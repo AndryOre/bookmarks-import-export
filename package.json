@@ -1,8 +1,8 @@
 {
-  "name": "bookmarks-converter",
-  "displayName": "Bookmarks converter",
+  "name": "bookmarks-exporter",
+  "displayName": "Bookmarks Exporter",
   "version": "0.0.1",
-  "description": "Convert and Save Your Bookmarks Instantly",
+  "description": "Export and save your bookmarks instantly",
   "author": "AndryOre",
   "scripts": {
     "dev": "plasmo dev",
