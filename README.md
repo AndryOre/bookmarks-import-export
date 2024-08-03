@@ -1,15 +1,15 @@
-![Bookmarks Exporter](/docs/assets/Cover.png)
+![Bookmark Import/Export](https://res.cloudinary.com/dhwxnbnaj/image/upload/v1722710029/Bookmark%20ImportExport/Cover_zvlu4x.png)
 
-# Bookmarks Exporter
+# Bookmark Import/Export
 
-**Bookmarks Exporter** is a web extension designed to help you export and save your bookmarks instantly. This tool simplifies the process of managing your bookmarks, making it easier to keep your important links organized and accessible.
+**Bookmark Import/Export** is a web extension designed to help you import and export your bookmarks with ease. This tool simplifies the process of managing your bookmarks, making it easier to keep your important links organized, accessible, and transferable between browsers.
 
 ## Features 🌟
 
-- 📂 **Bookmark Exporting**: Easily export your bookmarks to different formats (JSON, CSV, and HTML) for better accessibility and management.
-- 📑 **Instant Saving**: Save your exported bookmarks instantly.
+- ⬇️ **Bookmark Exporting**: Easily export your bookmarks to different formats (JSON and HTML) for better accessibility and management.
+- ⬆️ **Bookmark Importing**: Import bookmarks from JSON and HTML files, allowing you to transfer your bookmarks between browsers or restore from backups.
 - 🌐 **Browser Compatibility**: Works seamlessly with major web browsers, ensuring smooth operation across different platforms.
-- 📋 **Minimal Interface**: Clean and easy-to-use interface for quick access and efficient management of bookmarks.
+- 📑 **Minimal Interface**: Clean and easy-to-use interface for quick access and efficient management of bookmarks.
 
 ## Tech Stack 🧰
 
@@ -28,6 +28,23 @@ To install the extension, visit the relevant store:
 - [![Firefox Add-ons][Firefox Add-ons]][Firefox Add-ons-url]
 - [![Microsoft Edge Add-ons][Microsoft Edge Add-ons]][Microsoft Edge Add-ons-url]
 - [![Opera Add-ons][Opera Add-ons]][Opera Add-ons-url]
+
+## Usage 📚
+
+1. Click on the extension icon in your browser toolbar to open the popup.
+2. Choose between "Export" and "Import" tabs.
+3. For exporting:
+   - Select either HTML or JSON format.
+   - Click the corresponding button to export your bookmarks.
+   - Choose a location on your device to save the exported file.
+4. For importing:
+   - Click the "Import" button.
+   - Select a JSON or HTML file containing bookmarks.
+   - The extension will automatically detect the format and import the bookmarks.
+
+## License 📄
+
+This project is licensed under the MIT License.
 
 [Plasmo]: https://img.shields.io/badge/Plasmo-0F0C29.svg?style=for-the-badge&logo=Plasmo&logoColor=white
 [Plasmo-url]: https://plasmo.com/
