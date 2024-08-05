@@ -50,6 +50,7 @@ const parseHTML = (html: string): any[] => {
     const parsed = parseNode(dt.firstElementChild)
     if (parsed) {
       if (dt.firstElementChild === bookmarksBarNode) {
+        parsed.isBookmarksBar = true
         bookmarks.push(parsed)
       } else {
         otherBookmarks.push(parsed)
@@ -59,6 +60,7 @@ const parseHTML = (html: string): any[] => {
 
   if (otherBookmarks.length > 0) {
     bookmarks.push({
+      isOtherBookmarks: true,
       title: "Other bookmarks",
       children: otherBookmarks
     })
@@ -119,9 +121,9 @@ const processBookmarks = async (
   }
 
   for (const bookmark of parsedBookmarks) {
-    if (bookmark.id === "1") {
+    if (bookmark.isBookmarksBar) {
       await createBookmarks(bookmark.children, bookmarksBar.id)
-    } else if (bookmark.id === "2") {
+    } else if (bookmark.isOtherBookmarks) {
       await createBookmarks(bookmark.children, otherBookmarks.id)
     }
   }
