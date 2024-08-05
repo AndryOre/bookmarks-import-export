@@ -49,18 +49,12 @@ const processBookmarks = async (
     throw new Error("Could not find Bookmarks bar or Other bookmarks folder")
   }
 
-  const bookmarksBarData = bookmarksData[0].children?.find(
-    (bookmark) => bookmark.id === "1"
-  )
-  if (bookmarksBarData && bookmarksBarData.children) {
-    await createBookmarks(bookmarksBarData.children, bookmarksBar.id)
-  }
-
-  const otherBookmarksData = bookmarksData[0].children?.find(
-    (bookmark) => bookmark.id === "2"
-  )
-  if (otherBookmarksData && otherBookmarksData.children) {
-    await createBookmarks(otherBookmarksData.children, otherBookmarks.id)
+  for (const bookmark of bookmarksData) {
+    if (bookmark.isBookmarksBar) {
+      await createBookmarks(bookmark.children, bookmarksBar.id)
+    } else if (bookmark.isOtherBookmarks) {
+      await createBookmarks(bookmark.children, otherBookmarks.id)
+    }
   }
 }
 
@@ -72,12 +66,22 @@ const processBookmarks = async (
 export const importFromJSON = async (bookmarks: any[]): Promise<void> => {
   return new Promise((resolve, reject) => {
     try {
+      // Preprocess the bookmarks to add isBookmarksBar and isOtherBookmarks flags
+      const processedBookmarks = bookmarks.map((bookmark) => {
+        if (bookmark.id === "1") {
+          return { ...bookmark, isBookmarksBar: true }
+        } else if (bookmark.id === "2") {
+          return { ...bookmark, isOtherBookmarks: true }
+        }
+        return bookmark
+      })
+
       chrome.bookmarks.getTree(async (bookmarkTreeNodes) => {
         if (chrome.runtime.lastError) {
           reject(chrome.runtime.lastError)
         } else {
           try {
-            await processBookmarks(bookmarkTreeNodes, bookmarks)
+            await processBookmarks(bookmarkTreeNodes, processedBookmarks)
             resolve()
           } catch (error) {
             reject(error)
