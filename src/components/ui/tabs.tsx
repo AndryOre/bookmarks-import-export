@@ -12,7 +12,7 @@ const TabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      "plasmo-inline-flex plasmo-h-10 plasmo-items-center plasmo-justify-center plasmo-rounded-md plasmo-bg-neutral-100 plasmo-p-1 plasmo-text-neutral-500 dark:plasmo-bg-neutral-800 dark:plasmo-text-neutral-400",
+      "plasmo-inline-flex plasmo-h-10 plasmo-items-center plasmo-justify-center plasmo-rounded-md plasmo-bg-muted plasmo-p-1 plasmo-text-muted-foreground",
       className
     )}
     {...props}
@@ -27,7 +27,7 @@ const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      "plasmo-inline-flex plasmo-items-center plasmo-justify-center plasmo-whitespace-nowrap plasmo-rounded-sm plasmo-px-3 plasmo-py-1.5 plasmo-text-sm plasmo-font-medium plasmo-ring-offset-white plasmo-transition-all focus-visible:plasmo-outline-none focus-visible:plasmo-ring-2 focus-visible:plasmo-ring-neutral-950 focus-visible:plasmo-ring-offset-2 disabled:plasmo-pointer-events-none disabled:plasmo-opacity-50 data-[state=active]:plasmo-bg-white data-[state=active]:plasmo-text-neutral-950 data-[state=active]:plasmo-shadow-sm dark:plasmo-ring-offset-neutral-950 dark:focus-visible:plasmo-ring-neutral-300 dark:data-[state=active]:plasmo-bg-neutral-950 dark:data-[state=active]:plasmo-text-neutral-50",
+      "plasmo-inline-flex plasmo-items-center plasmo-justify-center plasmo-whitespace-nowrap plasmo-rounded-sm plasmo-px-3 plasmo-py-1.5 plasmo-text-sm plasmo-font-medium plasmo-ring-offset-background plasmo-transition-all focus-visible:plasmo-outline-none focus-visible:plasmo-ring-2 focus-visible:plasmo-ring-ring focus-visible:plasmo-ring-offset-2 disabled:plasmo-pointer-events-none disabled:plasmo-opacity-50 data-[state=active]:plasmo-bg-background data-[state=active]:plasmo-text-foreground data-[state=active]:plasmo-shadow-sm",
       className
     )}
     {...props}
@@ -42,7 +42,7 @@ const TabsContent = React.forwardRef<
   <TabsPrimitive.Content
     ref={ref}
     className={cn(
-      "plasmo-mt-2 plasmo-ring-offset-white focus-visible:plasmo-outline-none focus-visible:plasmo-ring-2 focus-visible:plasmo-ring-neutral-950 focus-visible:plasmo-ring-offset-2 dark:plasmo-ring-offset-neutral-950 dark:focus-visible:plasmo-ring-neutral-300",
+      "plasmo-mt-2 plasmo-ring-offset-background focus-visible:plasmo-outline-none focus-visible:plasmo-ring-2 focus-visible:plasmo-ring-ring focus-visible:plasmo-ring-offset-2",
       className
     )}
     {...props}

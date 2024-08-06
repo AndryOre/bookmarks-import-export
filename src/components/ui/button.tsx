@@ -5,19 +5,19 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "~lib/utils"
 
 const buttonVariants = cva(
-  "plasmo-inline-flex plasmo-items-center plasmo-justify-center plasmo-whitespace-nowrap plasmo-rounded-md plasmo-text-sm plasmo-font-medium plasmo-ring-offset-white plasmo-transition-colors focus-visible:plasmo-outline-none focus-visible:plasmo-ring-2 focus-visible:plasmo-ring-neutral-950 focus-visible:plasmo-ring-offset-2 disabled:plasmo-pointer-events-none disabled:plasmo-opacity-50 dark:plasmo-ring-offset-neutral-950 dark:focus-visible:plasmo-ring-neutral-300",
+  "plasmo-inline-flex plasmo-items-center plasmo-justify-center plasmo-whitespace-nowrap plasmo-rounded-md plasmo-text-sm plasmo-font-medium plasmo-ring-offset-background plasmo-transition-colors focus-visible:plasmo-outline-none focus-visible:plasmo-ring-2 focus-visible:plasmo-ring-ring focus-visible:plasmo-ring-offset-2 disabled:plasmo-pointer-events-none disabled:plasmo-opacity-50",
   {
     variants: {
       variant: {
-        default: "plasmo-bg-neutral-900 plasmo-text-neutral-50 hover:plasmo-bg-neutral-900/90 dark:plasmo-bg-neutral-50 dark:plasmo-text-neutral-900 dark:hover:plasmo-bg-neutral-50/90",
+        default: "plasmo-bg-primary plasmo-text-primary-foreground hover:plasmo-bg-primary/90",
         destructive:
-          "plasmo-bg-red-500 plasmo-text-neutral-50 hover:plasmo-bg-red-500/90 dark:plasmo-bg-red-900 dark:plasmo-text-neutral-50 dark:hover:plasmo-bg-red-900/90",
+          "plasmo-bg-destructive plasmo-text-destructive-foreground hover:plasmo-bg-destructive/90",
         outline:
-          "plasmo-border plasmo-border-neutral-200 plasmo-bg-white hover:plasmo-bg-neutral-100 hover:plasmo-text-neutral-900 dark:plasmo-border-neutral-800 dark:plasmo-bg-neutral-950 dark:hover:plasmo-bg-neutral-800 dark:hover:plasmo-text-neutral-50",
+          "plasmo-border plasmo-border-input plasmo-bg-background hover:plasmo-bg-accent hover:plasmo-text-accent-foreground",
         secondary:
-          "plasmo-bg-neutral-100 plasmo-text-neutral-900 hover:plasmo-bg-neutral-100/80 dark:plasmo-bg-neutral-800 dark:plasmo-text-neutral-50 dark:hover:plasmo-bg-neutral-800/80",
-        ghost: "hover:plasmo-bg-neutral-100 hover:plasmo-text-neutral-900 dark:hover:plasmo-bg-neutral-800 dark:hover:plasmo-text-neutral-50",
-        link: "plasmo-text-neutral-900 plasmo-underline-offset-4 hover:plasmo-underline dark:plasmo-text-neutral-50",
+          "plasmo-bg-secondary plasmo-text-secondary-foreground hover:plasmo-bg-secondary/80",
+        ghost: "hover:plasmo-bg-accent hover:plasmo-text-accent-foreground",
+        link: "plasmo-text-primary plasmo-underline-offset-4 hover:plasmo-underline",
       },
       size: {
         default: "plasmo-h-10 plasmo-px-4 plasmo-py-2",
