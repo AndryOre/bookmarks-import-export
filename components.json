@@ -7,7 +7,7 @@
     "config": "tailwind.config.js",
     "css": "src/style.css",
     "baseColor": "neutral",
-    "cssVariables": false,
+    "cssVariables": true,
     "prefix": "plasmo-"
   },
   "aliases": {

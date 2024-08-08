@@ -1,7 +1,7 @@
 {
   "name": "bookmarks-import-export",
   "displayName": "Bookmark Import/Export",
-  "version": "0.1.1",
+  "version": "1.0.0",
   "description": "Import and export your bookmarks easily",
   "author": "AndryOre",
   "scripts": {
@@ -10,8 +10,14 @@
     "package": "plasmo package"
   },
   "dependencies": {
+    "@radix-ui/react-checkbox": "^1.1.1",
+    "@radix-ui/react-dialog": "^1.1.1",
+    "@radix-ui/react-label": "^2.1.0",
+    "@radix-ui/react-separator": "^1.1.0",
     "@radix-ui/react-slot": "^1.1.0",
+    "@radix-ui/react-switch": "^1.1.0",
     "@radix-ui/react-tabs": "^1.1.0",
+    "@radix-ui/react-tooltip": "^1.1.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.402.0",
@@ -34,7 +40,8 @@
   },
   "manifest": {
     "permissions": [
-      "bookmarks"
+      "bookmarks",
+      "favicon"
     ]
   }
 }
