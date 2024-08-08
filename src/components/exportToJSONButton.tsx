@@ -1,7 +1,7 @@
 import { Code } from "lucide-react"
 
+import { exportToJSON } from "~common/lib"
 import { Button } from "~components/ui"
-import { exportToJSON } from "~lib"
 
 /**
  * ExportToJSONButton component for exporting bookmarks to JSON format.

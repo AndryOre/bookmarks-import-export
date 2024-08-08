@@ -1,8 +1,8 @@
 import { Upload } from "lucide-react"
 import { useRef } from "react"
 
+import { detectFormat, importFromHTML, importFromJSON } from "~common/lib"
 import { Button } from "~components/ui"
-import { detectFormat, importFromHTML, importFromJSON } from "~lib"
 
 /**
  * ImportBookmarksButton component for importing bookmarks from a file.

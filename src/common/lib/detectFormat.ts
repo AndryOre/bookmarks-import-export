@@ -1,7 +1,4 @@
-/**
- * Represents the possible formats of bookmark files.
- */
-type BookmarkFormat = "json" | "html" | "unknown"
+import { type BookmarkFormat } from "~common/types"
 
 /**
  * Detects the format of the bookmark content.
