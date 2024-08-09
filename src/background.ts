@@ -1,6 +1,6 @@
 /**
  * This file contains the background script for the Bookmark Import/Export extension.
- * It handles the extension installation, update, and opens a welcome page on first install.
+ * It handles the extension installation, update, and opens appropriate pages based on the action.
  */
 
 chrome.runtime.onInstalled.addListener((details) => {
@@ -13,5 +13,8 @@ chrome.runtime.onInstalled.addListener((details) => {
     console.log(
       `Bookmark Import/Export extension updated to version ${chrome.runtime.getManifest().version}`
     )
+
+    // Open the update page
+    chrome.tabs.create({ url: "tabs/update.html" })
   }
 })
