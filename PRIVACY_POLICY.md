@@ -34,7 +34,7 @@ We may update our Privacy Policy from time to time. We will notify you of any ch
 If you have any questions about this Privacy Policy, please contact us:
 
 - By email: andryfpo@gmail.com
-- By opening an issue on our GitHub repository: https://github.com/AndryOre/bookmarks-exporter/issues
+- By opening an issue on our GitHub repository: https://github.com/AndryOre/bookmarks-import-export/issues
 
 ## Consent
 

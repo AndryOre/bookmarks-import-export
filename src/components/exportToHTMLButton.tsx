@@ -1,7 +1,7 @@
 import { FileText } from "lucide-react"
 
+import { exportToHTML } from "~common/lib"
 import { Button } from "~components/ui"
-import { exportToHTML } from "~lib"
 
 /**
  * ExportToHTMLButton component for exporting bookmarks to HTML format.

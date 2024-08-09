@@ -8,8 +8,7 @@ import { Button } from "~components/ui"
  */
 export const AdvancedExportButton = ({ className = "" }): JSX.Element => {
   const handleAdvancedExport = () => {
-    console.log("Advanced Export clicked")
-    // TODO: Implement advanced export functionality
+    chrome.tabs.create({ url: "tabs/advanced-export.html" })
   }
 
   return (
