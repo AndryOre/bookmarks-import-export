@@ -135,4 +135,6 @@ export interface ParsedBookmark {
   isOtherBookmarks?: boolean
   /** Optional ID for the bookmark or folder (used in JSON import) */
   id?: string
+  /** Optional parent ID for the bookmark or folder (used in JSON import) */
+  parentId?: string
 }

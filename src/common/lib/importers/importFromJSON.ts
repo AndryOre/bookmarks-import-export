@@ -83,14 +83,32 @@ const processBookmarks = async (
  * @returns {ParsedBookmark[]} The processed bookmarks array.
  */
 const preprocessBookmarks = (bookmarks: ParsedBookmark[]): ParsedBookmark[] => {
-  return bookmarks.map((bookmark) => {
+  const processedBookmarks: ParsedBookmark[] = []
+  const otherBookmarks: ParsedBookmark[] = []
+
+  bookmarks.forEach((bookmark) => {
     if (bookmark.id === "1") {
-      return { ...bookmark, isBookmarksBar: true }
+      processedBookmarks.push({ ...bookmark, isBookmarksBar: true })
     } else if (bookmark.id === "2") {
-      return { ...bookmark, isOtherBookmarks: true }
+      processedBookmarks.push({ ...bookmark, isOtherBookmarks: true })
+    } else if (bookmark.parentId === "2") {
+      otherBookmarks.push(bookmark)
+    } else {
+      processedBookmarks.push(bookmark)
     }
-    return bookmark
   })
+
+  if (otherBookmarks.length > 0) {
+    processedBookmarks.push({
+      id: "2",
+      title: "Other bookmarks",
+      dateAdded: Date.now(),
+      isOtherBookmarks: true,
+      children: otherBookmarks
+    })
+  }
+
+  return processedBookmarks
 }
 
 /**
