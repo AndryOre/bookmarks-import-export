@@ -55,9 +55,9 @@ export function SettingsDialog({
   const [settings, setSettings] = useState({
     showBookmarkIcon: true,
     autoExpandFolders: false,
-    includeIconData: false,
+    includeIconData: true,
     includeDateAdded: true,
-    includeDateLastUsed: true,
+    includeDateLastUsed: false,
     includeDateGroupModified: true,
     hideOtherBookmarks: true,
     hideParentFolder: false

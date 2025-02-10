@@ -232,9 +232,9 @@ const generateOtherBookmarksHtml = async (
  */
 export const exportToHTML = async (
   selectedBookmarks: ExtendedBookmarkTreeNode[] | null = null,
-  includeIconData: boolean = false,
+  includeIconData: boolean = true,
   includeDateAdded: boolean = true,
-  includeDateLastUsed: boolean = true,
+  includeDateLastUsed: boolean = false,
   includeDateGroupModified: boolean = true,
   hideOtherBookmarks: boolean = true,
   hideParentFolder: boolean = false
@@ -310,17 +310,15 @@ const generateFullHtmlContent = async (
     }
   } else {
     for (const child of rootNode.children || []) {
-      if (child.id === "1" || child.id === "2") {
-        htmlContent += await generateHtmlContent(
-          child,
-          includeIconData,
-          dateOptions,
-          1,
-          child.id === "2",
-          hideOtherBookmarks,
-          hideParentFolder
-        )
-      }
+      htmlContent += await generateHtmlContent(
+        child,
+        includeIconData,
+        dateOptions,
+        1,
+        child.id === "2",
+        hideOtherBookmarks,
+        hideParentFolder
+      )
     }
   }
 

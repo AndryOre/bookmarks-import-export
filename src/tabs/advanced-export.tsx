@@ -20,7 +20,7 @@ export default function AdvancedExportPage(): JSX.Element {
   const [selectedCount, setSelectedCount] = useState(0)
   const [totalCount, setTotalCount] = useState(0)
   const [includeDateAdded, setIncludeDateAdded] = useState(true)
-  const [includeDateLastUsed, setIncludeDateLastUsed] = useState(true)
+  const [includeDateLastUsed, setIncludeDateLastUsed] = useState(false)
   const [includeDateGroupModified, setIncludeDateGroupModified] = useState(true)
   const [hideOtherBookmarks, setHideOtherBookmarks] = useState(true)
   const [hideParentFolder, setHideParentFolder] = useState(false)

@@ -209,9 +209,9 @@ const processFolderWithStructure = async (
  */
 export const exportToJSON = async (
   selectedBookmarks: ExtendedBookmarkTreeNode[] | null = null,
-  includeIconData: boolean = false,
+  includeIconData: boolean = true,
   includeDateAdded: boolean = true,
-  includeDateLastUsed: boolean = true,
+  includeDateLastUsed: boolean = false,
   includeDateGroupModified: boolean = true,
   hideOtherBookmarks: boolean = true,
   hideParentFolder: boolean = false
