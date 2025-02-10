@@ -55,12 +55,8 @@ const processBookmarks = async (
   bookmarkTreeNodes: chrome.bookmarks.BookmarkTreeNode[],
   bookmarksData: ParsedBookmark[]
 ) => {
-  const bookmarksBar = bookmarkTreeNodes[0].children?.find(
-    (child) => child.id === "1"
-  )
-  const otherBookmarks = bookmarkTreeNodes[0].children?.find(
-    (child) => child.id === "2"
-  )
+  const bookmarksBar = bookmarkTreeNodes[0].children?.[0]
+  const otherBookmarks = bookmarkTreeNodes[0].children?.[1]
 
   if (!bookmarksBar || !otherBookmarks) {
     throw new BookmarkImportError(
