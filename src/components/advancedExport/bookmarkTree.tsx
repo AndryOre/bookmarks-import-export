@@ -443,38 +443,31 @@ const BookmarkTreeComponent = forwardRef<BookmarkTreeHandle, BookmarkTreeProps>(
      * Retrieves all selected bookmarks
      * @returns {Promise<ExtendedBookmarkTreeNode[]>} A promise that resolves to an array of selected bookmarks
      */
-    const getSelectedBookmarks = useCallback(async (): Promise<
-      ExtendedBookmarkTreeNode[]
-    > => {
-      const selectedBookmarks: ExtendedBookmarkTreeNode[] = []
-
-      const traverseNodes = (
-        nodes: ExtendedBookmarkTreeNode[]
-      ): ExtendedBookmarkTreeNode[] => {
-        return nodes.reduce((acc: ExtendedBookmarkTreeNode[], node) => {
-          if (checkedState[node.id]) {
-            const selectedNode: ExtendedBookmarkTreeNode = { ...node }
-            if (node.children) {
-              selectedNode.children = traverseNodes(node.children)
-            }
-            acc.push(selectedNode)
-          } else if (node.children) {
-            const selectedChildren = traverseNodes(node.children)
-            if (selectedChildren.length > 0) {
-              acc.push({ ...node, children: selectedChildren })
-            }
+    const getSelectedBookmarks = useCallback(async () => {
+      return new Promise<ExtendedBookmarkTreeNode[]>((resolve) => {
+        chrome.bookmarks.getTree((result) => {
+          const traverseNodes = (
+            nodes: ExtendedBookmarkTreeNode[]
+          ): ExtendedBookmarkTreeNode[] => {
+            return nodes.reduce<ExtendedBookmarkTreeNode[]>((acc, node) => {
+              if (checkedState[node.id]) {
+                acc.push(node)
+              } else if (node.children) {
+                const selectedChildren = traverseNodes(node.children)
+                if (selectedChildren.length > 0) {
+                  const nodeWithSelectedChildren = { ...node, children: selectedChildren }
+                  acc.push(nodeWithSelectedChildren)
+                }
+              }
+              return acc
+            }, [])
           }
-          return acc
-        }, [])
-      }
-
-      const rootNodes = bookmarks.filter(
-        (node) => node.id === "1" || node.id === "2"
-      )
-      selectedBookmarks.push(...traverseNodes(rootNodes))
-
-      return selectedBookmarks
-    }, [bookmarks, checkedState])
+          
+          const selectedBookmarks = traverseNodes(result[0].children || [])
+          resolve(selectedBookmarks)
+        })
+      })
+    }, [checkedState])
 
     // Expose imperative handle for parent components to interact with the tree
     useImperativeHandle(
