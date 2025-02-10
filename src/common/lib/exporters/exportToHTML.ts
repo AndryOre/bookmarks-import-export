@@ -11,9 +11,18 @@ const toSeconds = (timestamp: number): number => Math.floor(timestamp / 1000)
 /**
  * Escapes special characters in a string for use in HTML.
  * @param {string} unsafe - The string to be escaped
+ * @param {boolean} isUrl - Whether the string is a URL (to avoid escaping &)
  * @returns {string} The escaped string
  */
-const escapeHtml = (unsafe: string): string => {
+const escapeHtml = (unsafe: string, isUrl: boolean = false): string => {
+  if (isUrl) {
+    return unsafe
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;")
+  }
+  
   return unsafe
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
@@ -97,7 +106,7 @@ const generateBookmarkHtml = async (
     iconHtml = iconData ? ` ICON="${iconData}"` : ""
   }
 
-  return `${indent}<DT><A HREF="${escapeHtml(node.url)}"${attributes}${iconHtml}>${escapeHtml(node.title || "")}</A>\n`
+  return `${indent}<DT><A HREF="${escapeHtml(node.url, true)}"${attributes}${iconHtml}>${escapeHtml(node.title || "")}</A>\n`
 }
 
 /**
