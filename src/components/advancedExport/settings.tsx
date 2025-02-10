@@ -35,7 +35,9 @@ type SettingKey =
   | "autoExpandFolders"
   | "showBookmarkIcon"
   | "includeIconData"
-  | "includeDates"
+  | "includeDateAdded"
+  | "includeDateLastUsed"
+  | "includeDateGroupModified"
   | "hideOtherBookmarks"
   | "hideParentFolder"
 
@@ -54,7 +56,9 @@ export function SettingsDialog({
     showBookmarkIcon: true,
     autoExpandFolders: false,
     includeIconData: false,
-    includeDates: true,
+    includeDateAdded: true,
+    includeDateLastUsed: true,
+    includeDateGroupModified: true,
     hideOtherBookmarks: true,
     hideParentFolder: false
   })
@@ -176,9 +180,21 @@ export function SettingsDialog({
             )}
             <Separator />
             {renderSettingSwitch(
-              "includeDates",
-              "Include dates",
-              "Add creation and modification dates to the exported file"
+              "includeDateAdded",
+              "Include creation dates",
+              "Add creation dates to the exported file"
+            )}
+            <Separator />
+            {renderSettingSwitch(
+              "includeDateLastUsed",
+              "Include last used dates",
+              "Add last used dates to the exported file"
+            )}
+            <Separator />
+            {renderSettingSwitch(
+              "includeDateGroupModified",
+              "Include folder modification dates",
+              "Add last modification dates for folders to the exported file"
             )}
             <Separator />
             {renderSettingSwitch(

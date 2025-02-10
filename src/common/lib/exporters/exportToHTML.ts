@@ -1,5 +1,5 @@
 import { getFaviconBase64 } from "~common/lib/favicon"
-import { type ExtendedBookmarkTreeNode } from "~common/types"
+import { type DateOptions, type ExtendedBookmarkTreeNode } from "~common/types"
 
 /**
  * Converts a timestamp from milliseconds to seconds.
@@ -26,7 +26,7 @@ const escapeHtml = (unsafe: string): string => {
  * Generates HTML content for a bookmark node.
  * @param {ExtendedBookmarkTreeNode} node - The bookmark node
  * @param {boolean} includeIconData - Whether to include favicon data
- * @param {boolean} includeDates - Whether to include date information
+ * @param {DateOptions} dateOptions - The date options
  * @param {number} level - The indentation level
  * @param {boolean} isOtherBookmarks - Whether the node is the "Other Bookmarks" folder
  * @param {boolean} hideOtherBookmarks - Whether to hide the "Other Bookmarks" folder
@@ -36,7 +36,7 @@ const escapeHtml = (unsafe: string): string => {
 const generateHtmlContent = async (
   node: ExtendedBookmarkTreeNode,
   includeIconData: boolean,
-  includeDates: boolean,
+  dateOptions: DateOptions,
   level: number = 0,
   isOtherBookmarks: boolean = false,
   hideOtherBookmarks: boolean = true,
@@ -45,12 +45,12 @@ const generateHtmlContent = async (
   const indent = "    ".repeat(level)
 
   if (node.url) {
-    return generateBookmarkHtml(node, includeIconData, includeDates, indent)
+    return generateBookmarkHtml(node, includeIconData, dateOptions, indent)
   } else if (!isOtherBookmarks || !hideOtherBookmarks) {
     return generateFolderHtml(
       node,
       includeIconData,
-      includeDates,
+      dateOptions,
       level,
       hideOtherBookmarks,
       hideParentFolder
@@ -59,7 +59,7 @@ const generateHtmlContent = async (
     return generateOtherBookmarksHtml(
       node,
       includeIconData,
-      includeDates,
+      dateOptions,
       level,
       hideOtherBookmarks,
       hideParentFolder
@@ -71,22 +71,24 @@ const generateHtmlContent = async (
  * Generates HTML for a bookmark (leaf node).
  * @param {ExtendedBookmarkTreeNode} node - The bookmark node
  * @param {boolean} includeIconData - Whether to include favicon data
- * @param {boolean} includeDates - Whether to include date information
+ * @param {DateOptions} dateOptions - The date options
  * @param {string} indent - The indentation string
  * @returns {Promise<string>} The generated HTML for the bookmark
  */
 const generateBookmarkHtml = async (
   node: ExtendedBookmarkTreeNode,
   includeIconData: boolean,
-  includeDates: boolean,
+  dateOptions: DateOptions,
   indent: string
 ): Promise<string> => {
   let attributes = ""
-  if (includeDates) {
+  
+  if (dateOptions.includeDateAdded) {
     attributes += ` ADD_DATE="${toSeconds(node.dateAdded)}"`
-    if (node.dateLastUsed) {
-      attributes += ` LAST_USED="${toSeconds(node.dateLastUsed)}"`
-    }
+  }
+  
+  if (dateOptions.includeDateLastUsed && node.dateLastUsed) {
+    attributes += ` LAST_USED="${toSeconds(node.dateLastUsed)}"`
   }
 
   let iconHtml = ""
@@ -102,7 +104,7 @@ const generateBookmarkHtml = async (
  * Generates HTML for a folder node.
  * @param {ExtendedBookmarkTreeNode} node - The folder node
  * @param {boolean} includeIconData - Whether to include favicon data
- * @param {boolean} includeDates - Whether to include date information
+ * @param {DateOptions} dateOptions - The date options
  * @param {number} level - The indentation level
  * @param {boolean} hideOtherBookmarks - Whether to hide the "Other Bookmarks" folder
  * @param {boolean} hideParentFolder - Whether to hide parent folders
@@ -111,7 +113,7 @@ const generateBookmarkHtml = async (
 const generateFolderHtml = async (
   node: ExtendedBookmarkTreeNode,
   includeIconData: boolean,
-  includeDates: boolean,
+  dateOptions: DateOptions,
   level: number,
   hideOtherBookmarks: boolean,
   hideParentFolder: boolean
@@ -120,7 +122,7 @@ const generateFolderHtml = async (
   const indent = "    ".repeat(level)
 
   if (!hideParentFolder || node.id === "1" || node.id === "2") {
-    htmlContent += generateFolderHeaderHtml(node, includeDates, indent)
+    htmlContent += generateFolderHeaderHtml(node, dateOptions, indent)
   }
 
   if (node.children) {
@@ -128,7 +130,7 @@ const generateFolderHtml = async (
       htmlContent += await generateHtmlContent(
         child,
         includeIconData,
-        includeDates,
+        dateOptions,
         hideParentFolder && node.id !== "1" && node.id !== "2"
           ? level
           : level + 1,
@@ -149,20 +151,25 @@ const generateFolderHtml = async (
 /**
  * Generates HTML for the folder header.
  * @param {ExtendedBookmarkTreeNode} node - The folder node
- * @param {boolean} includeDates - Whether to include date information
+ * @param {DateOptions} dateOptions - The date options
  * @param {string} indent - The indentation string
  * @returns {string} The generated HTML for the folder header
  */
 const generateFolderHeaderHtml = (
   node: ExtendedBookmarkTreeNode,
-  includeDates: boolean,
+  dateOptions: DateOptions,
   indent: string
 ): string => {
   let attributes = ""
-  if (includeDates) {
+  
+  if (dateOptions.includeDateAdded) {
     attributes += ` ADD_DATE="${toSeconds(node.dateAdded)}"`
-    attributes += ` LAST_MODIFIED="${toSeconds(node.dateGroupModified || node.dateAdded)}"`
   }
+  
+  if (dateOptions.includeDateGroupModified && node.dateGroupModified) {
+    attributes += ` LAST_MODIFIED="${toSeconds(node.dateGroupModified)}"`
+  }
+  
   const personalBar = node.id === "1" ? ' PERSONAL_TOOLBAR_FOLDER="true"' : ""
 
   return `${indent}<DT><H3${attributes}${personalBar}>${escapeHtml(node.title || "")}</H3>\n${indent}<DL><p>\n`
@@ -172,7 +179,7 @@ const generateFolderHeaderHtml = (
  * Generates HTML for the "Other Bookmarks" folder.
  * @param {ExtendedBookmarkTreeNode} node - The "Other Bookmarks" folder node
  * @param {boolean} includeIconData - Whether to include favicon data
- * @param {boolean} includeDates - Whether to include date information
+ * @param {DateOptions} dateOptions - The date options
  * @param {number} level - The indentation level
  * @param {boolean} hideOtherBookmarks - Whether to hide the "Other Bookmarks" folder
  * @param {boolean} hideParentFolder - Whether to hide parent folders
@@ -181,7 +188,7 @@ const generateFolderHeaderHtml = (
 const generateOtherBookmarksHtml = async (
   node: ExtendedBookmarkTreeNode,
   includeIconData: boolean,
-  includeDates: boolean,
+  dateOptions: DateOptions,
   level: number,
   hideOtherBookmarks: boolean,
   hideParentFolder: boolean
@@ -192,7 +199,7 @@ const generateOtherBookmarksHtml = async (
       htmlContent += await generateHtmlContent(
         child,
         includeIconData,
-        includeDates,
+        dateOptions,
         level,
         false,
         hideOtherBookmarks,
@@ -207,7 +214,9 @@ const generateOtherBookmarksHtml = async (
  * Exports bookmarks to HTML format.
  * @param {ExtendedBookmarkTreeNode[] | null} selectedBookmarks - Specific bookmarks to export, or null for all
  * @param {boolean} includeIconData - Whether to include favicon data
- * @param {boolean} includeDates - Whether to include date information
+ * @param {boolean} includeDateAdded - Whether to include date added
+ * @param {boolean} includeDateLastUsed - Whether to include date last used
+ * @param {boolean} includeDateGroupModified - Whether to include date group modified
  * @param {boolean} hideOtherBookmarks - Whether to hide the "Other Bookmarks" folder
  * @param {boolean} hideParentFolder - Whether to hide parent folders
  * @returns {Promise<string>} The generated HTML content
@@ -215,10 +224,18 @@ const generateOtherBookmarksHtml = async (
 export const exportToHTML = async (
   selectedBookmarks: ExtendedBookmarkTreeNode[] | null = null,
   includeIconData: boolean = false,
-  includeDates: boolean = true,
+  includeDateAdded: boolean = true,
+  includeDateLastUsed: boolean = true,
+  includeDateGroupModified: boolean = true,
   hideOtherBookmarks: boolean = true,
   hideParentFolder: boolean = false
 ): Promise<string> => {
+  const dateOptions: DateOptions = {
+    includeDateAdded,
+    includeDateLastUsed,
+    includeDateGroupModified
+  }
+
   return new Promise((resolve, reject) => {
     chrome.bookmarks.getTree(async (bookmarkTreeNodes) => {
       if (chrome.runtime.lastError) {
@@ -231,7 +248,7 @@ export const exportToHTML = async (
           bookmarkTreeNodes[0],
           selectedBookmarks,
           includeIconData,
-          includeDates,
+          dateOptions,
           hideOtherBookmarks,
           hideParentFolder
         )
@@ -248,7 +265,7 @@ export const exportToHTML = async (
  * @param {ExtendedBookmarkTreeNode} rootNode - The root bookmark node
  * @param {ExtendedBookmarkTreeNode[] | null} selectedBookmarks - Specific bookmarks to export, or null for all
  * @param {boolean} includeIconData - Whether to include favicon data
- * @param {boolean} includeDates - Whether to include date information
+ * @param {DateOptions} dateOptions - The date options
  * @param {boolean} hideOtherBookmarks - Whether to hide the "Other Bookmarks" folder
  * @param {boolean} hideParentFolder - Whether to hide parent folders
  * @returns {Promise<string>} The generated full HTML content
@@ -257,7 +274,7 @@ const generateFullHtmlContent = async (
   rootNode: ExtendedBookmarkTreeNode,
   selectedBookmarks: ExtendedBookmarkTreeNode[] | null,
   includeIconData: boolean,
-  includeDates: boolean,
+  dateOptions: DateOptions,
   hideOtherBookmarks: boolean,
   hideParentFolder: boolean
 ): Promise<string> => {
@@ -275,7 +292,7 @@ const generateFullHtmlContent = async (
       htmlContent += await generateHtmlContent(
         bookmark,
         includeIconData,
-        includeDates,
+        dateOptions,
         1,
         bookmark.id === "2",
         hideOtherBookmarks,
@@ -288,7 +305,7 @@ const generateFullHtmlContent = async (
         htmlContent += await generateHtmlContent(
           child,
           includeIconData,
-          includeDates,
+          dateOptions,
           1,
           child.id === "2",
           hideOtherBookmarks,
@@ -298,6 +315,6 @@ const generateFullHtmlContent = async (
     }
   }
 
-  htmlContent += "</DL><p>\n"
+  htmlContent += '</DL><p>\n'
   return htmlContent
 }

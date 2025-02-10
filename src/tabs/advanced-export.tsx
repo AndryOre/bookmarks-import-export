@@ -19,7 +19,9 @@ export default function AdvancedExportPage(): JSX.Element {
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedCount, setSelectedCount] = useState(0)
   const [totalCount, setTotalCount] = useState(0)
-  const [includeDates, setIncludeDates] = useState(true)
+  const [includeDateAdded, setIncludeDateAdded] = useState(true)
+  const [includeDateLastUsed, setIncludeDateLastUsed] = useState(true)
+  const [includeDateGroupModified, setIncludeDateGroupModified] = useState(true)
   const [hideOtherBookmarks, setHideOtherBookmarks] = useState(true)
   const [hideParentFolder, setHideParentFolder] = useState(false)
   const bookmarkTreeRef = useRef<BookmarkTreeHandle>(null)
@@ -35,7 +37,9 @@ export default function AdvancedExportPage(): JSX.Element {
       }
     }
 
-    loadSetting("includeDates", setIncludeDates)
+    loadSetting("includeDateAdded", setIncludeDateAdded)
+    loadSetting("includeDateLastUsed", setIncludeDateLastUsed)
+    loadSetting("includeDateGroupModified", setIncludeDateGroupModified)
     loadSetting("hideOtherBookmarks", setHideOtherBookmarks)
     loadSetting("hideParentFolder", setHideParentFolder)
   }, [])
@@ -52,6 +56,9 @@ export default function AdvancedExportPage(): JSX.Element {
         }
       }
 
+      loadSetting("includeDateAdded", setIncludeDateAdded)
+      loadSetting("includeDateLastUsed", setIncludeDateLastUsed)
+      loadSetting("includeDateGroupModified", setIncludeDateGroupModified)
       loadSetting("hideOtherBookmarks", setHideOtherBookmarks)
       loadSetting("hideParentFolder", setHideParentFolder)
     }
@@ -118,7 +125,9 @@ export default function AdvancedExportPage(): JSX.Element {
       const exportConfig = {
         selectedBookmarks,
         includeIconData,
-        includeDates,
+        includeDateAdded,
+        includeDateLastUsed,
+        includeDateGroupModified,
         hideOtherBookmarks,
         hideParentFolder
       }
@@ -145,7 +154,9 @@ export default function AdvancedExportPage(): JSX.Element {
     config: {
       selectedBookmarks: ExtendedBookmarkTreeNode[]
       includeIconData: boolean
-      includeDates: boolean
+      includeDateAdded: boolean
+      includeDateLastUsed: boolean
+      includeDateGroupModified: boolean
       hideOtherBookmarks: boolean
       hideParentFolder: boolean
     }
@@ -154,7 +165,9 @@ export default function AdvancedExportPage(): JSX.Element {
       const exportedData = await exportToHTML(
         config.selectedBookmarks,
         config.includeIconData,
-        config.includeDates,
+        config.includeDateAdded,
+        config.includeDateLastUsed,
+        config.includeDateGroupModified,
         config.hideOtherBookmarks,
         config.hideParentFolder
       )
@@ -163,7 +176,9 @@ export default function AdvancedExportPage(): JSX.Element {
       const jsonData = await exportToJSON(
         config.selectedBookmarks,
         config.includeIconData,
-        config.includeDates,
+        config.includeDateAdded,
+        config.includeDateLastUsed,
+        config.includeDateGroupModified,
         config.hideOtherBookmarks,
         config.hideParentFolder
       )
