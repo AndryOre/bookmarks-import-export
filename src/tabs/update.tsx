@@ -17,6 +17,22 @@ interface ChangelogEntry {
 
 const changelog: ChangelogEntry[] = [
   {
+    version: "1.1.0",
+    date: "February 11, 2025",
+    changes: [
+      {
+        description: "Imported bookmarks now go to their own folder to avoid mixing with your existing bookmarks"
+      },
+      {
+        description: "More precise control over which dates to include in your exports",
+        link: {
+          text: "Try the new export options",
+          url: "tabs/advanced-export.html"
+        }
+      }
+    ]
+  },
+  {
     version: "1.0.0",
     date: "August 5, 2024",
     changes: [
