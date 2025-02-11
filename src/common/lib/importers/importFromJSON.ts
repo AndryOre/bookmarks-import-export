@@ -64,11 +64,40 @@ const processBookmarks = async (
     )
   }
 
+  const importedFolder = await chrome.bookmarks.create({
+    title: "Imported bookmarks"
+  })
+
   for (const bookmark of bookmarksData) {
-    if (bookmark.isBookmarksBar) {
-      await createBookmarks(bookmark.children || [], bookmarksBar.id)
-    } else if (bookmark.isOtherBookmarks) {
-      await createBookmarks(bookmark.children || [], otherBookmarks.id)
+    if (bookmark.isBookmarksBar && bookmark.children?.length > 0) {
+      const importedBookmarksBar = await chrome.bookmarks.create({
+        parentId: importedFolder.id,
+        title: "Bookmarks bar"
+      })
+
+      for (const child of bookmark.children) {
+        if (child.url) {
+          await chrome.bookmarks.create({
+            parentId: importedBookmarksBar.id,
+            title: child.title,
+            url: child.url
+          })
+        } else if (child.children) {
+          const folder = await chrome.bookmarks.create({
+            parentId: importedBookmarksBar.id,
+            title: child.title
+          })
+          await createBookmarks(child.children, folder.id)
+        }
+      }
+    } else if (bookmark.isOtherBookmarks || bookmark.children) {
+      await createBookmarks(bookmark.children || [], importedFolder.id)
+    } else if (bookmark.url) {
+      await chrome.bookmarks.create({
+        parentId: importedFolder.id,
+        title: bookmark.title,
+        url: bookmark.url
+      })
     }
   }
 }

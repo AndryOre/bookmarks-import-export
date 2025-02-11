@@ -133,7 +133,7 @@ const BookmarkTreeComponent = forwardRef<BookmarkTreeHandle, BookmarkTreeProps>(
       }
 
       window.addEventListener("settingsChanged", handleSettingsChange)
-      handleSettingsChange() // Initialize settings
+      handleSettingsChange()
       return () => {
         window.removeEventListener("settingsChanged", handleSettingsChange)
       }
@@ -469,7 +469,6 @@ const BookmarkTreeComponent = forwardRef<BookmarkTreeHandle, BookmarkTreeProps>(
       })
     }, [checkedState])
 
-    // Expose imperative handle for parent components to interact with the tree
     useImperativeHandle(
       ref,
       () => ({

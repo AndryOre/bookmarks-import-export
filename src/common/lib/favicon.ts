@@ -32,7 +32,6 @@ export async function getFaviconBase64(
       const reader = new FileReader()
       reader.onloadend = () => {
         const result = reader.result as string
-        // Skip Chrome's default favicon
         if (result === DEFAULT_CHROME_FAVICON) {
           resolve("")
         } else {

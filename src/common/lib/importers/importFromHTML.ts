@@ -126,11 +126,13 @@ const createBookmarks = async (nodes: ParsedBookmark[], parentId: string) => {
  * Processes parsed bookmarks and creates them in Chrome's bookmark structure.
  * @param {chrome.bookmarks.BookmarkTreeNode[]} bookmarkTreeNodes - Chrome's existing bookmark tree.
  * @param {ParsedBookmark[]} parsedBookmarks - Array of parsed bookmarks from HTML.
+ * @param {string} importedFolderId - ID of the imported folder.
  * @throws {BookmarkImportError} If processing bookmarks fails.
  */
 const processBookmarks = async (
   bookmarkTreeNodes: chrome.bookmarks.BookmarkTreeNode[],
-  parsedBookmarks: ParsedBookmark[]
+  parsedBookmarks: ParsedBookmark[],
+  importedFolderId: string
 ) => {
   const bookmarksBar = bookmarkTreeNodes[0].children?.[0]
   const otherBookmarks = bookmarkTreeNodes[0].children?.[1]
@@ -141,11 +143,16 @@ const processBookmarks = async (
     )
   }
 
+  const importedBookmarksBar = await chrome.bookmarks.create({
+    parentId: importedFolderId,
+    title: "Bookmarks bar"
+  })
+
   for (const bookmark of parsedBookmarks) {
     if (bookmark.isBookmarksBar) {
-      await createBookmarks(bookmark.children || [], bookmarksBar.id)
+      await createBookmarks(bookmark.children || [], importedBookmarksBar.id)
     } else if (bookmark.isOtherBookmarks) {
-      await createBookmarks(bookmark.children || [], otherBookmarks.id)
+      await createBookmarks(bookmark.children || [], importedFolderId)
     }
   }
 }
@@ -169,7 +176,14 @@ export const importFromHTML = async (html: string): Promise<void> => {
           )
         } else {
           try {
-            await processBookmarks(bookmarkTreeNodes, parsedBookmarks)
+            const importedFolder = await chrome.bookmarks.create({
+              title: "Imported bookmarks"
+            })
+            await processBookmarks(
+              bookmarkTreeNodes,
+              parsedBookmarks,
+              importedFolder.id
+            )
             resolve()
           } catch (error) {
             reject(error)
