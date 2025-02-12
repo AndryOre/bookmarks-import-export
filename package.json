@@ -43,5 +43,6 @@
       "bookmarks",
       "favicon"
     ]
-  }
+  },
+  "packageManager": "pnpm@10.3.0"
 }
