@@ -1,6 +1,18 @@
 import { type ClassValue } from "clsx"
 
 /**
+ * Options for controlling which dates to include in exports
+ */
+export interface DateOptions {
+  /** Whether to include creation dates */
+  includeDateAdded: boolean
+  /** Whether to include last used dates */
+  includeDateLastUsed: boolean
+  /** Whether to include folder modification dates */
+  includeDateGroupModified: boolean
+}
+
+/**
  * Represents a node in the bookmark tree structure.
  */
 export interface BookmarkNode {
@@ -135,4 +147,6 @@ export interface ParsedBookmark {
   isOtherBookmarks?: boolean
   /** Optional ID for the bookmark or folder (used in JSON import) */
   id?: string
+  /** Optional parent ID for the bookmark or folder (used in JSON import) */
+  parentId?: string
 }

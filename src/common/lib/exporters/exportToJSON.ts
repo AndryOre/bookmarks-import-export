@@ -1,5 +1,5 @@
 import { getFaviconBase64 } from "~common/lib/favicon"
-import { type ExtendedBookmarkTreeNode } from "~common/types"
+import { type DateOptions, type ExtendedBookmarkTreeNode } from "~common/types"
 
 /**
  * Converts a timestamp from milliseconds to seconds.
@@ -14,7 +14,7 @@ const toSeconds = (timestamp: number): number => {
  * Processes a bookmark node, applying the specified options.
  * @param {ExtendedBookmarkTreeNode} node - The bookmark node to process
  * @param {boolean} includeIconData - Whether to include favicon data
- * @param {boolean} includeDates - Whether to include date information
+ * @param {DateOptions} dateOptions - The date options to apply
  * @param {boolean} isOtherBookmarks - Whether the node is the "Other Bookmarks" folder
  * @param {boolean} hideOtherBookmarks - Whether to hide the "Other Bookmarks" folder
  * @param {boolean} hideParentFolder - Whether to hide parent folders
@@ -23,18 +23,18 @@ const toSeconds = (timestamp: number): number => {
 const processNode = async (
   node: ExtendedBookmarkTreeNode,
   includeIconData: boolean,
-  includeDates: boolean,
+  dateOptions: DateOptions,
   isOtherBookmarks: boolean = false,
   hideOtherBookmarks: boolean = true,
   hideParentFolder: boolean = false
 ): Promise<ExtendedBookmarkTreeNode[]> => {
   if (node.url) {
-    return processBookmark(node, includeIconData, includeDates)
+    return processBookmark(node, includeIconData, dateOptions)
   } else if (node.children) {
     return processFolder(
       node,
       includeIconData,
-      includeDates,
+      dateOptions,
       isOtherBookmarks,
       hideOtherBookmarks,
       hideParentFolder
@@ -47,24 +47,26 @@ const processNode = async (
  * Processes a bookmark (leaf node).
  * @param {ExtendedBookmarkTreeNode} node - The bookmark to process
  * @param {boolean} includeIconData - Whether to include favicon data
- * @param {boolean} includeDates - Whether to include date information
+ * @param {DateOptions} dateOptions - The date options to apply
  * @returns {Promise<ExtendedBookmarkTreeNode[]>} Array containing the processed bookmark
  */
 const processBookmark = async (
   node: ExtendedBookmarkTreeNode,
   includeIconData: boolean,
-  includeDates: boolean
+  dateOptions: DateOptions
 ): Promise<ExtendedBookmarkTreeNode[]> => {
   const processedNode: ExtendedBookmarkTreeNode = { ...node }
 
-  if (includeDates) {
-    processedNode.dateAdded = toSeconds(node.dateAdded)
-    if (node.dateLastUsed) {
-      processedNode.dateLastUsed = toSeconds(node.dateLastUsed)
-    }
-  } else {
+  if (!dateOptions.includeDateAdded) {
     delete processedNode.dateAdded
+  } else {
+    processedNode.dateAdded = toSeconds(node.dateAdded)
+  }
+
+  if (!dateOptions.includeDateLastUsed) {
     delete processedNode.dateLastUsed
+  } else if (node.dateLastUsed) {
+    processedNode.dateLastUsed = toSeconds(node.dateLastUsed)
   }
 
   if (includeIconData && node.url) {
@@ -78,7 +80,7 @@ const processBookmark = async (
  * Processes a folder node.
  * @param {ExtendedBookmarkTreeNode} node - The folder node to process
  * @param {boolean} includeIconData - Whether to include favicon data
- * @param {boolean} includeDates - Whether to include date information
+ * @param {DateOptions} dateOptions - The date options to apply
  * @param {boolean} isOtherBookmarks - Whether the node is the "Other Bookmarks" folder
  * @param {boolean} hideOtherBookmarks - Whether to hide the "Other Bookmarks" folder
  * @param {boolean} hideParentFolder - Whether to hide parent folders
@@ -87,7 +89,7 @@ const processBookmark = async (
 const processFolder = async (
   node: ExtendedBookmarkTreeNode,
   includeIconData: boolean,
-  includeDates: boolean,
+  dateOptions: DateOptions,
   isOtherBookmarks: boolean,
   hideOtherBookmarks: boolean,
   hideParentFolder: boolean
@@ -96,7 +98,7 @@ const processFolder = async (
     return processChildrenDirectly(
       node,
       includeIconData,
-      includeDates,
+      dateOptions,
       hideOtherBookmarks,
       hideParentFolder
     )
@@ -104,7 +106,7 @@ const processFolder = async (
     return processFolderWithStructure(
       node,
       includeIconData,
-      includeDates,
+      dateOptions,
       isOtherBookmarks,
       hideOtherBookmarks,
       hideParentFolder
@@ -116,7 +118,7 @@ const processFolder = async (
  * Processes children of a folder directly, without including the folder itself.
  * @param {ExtendedBookmarkTreeNode} node - The folder node whose children to process
  * @param {boolean} includeIconData - Whether to include favicon data
- * @param {boolean} includeDates - Whether to include date information
+ * @param {DateOptions} dateOptions - The date options to apply
  * @param {boolean} hideOtherBookmarks - Whether to hide the "Other Bookmarks" folder
  * @param {boolean} hideParentFolder - Whether to hide parent folders
  * @returns {Promise<ExtendedBookmarkTreeNode[]>} Array of processed child nodes
@@ -124,7 +126,7 @@ const processFolder = async (
 const processChildrenDirectly = async (
   node: ExtendedBookmarkTreeNode,
   includeIconData: boolean,
-  includeDates: boolean,
+  dateOptions: DateOptions,
   hideOtherBookmarks: boolean,
   hideParentFolder: boolean
 ): Promise<ExtendedBookmarkTreeNode[]> => {
@@ -133,7 +135,7 @@ const processChildrenDirectly = async (
     const childNodes = await processNode(
       child,
       includeIconData,
-      includeDates,
+      dateOptions,
       child.id === "2",
       hideOtherBookmarks,
       hideParentFolder
@@ -147,7 +149,7 @@ const processChildrenDirectly = async (
  * Processes a folder while maintaining its structure.
  * @param {ExtendedBookmarkTreeNode} node - The folder node to process
  * @param {boolean} includeIconData - Whether to include favicon data
- * @param {boolean} includeDates - Whether to include date information
+ * @param {DateOptions} dateOptions - The date options to apply
  * @param {boolean} isOtherBookmarks - Whether the node is the "Other Bookmarks" folder
  * @param {boolean} hideOtherBookmarks - Whether to hide the "Other Bookmarks" folder
  * @param {boolean} hideParentFolder - Whether to hide parent folders
@@ -156,7 +158,7 @@ const processChildrenDirectly = async (
 const processFolderWithStructure = async (
   node: ExtendedBookmarkTreeNode,
   includeIconData: boolean,
-  includeDates: boolean,
+  dateOptions: DateOptions,
   isOtherBookmarks: boolean,
   hideOtherBookmarks: boolean,
   hideParentFolder: boolean
@@ -167,18 +169,19 @@ const processFolderWithStructure = async (
     children: []
   }
 
-  if (includeDates) {
+  if (dateOptions.includeDateAdded) {
     processedFolder.dateAdded = toSeconds(node.dateAdded)
-    if (node.dateGroupModified) {
-      processedFolder.dateGroupModified = toSeconds(node.dateGroupModified)
-    }
+  }
+  
+  if (dateOptions.includeDateGroupModified && node.dateGroupModified) {
+    processedFolder.dateGroupModified = toSeconds(node.dateGroupModified)
   }
 
   for (const child of node.children || []) {
     const childNodes = await processNode(
       child,
       includeIconData,
-      includeDates,
+      dateOptions,
       child.id === "2",
       hideOtherBookmarks,
       hideParentFolder
@@ -197,18 +200,28 @@ const processFolderWithStructure = async (
  * Exports bookmarks to JSON format.
  * @param {ExtendedBookmarkTreeNode[] | null} selectedBookmarks - Specific bookmarks to export, or null for all
  * @param {boolean} includeIconData - Whether to include favicon data
- * @param {boolean} includeDates - Whether to include date information
+ * @param {boolean} includeDateAdded - Whether to include date added information
+ * @param {boolean} includeDateLastUsed - Whether to include date last used information
+ * @param {boolean} includeDateGroupModified - Whether to include date group modified information
  * @param {boolean} hideOtherBookmarks - Whether to hide the "Other Bookmarks" folder
  * @param {boolean} hideParentFolder - Whether to hide parent folders
  * @returns {Promise<ExtendedBookmarkTreeNode[]>} Array of exported bookmark nodes
  */
 export const exportToJSON = async (
   selectedBookmarks: ExtendedBookmarkTreeNode[] | null = null,
-  includeIconData: boolean = false,
-  includeDates: boolean = true,
+  includeIconData: boolean = true,
+  includeDateAdded: boolean = true,
+  includeDateLastUsed: boolean = false,
+  includeDateGroupModified: boolean = true,
   hideOtherBookmarks: boolean = true,
   hideParentFolder: boolean = false
 ): Promise<ExtendedBookmarkTreeNode[]> => {
+  const dateOptions: DateOptions = {
+    includeDateAdded,
+    includeDateLastUsed,
+    includeDateGroupModified
+  }
+
   return new Promise((resolve, reject) => {
     try {
       chrome.bookmarks.getTree(async (bookmarkTreeNodes) => {
@@ -221,7 +234,7 @@ export const exportToJSON = async (
             processedNodes = await processSelectedBookmarks(
               selectedBookmarks,
               includeIconData,
-              includeDates,
+              dateOptions,
               hideOtherBookmarks,
               hideParentFolder
             )
@@ -229,7 +242,7 @@ export const exportToJSON = async (
             processedNodes = await processAllBookmarks(
               bookmarkTreeNodes[0],
               includeIconData,
-              includeDates,
+              dateOptions,
               hideOtherBookmarks,
               hideParentFolder
             )
@@ -248,7 +261,7 @@ export const exportToJSON = async (
  * Processes selected bookmarks.
  * @param {ExtendedBookmarkTreeNode[]} selectedBookmarks - The bookmarks to process
  * @param {boolean} includeIconData - Whether to include favicon data
- * @param {boolean} includeDates - Whether to include date information
+ * @param {DateOptions} dateOptions - The date options to apply
  * @param {boolean} hideOtherBookmarks - Whether to hide the "Other Bookmarks" folder
  * @param {boolean} hideParentFolder - Whether to hide parent folders
  * @returns {Promise<ExtendedBookmarkTreeNode[]>} Array of processed bookmark nodes
@@ -256,7 +269,7 @@ export const exportToJSON = async (
 const processSelectedBookmarks = async (
   selectedBookmarks: ExtendedBookmarkTreeNode[],
   includeIconData: boolean,
-  includeDates: boolean,
+  dateOptions: DateOptions,
   hideOtherBookmarks: boolean,
   hideParentFolder: boolean
 ): Promise<ExtendedBookmarkTreeNode[]> => {
@@ -265,7 +278,7 @@ const processSelectedBookmarks = async (
     const nodes = await processNode(
       bookmark,
       includeIconData,
-      includeDates,
+      dateOptions,
       bookmark.id === "2",
       hideOtherBookmarks,
       hideParentFolder
@@ -279,7 +292,7 @@ const processSelectedBookmarks = async (
  * Processes all bookmarks from the root node.
  * @param {ExtendedBookmarkTreeNode} rootNode - The root bookmark node
  * @param {boolean} includeIconData - Whether to include favicon data
- * @param {boolean} includeDates - Whether to include date information
+ * @param {DateOptions} dateOptions - The date options to apply
  * @param {boolean} hideOtherBookmarks - Whether to hide the "Other Bookmarks" folder
  * @param {boolean} hideParentFolder - Whether to hide parent folders
  * @returns {Promise<ExtendedBookmarkTreeNode[]>} Array of processed bookmark nodes
@@ -287,23 +300,16 @@ const processSelectedBookmarks = async (
 const processAllBookmarks = async (
   rootNode: ExtendedBookmarkTreeNode,
   includeIconData: boolean,
-  includeDates: boolean,
+  dateOptions: DateOptions,
   hideOtherBookmarks: boolean,
   hideParentFolder: boolean
 ): Promise<ExtendedBookmarkTreeNode[]> => {
-  let processedNodes: ExtendedBookmarkTreeNode[] = []
-  for (const child of rootNode.children || []) {
-    if (child.id === "1" || child.id === "2") {
-      const nodes = await processNode(
-        child,
-        includeIconData,
-        includeDates,
-        child.id === "2",
-        hideOtherBookmarks,
-        hideParentFolder
-      )
-      processedNodes.push(...nodes)
-    }
-  }
-  return processedNodes
+  return processNode(
+    rootNode,
+    includeIconData,
+    dateOptions,
+    false,
+    hideOtherBookmarks,
+    hideParentFolder
+  )
 }

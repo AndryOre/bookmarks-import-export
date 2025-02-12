@@ -55,12 +55,8 @@ const processBookmarks = async (
   bookmarkTreeNodes: chrome.bookmarks.BookmarkTreeNode[],
   bookmarksData: ParsedBookmark[]
 ) => {
-  const bookmarksBar = bookmarkTreeNodes[0].children?.find(
-    (child) => child.id === "1"
-  )
-  const otherBookmarks = bookmarkTreeNodes[0].children?.find(
-    (child) => child.id === "2"
-  )
+  const bookmarksBar = bookmarkTreeNodes[0].children?.[0]
+  const otherBookmarks = bookmarkTreeNodes[0].children?.[1]
 
   if (!bookmarksBar || !otherBookmarks) {
     throw new BookmarkImportError(
@@ -68,11 +64,40 @@ const processBookmarks = async (
     )
   }
 
+  const importedFolder = await chrome.bookmarks.create({
+    title: "Imported bookmarks"
+  })
+
   for (const bookmark of bookmarksData) {
-    if (bookmark.isBookmarksBar) {
-      await createBookmarks(bookmark.children || [], bookmarksBar.id)
-    } else if (bookmark.isOtherBookmarks) {
-      await createBookmarks(bookmark.children || [], otherBookmarks.id)
+    if (bookmark.isBookmarksBar && bookmark.children?.length > 0) {
+      const importedBookmarksBar = await chrome.bookmarks.create({
+        parentId: importedFolder.id,
+        title: "Bookmarks bar"
+      })
+
+      for (const child of bookmark.children) {
+        if (child.url) {
+          await chrome.bookmarks.create({
+            parentId: importedBookmarksBar.id,
+            title: child.title,
+            url: child.url
+          })
+        } else if (child.children) {
+          const folder = await chrome.bookmarks.create({
+            parentId: importedBookmarksBar.id,
+            title: child.title
+          })
+          await createBookmarks(child.children, folder.id)
+        }
+      }
+    } else if (bookmark.isOtherBookmarks || bookmark.children) {
+      await createBookmarks(bookmark.children || [], importedFolder.id)
+    } else if (bookmark.url) {
+      await chrome.bookmarks.create({
+        parentId: importedFolder.id,
+        title: bookmark.title,
+        url: bookmark.url
+      })
     }
   }
 }
@@ -83,14 +108,32 @@ const processBookmarks = async (
  * @returns {ParsedBookmark[]} The processed bookmarks array.
  */
 const preprocessBookmarks = (bookmarks: ParsedBookmark[]): ParsedBookmark[] => {
-  return bookmarks.map((bookmark) => {
+  const processedBookmarks: ParsedBookmark[] = []
+  const otherBookmarks: ParsedBookmark[] = []
+
+  bookmarks.forEach((bookmark) => {
     if (bookmark.id === "1") {
-      return { ...bookmark, isBookmarksBar: true }
+      processedBookmarks.push({ ...bookmark, isBookmarksBar: true })
     } else if (bookmark.id === "2") {
-      return { ...bookmark, isOtherBookmarks: true }
+      processedBookmarks.push({ ...bookmark, isOtherBookmarks: true })
+    } else if (bookmark.parentId === "2") {
+      otherBookmarks.push(bookmark)
+    } else {
+      processedBookmarks.push(bookmark)
     }
-    return bookmark
   })
+
+  if (otherBookmarks.length > 0) {
+    processedBookmarks.push({
+      id: "2",
+      title: "Other bookmarks",
+      dateAdded: Date.now(),
+      isOtherBookmarks: true,
+      children: otherBookmarks
+    })
+  }
+
+  return processedBookmarks
 }
 
 /**
