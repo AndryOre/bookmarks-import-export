@@ -63,7 +63,7 @@ export default function WelcomePage(): JSX.Element {
       <FeatureCard
         icon={BookmarkPlus}
         title="Import Bookmarks"
-        description="Easily import bookmarks from JSON or HTML files to restore or transfer your data."
+        description="Easily import bookmarks from CSV, JSON or HTML files to restore or transfer your data."
       />
       <FeatureCard
         icon={Settings}
