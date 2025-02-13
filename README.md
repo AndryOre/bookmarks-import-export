@@ -48,6 +48,43 @@ Note: While this extension is primarily listed on the Chrome Web Store, it is co
    - Select a JSON or HTML file containing bookmarks.
    - The extension will automatically detect the format and import the bookmarks.
 
+## Local Development 🛠️
+
+To set up the project for local development:
+
+1. Clone the repository
+```bash
+git clone <your-repo-url>
+cd bookmarks-import-export
+```
+
+2. Install dependencies
+```bash
+pnpm install
+```
+
+3. Start the development server
+```bash
+pnpm dev
+```
+
+4. Load the extension in your browser:
+   - Open Chrome/Edge/Brave browser
+   - Navigate to `chrome://extensions`
+   - Enable "Developer mode"
+   - Click "Load unpacked"
+   - Select the `build/chrome-mv3-dev` directory
+
+5. Build for production
+```bash
+pnpm build
+```
+
+6. Package the extension
+```bash
+pnpm package
+```
+
 ## License 📄
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
