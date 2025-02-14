@@ -45,11 +45,11 @@ export function SearchBar({
       />
       <Input
         type="text"
-        placeholder="Search bookmarks..."
+        placeholder={chrome.i18n.getMessage("searchBookmarks")}
         value={searchTerm}
         onChange={handleInputChange}
         className="plasmo-pl-9"
-        aria-label="Search bookmarks"
+        aria-label={chrome.i18n.getMessage("searchBookmarks")}
       />
     </div>
   )

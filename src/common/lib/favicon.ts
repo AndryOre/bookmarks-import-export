@@ -42,7 +42,7 @@ export async function getFaviconBase64(
       reader.readAsDataURL(blob)
     })
   } catch (error) {
-    console.error("Error fetching favicon:", error)
+    console.error(chrome.i18n.getMessage("faviconError"), error)
     return ""
   }
 }

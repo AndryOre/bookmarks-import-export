@@ -383,7 +383,7 @@ const BookmarkTreeComponent = forwardRef<BookmarkTreeHandle, BookmarkTreeProps>(
                 ) : showBookmarkIcon && node.url ? (
                   <img
                     src={getFaviconUrl(node.url)}
-                    alt="Favicon"
+                    alt={chrome.i18n.getMessage("faviconAlt")}
                     className="plasmo-h-4 plasmo-w-4 plasmo-mr-1"
                   />
                 ) : (
