@@ -54,7 +54,7 @@ export interface ExtendedBookmarkTreeNode
 /**
  * Supported bookmark export formats.
  */
-export type BookmarkFormat = "json" | "html" | "unknown"
+export type BookmarkFormat = "json" | "html" | "csv" | "unknown"
 
 /**
  * Interface for the imperative handle of the BookmarkTree component.

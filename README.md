@@ -45,7 +45,7 @@ Note: While this extension is primarily listed on the Chrome Web Store, it is co
    - Choose the export format and click the export button.
 5. For importing:
    - Click the "Import" button.
-   - Select a JSON or HTML file containing bookmarks.
+   - Select a CSV, JSON or HTML file containing bookmarks.
    - The extension will automatically detect the format and import the bookmarks.
 
 ## Local Development 🛠️
