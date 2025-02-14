@@ -109,7 +109,7 @@ export default function AdvancedExportPage(): JSX.Element {
    */
   const handleExport = async (format: "html" | "json") => {
     if (!bookmarkTreeRef.current) {
-      console.error("Bookmark tree reference is not available")
+      console.error(chrome.i18n.getMessage("bookmarkTreeRefNotAvailable"))
       return
     }
 
@@ -117,7 +117,7 @@ export default function AdvancedExportPage(): JSX.Element {
       const selectedBookmarks =
         await bookmarkTreeRef.current.getSelectedBookmarks()
       if (!selectedBookmarks || selectedBookmarks.length === 0) {
-        console.error("No bookmarks selected")
+        console.error(chrome.i18n.getMessage("noBookmarksSelected"))
         return
       }
 
@@ -139,7 +139,7 @@ export default function AdvancedExportPage(): JSX.Element {
 
       downloadFile(exportedData, fileName, mimeType)
     } catch (error) {
-      console.error("Error exporting bookmarks:", error)
+      console.error(chrome.i18n.getMessage("exportError"), error)
     }
   }
 

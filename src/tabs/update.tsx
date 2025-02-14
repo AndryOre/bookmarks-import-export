@@ -17,16 +17,25 @@ interface ChangelogEntry {
 
 const changelog: ChangelogEntry[] = [
   {
-    version: "1.1.0",
-    date: "February 11, 2025",
+    version: "1.2.0",
+    date: chrome.i18n.getMessage("changelog_1_2_0_date"),
     changes: [
       {
-        description: "Imported bookmarks now go to their own folder to avoid mixing with your existing bookmarks"
+        description: chrome.i18n.getMessage("changelog_1_2_0_1")
+      }
+    ]
+  },
+  {
+    version: "1.1.0",
+    date: chrome.i18n.getMessage("changelog_1_1_0_date"),
+    changes: [
+      {
+        description: chrome.i18n.getMessage("changelog_1_1_0_1")
       },
       {
-        description: "More precise control over which dates to include in your exports",
+        description: chrome.i18n.getMessage("changelog_1_1_0_2"),
         link: {
-          text: "Try the new export options",
+          text: chrome.i18n.getMessage("changelog_1_1_0_2_link"),
           url: "tabs/advanced-export.html"
         }
       }
@@ -34,47 +43,42 @@ const changelog: ChangelogEntry[] = [
   },
   {
     version: "1.0.0",
-    date: "August 5, 2024",
+    date: chrome.i18n.getMessage("changelog_1_0_0_date"),
     changes: [
       {
-        description:
-          "Added new Advanced Export feature for more control over your bookmarks.",
+        description: chrome.i18n.getMessage("changelog_1_0_0_1"),
         link: {
-          text: "Try advanced export",
+          text: chrome.i18n.getMessage("changelog_1_0_0_1_link"),
           url: "tabs/advanced-export.html"
         }
       },
       {
-        description:
-          "Introduced welcome and update pages to keep you informed about new features."
+        description: chrome.i18n.getMessage("changelog_1_0_0_2")
       },
-      { description: "Improved overall performance for a smoother experience." }
+      { description: chrome.i18n.getMessage("changelog_1_0_0_3") }
     ]
   },
   {
     version: "0.1.1",
-    date: "August 4, 2024",
+    date: chrome.i18n.getMessage("changelog_0_1_1_date"),
     changes: [
       {
-        description:
-          "Fixed a critical bug that affected users with non-English browser languages."
+        description: chrome.i18n.getMessage("changelog_0_1_1_1")
       },
       {
-        description:
-          "Improved reliability for both import and export functions."
+        description: chrome.i18n.getMessage("changelog_0_1_1_2")
       }
     ]
   },
   {
     version: "0.1.0",
-    date: "August 3, 2024",
+    date: chrome.i18n.getMessage("changelog_0_1_0_date"),
     changes: [
-      { description: "Initial release of Bookmark Import/Export extension." },
+      { description: chrome.i18n.getMessage("changelog_0_1_0_1") },
       {
-        description:
-          "Basic functionality for exporting bookmarks to HTML and JSON formats."
+        description: chrome.i18n.getMessage("changelog_0_1_0_2")
       },
-      { description: "Simple import feature for HTML and JSON files." }
+      { description: chrome.i18n.getMessage("changelog_0_1_0_3") }
     ]
   }
 ]
@@ -96,14 +100,14 @@ export default function UpdatePage(): JSX.Element {
     <div className="plasmo-flex plasmo-flex-col plasmo-items-center plasmo-gap-2">
       <img
         src={logo}
-        alt="Bookmark Import/Export Logo"
+        alt={chrome.i18n.getMessage("extensionLogoAlt")}
         className="plasmo-w-24 plasmo-h-24"
       />
       <h1 className="plasmo-text-4xl plasmo-font-bold plasmo-text-center">
-        Bookmark Import/Export has been updated!
+        {chrome.i18n.getMessage("updateTitle")}
       </h1>
       <p className="plasmo-text-xl plasmo-text-center">
-        You're now using version {currentVersion}. Check out what's new below.
+        {chrome.i18n.getMessage("currentVersion", [currentVersion])}
       </p>
     </div>
   )
@@ -119,7 +123,7 @@ export default function UpdatePage(): JSX.Element {
       rel="noopener noreferrer"
       className="plasmo-inline-flex plasmo-items-center plasmo-text-lg plasmo-font-medium hover:plasmo-underline">
       <Star className="plasmo-w-6 plasmo-h-6 plasmo-mr-2 plasmo-text-yellow-500" />
-      Enjoying the updates? We'd love your feedback!
+      {chrome.i18n.getMessage("feedbackLink")}
     </a>
   )
 
@@ -131,7 +135,7 @@ export default function UpdatePage(): JSX.Element {
   const renderChangelogEntry = (entry: ChangelogEntry): JSX.Element => (
     <div key={entry.version} className="plasmo-mb-10">
       <h2 className="plasmo-text-3xl plasmo-font-bold plasmo-mb-4">
-        Version {entry.version}
+        {chrome.i18n.getMessage("version")} {entry.version}
         <span className="plasmo-text-xl plasmo-font-normal plasmo-text-gray-500 plasmo-ml-3">
           {entry.date}
         </span>
@@ -172,7 +176,7 @@ export default function UpdatePage(): JSX.Element {
   const renderFooter = (): JSX.Element => (
     <div className="plasmo-text-center plasmo-text-sm plasmo-text-muted-foreground">
       <p>
-        Built by{" "}
+        {chrome.i18n.getMessage("builtBy")}{" "}
         <a
           href="https://x.com/andryore"
           target="_blank"
@@ -180,7 +184,7 @@ export default function UpdatePage(): JSX.Element {
           className="plasmo-text-primary plasmo-font-semibold plasmo-inline-flex plasmo-items-center hover:plasmo-underline">
           @AndryOre
         </a>
-        . The source code is available on{" "}
+        . {chrome.i18n.getMessage("sourceCode")}{" "}
         <a
           href="https://github.com/AndryOre/bookmarks-import-export"
           target="_blank"

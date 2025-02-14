@@ -1,0 +1,400 @@
+{
+  "extensionName": {
+    "message": "Importar/Exportar Marcadores",
+    "description": "Nombre de la extensión."
+  },
+  "extensionDescription": {
+    "message": "Importa y exporta tus marcadores fácilmente",
+    "description": "Descripción de la extensión"
+  },
+  "welcome": {
+    "message": "Bienvenido a Importar/Exportar Marcadores",
+    "description": "Mensaje de bienvenida"
+  },
+  "welcomeDescription": {
+    "message": "Importar y exportar marcadores fácilmente en todos los navegadores!",
+    "description": "Descripción de bienvenida"
+  },
+  "gettingStarted": {
+    "message": "Para empezar, haz clic en el icono de la extensión en la barra de herramientas de tu navegador.",
+    "description": "Mensaje de inicio"
+  },
+  "exportToJSON": {
+    "message": "Exportar a JSON",
+    "description": "Exportar a JSON"
+  },
+  "exportToJSONDescription": {
+    "message": "Exporta tus marcadores a formato JSON para facilitar la manipulación y el respaldo de datos.",
+    "description": "Descripción de exportación a JSON"
+  },
+  "exportToHTML": {
+    "message": "Exportar a HTML",
+    "description": "Exportar a HTML"
+  },
+  "exportToHTMLDescription": {
+    "message": "Exporta tus marcadores a formato HTML para facilitar la manipulación y el respaldo de datos.",
+    "description": "Descripción de exportación a HTML"
+  },
+  "importBookmarks": {
+    "message": "Importar Marcadores",
+    "description": "Importar Marcadores"
+  },
+  "importBookmarksDescription": {
+    "message": "Importa marcadores desde archivos JSON o HTML para restaurar o transferir tus datos.",
+    "description": "Descripción de importación de marcadores"
+  },
+  "extensionLogoAlt": {
+    "message": "Logo de Importar/Exportar Marcadores",
+    "description": "Texto alternativo del logo de la extensión"
+  },
+  "advancedOptions": {
+    "message": "Opciones Avanzadas",
+    "description": "Opciones Avanzadas"
+  },
+  "advancedOptionsDescription": {
+    "message": "Personaliza tus exportaciones con ajustes avanzados y elección selectiva de marcadores.",
+    "description": "Descripción de opciones avanzadas"
+  },
+  "compatibleBrowsers": {
+    "message": "Compatible con todos los navegadores basados en Chromium, incluyendo Google Chrome, Microsoft Edge, Opera y Brave.",
+    "description": "Navegadores compatibles"
+  },
+  "feedbackLink": {
+    "message": "¿Disfrutas de la extensión? ¡Nos encantaría tu feedback!",
+    "description": "Enlace de feedback"
+  },
+  "builtBy": {
+    "message": "Construido por",
+    "description": "Construido por"
+  },
+  "sourceCode": {
+    "message": "Código fuente disponible en",
+    "description": "Código fuente"
+  },
+  "advancedDescription": {
+    "message": "Exportación Avanzada",
+    "description": "Exportación Avanzada"
+  },
+  "settings": {
+    "message": "Ajustes",
+    "description": "Ajustes"
+  },
+  "exportHTML": {
+    "message": "Exportar a HTML",
+    "description": "Exportar a HTML"
+  },
+  "exportJSON": {
+    "message": "Exportar a JSON",
+    "description": "Exportar a JSON"
+  },
+  "refresh": {
+    "message": "Refrescar",
+    "description": "Refrescar"
+  },
+  "selectAll": {
+    "message": "Seleccionar Todo",
+    "description": "Seleccionar Todo"
+  },
+  "deselectAll": {
+    "message": "Deseleccionar Todo",
+    "description": "Deseleccionar Todo"
+  },
+  "selected": {
+    "message": "Seleccionado",
+    "description": "Seleccionado"
+  },
+  "searchBookmarks": {
+    "message": "Buscar marcadores",
+    "description": "Buscar marcadores"
+  },
+  "faviconAlt": {
+    "message": "Icono de marcador",
+    "description": "Icono de marcador"
+  },
+  "settingsDescription": {
+    "message": "Personaliza tu experiencia de importación/exportación de marcadores.",
+    "description": "Descripción de ajustes"
+  },
+  "display": {
+    "message": "Mostrar",
+    "description": "Mostrar"
+  },
+  "export": {
+    "message": "Exportar",
+    "description": "Exportar"
+  },
+  "showBookmarkIcon": {
+    "message": "Mostrar icono de marcador",
+    "description": "Mostrar icono de marcador"
+  },
+  "showBookmarkIconDescription": {
+    "message": "Mostrar iconos junto a los marcadores",
+    "description": "Mostrar icono de marcador descripción"
+  },
+  "autoExpandFolders": {
+    "message": "Expandir carpetas automáticamente",
+    "description": "Expandir carpetas automáticamente"
+  },
+  "autoExpandFoldersDescription": {
+    "message": "Expandir carpetas automáticamente en el árbol de marcadores",
+    "description": "Expandir carpetas automáticamente descripción"
+  },
+  "autoExpandFoldersTooltip": {
+    "message": "Nota: Puede impactar el rendimiento con un gran número de marcadores",
+    "description": "Expandir carpetas automáticamente tooltip"
+  },
+  "includeIconData": {
+    "message": "Incluir datos de icono",
+    "description": "Incluir datos de icono"
+  },
+  "includeIconDataDescription": {
+    "message": "Agregar datos de favicon del sitio web al archivo exportado",
+    "description": "Incluir datos de icono descripción"
+  },
+  "includeIconDataTooltip": {
+    "message": "Nota: Aumenta significativamente el tiempo de exportación y el tamaño del archivo",
+    "description": "Incluir datos de icono tooltip"
+  },
+  "includeDateAdded": {
+    "message": "Incluir fechas de creación",
+    "description": "Incluir fechas de creación"
+  },
+  "includeDateAddedDescription": {
+    "message": "Agregar fechas de creación al archivo exportado",
+    "description": "Incluir fechas de creación descripción"
+  },
+  "includeDateLastUsed": {
+    "message": "Incluir fechas de uso",
+    "description": "Incluir fechas de uso"
+  },
+  "includeDateLastUsedDescription": {
+    "message": "Agregar fechas de uso al archivo exportado",
+    "description": "Incluir fechas de uso descripción"
+  },
+  "includeDateGroupModified": {
+    "message": "Incluir fechas de modificación de carpetas",
+    "description": "Incluir fechas de modificación de carpetas"
+  },
+  "includeDateGroupModifiedDescription": {
+    "message": "Agregar fechas de modificación de carpetas al archivo exportado",
+    "description": "Incluir fechas de modificación de carpetas descripción"
+  },
+  "hideOtherBookmarks": {
+    "message": "Ocultar carpeta 'Otros marcadores'",
+    "description": "Ocultar carpeta 'Otros marcadores'"
+  },
+  "hideOtherBookmarksDescription": {
+    "message": "Excluir la carpeta raíz 'Otros marcadores' del archivo exportado",
+    "description": "Ocultar carpeta 'Otros marcadores' descripción"
+  },
+  "hideOtherBookmarksTooltip": {
+    "message": "Nota: Coincide con el comportamiento de exportación nativo del navegador, colocando el contenido de 'Otros marcadores' al mismo nivel que 'Barra de marcadores'",
+    "description": "Ocultar carpeta 'Otros marcadores' tooltip"
+  },
+  "hideParentFolder": {
+    "message": "Ocultar carpeta padre",
+    "description": "Ocultar carpeta padre"
+  },
+  "hideParentFolderDescription": {
+    "message": "Excluir carpetas padre del archivo exportado",
+    "description": "Ocultar carpeta padre descripción"
+  },
+  "hideParentFolderTooltip": {
+    "message": "Nota: Excluye carpetas padre del archivo exportado",
+    "description": "Ocultar carpeta padre tooltip"
+  },
+  "advancedExport": {
+    "message": "Exportación Avanzada",
+    "description": "Exportación Avanzada"
+  },
+  "unsupportedFileFormat": {
+    "message": "Formato de archivo no soportado",
+    "description": "Formato de archivo no soportado"
+  },
+  "bookmarksImportedSuccessfully": {
+    "message": "Marcadores importados correctamente!",
+    "description": "Marcadores importados correctamente"
+  },
+  "failedToImportBookmarks": {
+    "message": "Error al importar marcadores",
+    "description": "Error al importar marcadores"
+  },
+  "import": {
+    "message": "Importar",
+    "description": "Importar"
+  },
+  "updateTitle": {
+    "message": "Importar/Exportar Marcadores ha sido actualizado!",
+    "description": "Título de actualización"
+  },
+  "currentVersion": {
+    "message": "Estás usando la versión $VERSION$. Revisa lo que hay de nuevo abajo.",
+    "description": "Versión actual",
+    "placeholders": {
+      "version": {
+        "content": "$1"
+      }
+    }
+  },
+  "version": {
+    "message": "Versión",
+    "description": "Versión"
+  },
+  "changelog_1_1_0_date": {
+    "message": "13 de febrero de 2025",
+    "description": "Fecha del changelog 1.1.0"
+  },
+  "changelog_1_1_0_1": {
+    "message": "Los marcadores importados ahora van a su propia carpeta para evitar mezclarlos con tus marcadores existentes"
+  },
+  "changelog_1_1_0_2": {
+    "message": "Más control preciso sobre qué fechas incluir en tus exportaciones"
+  },
+  "changelog_1_1_0_2_link": {
+    "message": "Prueba las nuevas opciones de exportación"
+  },
+  "changelog_1_0_0_date": {
+    "message": "5 de agosto de 2024",
+    "description": "Fecha del changelog 1.0.0"
+  },
+  "changelog_1_0_0_1": {
+    "message": "Añadida nueva exportación avanzada para más control sobre tus marcadores."
+  },
+  "changelog_1_0_0_1_link": {
+    "message": "Prueba la exportación avanzada"
+  },
+  "changelog_1_0_0_2": {
+    "message": "Introducido página de bienvenida y páginas de actualización para mantenerte informado sobre nuevas características."
+  },
+  "changelog_1_0_0_3": {
+    "message": "Mejorado rendimiento general para una experiencia más suave."
+  },
+  "changelog_0_1_1_date": {
+    "message": "4 de agosto de 2024",
+    "description": "Fecha del changelog 0.1.1"
+  },
+  "changelog_0_1_1_1": {
+    "message": "Corregido un error crítico que afectaba a los usuarios con navegadores que no usan inglés."
+  },
+  "changelog_0_1_1_2": {
+    "message": "Mejorada fiabilidad para ambas funciones de importación y exportación."
+  },
+  "changelog_0_1_1_3": {
+    "message": "Corregido un problema donde el icono de la extensión no se mostraba en la barra de herramientas del navegador."
+  },
+  "changelog_0_1_1_4": {
+    "message": "Corregido un problema donde la extensión no funcionaba en algunos navegadores."
+  },
+  "changelog_0_1_0_date": {
+    "message": "3 de agosto de 2024",
+    "description": "Fecha del changelog 0.1.0"
+  },
+  "changelog_0_1_0_1": {
+    "message": "Primera versión de la extensión Importar/Exportar Marcadores."
+  },
+  "changelog_0_1_0_2": {
+    "message": "Función de importación simple para archivos HTML y JSON."
+  },
+  "changelog_0_1_0_3": {
+    "message": "Funcionalidad básica para exportar marcadores a formatos HTML y JSON."
+  },
+  "extensionInstalled": {
+    "message": "Importar/Exportar Marcadores ha sido instalado",
+    "description": "Importar/Exportar Marcadores instalado"
+  },
+  "extensionUpdated": {
+    "message": "Importar/Exportar Marcadores ha sido actualizado a la versión $VERSION$",
+    "description": "Importar/Exportar Marcadores actualizado",
+    "placeholders": {
+      "version": {
+        "content": "$1"
+      }
+    }
+  },
+  "exportFileNameHTML": {
+    "message": "Marcadores.html",
+    "description": "Nombre del archivo exportado"
+  },
+  "exportFileNameJSON": {
+    "message": "Marcadores.json",
+    "description": "Nombre del archivo exportado"
+  },
+  "exportError": {
+    "message": "Error al exportar marcadores",
+    "description": "Error al exportar marcadores"
+  },
+  "close": {
+    "message": "Cerrar",
+    "description": "Cerrar"
+  },
+  "bookmarkTreeRefNotAvailable": {
+    "message": "Referencia de árbol de marcadores no disponible",
+    "description": "Referencia de árbol de marcadores no disponible"
+  },
+  "noBookmarksSelected": {
+    "message": "No hay marcadores seleccionados",
+    "description": "No hay marcadores seleccionados"
+  },
+  "faviconError": {
+    "message": "Error al obtener el icono de marcador",
+    "description": "Error al obtener el icono de marcador"
+  },
+  "importFromHTMLLoadError": {
+    "message": "Error al analizar HTML: $ERROR$",
+    "description": "Error al analizar HTML",
+    "placeholders": {
+      "error": {
+        "content": "$1"
+      }
+    }
+  },
+  "importFromHTMLCreateError": {
+    "message": "Error al crear marcadores desde HTML: $ERROR$",
+    "description": "Error al crear marcadores desde HTML",
+    "placeholders": {
+      "error": {
+        "content": "$1"
+      }
+    }
+  },
+  "importFromHTMLProcessError": {
+    "message": "No se encontró la carpeta 'Barra de marcadores' o 'Otros marcadores'",
+    "description": "No se encontró la carpeta 'Barra de marcadores' o 'Otros marcadores'"
+  },
+  "importFromHTMLProcessError_1": {
+    "message": "Error de API de Chrome: $ERROR$",
+    "description": "Error de API de Chrome",
+    "placeholders": {
+      "error": {
+        "content": "$1"
+      }
+    }
+  },
+  "bookmarksBar": {
+    "message": "Barra de marcadores",
+    "description": "Barra de marcadores"
+  },
+  "importedBookmarks": {
+    "message": "Marcadores importados",
+    "description": "Marcadores importados"
+  },
+  "otherBookmarks": {
+    "message": "Otros marcadores",
+    "description": "Otros marcadores"
+  },
+  "importFromJSONImportError": {
+    "message": "Error al importar marcadores: $ERROR$",
+    "description": "Error al importar marcadores",
+    "placeholders": {
+      "error": {
+        "content": "$1"
+      }
+    }
+  },
+  "changelog_1_2_0_date": {
+    "message": "14 de febrero de 2024"
+  },
+  "changelog_1_2_0_1": {
+    "message": "¡Ahora se adapta automáticamente al idioma de tu navegador! Disponible en español e inglés."
+  }
+}
