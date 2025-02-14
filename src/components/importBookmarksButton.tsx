@@ -36,13 +36,13 @@ export const ImportBookmarksButton = ({ className = "" }): JSX.Element => {
             await importFromHTML(text)
             break
           default:
-            throw new Error("Unsupported file format.")
+            throw new Error(chrome.i18n.getMessage("unsupportedFileFormat"))
         }
 
-        alert("Bookmarks imported successfully!")
+        alert(chrome.i18n.getMessage("bookmarksImportedSuccessfully"))
       } catch (error) {
-        console.error("Error importing bookmarks:", error)
-        alert("Failed to import bookmarks.")
+        console.error(chrome.i18n.getMessage("failedToImportBookmarks"), error)
+        alert(chrome.i18n.getMessage("failedToImportBookmarks"))
       }
     }
   }
@@ -51,7 +51,7 @@ export const ImportBookmarksButton = ({ className = "" }): JSX.Element => {
     <>
       <Button onClick={handleButtonClick} className={className}>
         <Upload className="plasmo-mr-2 plasmo-h-4 plasmo-w-4" />
-        Import
+        {chrome.i18n.getMessage("importBookmarks")}
       </Button>
       <input
         ref={fileInputRef}

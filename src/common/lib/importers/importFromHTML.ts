@@ -80,7 +80,7 @@ const parseHTML = (html: string): ParsedBookmark[] => {
     if (otherBookmarks.length > 0) {
       bookmarks.push({
         isOtherBookmarks: true,
-        title: "Other bookmarks",
+        title: chrome.i18n.getMessage("otherBookmarks"),
         dateAdded: Date.now(),
         children: otherBookmarks
       })
@@ -88,7 +88,9 @@ const parseHTML = (html: string): ParsedBookmark[] => {
 
     return bookmarks
   } catch (error) {
-    throw new BookmarkImportError(`Failed to parse HTML: ${error.message}`)
+    throw new BookmarkImportError(
+      chrome.i18n.getMessage("importFromHTMLLoadError", [error.message])
+    )
   }
 }
 
@@ -116,7 +118,11 @@ const createBookmarks = async (nodes: ParsedBookmark[], parentId: string) => {
       }
     } catch (error) {
       throw new BookmarkImportError(
-        `Error creating ${node.url ? "bookmark" : "folder"} ${node.title}: ${error.message}`
+        chrome.i18n.getMessage("importFromHTMLCreateError", [
+          node.url ? "bookmark" : "folder",
+          node.title,
+          error.message
+        ])
       )
     }
   }
@@ -139,13 +145,13 @@ const processBookmarks = async (
 
   if (!bookmarksBar || !otherBookmarks) {
     throw new BookmarkImportError(
-      "Could not find Bookmarks bar or Other bookmarks folder"
+      chrome.i18n.getMessage("importFromHTMLProcessError")
     )
   }
 
   const importedBookmarksBar = await chrome.bookmarks.create({
     parentId: importedFolderId,
-    title: "Bookmarks bar"
+    title: chrome.i18n.getMessage("bookmarksBar")
   })
 
   for (const bookmark of parsedBookmarks) {
@@ -171,13 +177,15 @@ export const importFromHTML = async (html: string): Promise<void> => {
         if (chrome.runtime.lastError) {
           reject(
             new BookmarkImportError(
-              `Chrome API error: ${chrome.runtime.lastError.message}`
+              chrome.i18n.getMessage("importFromHTMLProcessError", [
+                chrome.runtime.lastError.message
+              ])
             )
           )
         } else {
           try {
             const importedFolder = await chrome.bookmarks.create({
-              title: "Imported bookmarks"
+              title: chrome.i18n.getMessage("importedBookmarks")
             })
             await processBookmarks(
               bookmarkTreeNodes,
@@ -192,6 +200,8 @@ export const importFromHTML = async (html: string): Promise<void> => {
       })
     })
   } catch (error) {
-    throw new BookmarkImportError(`Import failed: ${error.message}`)
+    throw new BookmarkImportError(
+      chrome.i18n.getMessage("importFromHTMLImportError", [error.message])
+    )
   }
 }

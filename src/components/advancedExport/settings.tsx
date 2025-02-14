@@ -106,9 +106,9 @@ export function SettingsDialog({
    */
   const renderSettingSwitch = (
     settingKey: SettingKey,
-    label: string,
-    description: string,
-    tooltipContent?: string
+    label: any,
+    description: any,
+    tooltipContent?: any
   ) => (
     <div className="plasmo-flex plasmo-items-center plasmo-justify-between">
       <div className="plasmo-gap-0.5 plasmo-flex plasmo-flex-col">
@@ -143,30 +143,34 @@ export function SettingsDialog({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Settings</DialogTitle>
+          <DialogTitle>{chrome.i18n.getMessage("settings")}</DialogTitle>
           <DialogDescription>
-            Customize your bookmark import/export experience.
+            {chrome.i18n.getMessage("settingsDescription")}
           </DialogDescription>
         </DialogHeader>
         <Tabs defaultValue="display">
           <TabsList className="plasmo-grid plasmo-w-full plasmo-grid-cols-2">
-            <TabsTrigger value="display">Display</TabsTrigger>
-            <TabsTrigger value="export">Export</TabsTrigger>
+            <TabsTrigger value="display">
+              {chrome.i18n.getMessage("display")}
+            </TabsTrigger>
+            <TabsTrigger value="export">
+              {chrome.i18n.getMessage("export")}
+            </TabsTrigger>
           </TabsList>
           <TabsContent
             value="display"
             className="plasmo-gap-4 plasmo-flex plasmo-flex-col">
             {renderSettingSwitch(
               "showBookmarkIcon",
-              "Show bookmark icon",
-              "Display icons next to bookmarks"
+              chrome.i18n.getMessage("showBookmarkIcon"),
+              chrome.i18n.getMessage("showBookmarkIconDescription")
             )}
             <Separator />
             {renderSettingSwitch(
               "autoExpandFolders",
-              "Auto-expand folders on load",
-              "Expand all folders when bookmarks are initially loaded",
-              "Note: May impact performance with large numbers of bookmarks"
+              chrome.i18n.getMessage("autoExpandFolders"),
+              chrome.i18n.getMessage("autoExpandFoldersDescription"),
+              chrome.i18n.getMessage("autoExpandFoldersTooltip")
             )}
           </TabsContent>
           <TabsContent
@@ -174,41 +178,41 @@ export function SettingsDialog({
             className="plasmo-gap-4 plasmo-flex plasmo-flex-col">
             {renderSettingSwitch(
               "includeIconData",
-              "Include icon data",
-              "Add website favicon data to the exported file",
-              "Note: Increases export time and file size significantly"
+              chrome.i18n.getMessage("includeIconData"),
+              chrome.i18n.getMessage("includeIconDataDescription"),
+              chrome.i18n.getMessage("includeIconDataTooltip")
             )}
             <Separator />
             {renderSettingSwitch(
               "includeDateAdded",
-              "Include creation dates",
-              "Add creation dates to the exported file"
+              chrome.i18n.getMessage("includeDateAdded"),
+              chrome.i18n.getMessage("includeDateAddedDescription")
             )}
             <Separator />
             {renderSettingSwitch(
               "includeDateLastUsed",
-              "Include last used dates",
-              "Add last used dates to the exported file"
+              chrome.i18n.getMessage("includeDateLastUsed"),
+              chrome.i18n.getMessage("includeDateLastUsedDescription")
             )}
             <Separator />
             {renderSettingSwitch(
               "includeDateGroupModified",
-              "Include folder modification dates",
-              "Add last modification dates for folders to the exported file"
+              chrome.i18n.getMessage("includeDateGroupModified"),
+              chrome.i18n.getMessage("includeDateGroupModifiedDescription")
             )}
             <Separator />
             {renderSettingSwitch(
               "hideOtherBookmarks",
-              "Hide 'Other bookmarks' folder",
-              "Exclude the root 'Other bookmarks' folder from the export",
-              "Note: Matches browser's native export behavior, placing 'Other bookmarks' content at the same level as 'Bookmarks bar'"
+              chrome.i18n.getMessage("hideOtherBookmarks"),
+              chrome.i18n.getMessage("hideOtherBookmarksDescription"),
+              chrome.i18n.getMessage("hideOtherBookmarksTooltip")
             )}
             <Separator />
             {renderSettingSwitch(
               "hideParentFolder",
-              "Hide parent folder",
-              "Exclude parent folders from the exported file",
-              "Note: Places all bookmarks directly under root folders like 'Bookmarks bar' and 'Other bookmarks'"
+              chrome.i18n.getMessage("hideParentFolder"),
+              chrome.i18n.getMessage("hideParentFolderDescription"),
+              chrome.i18n.getMessage("hideParentFolderTooltip")
             )}
           </TabsContent>
         </Tabs>

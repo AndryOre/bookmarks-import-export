@@ -1,8 +1,8 @@
 {
   "name": "bookmarks-import-export",
   "displayName": "Bookmark Import/Export",
-  "version": "1.1.0",
-  "description": "Import and export your bookmarks easily",
+  "version": "1.2.0",
+  "description": "__MSG_extensionDescription__",
   "author": "AndryOre",
   "scripts": {
     "dev": "plasmo dev",
@@ -44,7 +44,9 @@
     "permissions": [
       "bookmarks",
       "favicon"
-    ]
+    ],
+    "default_locale": "en",
+    "name": "__MSG_extensionName__"
   },
   "packageManager": "pnpm@10.3.0"
 }

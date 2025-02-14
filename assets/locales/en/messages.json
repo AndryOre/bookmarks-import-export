@@ -1,0 +1,397 @@
+{
+  "extensionName": {
+    "message": "Bookmark Import/Export",
+    "description": "Name of the extension."
+  },
+  "extensionDescription": {
+    "message": "Import and export your bookmarks easily",
+    "description": "Description of the extension"
+  },
+  "welcome": {
+    "message": "Welcome to Bookmark Import/Export",
+    "description": "Welcome message"
+  },
+  "welcomeDescription": {
+    "message": "Easily import and export your bookmarks across browsers!",
+    "description": "Welcome description"
+  },
+  "gettingStarted": {
+    "message": "To get started, click on the extension icon in your browser toolbar.",
+    "description": "Getting started message"
+  },
+  "exportToJSON": {
+    "message": "Export to JSON",
+    "description": "Export to JSON"
+  },
+  "exportToJSONDescription": {
+    "message": "Export your bookmarks to JSON format for easy data manipulation and backup.",
+    "description": "Export to JSON description"
+  },
+  "exportToHTML": {
+    "message": "Export to HTML",
+    "description": "Export to HTML"
+  },
+  "exportToHTMLDescription": {
+    "message": "Export your bookmarks to HTML format for easy data manipulation and backup.",
+    "description": "Export to HTML description"
+  },
+  "importBookmarks": {
+    "message": "Import Bookmarks",
+    "description": "Import Bookmarks"
+  },
+  "importBookmarksDescription": {
+    "message": "Easily import bookmarks from JSON or HTML files to restore or transfer your data.",
+    "description": "Import Bookmarks description"
+  },
+  "extensionLogoAlt": {
+    "message": "Bookmark Import/Export Logo",
+    "description": "Extension logo alt text"
+  },
+  "advancedOptions": {
+    "message": "Advanced Options",
+    "description": "Advanced Options"
+  },
+  "advancedOptionsDescription": {
+    "message": "Fine-tune your exports with advanced settings and selective bookmark choosing.",
+    "description": "Advanced Options description"
+  },
+  "compatibleBrowsers": {
+    "message": "Compatible with all Chromium-based browsers, including Google Chrome, Microsoft Edge, Opera, and Brave.",
+    "description": "Compatible Browsers"
+  },
+  "feedbackLink": {
+    "message": "Enjoying the extension? We'd love your feedback!",
+    "description": "Feedback Link"
+  },
+  "builtBy": {
+    "message": "Built by",
+    "description": "Built By"
+  },
+  "sourceCode": {
+    "message": "Source code available on",
+    "description": "Source Code"
+  },
+  "advancedDescription": {
+    "message": "Advanced Export",
+    "description": "Advanced Export"
+  },
+  "settings": {
+    "message": "Settings",
+    "description": "Settings"
+  },
+  "exportHTML": {
+    "message": "Export HTML",
+    "description": "Export HTML"
+  },
+  "exportJSON": {
+    "message": "Export JSON",
+    "description": "Export JSON"
+  },
+  "refresh": {
+    "message": "Refresh",
+    "description": "Refresh"
+  },
+  "selectAll": {
+    "message": "Select All",
+    "description": "Select All"
+  },
+  "deselectAll": {
+    "message": "Deselect All",
+    "description": "Deselect All"
+  },
+  "selected": {
+    "message": "Selected",
+    "description": "Selected"
+  },
+  "searchBookmarks": {
+    "message": "Search bookmarks",
+    "description": "Search bookmarks"
+  },
+  "faviconAlt": {
+    "message": "Bookmark icon",
+    "description": "Bookmark icon"
+  },
+  "settingsDescription": {
+    "message": "Customize your bookmark import/export experience.",
+    "description": "Settings description"
+  },
+  "display": {
+    "message": "Display",
+    "description": "Display"
+  },
+  "export": {
+    "message": "Export",
+    "description": "Export"
+  },
+  "showBookmarkIcon": {
+    "message": "Show bookmark icon",
+    "description": "Show bookmark icon"
+  },
+  "showBookmarkIconDescription": {
+    "message": "Display icons next to bookmarks",
+    "description": "Show bookmark icon description"
+  },
+  "autoExpandFolders": {
+    "message": "Auto expand folders",
+    "description": "Auto expand folders"
+  },
+  "autoExpandFoldersDescription": {
+    "message": "Automatically expand folders in the bookmark tree",
+    "description": "Auto expand folders description"
+  },
+  "autoExpandFoldersTooltip": {
+    "message": "Note: May impact performance with large numbers of bookmarks",
+    "description": "Auto expand folders tooltip"
+  },
+  "includeIconData": {
+    "message": "Include icon data",
+    "description": "Include icon data"
+  },
+  "includeIconDataDescription": {
+    "message": "Add website favicon data to the exported file",
+    "description": "Include icon data description"
+  },
+  "includeIconDataTooltip": {
+    "message": "Note: Increases export time and file size significantly",
+    "description": "Include icon data tooltip"
+  },
+  "includeDateAdded": {
+    "message": "Include creation dates",
+    "description": "Include creation dates"
+  },
+  "includeDateAddedDescription": {
+    "message": "Add creation dates to the exported file",
+    "description": "Include creation dates description"
+  },
+  "includeDateLastUsed": {
+    "message": "Include last used dates",
+    "description": "Include last used dates"
+  },
+  "includeDateLastUsedDescription": {
+    "message": "Add last used dates to the exported file",
+    "description": "Include last used dates description"
+  },
+  "includeDateGroupModified": {
+    "message": "Include folder modification dates",
+    "description": "Include folder modification dates"
+  },
+  "includeDateGroupModifiedDescription": {
+    "message": "Add last modification dates for folders to the exported file",
+    "description": "Include folder modification dates description"
+  },
+  "hideOtherBookmarks": {
+    "message": "Hide 'Other bookmarks' folder",
+    "description": "Hide 'Other bookmarks' folder"
+  },
+  "hideOtherBookmarksDescription": {
+    "message": "Exclude the root 'Other bookmarks' folder from the export",
+    "description": "Hide 'Other bookmarks' folder description"
+  },
+  "hideOtherBookmarksTooltip": {
+    "message": "Note: Matches browser's native export behavior, placing 'Other bookmarks' content at the same level as 'Bookmarks bar'",
+    "description": "Hide 'Other bookmarks' folder tooltip"
+  },
+  "hideParentFolder": {
+    "message": "Hide parent folder",
+    "description": "Hide parent folder"
+  },
+  "hideParentFolderDescription": {
+    "message": "Exclude parent folders from the exported file",
+    "description": "Hide parent folder description"
+  },
+  "hideParentFolderTooltip": {
+    "message": "Note: Excludes parent folders from the exported file",
+    "description": "Hide parent folder tooltip"
+  },
+  "advancedExport": {
+    "message": "Advanced Export",
+    "description": "Advanced Export"
+  },
+  "unsupportedFileFormat": {
+    "message": "Unsupported file format",
+    "description": "Unsupported file format"
+  },
+  "bookmarksImportedSuccessfully": {
+    "message": "Bookmarks imported successfully!",
+    "description": "Bookmarks imported successfully"
+  },
+  "failedToImportBookmarks": {
+    "message": "Failed to import bookmarks",
+    "description": "Failed to import bookmarks"
+  },
+  "import": {
+    "message": "Import",
+    "description": "Import"
+  },
+  "updateTitle": {
+    "message": "Bookmark Import/Export has been updated!",
+    "description": "Update title"
+  },
+  "currentVersion": {
+    "message": "You're now using version $VERSION$. Check out what's new below.",
+    "description": "Current version message",
+    "placeholders": {
+      "version": {
+        "content": "$1"
+      }
+    }
+  },
+  "version": {
+    "message": "Version",
+    "description": "Version"
+  },
+  "changelog_1_1_0_date": {
+    "message": "February 13, 2025",
+    "description": "Changelog 1.1.0 date"
+  },
+  "changelog_1_1_0_1": {
+    "message": "Imported bookmarks now go to their own folder to avoid mixing with your existing bookmarks"
+  },
+  "changelog_1_1_0_2": {
+    "message": "More precise control over which dates to include in your exports"
+  },
+  "changelog_1_1_0_2_link": {
+    "message": "Try the new export options"
+  },
+  "changelog_1_0_0_date": {
+    "message": "August 5, 2024",
+    "description": "Changelog 1.0.0 date"
+  },
+  "changelog_1_0_0_1": {
+    "message": "Added new Advanced Export feature for more control over your bookmarks."
+  },
+  "changelog_1_0_0_1_link": {
+    "message": "Try advanced export"
+  },
+  "changelog_1_0_0_2": {
+    "message": "Introduced welcome and update pages to keep you informed about new features."
+  },
+  "changelog_1_0_0_3": {
+    "message": "Improved overall performance for a smoother experience."
+  },
+  "changelog_0_1_1_date": {
+    "message": "August 4, 2024",
+    "description": "Changelog 0.1.1 date"
+  },
+  "changelog_0_1_1_1": {
+    "message": "Fixed a critical bug that affected users with non-English browser languages."
+  },
+  "changelog_0_1_1_2": {
+    "message": "Improved reliability for both import and export functions."
+  },
+  "changelog_0_1_1_3": {
+    "message": "Fixed an issue where the extension icon was not showing in the browser toolbar."
+  },
+  "changelog_0_1_1_4": {
+    "message": "Fixed an issue where the extension was not working in some browsers."
+  },
+  "changelog_0_1_0_date": {
+    "message": "August 3, 2024",
+    "description": "Changelog 0.1.0 date"
+  },
+  "changelog_0_1_0_1": {
+    "message": "Initial release of Bookmark Import/Export extension."
+  },
+  "changelog_0_1_0_2": {
+    "message": "Simple import feature for HTML and JSON files."
+  },
+  "changelog_0_1_0_3": {
+    "message": "Basic functionality for exporting bookmarks to HTML and JSON formats."
+  },
+  "extensionInstalled": {
+    "message": "Bookmark Import/Export extension installed",
+    "description": "Extension installed"
+  },
+  "extensionUpdated": {
+    "message": "Bookmark Import/Export extension updated to version $VERSION$",
+    "description": "Extension updated",
+    "placeholders": {
+      "version": {
+        "content": "$1"
+      }
+    }
+  },
+  "exportFileNameHTML": {
+    "message": "Bookmarks.html",
+    "description": "Export file name"
+  },
+  "exportFileNameJSON": {
+    "message": "Bookmarks.json",
+    "description": "Export file name"
+  },
+  "close": {
+    "message": "Close",
+    "description": "Close"
+  },
+  "bookmarkTreeRefNotAvailable": {
+    "message": "Bookmark tree reference is not available",
+    "description": "Bookmark tree reference not available"
+  },
+  "noBookmarksSelected": {
+    "message": "No bookmarks selected",
+    "description": "No bookmarks selected"
+  },
+  "faviconError": {
+    "message": "Error fetching favicon",
+    "description": "Error fetching favicon"
+  },
+  "importFromHTMLLoadError": {
+    "message": "Failed to parse HTML: $ERROR$",
+    "description": "Failed to parse HTML",
+    "placeholders": {
+      "error": {
+        "content": "$1"
+      }
+    }
+  },
+  "importFromHTMLCreateError": {
+    "message": "Failed to create bookmarks from HTML: $ERROR$",
+    "description": "Failed to create bookmarks from HTML",
+    "placeholders": {
+      "error": {
+        "content": "$1"
+      }
+    }
+  },
+  "importFromHTMLProcessError": {
+    "message": "Could not find Bookmarks bar or Other bookmarks folder",
+    "description": "Could not find Bookmarks bar or Other bookmarks folder"
+  },
+  "importFromHTMLProcessError_1": {
+    "message": "Chrome API error: $ERROR$",
+    "description": "Chrome API error",
+    "placeholders": {
+      "error": {
+        "content": "$1"
+      }
+    }
+  },
+  "bookmarksBar": {
+    "message": "Bookmarks bar",
+    "description": "Bookmarks bar"
+  },
+  "importedBookmarks": {
+    "message": "Imported bookmarks",
+    "description": "Imported bookmarks"
+  },
+  "otherBookmarks": {
+    "message": "Other bookmarks",
+    "description": "Other bookmarks"
+  },
+  "importFromJSONImportError": {
+    "message": "Import failed: $ERROR$",
+    "description": "Import failed",
+    "placeholders": {
+      "error": {
+        "content": "$1"
+      }
+    }
+  },
+  "changelog_1_2_0_date": {
+    "message": "February 14, 2024",
+    "description": "Changelog 1.2.0 date"
+  },
+  "changelog_1_2_0_1": {
+    "message": "Now automatically adapts to your browser's language! Available in English and Spanish."
+  }
+}

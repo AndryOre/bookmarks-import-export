@@ -43,7 +43,7 @@ const DialogContent = React.forwardRef<
       {children}
       <DialogPrimitive.Close className="plasmo-absolute plasmo-right-4 plasmo-top-4 plasmo-rounded-sm plasmo-opacity-70 plasmo-ring-offset-background plasmo-transition-opacity hover:plasmo-opacity-100 focus:plasmo-outline-none focus:plasmo-ring-2 focus:plasmo-ring-ring focus:plasmo-ring-offset-2 disabled:plasmo-pointer-events-none data-[state=open]:plasmo-bg-accent data-[state=open]:plasmo-text-muted-foreground">
         <X className="plasmo-h-4 plasmo-w-4" />
-        <span className="plasmo-sr-only">Close</span>
+        <span className="plasmo-sr-only">{chrome.i18n.getMessage("close")}</span>
       </DialogPrimitive.Close>
     </DialogPrimitive.Content>
   </DialogPortal>
