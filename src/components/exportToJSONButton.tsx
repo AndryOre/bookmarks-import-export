@@ -16,10 +16,10 @@ export const ExportToJSONButton = ({ className = "" }): JSX.Element => {
       const url = URL.createObjectURL(blob)
       const link = document.createElement("a")
       link.href = url
-      link.download = "Bookmarks.json"
+      link.download = chrome.i18n.getMessage("exportFileNameJSON")
       link.click()
     } catch (error) {
-      console.error("Error exporting bookmarks:", error)
+      console.error(chrome.i18n.getMessage("exportError"), error)
     }
   }
 

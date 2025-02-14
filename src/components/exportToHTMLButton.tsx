@@ -15,10 +15,10 @@ export const ExportToHTMLButton = ({ className = "" }): JSX.Element => {
       const url = URL.createObjectURL(blob)
       const link = document.createElement("a")
       link.href = url
-      link.download = "Bookmarks.html"
+      link.download = chrome.i18n.getMessage("exportFileNameHTML")
       link.click()
     } catch (error) {
-      console.error("Error exporting bookmarks:", error)
+      console.error(chrome.i18n.getMessage("exportError"), error)
     }
   }
 

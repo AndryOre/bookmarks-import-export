@@ -72,9 +72,9 @@ function IndexPopup(): JSX.Element {
   )
 
   return (
-    <div className="plasmo-flex plasmo-flex-col plasmo-p-3 plasmo-w-60 plasmo-h-56 plasmo-bg-neutral-50 plasmo-rounded">
+    <div className="plasmo-flex plasmo-flex-col plasmo-p-3 plasmo-w-72 plasmo-h-56 plasmo-bg-neutral-50 plasmo-rounded">
       <h1 className="plasmo-text-base plasmo-font-bold plasmo-mb-2 plasmo-text-center">
-        Bookmark Import/Export
+        {chrome.i18n.getMessage("extensionName")}
       </h1>
 
       <Tabs
@@ -82,10 +82,10 @@ function IndexPopup(): JSX.Element {
         className="plasmo-flex-grow plasmo-flex plasmo-flex-col">
         <TabsList className="plasmo-grid plasmo-w-full plasmo-grid-cols-2">
           <TabsTrigger value="export" onClick={() => handleTabChange("export")}>
-            Export
+            {chrome.i18n.getMessage("export")}
           </TabsTrigger>
           <TabsTrigger value="import" onClick={() => handleTabChange("import")}>
-            Import
+            {chrome.i18n.getMessage("import")}
           </TabsTrigger>
         </TabsList>
         {renderExportTab()}
@@ -93,7 +93,7 @@ function IndexPopup(): JSX.Element {
       </Tabs>
 
       <p className="plasmo-mt-2 plasmo-text-xs plasmo-text-center plasmo-text-gray-500">
-        Import or export your bookmarks easily
+        {chrome.i18n.getMessage("extensionDescription")}
       </p>
     </div>
   )

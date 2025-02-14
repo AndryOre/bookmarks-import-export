@@ -46,13 +46,17 @@ export function Header({
    */
   const renderLogoAndTitle = () => (
     <div className="plasmo-flex plasmo-items-center plasmo-gap-3">
-      <img src={logo} alt="Logo" className="plasmo-w-11 plasmo-h-11" />
+      <img
+        src={logo}
+        alt={chrome.i18n.getMessage("extensionLogoAlt")}
+        className="plasmo-w-11 plasmo-h-11"
+      />
       <div className="plasmo-flex plasmo-flex-col">
         <h1 className="plasmo-text-xl plasmo-font-bold plasmo-leading-tight">
-          Bookmark Import/Export
+          {chrome.i18n.getMessage("extensionName")}
         </h1>
         <h2 className="plasmo-text-lg plasmo-font-semibold plasmo-text-muted-foreground">
-          Advanced Export
+        {chrome.i18n.getMessage("advancedDescription")}
         </h2>
       </div>
     </div>
@@ -68,7 +72,7 @@ export function Header({
         variant="outline"
         size="icon"
         onClick={() => setIsSettingsOpen(true)}
-        title="Settings">
+        title={chrome.i18n.getMessage("settings")}>
         <Settings />
       </Button>
       <SettingsDialog
@@ -79,13 +83,13 @@ export function Header({
         onClick={() => onExport("html")}
         className="plasmo-flex plasmo-items-center plasmo-gap-2">
         <FileText />
-        Export HTML
+        {chrome.i18n.getMessage("exportHTML")}
       </Button>
       <Button
         onClick={() => onExport("json")}
         className="plasmo-flex plasmo-items-center plasmo-gap-2">
         <Code />
-        Export JSON
+        {chrome.i18n.getMessage("exportJSON")}
       </Button>
     </div>
   )
@@ -101,7 +105,7 @@ export function Header({
         variant="outline"
         size="icon"
         onClick={handleRefresh}
-        title="Refresh"
+        title={chrome.i18n.getMessage("refresh")}
         disabled={isRefreshing}>
         <RefreshCw className={`${isRefreshing ? "plasmo-animate-spin" : ""}`} />
       </Button>
@@ -109,18 +113,18 @@ export function Header({
         variant="outline"
         size="icon"
         onClick={onSelectAll}
-        title="Select All">
+        title={chrome.i18n.getMessage("selectAll")}>
         <CheckSquare />
       </Button>
       <Button
         variant="outline"
         size="icon"
         onClick={onDeselectAll}
-        title="Deselect All">
+        title={chrome.i18n.getMessage("deselectAll")}>
         <Square />
       </Button>
       <span className="plasmo-text-sm plasmo-text-muted-foreground">
-        {selectedCount} / {totalCount} Selected
+        {selectedCount} / {totalCount} {chrome.i18n.getMessage("selected")}
       </span>
     </div>
   )

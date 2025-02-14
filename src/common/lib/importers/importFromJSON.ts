@@ -39,7 +39,11 @@ const createBookmarks = async (nodes: ParsedBookmark[], parentId: string) => {
       }
     } catch (error) {
       throw new BookmarkImportError(
-        `Error creating ${node.url ? "bookmark" : "folder"} ${node.title}: ${error.message}`
+        chrome.i18n.getMessage("importFromJSONCreateError", [
+          node.url ? "bookmark" : "folder",
+          node.title,
+          error.message
+        ])
       )
     }
   }
@@ -60,19 +64,19 @@ const processBookmarks = async (
 
   if (!bookmarksBar || !otherBookmarks) {
     throw new BookmarkImportError(
-      "Could not find Bookmarks bar or Other bookmarks folder"
+      chrome.i18n.getMessage("importFromJSONProcessError")
     )
   }
 
   const importedFolder = await chrome.bookmarks.create({
-    title: "Imported bookmarks"
+    title: chrome.i18n.getMessage("importedBookmarks")
   })
 
   for (const bookmark of bookmarksData) {
     if (bookmark.isBookmarksBar && bookmark.children?.length > 0) {
       const importedBookmarksBar = await chrome.bookmarks.create({
         parentId: importedFolder.id,
-        title: "Bookmarks bar"
+        title: chrome.i18n.getMessage("bookmarksBar")
       })
 
       for (const child of bookmark.children) {
@@ -126,7 +130,7 @@ const preprocessBookmarks = (bookmarks: ParsedBookmark[]): ParsedBookmark[] => {
   if (otherBookmarks.length > 0) {
     processedBookmarks.push({
       id: "2",
-      title: "Other bookmarks",
+      title: chrome.i18n.getMessage("otherBookmarks"),
       dateAdded: Date.now(),
       isOtherBookmarks: true,
       children: otherBookmarks
@@ -153,7 +157,9 @@ export const importFromJSON = async (
         if (chrome.runtime.lastError) {
           reject(
             new BookmarkImportError(
-              `Chrome API error: ${chrome.runtime.lastError.message}`
+              chrome.i18n.getMessage("importFromJSONProcessError_1", [
+                chrome.runtime.lastError.message
+              ])
             )
           )
         } else {
@@ -167,6 +173,8 @@ export const importFromJSON = async (
       })
     })
   } catch (error) {
-    throw new BookmarkImportError(`Import failed: ${error.message}`)
+    throw new BookmarkImportError(
+      chrome.i18n.getMessage("importFromJSONImportError", [error.message])
+    )
   }
 }
