@@ -1,5 +1,5 @@
-import * as SeparatorPrimitive from "@radix-ui/react-separator"
 import * as React from "react"
+import * as SeparatorPrimitive from "@radix-ui/react-separator"
 
 import { cn } from "~common/lib/utils"
 
@@ -17,9 +17,7 @@ const Separator = React.forwardRef<
       orientation={orientation}
       className={cn(
         "plasmo-shrink-0 plasmo-bg-border",
-        orientation === "horizontal"
-          ? "plasmo-h-[1px] plasmo-w-full"
-          : "plasmo-h-full plasmo-w-[1px]",
+        orientation === "horizontal" ? "plasmo-h-[1px] plasmo-w-full" : "plasmo-h-full plasmo-w-[1px]",
         className
       )}
       {...props}

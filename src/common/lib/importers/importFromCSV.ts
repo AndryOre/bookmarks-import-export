@@ -39,7 +39,6 @@ const createBookmarks = async (nodes: ParsedBookmark[], parentId: string) => {
           url: node.url
         })
       } else if (node.children && node.children.length > 0) {
-        // Search for existing folder with the same name under the parent
         const existingFolders = await chrome.bookmarks.search({ title: node.title })
         const existingFolder = existingFolders.find(
           folder => folder.parentId === parentId
@@ -81,7 +80,6 @@ const processBookmarks = async (
     )
   }
 
-  // Search for existing "Imported bookmarks" folder
   const existingFolders = await chrome.bookmarks.search({ title: "Imported bookmarks" })
   const importedFolder = existingFolders.length > 0
     ? existingFolders[0]
@@ -110,7 +108,6 @@ const processCSVData = (csvData: CSVRow[]): ParsedBookmark[] => {
     if (!title || !url) return
 
     try {
-      // Validate URL
       new URL(url)
     } catch {
       console.warn(`Skipping invalid URL for bookmark "${title}": ${url}`)
@@ -124,7 +121,6 @@ const processCSVData = (csvData: CSVRow[]): ParsedBookmark[] => {
     let currentLevel = rootBookmarks
     let currentPath = ""
 
-    // Create or traverse folder structure
     for (const folder of folders) {
       currentPath = currentPath ? `${currentPath}/${folder}` : folder
 
@@ -142,7 +138,6 @@ const processCSVData = (csvData: CSVRow[]): ParsedBookmark[] => {
       currentLevel = bookmarks[currentPath].children!
     }
 
-    // Add bookmark to current level
     currentLevel.push({
       title,
       url,

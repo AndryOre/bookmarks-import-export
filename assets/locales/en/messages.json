@@ -179,6 +179,10 @@
     "message": "Add last modification dates for folders to the exported file",
     "description": "Include folder modification dates description"
   },
+  "includeDateGroupModifiedTooltip": {
+    "message": "Note: Only available for HTML and JSON exports. Not applicable for CSV exports as they only include individual bookmarks.",
+    "description": "Include folder modification dates tooltip"
+  },
   "hideOtherBookmarks": {
     "message": "Hide 'Other bookmarks' folder",
     "description": "Hide 'Other bookmarks' folder"
@@ -393,5 +397,33 @@
   },
   "changelog_1_2_0_1": {
     "message": "Now automatically adapts to your browser's language! Available in English and Spanish."
+  },
+  "exportFileNameCSV": {
+    "message": "Bookmarks.csv",
+    "description": "Export file name"
+  },
+  "exportError": {
+    "message": "Failed to export bookmarks",
+    "description": "Export error"
+  },
+  "exportCSV": {
+    "message": "Export CSV",
+    "description": "Export CSV"
+  },
+  "exportToCSV": {
+    "message": "Export to CSV",
+    "description": "Export to CSV"
+  },
+  "exportToCSVDescription": {
+    "message": "Export your bookmarks to CSV format for easy data manipulation and backup.",
+    "description": "Export to CSV description"
+  },
+  "multiLanguageSupport": {
+    "message": "Multi-language support",
+    "description": "Multi-language support"
+  },
+  "multiLanguageSupportDescription": {
+    "message": "Automatically adapts to your browser's language! Available in English and Spanish.",
+    "description": "Multi-language support description"
   }
 }

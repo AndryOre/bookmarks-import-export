@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 
-import { exportToHTML, exportToJSON } from "~common/lib"
+import { exportToCSV, exportToHTML, exportToJSON } from "~common/lib"
 import type {
   BookmarkTreeHandle,
   ExtendedBookmarkTreeNode
@@ -105,9 +105,9 @@ export default function AdvancedExportPage(): JSX.Element {
 
   /**
    * Export selected bookmarks in the specified format
-   * @param {("html" | "json")} format - The format to export bookmarks in
+   * @param {("html" | "json" | "csv")} format - The format to export bookmarks in
    */
-  const handleExport = async (format: "html" | "json") => {
+  const handleExport = async (format: "html" | "json" | "csv") => {
     if (!bookmarkTreeRef.current) {
       console.error(chrome.i18n.getMessage("bookmarkTreeRefNotAvailable"))
       return
@@ -145,12 +145,12 @@ export default function AdvancedExportPage(): JSX.Element {
 
   /**
    * Export bookmarks based on the specified format and configuration
-   * @param {("html" | "json")} format - The format to export bookmarks in
+   * @param {("html" | "json" | "csv")} format - The format to export bookmarks in
    * @param {Object} config - Export configuration
    * @returns {Promise<{exportedData: string, fileName: string, mimeType: string}>} Export result
    */
   const exportBookmarks = async (
-    format: "html" | "json",
+    format: "html" | "json" | "csv",
     config: {
       selectedBookmarks: ExtendedBookmarkTreeNode[]
       includeIconData: boolean
@@ -161,32 +161,55 @@ export default function AdvancedExportPage(): JSX.Element {
       hideParentFolder: boolean
     }
   ): Promise<{ exportedData: string; fileName: string; mimeType: string }> => {
-    if (format === "html") {
-      const exportedData = await exportToHTML(
-        config.selectedBookmarks,
-        config.includeIconData,
-        config.includeDateAdded,
-        config.includeDateLastUsed,
-        config.includeDateGroupModified,
-        config.hideOtherBookmarks,
-        config.hideParentFolder
-      )
-      return { exportedData, fileName: "bookmarks.html", mimeType: "text/html" }
-    } else {
-      const jsonData = await exportToJSON(
-        config.selectedBookmarks,
-        config.includeIconData,
-        config.includeDateAdded,
-        config.includeDateLastUsed,
-        config.includeDateGroupModified,
-        config.hideOtherBookmarks,
-        config.hideParentFolder
-      )
-      const exportedData = JSON.stringify(jsonData, null, 2)
-      return {
-        exportedData,
-        fileName: "bookmarks.json",
-        mimeType: "application/json"
+    let exportedData: string
+    
+    switch (format) {
+      case "html": {
+        exportedData = await exportToHTML(
+          config.selectedBookmarks,
+          config.includeIconData,
+          config.includeDateAdded,
+          config.includeDateLastUsed,
+          config.includeDateGroupModified,
+          config.hideOtherBookmarks,
+          config.hideParentFolder
+        )
+        return {
+          exportedData,
+          fileName: chrome.i18n.getMessage("exportFileNameHTML"),
+          mimeType: "text/html"
+        }
+      }
+      case "json": {
+        const jsonData = await exportToJSON(
+          config.selectedBookmarks,
+          config.includeIconData,
+          config.includeDateAdded,
+          config.includeDateLastUsed,
+          config.includeDateGroupModified,
+          config.hideOtherBookmarks,
+          config.hideParentFolder
+        )
+        exportedData = JSON.stringify(jsonData, null, 2)
+        return {
+          exportedData,
+          fileName: chrome.i18n.getMessage("exportFileNameJSON"),
+          mimeType: "application/json"
+        }
+      }
+      case "csv": {
+        exportedData = await exportToCSV(
+          config.selectedBookmarks,
+          config.includeIconData,
+          config.includeDateAdded,
+          config.includeDateLastUsed,
+          config.includeDateGroupModified
+        )
+        return {
+          exportedData,
+          fileName: chrome.i18n.getMessage("exportFileNameCSV"),
+          mimeType: "text/csv"
+        }
       }
     }
   }

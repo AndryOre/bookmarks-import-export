@@ -50,7 +50,7 @@ export const ImportBookmarksButton = ({ className = "" }): JSX.Element => {
   return (
     <>
       <Button onClick={handleButtonClick} className={className}>
-        <Upload className="plasmo-mr-2 plasmo-h-4 plasmo-w-4" />
+        <Upload />
         {chrome.i18n.getMessage("importBookmarks")}
       </Button>
       <input

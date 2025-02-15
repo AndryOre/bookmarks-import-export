@@ -13,7 +13,7 @@ export const AdvancedExportButton = ({ className = "" }): JSX.Element => {
 
   return (
     <Button onClick={handleAdvancedExport} variant="link" className={className}>
-      <Settings className="plasmo-mr-2 plasmo-h-4 plasmo-w-4" />
+      <Settings />
       {chrome.i18n.getMessage("advancedExport")}
     </Button>
   )

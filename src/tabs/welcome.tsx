@@ -1,5 +1,5 @@
 import logo from "data-base64:assets/icon.png"
-import { BookmarkPlus, FileJson, FileText, Settings, Star } from "lucide-react"
+import { BookmarkPlus, FileJson, FileSpreadsheet, FileText, Languages, Settings, Star } from "lucide-react"
 
 import { Card, CardHeader, FeatureCard } from "~components"
 
@@ -61,6 +61,11 @@ export default function WelcomePage(): JSX.Element {
         description={chrome.i18n.getMessage("exportToHTMLDescription")}
       />
       <FeatureCard
+        icon={FileSpreadsheet}
+        title={chrome.i18n.getMessage("exportToCSV")}
+        description={chrome.i18n.getMessage("exportToCSVDescription")}
+      />
+      <FeatureCard
         icon={BookmarkPlus}
         title={chrome.i18n.getMessage("importBookmarks")}
         description={chrome.i18n.getMessage("importBookmarksDescription")}
@@ -69,6 +74,11 @@ export default function WelcomePage(): JSX.Element {
         icon={Settings}
         title={chrome.i18n.getMessage("advancedOptions")}
         description={chrome.i18n.getMessage("advancedOptionsDescription")}
+      />
+      <FeatureCard
+        icon={Languages}
+        title={chrome.i18n.getMessage("multiLanguageSupport")}
+        description={chrome.i18n.getMessage("multiLanguageSupportDescription")}
       />
       <p className="plasmo-text-center plasmo-text-muted-foreground plasmo-col-span-2">
         {chrome.i18n.getMessage("compatibleBrowsers")}
