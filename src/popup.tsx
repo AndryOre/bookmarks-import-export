@@ -1,15 +1,15 @@
 import React, { useCallback, useState } from "react"
+import { exportToHTML, exportToJSON, exportToCSV } from "~common/lib"
 
 import {
   AdvancedExportButton,
-  ExportToHTMLButton,
-  ExportToJSONButton,
   ImportBookmarksButton,
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger
 } from "~components"
+import { ExportFormatSelector, type ExportFormat } from "~components/exportFormatSelector"
 
 import "~style.css"
 
@@ -24,6 +24,45 @@ type TabValue = "export" | "import"
  */
 function IndexPopup(): JSX.Element {
   const [activeTab, setActiveTab] = useState<TabValue>("export")
+
+  /**
+   * Handles export functionality
+   */
+  const handleExport = async (format: ExportFormat) => {
+    try {
+      let content: string
+      let mimeType: string
+      let fileName: string
+
+      switch (format) {
+        case "html":
+          content = await exportToHTML()
+          mimeType = "text/html"
+          fileName = chrome.i18n.getMessage("exportFileNameHTML")
+          break
+        case "json":
+          const jsonData = await exportToJSON()
+          content = JSON.stringify(jsonData, null, 2)
+          mimeType = "application/json"
+          fileName = chrome.i18n.getMessage("exportFileNameJSON")
+          break
+        case "csv":
+          content = await exportToCSV()
+          mimeType = "text/csv"
+          fileName = chrome.i18n.getMessage("exportFileNameCSV")
+          break
+      }
+
+      const blob = new Blob([content], { type: mimeType })
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement("a")
+      link.href = url
+      link.download = fileName
+      link.click()
+    } catch (error) {
+      console.error(chrome.i18n.getMessage("exportError"), error)
+    }
+  }
 
   /**
    * Handles tab change
@@ -45,13 +84,12 @@ function IndexPopup(): JSX.Element {
           activeTab === "export" ? "" : "plasmo-hidden"
         }`}>
         <div className="plasmo-flex plasmo-justify-between plasmo-items-center plasmo-gap-2 plasmo-w-full">
-          <ExportToHTMLButton className="plasmo-w-full" />
-          <ExportToJSONButton className="plasmo-w-full" />
+          <ExportFormatSelector onExport={handleExport} />
         </div>
         <AdvancedExportButton className="plasmo-w-full" />
       </TabsContent>
     ),
-    [activeTab]
+    [activeTab, handleExport]
   )
 
   /**
@@ -72,7 +110,7 @@ function IndexPopup(): JSX.Element {
   )
 
   return (
-    <div className="plasmo-flex plasmo-flex-col plasmo-p-3 plasmo-w-72 plasmo-h-56 plasmo-bg-neutral-50 plasmo-rounded">
+    <div className="plasmo-flex plasmo-flex-col plasmo-p-3 plasmo-w-60 plasmo-h-64 plasmo-bg-neutral-50 plasmo-rounded">
       <h1 className="plasmo-text-base plasmo-font-bold plasmo-mb-2 plasmo-text-center">
         {chrome.i18n.getMessage("extensionName")}
       </h1>

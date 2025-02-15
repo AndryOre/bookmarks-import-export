@@ -198,7 +198,8 @@ export function SettingsDialog({
             {renderSettingSwitch(
               "includeDateGroupModified",
               chrome.i18n.getMessage("includeDateGroupModified"),
-              chrome.i18n.getMessage("includeDateGroupModifiedDescription")
+              chrome.i18n.getMessage("includeDateGroupModifiedDescription"),
+              chrome.i18n.getMessage("includeDateGroupModifiedTooltip")
             )}
             <Separator />
             {renderSettingSwitch(

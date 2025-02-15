@@ -1,6 +1,6 @@
-import * as CheckboxPrimitive from "@radix-ui/react-checkbox"
-import { Check, Minus } from "lucide-react"
 import * as React from "react"
+import * as CheckboxPrimitive from "@radix-ui/react-checkbox"
+import { Check } from "lucide-react"
 
 import { cn } from "~common/lib/utils"
 
@@ -11,16 +11,15 @@ const Checkbox = React.forwardRef<
   <CheckboxPrimitive.Root
     ref={ref}
     className={cn(
-      "plasmo-group plasmo-peer plasmo-h-4 plasmo-w-4 plasmo-shrink-0 plasmo-rounded-sm plasmo-border plasmo-border-primary plasmo-ring-offset-background focus-visible:plasmo-outline-none focus-visible:plasmo-ring-2 focus-visible:plasmo-ring-ring focus-visible:plasmo-ring-offset-2 disabled:plasmo-cursor-not-allowed disabled:plasmo-opacity-50 data-[state=checked]:plasmo-bg-primary data-[state=checked]:plasmo-text-primary-foreground data-[state=indeterminate]:plasmo-bg-primary data-[state=indeterminate]:plasmo-text-primary-foreground",
+      "plasmo-peer plasmo-h-4 plasmo-w-4 plasmo-shrink-0 plasmo-rounded-sm plasmo-border plasmo-border-primary plasmo-ring-offset-background focus-visible:plasmo-outline-none focus-visible:plasmo-ring-2 focus-visible:plasmo-ring-ring focus-visible:plasmo-ring-offset-2 disabled:plasmo-cursor-not-allowed disabled:plasmo-opacity-50 data-[state=checked]:plasmo-bg-primary data-[state=checked]:plasmo-text-primary-foreground",
       className
     )}
-    {...props}>
+    {...props}
+  >
     <CheckboxPrimitive.Indicator
-      className={cn(
-        "plasmo-flex plasmo-items-center plasmo-justify-center plasmo-text-current"
-      )}>
-      <Check className="plasmo-h-4 plasmo-w-4 plasmo-hidden group-data-[state=checked]:plasmo-block" />
-      <Minus className="plasmo-h-4 plasmo-w-4 plasmo-hidden group-data-[state=indeterminate]:plasmo-block" />
+      className={cn("plasmo-flex plasmo-items-center plasmo-justify-center plasmo-text-current")}
+    >
+      <Check className="plasmo-h-4 plasmo-w-4" />
     </CheckboxPrimitive.Indicator>
   </CheckboxPrimitive.Root>
 ))

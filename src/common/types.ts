@@ -109,7 +109,7 @@ export interface HeaderProps {
   /** Total number of bookmarks */
   totalCount: number
   /** Callback function to export bookmarks */
-  onExport: (format: "html" | "json") => void
+  onExport: (format: "html" | "json" | "csv") => void
 }
 
 /**
