@@ -1,4 +1,5 @@
 import { type BookmarkFormat } from "~common/types"
+import Papa from "papaparse"
 
 /**
  * Detects the format of the bookmark content.
@@ -15,6 +16,9 @@ export const detectFormat = (
   switch (type) {
     case "application/json":
       return isValidJSON(content) ? "json" : "unknown"
+
+    case "text/csv":
+      return isValidCSV(content) ? "csv" : "unknown"
 
     case "text/html":
       return isValidHTML(content) ? "html" : "unknown"
@@ -45,4 +49,39 @@ const isValidJSON = (content: string): boolean => {
  */
 const isValidHTML = (content: string): boolean => {
   return content.trim().startsWith("<!DOCTYPE NETSCAPE-Bookmark-file-1>")
+}
+
+/**
+ * Checks if the content is valid CSV bookmark format.
+ * @param {string} content - The content to check.
+ * @returns {boolean} True if the content appears to be valid CSV bookmark format, false otherwise.
+ */
+const isValidCSV = (content: string): boolean => {
+  try {
+    const result = Papa.parse(content.trim(), {
+      header: true,
+      skipEmptyLines: true,
+      preview: 3 // Only parse first 3 rows for validation
+    })
+
+    // Check if parsing was successful and has data
+    if (result.errors.length > 0 || result.data.length === 0) {
+      return false
+    }
+
+    // Check if required fields are present
+    const fields = result.meta.fields || []
+    const hasRequiredFields = fields.some(field =>
+      field.toLowerCase().includes("title") &&
+      fields.some(field => field.toLowerCase().includes("url"))
+    )
+
+    if (!hasRequiredFields) {
+      return false
+    }
+
+    return true
+  } catch {
+    return false
+  }
 }

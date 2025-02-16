@@ -1,7 +1,7 @@
 import { Upload } from "lucide-react"
 import { useRef } from "react"
 
-import { detectFormat, importFromHTML, importFromJSON } from "~common/lib"
+import { detectFormat, importFromCSV, importFromHTML, importFromJSON } from "~common/lib"
 import { Button } from "~components/ui"
 
 /**
@@ -25,6 +25,9 @@ export const ImportBookmarksButton = ({ className = "" }): JSX.Element => {
         const format = detectFormat(text, file.type)
 
         switch (format) {
+          case "csv":
+            await importFromCSV(text)
+            break
           case "json":
             const bookmarks = JSON.parse(text)
             await importFromJSON(bookmarks)
@@ -47,13 +50,13 @@ export const ImportBookmarksButton = ({ className = "" }): JSX.Element => {
   return (
     <>
       <Button onClick={handleButtonClick} className={className}>
-        <Upload className="plasmo-mr-2 plasmo-h-4 plasmo-w-4" />
+        <Upload />
         {chrome.i18n.getMessage("importBookmarks")}
       </Button>
       <input
         ref={fileInputRef}
         type="file"
-        accept=".json,.html,.htm"
+        accept=".csv,.json,.html,.htm"
         onChange={handleImport}
         className="plasmo-hidden"
       />

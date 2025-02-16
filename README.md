@@ -6,11 +6,13 @@
 
 ## Features 🌟
 
-- ⬇️ **Bookmark Exporting**: Easily export your bookmarks to different formats (JSON and HTML) for better accessibility and management.
-- ⬆️ **Bookmark Importing**: Import bookmarks from JSON and HTML files, allowing you to transfer your bookmarks between browsers or restore from backups.
+- ⬇️ **Bookmark Exporting**: Easily export your bookmarks to different formats (HTML, JSON, CSV) for better accessibility and management.
+- ⬆️ **Bookmark Importing**: Import bookmarks from HTML, JSON and CSV files, allowing you to transfer your bookmarks between browsers or restore from backups.
 - 🔍 **Advanced Export**: Use the advanced export feature to selectively export bookmarks, search through your bookmark collection, and customize export settings.
 - 🌐 **Browser Compatibility**: Works seamlessly with Chromium-based web browsers, ensuring smooth operation across different platforms.
 - 📑 **Minimal Interface**: Clean and easy-to-use interface for quick access and efficient management of bookmarks.
+- 🌙 **Theme Support**: Automatically adapts to your system's theme preferences for a consistent look.
+- 🌍 **Multi-language**: Available in English and Spanish, automatically matching your browser's language.
 
 ## Tech Stack 🧰
 
@@ -34,7 +36,7 @@ Note: While this extension is primarily listed on the Chrome Web Store, it is co
 1. Click on the extension icon in your browser toolbar to open the popup.
 2. Choose between "Export" and "Import" tabs.
 3. For basic exporting:
-   - Select either HTML or JSON format.
+   - Select either HTML, JSON or CSV format.
    - Click the corresponding button to export your bookmarks.
    - Choose a location on your device to save the exported file.
 4. For advanced exporting:
@@ -45,7 +47,7 @@ Note: While this extension is primarily listed on the Chrome Web Store, it is co
    - Choose the export format and click the export button.
 5. For importing:
    - Click the "Import" button.
-   - Select a JSON or HTML file containing bookmarks.
+   - Select a CSV, JSON or HTML file containing bookmarks.
    - The extension will automatically detect the format and import the bookmarks.
 
 ## Local Development 🛠️
@@ -84,6 +86,34 @@ pnpm build
 ```bash
 pnpm package
 ```
+
+## Contributors 🤝
+
+**We welcome your contributions!** If you'd like to be part of this list, simply fork this repository, make your changes, and open a pull request. Once merged, your avatar will appear below automatically.
+
+<!-- readme: contributors,AndryOre/- -start -->
+<table>
+	<tbody>
+		<tr>
+            <td align="center">
+                <a href="https://github.com/AndryOre">
+                    <img src="https://avatars.githubusercontent.com/u/44151183?v=4" width="100;" alt="AndryOre"/>
+                    <br />
+                    <sub><b>AndryOre</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/aam1r">
+                    <img src="https://avatars.githubusercontent.com/u/566418?v=4" width="100;" alt="aam1r"/>
+                    <br />
+                    <sub><b>aam1r</b></sub>
+                </a>
+            </td>
+		</tr>
+	<tbody>
+</table>
+<!-- readme: contributors,AndryOre/- -end -->
+
 
 ## License 📄
 

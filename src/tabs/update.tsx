@@ -1,5 +1,6 @@
 import logo from "data-base64:assets/icon.png"
 import { Star } from "lucide-react"
+import { ThemeProvider } from "~components"
 
 import "~style.css"
 
@@ -16,6 +17,15 @@ interface ChangelogEntry {
 }
 
 const changelog: ChangelogEntry[] = [
+  {
+    version: "1.3.0",
+    date: chrome.i18n.getMessage("changelog_1_3_0_date"),
+    changes: [
+      {
+        description: chrome.i18n.getMessage("changelog_1_3_0_1")
+      }
+    ]
+  },
   {
     version: "1.2.0",
     date: chrome.i18n.getMessage("changelog_1_2_0_date"),
@@ -198,11 +208,13 @@ export default function UpdatePage(): JSX.Element {
   )
 
   return (
-    <main className="plasmo-flex plasmo-p-6 plasmo-flex-col plasmo-min-h-screen plasmo-overflow-auto plasmo-items-center plasmo-justify-center plasmo-gap-6">
-      {renderHeader()}
-      {renderFeedbackLink()}
-      {renderChangelog()}
-      {renderFooter()}
-    </main>
+    <ThemeProvider storageKey="vite-ui-theme">
+      <main className="plasmo-flex plasmo-p-6 plasmo-flex-col plasmo-min-h-screen plasmo-overflow-auto plasmo-items-center plasmo-justify-center plasmo-gap-6">
+        {renderHeader()}
+        {renderFeedbackLink()}
+        {renderChangelog()}
+        {renderFooter()}
+      </main>
+    </ThemeProvider>
   )
 }

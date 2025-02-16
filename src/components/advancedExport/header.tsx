@@ -1,8 +1,6 @@
 import logo from "data-base64:assets/icon.png"
 import {
   CheckSquare,
-  Code,
-  FileText,
   RefreshCw,
   Settings,
   Square
@@ -11,6 +9,7 @@ import { useState } from "react"
 
 import { type HeaderProps } from "~common/types"
 import { Button, SearchBar, SettingsDialog } from "~components"
+import { ExportFormatSelector } from "~components/exportFormatSelector"
 
 /**
  * Header component for the advanced export page
@@ -37,6 +36,7 @@ export function Header({
   const handleRefresh = () => {
     setIsRefreshing(true)
     onRefresh()
+    onDeselectAll()
     setTimeout(() => setIsRefreshing(false), 1000)
   }
 
@@ -56,7 +56,7 @@ export function Header({
           {chrome.i18n.getMessage("extensionName")}
         </h1>
         <h2 className="plasmo-text-lg plasmo-font-semibold plasmo-text-muted-foreground">
-        {chrome.i18n.getMessage("advancedDescription")}
+          {chrome.i18n.getMessage("advancedDescription")}
         </h2>
       </div>
     </div>
@@ -67,7 +67,7 @@ export function Header({
    * @returns {JSX.Element} The action buttons JSX
    */
   const renderActionButtons = () => (
-    <div className="plasmo-flex plasmo-items-center plasmo-gap-3">
+    <div className="plasmo-flex plasmo-items-center plasmo-gap-2">
       <Button
         variant="outline"
         size="icon"
@@ -79,18 +79,7 @@ export function Header({
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
       />
-      <Button
-        onClick={() => onExport("html")}
-        className="plasmo-flex plasmo-items-center plasmo-gap-2">
-        <FileText />
-        {chrome.i18n.getMessage("exportHTML")}
-      </Button>
-      <Button
-        onClick={() => onExport("json")}
-        className="plasmo-flex plasmo-items-center plasmo-gap-2">
-        <Code />
-        {chrome.i18n.getMessage("exportJSON")}
-      </Button>
+      <ExportFormatSelector onExport={onExport} />
     </div>
   )
 

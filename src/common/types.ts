@@ -54,7 +54,7 @@ export interface ExtendedBookmarkTreeNode
 /**
  * Supported bookmark export formats.
  */
-export type BookmarkFormat = "json" | "html" | "unknown"
+export type BookmarkFormat = "json" | "html" | "csv" | "unknown"
 
 /**
  * Interface for the imperative handle of the BookmarkTree component.
@@ -109,7 +109,7 @@ export interface HeaderProps {
   /** Total number of bookmarks */
   totalCount: number
   /** Callback function to export bookmarks */
-  onExport: (format: "html" | "json") => void
+  onExport: (format: "html" | "json" | "csv") => void
 }
 
 /**

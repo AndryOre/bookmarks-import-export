@@ -179,6 +179,10 @@
     "message": "Agregar fechas de modificación de carpetas al archivo exportado",
     "description": "Incluir fechas de modificación de carpetas descripción"
   },
+  "includeDateGroupModifiedTooltip": {
+    "message": "Nota: Solo disponible para exportaciones HTML y JSON. No aplica para exportaciones CSV ya que estas solo incluyen marcadores individuales.",
+    "description": "Incluir fechas de modificación de carpetas tooltip"
+  },
   "hideOtherBookmarks": {
     "message": "Ocultar carpeta 'Otros marcadores'",
     "description": "Ocultar carpeta 'Otros marcadores'"
@@ -319,10 +323,6 @@
     "message": "Marcadores.json",
     "description": "Nombre del archivo exportado"
   },
-  "exportError": {
-    "message": "Error al exportar marcadores",
-    "description": "Error al exportar marcadores"
-  },
   "close": {
     "message": "Cerrar",
     "description": "Cerrar"
@@ -396,5 +396,40 @@
   },
   "changelog_1_2_0_1": {
     "message": "¡Ahora se adapta automáticamente al idioma de tu navegador! Disponible en español e inglés."
+  },
+  "exportFileNameCSV": {
+    "message": "Marcadores.csv",
+    "description": "Nombre del archivo exportado"
+  },
+  "exportError": {
+    "message": "Error al exportar marcadores",
+    "description": "Error al exportar marcadores"
+  },
+  "exportCSV": {
+    "message": "Exportar CSV",
+    "description": "Exportar CSV"
+  },
+  "exportToCSV": {
+    "message": "Exportar a CSV",
+    "description": "Exportar a CSV"
+  },
+  "exportToCSVDescription": {
+    "message": "Exporta tus marcadores a formato CSV para facilitar la manipulación y el respaldo de datos.",
+    "description": "Exportar a CSV descripción"
+  },
+  "multiLanguageSupport": {
+    "message": "Soporte Multi-idioma",
+    "description": "Soporte Multi-idioma"
+  },
+  "multiLanguageSupportDescription": {
+    "message": "¡Se adapta automáticamente al idioma de tu navegador! Disponible en español e inglés.",
+    "description": "Soporte Multi-idioma descripción"
+  },
+  "changelog_1_3_0_date": {
+    "message": "16 de febrero de 2025",
+    "description": "Fecha del changelog 1.3.0"
+  },
+  "changelog_1_3_0_1": {
+    "message": "Añadido modo oscuro que se adapta automáticamente a las preferencias de tema de tu sistema."
   }
 }

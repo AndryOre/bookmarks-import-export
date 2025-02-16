@@ -16,7 +16,7 @@ import type {
   CheckedState,
   ExtendedBookmarkTreeNode
 } from "~common/types"
-import { Checkbox } from "~components"
+import { Checkbox, Label } from "~components"
 
 /**
  * BookmarkTreeComponent is a complex component that renders a tree structure of bookmarks.
@@ -389,11 +389,11 @@ const BookmarkTreeComponent = forwardRef<BookmarkTreeHandle, BookmarkTreeProps>(
                 ) : (
                   <File className="plasmo-h-4 plasmo-w-4 plasmo-mr-1 plasmo-text-blue-500" />
                 )}
-                <label
+                <Label
                   htmlFor={node.id}
-                  className="plasmo-text-sm plasmo-truncate plasmo-cursor-pointer">
+                  className={!isFolder ? "plasmo-font-normal" : ""}>
                   {node.title}
-                </label>
+                </Label>
               </div>
             </div>
             {isFolder && isExpanded && node.children && (
