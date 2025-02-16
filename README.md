@@ -85,6 +85,14 @@ pnpm build
 pnpm package
 ```
 
+## Contributors 🤝
+
+**We welcome your contributions!** If you'd like to be part of this list, simply fork this repository, make your changes, and open a pull request. Once merged, your avatar will appear below automatically.
+
+<!-- readme: contributors,AndryOre/- -start -->
+<!-- readme: contributors,AndryOre/- -end -->
+
+
 ## License 📄
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
