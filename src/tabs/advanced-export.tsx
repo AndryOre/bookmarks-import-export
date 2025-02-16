@@ -5,7 +5,7 @@ import type {
   BookmarkTreeHandle,
   ExtendedBookmarkTreeNode
 } from "~common/types"
-import { BookmarkTree, Header } from "~components"
+import { BookmarkTree, Header, ThemeProvider } from "~components"
 
 import "~style.css"
 
@@ -162,7 +162,7 @@ export default function AdvancedExportPage(): JSX.Element {
     }
   ): Promise<{ exportedData: string; fileName: string; mimeType: string }> => {
     let exportedData: string
-    
+
     switch (format) {
       case "html": {
         exportedData = await exportToHTML(
@@ -235,24 +235,26 @@ export default function AdvancedExportPage(): JSX.Element {
   }
 
   return (
-    <div className="plasmo-flex plasmo-flex-col plasmo-h-screen plasmo-overflow-hidden">
-      <Header
-        searchTerm={searchTerm}
-        onSearchChange={setSearchTerm}
-        onRefresh={handleRefresh}
-        onSelectAll={handleSelectAll}
-        onDeselectAll={handleDeselectAll}
-        selectedCount={selectedCount}
-        totalCount={totalCount}
-        onExport={handleExport}
-      />
-      <div className="plasmo-flex-grow plasmo-overflow-hidden plasmo-p-6">
-        <BookmarkTree
-          ref={bookmarkTreeRef}
+    <ThemeProvider storageKey="vite-ui-theme">
+      <div className="plasmo-flex plasmo-flex-col plasmo-h-screen plasmo-overflow-hidden">
+        <Header
           searchTerm={searchTerm}
-          onSelectionChange={handleSelectionChange}
+          onSearchChange={setSearchTerm}
+          onRefresh={handleRefresh}
+          onSelectAll={handleSelectAll}
+          onDeselectAll={handleDeselectAll}
+          selectedCount={selectedCount}
+          totalCount={totalCount}
+          onExport={handleExport}
         />
+        <div className="plasmo-flex-grow plasmo-overflow-hidden plasmo-p-6">
+          <BookmarkTree
+            ref={bookmarkTreeRef}
+            searchTerm={searchTerm}
+            onSelectionChange={handleSelectionChange}
+          />
+        </div>
       </div>
-    </div>
+    </ThemeProvider>
   )
 }

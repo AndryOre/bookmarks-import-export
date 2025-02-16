@@ -7,7 +7,8 @@ import {
   Tabs,
   TabsContent,
   TabsList,
-  TabsTrigger
+  TabsTrigger,
+  ThemeProvider
 } from "~components"
 import { ExportFormatSelector, type ExportFormat } from "~components/exportFormatSelector"
 
@@ -110,7 +111,8 @@ function IndexPopup(): JSX.Element {
   )
 
   return (
-    <div className="plasmo-flex plasmo-flex-col plasmo-p-3 plasmo-w-60 plasmo-h-64 plasmo-bg-neutral-50 plasmo-rounded">
+    <ThemeProvider storageKey="vite-ui-theme">
+    <div className="plasmo-flex plasmo-flex-col plasmo-p-3 plasmo-w-60 plasmo-h-64 plasmo-rounded">
       <h1 className="plasmo-text-base plasmo-font-bold plasmo-mb-2 plasmo-text-center">
         {chrome.i18n.getMessage("extensionName")}
       </h1>
@@ -130,10 +132,11 @@ function IndexPopup(): JSX.Element {
         {renderImportTab()}
       </Tabs>
 
-      <p className="plasmo-mt-2 plasmo-text-xs plasmo-text-center plasmo-text-gray-500">
+      <p className="plasmo-mt-2 plasmo-text-xs plasmo-text-center plasmo-text-muted-foreground">
         {chrome.i18n.getMessage("extensionDescription")}
       </p>
     </div>
+    </ThemeProvider>
   )
 }
 
