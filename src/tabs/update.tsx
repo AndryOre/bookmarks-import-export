@@ -18,6 +18,15 @@ interface ChangelogEntry {
 
 const changelog: ChangelogEntry[] = [
   {
+    version: "1.3.0",
+    date: chrome.i18n.getMessage("changelog_1_3_0_date"),
+    changes: [
+      {
+        description: chrome.i18n.getMessage("changelog_1_3_0_1")
+      }
+    ]
+  },
+  {
     version: "1.2.0",
     date: chrome.i18n.getMessage("changelog_1_2_0_date"),
     changes: [

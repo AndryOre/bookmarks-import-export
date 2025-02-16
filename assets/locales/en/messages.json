@@ -425,5 +425,12 @@
   "multiLanguageSupportDescription": {
     "message": "Automatically adapts to your browser's language! Available in English and Spanish.",
     "description": "Multi-language support description"
+  },
+  "changelog_1_3_0_date": {
+    "message": "February 16, 2025",
+    "description": "Changelog 1.3.0 date"
+  },
+  "changelog_1_3_0_1": {
+    "message": "Added dark mode support that automatically matches your system theme preferences."
   }
 }
