@@ -424,5 +424,12 @@
   "multiLanguageSupportDescription": {
     "message": "¡Se adapta automáticamente al idioma de tu navegador! Disponible en español e inglés.",
     "description": "Soporte Multi-idioma descripción"
+  },
+  "changelog_1_3_0_date": {
+    "message": "16 de febrero de 2025",
+    "description": "Fecha del changelog 1.3.0"
+  },
+  "changelog_1_3_0_1": {
+    "message": "Añadido modo oscuro que se adapta automáticamente a las preferencias de tema de tu sistema."
   }
 }

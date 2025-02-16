@@ -7,10 +7,12 @@
 ## Features 🌟
 
 - ⬇️ **Bookmark Exporting**: Easily export your bookmarks to different formats (HTML, JSON, CSV) for better accessibility and management.
-- ⬆️ **Bookmark Importing**: Import bookmarks from JSON and HTML files, allowing you to transfer your bookmarks between browsers or restore from backups.
+- ⬆️ **Bookmark Importing**: Import bookmarks from HTML, JSON and CSV files, allowing you to transfer your bookmarks between browsers or restore from backups.
 - 🔍 **Advanced Export**: Use the advanced export feature to selectively export bookmarks, search through your bookmark collection, and customize export settings.
 - 🌐 **Browser Compatibility**: Works seamlessly with Chromium-based web browsers, ensuring smooth operation across different platforms.
 - 📑 **Minimal Interface**: Clean and easy-to-use interface for quick access and efficient management of bookmarks.
+- 🌙 **Theme Support**: Automatically adapts to your system's theme preferences for a consistent look.
+- 🌍 **Multi-language**: Available in English and Spanish, automatically matching your browser's language.
 
 ## Tech Stack 🧰
 
