@@ -6,7 +6,7 @@
 
 ## Features 🌟
 
-- ⬇️ **Bookmark Exporting**: Easily export your bookmarks to different formats (JSON and HTML) for better accessibility and management.
+- ⬇️ **Bookmark Exporting**: Easily export your bookmarks to different formats (HTML, JSON, CSV) for better accessibility and management.
 - ⬆️ **Bookmark Importing**: Import bookmarks from JSON and HTML files, allowing you to transfer your bookmarks between browsers or restore from backups.
 - 🔍 **Advanced Export**: Use the advanced export feature to selectively export bookmarks, search through your bookmark collection, and customize export settings.
 - 🌐 **Browser Compatibility**: Works seamlessly with Chromium-based web browsers, ensuring smooth operation across different platforms.
@@ -34,7 +34,7 @@ Note: While this extension is primarily listed on the Chrome Web Store, it is co
 1. Click on the extension icon in your browser toolbar to open the popup.
 2. Choose between "Export" and "Import" tabs.
 3. For basic exporting:
-   - Select either HTML or JSON format.
+   - Select either HTML, JSON or CSV format.
    - Click the corresponding button to export your bookmarks.
    - Choose a location on your device to save the exported file.
 4. For advanced exporting:
