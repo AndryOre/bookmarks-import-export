@@ -1,7 +1,15 @@
 import logo from "data-base64:assets/icon.png"
-import { BookmarkPlus, FileJson, FileSpreadsheet, FileText, Languages, Settings, Star } from "lucide-react"
+import {
+  BookmarkPlus,
+  FileJson,
+  FileSpreadsheet,
+  FileText,
+  Languages,
+  Settings,
+  Star
+} from "lucide-react"
 
-import { Card, CardHeader, FeatureCard } from "~components"
+import { Card, CardHeader, FeatureCard, ThemeProvider } from "~components"
 
 import "~style.css"
 
@@ -37,8 +45,8 @@ export default function WelcomePage(): JSX.Element {
    * @returns {JSX.Element} Card with instructions to start using the extension
    */
   const renderGettingStarted = (): JSX.Element => (
-    <Card>
-      <CardHeader className="plasmo-flex plasmo-items-center plasmo-bg-secondary plasmo-text-secondary-foreground plasmo-font-semibold plasmo-text-base">
+    <Card className="plasmo-bg-muted">
+      <CardHeader className="plasmo-flex plasmo-items-center plasmo-text-secondary-foreground plasmo-font-semibold plasmo-text-base">
         {chrome.i18n.getMessage("gettingStarted")}
       </CardHeader>
     </Card>
@@ -108,7 +116,7 @@ export default function WelcomePage(): JSX.Element {
   const renderFooter = (): JSX.Element => (
     <div className="plasmo-text-center plasmo-text-sm plasmo-text-muted-foreground">
       <p>
-        {chrome.i18n.getMessage("builtBy")} {" "}
+        {chrome.i18n.getMessage("builtBy")}{" "}
         <a
           href="https://x.com/andryore"
           target="_blank"
@@ -116,7 +124,7 @@ export default function WelcomePage(): JSX.Element {
           className="plasmo-text-primary plasmo-font-semibold plasmo-inline-flex plasmo-items-center hover:plasmo-underline">
           @AndryOre
         </a>
-        . {chrome.i18n.getMessage("sourceCode")} {" "}
+        . {chrome.i18n.getMessage("sourceCode")}{" "}
         <a
           href="https://github.com/AndryOre/bookmarks-import-export"
           target="_blank"
@@ -130,12 +138,14 @@ export default function WelcomePage(): JSX.Element {
   )
 
   return (
-    <main className="plasmo-flex plasmo-p-6 plasmo-flex-col plasmo-min-h-screen plasmo-overflow-auto plasmo-items-center plasmo-justify-center plasmo-gap-6">
-      {renderHeader()}
-      {renderGettingStarted()}
-      {renderFeatures()}
-      {renderFeedbackLink()}
-      {renderFooter()}
-    </main>
+    <ThemeProvider storageKey="vite-ui-theme">
+      <main className="plasmo-flex plasmo-p-6 plasmo-flex-col plasmo-min-h-screen plasmo-overflow-auto plasmo-items-center plasmo-justify-center plasmo-gap-6">
+        {renderHeader()}
+        {renderGettingStarted()}
+        {renderFeatures()}
+        {renderFeedbackLink()}
+        {renderFooter()}
+      </main>
+    </ThemeProvider>
   )
 }
