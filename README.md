@@ -90,6 +90,26 @@ pnpm package
 **We welcome your contributions!** If you'd like to be part of this list, simply fork this repository, make your changes, and open a pull request. Once merged, your avatar will appear below automatically.
 
 <!-- readme: contributors -start -->
+<table>
+	<tbody>
+		<tr>
+            <td align="center">
+                <a href="https://github.com/AndryOre">
+                    <img src="https://avatars.githubusercontent.com/u/44151183?v=4" width="100;" alt="AndryOre"/>
+                    <br />
+                    <sub><b>Andry Orellana</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/aam1r">
+                    <img src="https://avatars.githubusercontent.com/u/566418?v=4" width="100;" alt="aam1r"/>
+                    <br />
+                    <sub><b>Aamir Mansoor</b></sub>
+                </a>
+            </td>
+		</tr>
+	<tbody>
+</table>
 <!-- readme: contributors -end -->
 
 
