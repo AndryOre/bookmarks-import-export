@@ -8,6 +8,8 @@ import React, {
   useState
 } from "react"
 
+import { useStorage } from "@plasmohq/storage/hook"
+
 import { getFaviconUrl } from "~common/lib"
 import type {
   BookmarkNode,
@@ -38,8 +40,8 @@ const BookmarkTreeComponent = forwardRef<BookmarkTreeHandle, BookmarkTreeProps>(
     const [checkedState, setCheckedState] = useState<
       Record<string, CheckedState>
     >({})
-    const [autoExpand, setAutoExpand] = useState<boolean>(false)
-    const [showBookmarkIcon, setShowBookmarkIcon] = useState<boolean>(true)
+    const [autoExpand] = useStorage("autoExpandFolders", false)
+    const [showBookmarkIcon] = useStorage("showBookmarkIcon", true)
 
     /**
      * Collects all folder IDs from the bookmark tree
@@ -98,14 +100,6 @@ const BookmarkTreeComponent = forwardRef<BookmarkTreeHandle, BookmarkTreeProps>(
     }, [onSelectionChange])
 
     /**
-     * Loads the auto-expand setting from localStorage
-     */
-    useEffect(() => {
-      const autoExpandSetting = localStorage.getItem("autoExpandFolders")
-      setAutoExpand(autoExpandSetting === "true")
-    }, [])
-
-    /**
      * Fetches bookmarks on component mount
      */
     useEffect(() => {
@@ -120,24 +114,6 @@ const BookmarkTreeComponent = forwardRef<BookmarkTreeHandle, BookmarkTreeProps>(
         expandAllFolders()
       }
     }, [autoExpand, expandAllFolders])
-
-    /**
-     * Handles changes in settings
-     */
-    useEffect(() => {
-      const handleSettingsChange = () => {
-        const autoExpandSetting = localStorage.getItem("autoExpandFolders")
-        const showBookmarkIconSetting = localStorage.getItem("showBookmarkIcon")
-        setAutoExpand(autoExpandSetting === "true")
-        setShowBookmarkIcon(showBookmarkIconSetting === "true")
-      }
-
-      window.addEventListener("settingsChanged", handleSettingsChange)
-      handleSettingsChange()
-      return () => {
-        window.removeEventListener("settingsChanged", handleSettingsChange)
-      }
-    }, [])
 
     /**
      * Updates the selection count when bookmarks or checked state changes
@@ -455,14 +431,17 @@ const BookmarkTreeComponent = forwardRef<BookmarkTreeHandle, BookmarkTreeProps>(
               } else if (node.children) {
                 const selectedChildren = traverseNodes(node.children)
                 if (selectedChildren.length > 0) {
-                  const nodeWithSelectedChildren = { ...node, children: selectedChildren }
+                  const nodeWithSelectedChildren = {
+                    ...node,
+                    children: selectedChildren
+                  }
                   acc.push(nodeWithSelectedChildren)
                 }
               }
               return acc
             }, [])
           }
-          
+
           const selectedBookmarks = traverseNodes(result[0].children || [])
           resolve(selectedBookmarks)
         })

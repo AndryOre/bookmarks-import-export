@@ -1,4 +1,6 @@
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useRef, useState } from "react"
+
+import { useStorage } from "@plasmohq/storage/hook"
 
 import { exportToCSV, exportToHTML, exportToJSON } from "~common/lib"
 import type {
@@ -19,55 +21,18 @@ export default function AdvancedExportPage(): JSX.Element {
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedCount, setSelectedCount] = useState(0)
   const [totalCount, setTotalCount] = useState(0)
-  const [includeDateAdded, setIncludeDateAdded] = useState(true)
-  const [includeDateLastUsed, setIncludeDateLastUsed] = useState(false)
-  const [includeDateGroupModified, setIncludeDateGroupModified] = useState(true)
-  const [hideOtherBookmarks, setHideOtherBookmarks] = useState(true)
-  const [hideParentFolder, setHideParentFolder] = useState(false)
+
+  const [includeDateAdded] = useStorage("includeDateAdded", true)
+  const [includeDateLastUsed] = useStorage("includeDateLastUsed", false)
+  const [includeDateGroupModified] = useStorage(
+    "includeDateGroupModified",
+    true
+  )
+  const [hideOtherBookmarks] = useStorage("hideOtherBookmarks", true)
+  const [hideParentFolder] = useStorage("hideParentFolder", false)
+  const [includeIconData] = useStorage("includeIconData", false)
+
   const bookmarkTreeRef = useRef<BookmarkTreeHandle>(null)
-
-  /**
-   * Load initial settings from localStorage
-   */
-  useEffect(() => {
-    const loadSetting = (key: string, setter: (value: boolean) => void) => {
-      const loadedValue = localStorage.getItem(key)
-      if (loadedValue !== null) {
-        setter(JSON.parse(loadedValue))
-      }
-    }
-
-    loadSetting("includeDateAdded", setIncludeDateAdded)
-    loadSetting("includeDateLastUsed", setIncludeDateLastUsed)
-    loadSetting("includeDateGroupModified", setIncludeDateGroupModified)
-    loadSetting("hideOtherBookmarks", setHideOtherBookmarks)
-    loadSetting("hideParentFolder", setHideParentFolder)
-  }, [])
-
-  /**
-   * Handle settings changes
-   */
-  useEffect(() => {
-    const handleSettingsChange = () => {
-      const loadSetting = (key: string, setter: (value: boolean) => void) => {
-        const newValue = localStorage.getItem(key)
-        if (newValue !== null) {
-          setter(JSON.parse(newValue))
-        }
-      }
-
-      loadSetting("includeDateAdded", setIncludeDateAdded)
-      loadSetting("includeDateLastUsed", setIncludeDateLastUsed)
-      loadSetting("includeDateGroupModified", setIncludeDateGroupModified)
-      loadSetting("hideOtherBookmarks", setHideOtherBookmarks)
-      loadSetting("hideParentFolder", setHideParentFolder)
-    }
-
-    window.addEventListener("settingsChanged", handleSettingsChange)
-    return () => {
-      window.removeEventListener("settingsChanged", handleSettingsChange)
-    }
-  }, [])
 
   /**
    * Refresh the bookmark tree
@@ -121,7 +86,6 @@ export default function AdvancedExportPage(): JSX.Element {
         return
       }
 
-      const includeIconData = localStorage.getItem("includeIconData") === "true"
       const exportConfig = {
         selectedBookmarks,
         includeIconData,

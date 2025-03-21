@@ -1,5 +1,6 @@
 import { InfoIcon } from "lucide-react"
-import { useEffect, useState } from "react"
+
+import { useStorage } from "@plasmohq/storage/hook"
 
 import {
   Dialog,
@@ -41,8 +42,6 @@ type SettingKey =
   | "hideOtherBookmarks"
   | "hideParentFolder"
 
-const settingsChangedEvent = new Event("settingsChanged")
-
 /**
  * SettingsDialog component for managing user preferences
  * @param {SettingsDialogProps} props - The component props
@@ -52,40 +51,38 @@ export function SettingsDialog({
   isOpen,
   onClose
 }: SettingsDialogProps): JSX.Element {
-  const [settings, setSettings] = useState({
-    showBookmarkIcon: true,
-    autoExpandFolders: false,
-    includeIconData: true,
-    includeDateAdded: true,
-    includeDateLastUsed: false,
-    includeDateGroupModified: true,
-    hideOtherBookmarks: true,
-    hideParentFolder: false
-  })
-
-  /**
-   * Load settings from localStorage
-   */
-  useEffect(() => {
-    const loadSetting = (key: SettingKey) => {
-      const loadedValue = localStorage.getItem(key)
-      if (loadedValue !== null) {
-        setSettings((prev) => ({ ...prev, [key]: JSON.parse(loadedValue) }))
-      }
-    }
-
-    Object.keys(settings).forEach((key) => loadSetting(key as SettingKey))
-  }, [])
-
-  /**
-   * Save settings to localStorage and dispatch event
-   */
-  useEffect(() => {
-    Object.entries(settings).forEach(([key, value]) => {
-      localStorage.setItem(key, JSON.stringify(value))
-    })
-    window.dispatchEvent(settingsChangedEvent)
-  }, [settings])
+  const [showBookmarkIcon, setShowBookmarkIcon] = useStorage(
+    "showBookmarkIcon",
+    true
+  )
+  const [autoExpandFolders, setAutoExpandFolders] = useStorage(
+    "autoExpandFolders",
+    false
+  )
+  const [includeIconData, setIncludeIconData] = useStorage(
+    "includeIconData",
+    true
+  )
+  const [includeDateAdded, setIncludeDateAdded] = useStorage(
+    "includeDateAdded",
+    true
+  )
+  const [includeDateLastUsed, setIncludeDateLastUsed] = useStorage(
+    "includeDateLastUsed",
+    false
+  )
+  const [includeDateGroupModified, setIncludeDateGroupModified] = useStorage(
+    "includeDateGroupModified",
+    true
+  )
+  const [hideOtherBookmarks, setHideOtherBookmarks] = useStorage(
+    "hideOtherBookmarks",
+    true
+  )
+  const [hideParentFolder, setHideParentFolder] = useStorage(
+    "hideParentFolder",
+    false
+  )
 
   /**
    * Handle setting change
@@ -93,7 +90,59 @@ export function SettingsDialog({
    * @param {boolean} value - The new value for the setting
    */
   const handleSettingChange = (key: SettingKey, value: boolean) => {
-    setSettings((prev) => ({ ...prev, [key]: value }))
+    switch (key) {
+      case "showBookmarkIcon":
+        setShowBookmarkIcon(value)
+        break
+      case "autoExpandFolders":
+        setAutoExpandFolders(value)
+        break
+      case "includeIconData":
+        setIncludeIconData(value)
+        break
+      case "includeDateAdded":
+        setIncludeDateAdded(value)
+        break
+      case "includeDateLastUsed":
+        setIncludeDateLastUsed(value)
+        break
+      case "includeDateGroupModified":
+        setIncludeDateGroupModified(value)
+        break
+      case "hideOtherBookmarks":
+        setHideOtherBookmarks(value)
+        break
+      case "hideParentFolder":
+        setHideParentFolder(value)
+        break
+    }
+  }
+
+  /**
+   * Get setting value
+   * @param {SettingKey} key - The setting key to get
+   */
+  const getSettingValue = (key: SettingKey): boolean => {
+    switch (key) {
+      case "showBookmarkIcon":
+        return showBookmarkIcon
+      case "autoExpandFolders":
+        return autoExpandFolders
+      case "includeIconData":
+        return includeIconData
+      case "includeDateAdded":
+        return includeDateAdded
+      case "includeDateLastUsed":
+        return includeDateLastUsed
+      case "includeDateGroupModified":
+        return includeDateGroupModified
+      case "hideOtherBookmarks":
+        return hideOtherBookmarks
+      case "hideParentFolder":
+        return hideParentFolder
+      default:
+        return false
+    }
   }
 
   /**
@@ -133,7 +182,7 @@ export function SettingsDialog({
       </div>
       <Switch
         id={settingKey}
-        checked={settings[settingKey]}
+        checked={getSettingValue(settingKey)}
         onCheckedChange={(checked) => handleSettingChange(settingKey, checked)}
       />
     </div>

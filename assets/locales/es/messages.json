@@ -431,5 +431,65 @@
   },
   "changelog_1_3_0_1": {
     "message": "Añadido modo oscuro que se adapta automáticamente a las preferencias de tema de tu sistema."
+  },
+  "autoExport": {
+    "message": "Exportación Automática",
+    "description": "Exportación Automática"
+  },
+  "autoExportDescription": {
+    "message": "Exporta automáticamente tus marcadores a formatos HTML, JSON y CSV.",
+    "description": "Exportación Automática descripción"
+  },
+  "enableAutoExport": {
+    "message": "Habilitar Exportación Automática",
+    "description": "Habilitar Exportación Automática"
+  },
+  "enableAutoExportDescription": {
+    "message": "Habilita la exportación automática de tus marcadores.",
+    "description": "Habilitar Exportación Automática descripción"
+  },
+  "exportInterval": {
+    "message": "Intervalo de Exportación",
+    "description": "Intervalo de Exportación"
+  },
+  "every12Hours": {
+    "message": "Cada 12 horas",
+    "description": "Cada 12 horas"
+  },
+  "everyDay": {
+    "message": "Cada día",
+    "description": "Cada día"
+  },
+  "every3Days": {
+    "message": "Cada 3 días",
+    "description": "Cada 3 días"
+  },
+  "every7Days": {
+    "message": "Cada 7 días",
+    "description": "Cada 7 días"
+  },
+  "exportPath": {
+    "message": "Ruta de Exportación",
+    "description": "Ruta de Exportación"
+  },
+  "exportPathPlaceholder": {
+    "message": "Enter export path",
+    "description": "Ruta de Exportación placeholder"
+  },
+  "exportPathDescription": {
+    "message": "Ingresa la ruta a exportar los marcadores",
+    "description": "Ruta de Exportación descripción"
+  },
+  "exportFormats": {
+    "message": "Formatos de Exportación",
+    "description": "Formatos de Exportación"
+  },
+  "exportFormatsDescription": {
+    "message": "Selecciona los formatos a exportar los marcadores",
+    "description": "Formatos de Exportación descripción"
+  },
+  "saveSettings": {
+    "message": "Guardar Ajustes",
+    "description": "Guardar Ajustes"
   }
 }

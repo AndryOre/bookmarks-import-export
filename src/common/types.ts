@@ -150,3 +150,39 @@ export interface ParsedBookmark {
   /** Optional parent ID for the bookmark or folder (used in JSON import) */
   parentId?: string
 }
+
+/**
+ * Export intervals in milliseconds
+ */
+export const EXPORT_INTERVALS = {
+  HOURS_12: 12 * 60 * 60 * 1000,
+  DAYS_1: 24 * 60 * 60 * 1000,
+  DAYS_3: 3 * 24 * 60 * 60 * 1000,
+  DAYS_7: 7 * 24 * 60 * 60 * 1000
+} as const
+
+export type ExportInterval =
+  (typeof EXPORT_INTERVALS)[keyof typeof EXPORT_INTERVALS]
+
+/**
+ * Available export formats
+ */
+export const EXPORT_FORMATS = ["html", "json", "csv"] as const
+
+export type ExportFormat = (typeof EXPORT_FORMATS)[number]
+
+/**
+ * Auto-export configuration interface
+ */
+export interface AutoExportConfig {
+  /** Whether auto-export is enabled */
+  enabled: boolean
+  /** Export interval in milliseconds */
+  interval: ExportInterval
+  /** Path where exports will be saved */
+  path: string
+  /** Formats to export in */
+  formats: ExportFormat[]
+  /** Preferred time for export (HH:mm format), only used for intervals >= 24h */
+  preferredTime: string
+}

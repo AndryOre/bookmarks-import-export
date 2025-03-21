@@ -1,8 +1,9 @@
 import React, { useCallback, useState } from "react"
-import { exportToHTML, exportToJSON, exportToCSV } from "~common/lib"
 
+import { exportToCSV, exportToHTML, exportToJSON } from "~common/lib"
 import {
   AdvancedExportButton,
+  AutoExportButton,
   ImportBookmarksButton,
   Tabs,
   TabsContent,
@@ -10,7 +11,10 @@ import {
   TabsTrigger,
   ThemeProvider
 } from "~components"
-import { ExportFormatSelector, type ExportFormat } from "~components/exportFormatSelector"
+import {
+  ExportFormatSelector,
+  type ExportFormat
+} from "~components/exportFormatSelector"
 
 import "~style.css"
 
@@ -87,7 +91,10 @@ function IndexPopup(): JSX.Element {
         <div className="plasmo-flex plasmo-justify-between plasmo-items-center plasmo-gap-2 plasmo-w-full">
           <ExportFormatSelector onExport={handleExport} />
         </div>
-        <AdvancedExportButton className="plasmo-w-full" />
+        <div className="plasmo-flex plasmo-flex-col plasmo-w-full">
+          <AdvancedExportButton className="plasmo-w-full" />
+          <AutoExportButton className="plasmo-w-full" />
+        </div>
       </TabsContent>
     ),
     [activeTab, handleExport]
@@ -112,30 +119,34 @@ function IndexPopup(): JSX.Element {
 
   return (
     <ThemeProvider storageKey="vite-ui-theme">
-    <div className="plasmo-flex plasmo-flex-col plasmo-p-3 plasmo-w-60 plasmo-h-64 plasmo-rounded">
-      <h1 className="plasmo-text-base plasmo-font-bold plasmo-mb-2 plasmo-text-center">
-        {chrome.i18n.getMessage("extensionName")}
-      </h1>
+      <div className="plasmo-flex plasmo-flex-col plasmo-p-3 plasmo-w-60 plasmo-h-64 plasmo-rounded">
+        <h1 className="plasmo-text-base plasmo-font-bold plasmo-mb-2 plasmo-text-center">
+          {chrome.i18n.getMessage("extensionName")}
+        </h1>
 
-      <Tabs
-        defaultValue="export"
-        className="plasmo-flex-grow plasmo-flex plasmo-flex-col">
-        <TabsList className="plasmo-grid plasmo-w-full plasmo-grid-cols-2">
-          <TabsTrigger value="export" onClick={() => handleTabChange("export")}>
-            {chrome.i18n.getMessage("export")}
-          </TabsTrigger>
-          <TabsTrigger value="import" onClick={() => handleTabChange("import")}>
-            {chrome.i18n.getMessage("import")}
-          </TabsTrigger>
-        </TabsList>
-        {renderExportTab()}
-        {renderImportTab()}
-      </Tabs>
+        <Tabs
+          defaultValue="export"
+          className="plasmo-flex-grow plasmo-flex plasmo-flex-col">
+          <TabsList className="plasmo-grid plasmo-w-full plasmo-grid-cols-2">
+            <TabsTrigger
+              value="export"
+              onClick={() => handleTabChange("export")}>
+              {chrome.i18n.getMessage("export")}
+            </TabsTrigger>
+            <TabsTrigger
+              value="import"
+              onClick={() => handleTabChange("import")}>
+              {chrome.i18n.getMessage("import")}
+            </TabsTrigger>
+          </TabsList>
+          {renderExportTab()}
+          {renderImportTab()}
+        </Tabs>
 
-      <p className="plasmo-mt-2 plasmo-text-xs plasmo-text-center plasmo-text-muted-foreground">
-        {chrome.i18n.getMessage("extensionDescription")}
-      </p>
-    </div>
+        <p className="plasmo-mt-2 plasmo-text-xs plasmo-text-center plasmo-text-muted-foreground">
+          {chrome.i18n.getMessage("extensionDescription")}
+        </p>
+      </div>
     </ThemeProvider>
   )
 }

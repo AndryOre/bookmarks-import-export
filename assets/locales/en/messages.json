@@ -432,5 +432,65 @@
   },
   "changelog_1_3_0_1": {
     "message": "Added dark mode support that automatically matches your system theme preferences."
+  },
+  "autoExport": {
+    "message": "Auto Export",
+    "description": "Auto Export"
+  },
+  "autoExportDescription": {
+    "message": "Automatically export your bookmarks to HTML, JSON, and CSV formats.",
+    "description": "Auto Export description"
+  },
+  "enableAutoExport": {
+    "message": "Enable Auto Export",
+    "description": "Enable Auto Export"
+  },
+  "enableAutoExportDescription": {
+    "message": "Enable Auto Export",
+    "description": "Enable Auto Export description"
+  },
+  "exportInterval": {
+    "message": "Export Interval",
+    "description": "Export Interval"
+  },
+  "every12Hours": {
+    "message": "Every 12 hours",
+    "description": "Every 12 hours"
+  },
+  "everyDay": {
+    "message": "Every day",
+    "description": "Every day"
+  },
+  "every3Days": {
+    "message": "Every 3 days",
+    "description": "Every 3 days"
+  },
+  "every7Days": {
+    "message": "Every 7 days",
+    "description": "Every 7 days"
+  },
+  "exportPath": {
+    "message": "Export Path",
+    "description": "Export Path"
+  },
+  "exportPathPlaceholder": {
+    "message": "Enter export path",
+    "description": "Export Path placeholder"
+  },
+  "exportPathDescription": {
+    "message": "Enter the path to export the bookmarks",
+    "description": "Export Path description"
+  },
+  "exportFormats": {
+    "message": "Export Formats",
+    "description": "Export Formats"
+  },
+  "exportFormatsDescription": {
+    "message": "Select the formats to export the bookmarks",
+    "description": "Export Formats description"
+  },
+  "saveSettings": {
+    "message": "Save Settings",
+    "description": "Save Settings"
   }
 }
