@@ -444,10 +444,6 @@
     "message": "Habilitar Exportación Automática",
     "description": "Habilitar Exportación Automática"
   },
-  "enableAutoExportDescription": {
-    "message": "Habilita la exportación automática de tus marcadores.",
-    "description": "Habilitar Exportación Automática descripción"
-  },
   "exportInterval": {
     "message": "Intervalo de Exportación",
     "description": "Intervalo de Exportación"
@@ -491,5 +487,29 @@
   "saveSettings": {
     "message": "Guardar Ajustes",
     "description": "Guardar Ajustes"
+  },
+  "selectExportInterval": {
+    "message": "Selecciona el intervalo de exportación",
+    "description": "Descripción del intervalo de exportación"
+  },
+  "preferredExportTime": {
+    "message": "Hora de Exportación Preferida",
+    "description": "Etiqueta de hora de exportación preferida"
+  },
+  "timeSelectionUnavailable": {
+    "message": "La selección de hora solo está disponible para intervalos de 24 horas o más",
+    "description": "Mensaje de selección de hora no disponible"
+  },
+  "selectPreferredTime": {
+    "message": "Selecciona tu hora preferida para las exportaciones automáticas",
+    "description": "Descripción de selección de hora preferida"
+  },
+  "saving": {
+    "message": "Guardando...",
+    "description": "Mensaje de guardado en progreso"
+  },
+  "settingsSaved": {
+    "message": "¡Ajustes guardados correctamente!",
+    "description": "Mensaje de éxito al guardar ajustes"
   }
 }

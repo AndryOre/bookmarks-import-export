@@ -134,8 +134,7 @@ export default function AutoExportPage() {
                             {chrome.i18n.getMessage("enableAutoExport")}
                           </FormLabel>
                           <FormDescription>
-                            Automatically export your bookmarks to HTML, JSON,
-                            and CSV formats.
+                            {chrome.i18n.getMessage("autoExportDescription")}
                           </FormDescription>
                         </div>
                         <FormControl>
@@ -174,7 +173,7 @@ export default function AutoExportPage() {
                               ? "plasmo-opacity-50"
                               : ""
                           }>
-                          Select export interval
+                          {chrome.i18n.getMessage("selectExportInterval")}
                         </FormDescription>
                         <FormControl>
                           <RadioGroup
@@ -262,7 +261,7 @@ export default function AutoExportPage() {
                               ? "plasmo-opacity-50"
                               : ""
                           }>
-                          Preferred Export Time
+                          {chrome.i18n.getMessage("preferredExportTime")}
                         </FormLabel>
                         <FormDescription
                           className={
@@ -274,8 +273,8 @@ export default function AutoExportPage() {
                           }>
                           {autoExportForm.watch("interval") <
                           EXPORT_INTERVALS.DAYS_1
-                            ? "Time selection only available for intervals of 24 hours or more"
-                            : "Select your preferred time for auto exports"}
+                            ? chrome.i18n.getMessage("timeSelectionUnavailable")
+                            : chrome.i18n.getMessage("selectPreferredTime")}
                         </FormDescription>
                         <FormControl>
                           <TimePicker
@@ -441,9 +440,9 @@ export default function AutoExportPage() {
                       <SaveIcon />
                     )}
                     {isSaving
-                      ? "Saving..."
+                      ? chrome.i18n.getMessage("saving")
                       : showSaved
-                        ? "Settings saved successfully!"
+                        ? chrome.i18n.getMessage("settingsSaved")
                         : chrome.i18n.getMessage("saveSettings")}
                   </Button>
                 </CardFooter>

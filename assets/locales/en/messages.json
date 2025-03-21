@@ -445,10 +445,6 @@
     "message": "Enable Auto Export",
     "description": "Enable Auto Export"
   },
-  "enableAutoExportDescription": {
-    "message": "Enable Auto Export",
-    "description": "Enable Auto Export description"
-  },
   "exportInterval": {
     "message": "Export Interval",
     "description": "Export Interval"
@@ -492,5 +488,29 @@
   "saveSettings": {
     "message": "Save Settings",
     "description": "Save Settings"
+  },
+  "selectExportInterval": {
+    "message": "Select export interval",
+    "description": "Select export interval description"
+  },
+  "preferredExportTime": {
+    "message": "Preferred Export Time",
+    "description": "Preferred export time label"
+  },
+  "timeSelectionUnavailable": {
+    "message": "Time selection only available for intervals of 24 hours or more",
+    "description": "Time selection unavailable message"
+  },
+  "selectPreferredTime": {
+    "message": "Select your preferred time for auto exports",
+    "description": "Select preferred time description"
+  },
+  "saving": {
+    "message": "Saving...",
+    "description": "Saving in progress message"
+  },
+  "settingsSaved": {
+    "message": "Settings saved successfully!",
+    "description": "Settings saved success message"
   }
 }
