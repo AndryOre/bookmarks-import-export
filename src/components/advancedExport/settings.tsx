@@ -1,11 +1,13 @@
-import { InfoIcon } from "lucide-react"
+import { Database, Eye, FolderTree, InfoIcon, RotateCcw, X } from "lucide-react"
 
 import { useStorage } from "@plasmohq/storage/hook"
 
 import {
+  Button,
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   Label,
@@ -119,6 +121,20 @@ export function SettingsDialog({
   }
 
   /**
+   * Reset all settings to their default values
+   */
+  const resetToDefaults = () => {
+    setShowBookmarkIcon(true)
+    setAutoExpandFolders(false)
+    setIncludeIconData(true)
+    setIncludeDateAdded(true)
+    setIncludeDateLastUsed(false)
+    setIncludeDateGroupModified(true)
+    setHideOtherBookmarks(true)
+    setHideParentFolder(false)
+  }
+
+  /**
    * Get setting value
    * @param {SettingKey} key - The setting key to get
    */
@@ -198,17 +214,27 @@ export function SettingsDialog({
           </DialogDescription>
         </DialogHeader>
         <Tabs defaultValue="display">
-          <TabsList className="plasmo-grid plasmo-w-full plasmo-grid-cols-2">
-            <TabsTrigger value="display">
+          <TabsList className="plasmo-grid plasmo-w-full plasmo-grid-cols-3">
+            <TabsTrigger
+              value="display"
+              className="plasmo-flex plasmo-items-center plasmo-gap-2">
+              <Eye className="plasmo-h-4 plasmo-w-4" />
               {chrome.i18n.getMessage("display")}
             </TabsTrigger>
-            <TabsTrigger value="export">
-              {chrome.i18n.getMessage("export")}
+            <TabsTrigger
+              value="data"
+              className="plasmo-flex plasmo-items-center plasmo-gap-2">
+              <Database className="plasmo-h-4 plasmo-w-4" />
+              Data
+            </TabsTrigger>
+            <TabsTrigger
+              value="structure"
+              className="plasmo-flex plasmo-items-center plasmo-gap-2">
+              <FolderTree className="plasmo-h-4 plasmo-w-4" />
+              Structure
             </TabsTrigger>
           </TabsList>
-          <TabsContent
-            value="display"
-            className="plasmo-gap-4 plasmo-flex plasmo-flex-col">
+          <TabsContent value="display" className="plasmo-space-y-4">
             {renderSettingSwitch(
               "showBookmarkIcon",
               chrome.i18n.getMessage("showBookmarkIcon"),
@@ -222,9 +248,7 @@ export function SettingsDialog({
               chrome.i18n.getMessage("autoExpandFoldersTooltip")
             )}
           </TabsContent>
-          <TabsContent
-            value="export"
-            className="plasmo-gap-4 plasmo-flex plasmo-flex-col">
+          <TabsContent value="data" className="plasmo-space-y-4">
             {renderSettingSwitch(
               "includeIconData",
               chrome.i18n.getMessage("includeIconData"),
@@ -250,7 +274,8 @@ export function SettingsDialog({
               chrome.i18n.getMessage("includeDateGroupModifiedDescription"),
               chrome.i18n.getMessage("includeDateGroupModifiedTooltip")
             )}
-            <Separator />
+          </TabsContent>
+          <TabsContent value="structure" className="plasmo-space-y-4">
             {renderSettingSwitch(
               "hideOtherBookmarks",
               chrome.i18n.getMessage("hideOtherBookmarks"),
@@ -266,6 +291,21 @@ export function SettingsDialog({
             )}
           </TabsContent>
         </Tabs>
+        <DialogFooter>
+          <Button
+            variant="secondary"
+            onClick={resetToDefaults}
+            className="plasmo-flex plasmo-items-center plasmo-gap-2">
+            <RotateCcw className="plasmo-h-4 plasmo-w-4" />
+            Reset to defaults
+          </Button>
+          <Button
+            onClick={onClose}
+            className="plasmo-flex plasmo-items-center plasmo-gap-2">
+            <X className="plasmo-h-4 plasmo-w-4" />
+            {chrome.i18n.getMessage("close")}
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   )

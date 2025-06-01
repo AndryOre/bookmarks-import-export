@@ -1,10 +1,5 @@
 import logo from "data-base64:assets/icon.png"
-import {
-  CheckSquare,
-  RefreshCw,
-  Settings,
-  Square
-} from "lucide-react"
+import { CheckSquare, RefreshCw, Settings, Square } from "lucide-react"
 import { useState } from "react"
 
 import { type HeaderProps } from "~common/types"
@@ -68,12 +63,8 @@ export function Header({
    */
   const renderActionButtons = () => (
     <div className="plasmo-flex plasmo-items-center plasmo-gap-2">
-      <Button
-        variant="outline"
-        size="icon"
-        onClick={() => setIsSettingsOpen(true)}
-        title={chrome.i18n.getMessage("settings")}>
-        <Settings />
+      <Button variant="outline" onClick={() => setIsSettingsOpen(true)}>
+        <Settings /> {chrome.i18n.getMessage("settings")}
       </Button>
       <SettingsDialog
         isOpen={isSettingsOpen}
