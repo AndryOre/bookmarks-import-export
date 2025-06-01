@@ -234,7 +234,9 @@ export function SettingsDialog({
               Structure
             </TabsTrigger>
           </TabsList>
-          <TabsContent value="display" className="plasmo-space-y-4">
+          <TabsContent
+            value="display"
+            className="plasmo-space-y-4 plasmo-min-h-[283px]">
             {renderSettingSwitch(
               "showBookmarkIcon",
               chrome.i18n.getMessage("showBookmarkIcon"),
@@ -248,7 +250,9 @@ export function SettingsDialog({
               chrome.i18n.getMessage("autoExpandFoldersTooltip")
             )}
           </TabsContent>
-          <TabsContent value="data" className="plasmo-space-y-4">
+          <TabsContent
+            value="data"
+            className="plasmo-space-y-4 plasmo-min-h-[283px]">
             {renderSettingSwitch(
               "includeIconData",
               chrome.i18n.getMessage("includeIconData"),
@@ -275,7 +279,9 @@ export function SettingsDialog({
               chrome.i18n.getMessage("includeDateGroupModifiedTooltip")
             )}
           </TabsContent>
-          <TabsContent value="structure" className="plasmo-space-y-4">
+          <TabsContent
+            value="structure"
+            className="plasmo-space-y-4 plasmo-min-h-[283px]">
             {renderSettingSwitch(
               "hideOtherBookmarks",
               chrome.i18n.getMessage("hideOtherBookmarks"),
