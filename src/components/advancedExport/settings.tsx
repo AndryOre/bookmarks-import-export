@@ -24,11 +24,18 @@ import {
 } from "~components"
 
 /**
+ * Available tab types for the settings dialog
+ */
+type SettingsTab = "display" | "data" | "structure"
+
+/**
  * Props for the SettingsDialog component
  */
 interface SettingsDialogProps {
   isOpen: boolean
   onClose: () => void
+  availableTabs?: SettingsTab[]
+  defaultTab?: SettingsTab
 }
 
 /**
@@ -51,7 +58,9 @@ type SettingKey =
  */
 export function SettingsDialog({
   isOpen,
-  onClose
+  onClose,
+  availableTabs = ["display", "data", "structure"],
+  defaultTab = "display"
 }: SettingsDialogProps): JSX.Element {
   const [showBookmarkIcon, setShowBookmarkIcon] = useStorage(
     "showBookmarkIcon",
@@ -213,89 +222,101 @@ export function SettingsDialog({
             {chrome.i18n.getMessage("settingsDescription")}
           </DialogDescription>
         </DialogHeader>
-        <Tabs defaultValue="display">
-          <TabsList className="plasmo-grid plasmo-w-full plasmo-grid-cols-3">
-            <TabsTrigger
-              value="display"
-              className="plasmo-flex plasmo-items-center plasmo-gap-2">
-              <Eye className="plasmo-h-4 plasmo-w-4" />
-              {chrome.i18n.getMessage("display")}
-            </TabsTrigger>
-            <TabsTrigger
-              value="data"
-              className="plasmo-flex plasmo-items-center plasmo-gap-2">
-              <Database className="plasmo-h-4 plasmo-w-4" />
-              Data
-            </TabsTrigger>
-            <TabsTrigger
-              value="structure"
-              className="plasmo-flex plasmo-items-center plasmo-gap-2">
-              <FolderTree className="plasmo-h-4 plasmo-w-4" />
-              Structure
-            </TabsTrigger>
+        <Tabs defaultValue={defaultTab}>
+          <TabsList className="plasmo-grid plasmo-w-full plasmo-grid-cols-[repeat(auto-fit,_minmax(0,_1fr))]">
+            {availableTabs.includes("display") && (
+              <TabsTrigger
+                value="display"
+                className="plasmo-flex plasmo-items-center plasmo-gap-2">
+                <Eye className="plasmo-h-4 plasmo-w-4" />
+                {chrome.i18n.getMessage("display")}
+              </TabsTrigger>
+            )}
+            {availableTabs.includes("data") && (
+              <TabsTrigger
+                value="data"
+                className="plasmo-flex plasmo-items-center plasmo-gap-2">
+                <Database className="plasmo-h-4 plasmo-w-4" />
+                Data
+              </TabsTrigger>
+            )}
+            {availableTabs.includes("structure") && (
+              <TabsTrigger
+                value="structure"
+                className="plasmo-flex plasmo-items-center plasmo-gap-2">
+                <FolderTree className="plasmo-h-4 plasmo-w-4" />
+                Structure
+              </TabsTrigger>
+            )}
           </TabsList>
-          <TabsContent
-            value="display"
-            className="plasmo-space-y-4 plasmo-min-h-[283px]">
-            {renderSettingSwitch(
-              "showBookmarkIcon",
-              chrome.i18n.getMessage("showBookmarkIcon"),
-              chrome.i18n.getMessage("showBookmarkIconDescription")
-            )}
-            <Separator />
-            {renderSettingSwitch(
-              "autoExpandFolders",
-              chrome.i18n.getMessage("autoExpandFolders"),
-              chrome.i18n.getMessage("autoExpandFoldersDescription"),
-              chrome.i18n.getMessage("autoExpandFoldersTooltip")
-            )}
-          </TabsContent>
-          <TabsContent
-            value="data"
-            className="plasmo-space-y-4 plasmo-min-h-[283px]">
-            {renderSettingSwitch(
-              "includeIconData",
-              chrome.i18n.getMessage("includeIconData"),
-              chrome.i18n.getMessage("includeIconDataDescription"),
-              chrome.i18n.getMessage("includeIconDataTooltip")
-            )}
-            <Separator />
-            {renderSettingSwitch(
-              "includeDateAdded",
-              chrome.i18n.getMessage("includeDateAdded"),
-              chrome.i18n.getMessage("includeDateAddedDescription")
-            )}
-            <Separator />
-            {renderSettingSwitch(
-              "includeDateLastUsed",
-              chrome.i18n.getMessage("includeDateLastUsed"),
-              chrome.i18n.getMessage("includeDateLastUsedDescription")
-            )}
-            <Separator />
-            {renderSettingSwitch(
-              "includeDateGroupModified",
-              chrome.i18n.getMessage("includeDateGroupModified"),
-              chrome.i18n.getMessage("includeDateGroupModifiedDescription"),
-              chrome.i18n.getMessage("includeDateGroupModifiedTooltip")
-            )}
-          </TabsContent>
-          <TabsContent
-            value="structure"
-            className="plasmo-space-y-4 plasmo-min-h-[283px]">
-            {renderSettingSwitch(
-              "hideOtherBookmarks",
-              chrome.i18n.getMessage("hideOtherBookmarks"),
-              chrome.i18n.getMessage("hideOtherBookmarksDescription"),
-              chrome.i18n.getMessage("hideOtherBookmarksTooltip")
-            )}
-            <Separator />
-            {renderSettingSwitch(
-              "hideParentFolder",
-              chrome.i18n.getMessage("hideParentFolder"),
-              chrome.i18n.getMessage("hideParentFolderDescription"),
-              chrome.i18n.getMessage("hideParentFolderTooltip")
-            )}
-          </TabsContent>
+          {availableTabs.includes("display") && (
+            <TabsContent
+              value="display"
+              className="plasmo-space-y-4 plasmo-min-h-[283px]">
+              {renderSettingSwitch(
+                "showBookmarkIcon",
+                chrome.i18n.getMessage("showBookmarkIcon"),
+                chrome.i18n.getMessage("showBookmarkIconDescription")
+              )}
+              <Separator />
+              {renderSettingSwitch(
+                "autoExpandFolders",
+                chrome.i18n.getMessage("autoExpandFolders"),
+                chrome.i18n.getMessage("autoExpandFoldersDescription"),
+                chrome.i18n.getMessage("autoExpandFoldersTooltip")
+              )}
+            </TabsContent>
+          )}
+          {availableTabs.includes("data") && (
+            <TabsContent
+              value="data"
+              className="plasmo-space-y-4 plasmo-min-h-[283px]">
+              {renderSettingSwitch(
+                "includeIconData",
+                chrome.i18n.getMessage("includeIconData"),
+                chrome.i18n.getMessage("includeIconDataDescription"),
+                chrome.i18n.getMessage("includeIconDataTooltip")
+              )}
+              <Separator />
+              {renderSettingSwitch(
+                "includeDateAdded",
+                chrome.i18n.getMessage("includeDateAdded"),
+                chrome.i18n.getMessage("includeDateAddedDescription")
+              )}
+              <Separator />
+              {renderSettingSwitch(
+                "includeDateLastUsed",
+                chrome.i18n.getMessage("includeDateLastUsed"),
+                chrome.i18n.getMessage("includeDateLastUsedDescription")
+              )}
+              <Separator />
+              {renderSettingSwitch(
+                "includeDateGroupModified",
+                chrome.i18n.getMessage("includeDateGroupModified"),
+                chrome.i18n.getMessage("includeDateGroupModifiedDescription"),
+                chrome.i18n.getMessage("includeDateGroupModifiedTooltip")
+              )}
+            </TabsContent>
+          )}
+          {availableTabs.includes("structure") && (
+            <TabsContent
+              value="structure"
+              className="plasmo-space-y-4 plasmo-min-h-[283px]">
+              {renderSettingSwitch(
+                "hideOtherBookmarks",
+                chrome.i18n.getMessage("hideOtherBookmarks"),
+                chrome.i18n.getMessage("hideOtherBookmarksDescription"),
+                chrome.i18n.getMessage("hideOtherBookmarksTooltip")
+              )}
+              <Separator />
+              {renderSettingSwitch(
+                "hideParentFolder",
+                chrome.i18n.getMessage("hideParentFolder"),
+                chrome.i18n.getMessage("hideParentFolderDescription"),
+                chrome.i18n.getMessage("hideParentFolderTooltip")
+              )}
+            </TabsContent>
+          )}
         </Tabs>
         <DialogFooter>
           <Button

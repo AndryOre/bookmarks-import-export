@@ -69,6 +69,8 @@ export function Header({
       <SettingsDialog
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
+        availableTabs={["display", "data", "structure"]}
+        defaultTab="display"
       />
       <ExportFormatSelector onExport={onExport} />
     </div>
