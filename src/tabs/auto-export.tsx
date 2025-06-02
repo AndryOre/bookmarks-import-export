@@ -1,6 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import logo from "data-base64:assets/icon.png"
-import { Check, FolderIcon, Loader2Icon, SaveIcon } from "lucide-react"
+import {
+  Check,
+  FolderIcon,
+  Loader2Icon,
+  SaveIcon,
+  Settings
+} from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -29,6 +35,7 @@ import {
   RadioGroup,
   RadioGroupItem,
   Separator,
+  SettingsDialog,
   Switch,
   ThemeProvider,
   TimePicker
@@ -67,6 +74,7 @@ export default function AutoExportPage() {
 
   const [isSaving, setIsSaving] = useState(false)
   const [showSaved, setShowSaved] = useState(false)
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
 
   const autoExportForm = useForm<z.infer<typeof autoExportSchema>>({
     resolver: zodResolver(autoExportSchema),
@@ -102,20 +110,31 @@ export default function AutoExportPage() {
       <div className="plasmo-min-h-screen plasmo-bg-background">
         <div className="plasmo-container plasmo-mx-auto plasmo-max-w-2xl plasmo-p-8">
           {/* Header */}
-          <div className="plasmo-mb-8 plasmo-flex plasmo-items-center plasmo-gap-4">
-            <img
-              src={logo}
-              alt={chrome.i18n.getMessage("extensionLogoAlt")}
-              className="plasmo-w-12 plasmo-h-12"
-            />
-            <div className="plasmo-flex plasmo-flex-col">
-              <h1 className="plasmo-text-2xl plasmo-font-bold plasmo-leading-tight plasmo-tracking-tight">
-                {chrome.i18n.getMessage("extensionName")}
-              </h1>
-              <h2 className="plasmo-text-lg plasmo-font-medium plasmo-text-muted-foreground">
-                {chrome.i18n.getMessage("autoExport")}
-              </h2>
+          <div className="plasmo-mb-8 plasmo-flex plasmo-items-center plasmo-justify-between">
+            <div className="plasmo-flex plasmo-items-center plasmo-gap-4">
+              <img
+                src={logo}
+                alt={chrome.i18n.getMessage("extensionLogoAlt")}
+                className="plasmo-w-12 plasmo-h-12"
+              />
+              <div className="plasmo-flex plasmo-flex-col">
+                <h1 className="plasmo-text-2xl plasmo-font-bold plasmo-leading-tight plasmo-tracking-tight">
+                  {chrome.i18n.getMessage("extensionName")}
+                </h1>
+                <h2 className="plasmo-text-lg plasmo-font-medium plasmo-text-muted-foreground">
+                  {chrome.i18n.getMessage("autoExport")}
+                </h2>
+              </div>
             </div>
+            <Button variant="outline" onClick={() => setIsSettingsOpen(true)}>
+              <Settings /> {chrome.i18n.getMessage("settings")}
+            </Button>
+            <SettingsDialog
+              isOpen={isSettingsOpen}
+              onClose={() => setIsSettingsOpen(false)}
+              availableTabs={["data", "structure"]}
+              defaultTab="data"
+            />
           </div>
 
           {/* Main Card */}

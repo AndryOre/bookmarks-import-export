@@ -49,12 +49,34 @@ async function autoExportBookmarks() {
     const config = await storage.get<AutoExportConfig>(SETTINGS.AUTO_EXPORT)
     if (!config?.enabled) return
 
+    // Get settings from SettingsDialog storage keys
+    const includeIconData =
+      (await storage.get<boolean>("includeIconData")) ?? true
+    const includeDateAdded =
+      (await storage.get<boolean>("includeDateAdded")) ?? true
+    const includeDateLastUsed =
+      (await storage.get<boolean>("includeDateLastUsed")) ?? false
+    const includeDateGroupModified =
+      (await storage.get<boolean>("includeDateGroupModified")) ?? true
+    const hideOtherBookmarks =
+      (await storage.get<boolean>("hideOtherBookmarks")) ?? true
+    const hideParentFolder =
+      (await storage.get<boolean>("hideParentFolder")) ?? false
+
     const bookmarks = await chrome.bookmarks.getTree()
     const timestamp = new Date().toISOString().split("T")[0]
     const downloads = []
 
     if (config.formats.includes("html")) {
-      const htmlContent = await exportToHTML(bookmarks)
+      const htmlContent = await exportToHTML(
+        null, // Export all bookmarks
+        includeIconData,
+        includeDateAdded,
+        includeDateLastUsed,
+        includeDateGroupModified,
+        hideOtherBookmarks,
+        hideParentFolder
+      )
       downloads.push(
         chrome.downloads.download({
           url: createDataUrl(htmlContent, "text/html"),
@@ -65,7 +87,15 @@ async function autoExportBookmarks() {
     }
 
     if (config.formats.includes("json")) {
-      const jsonData = await exportToJSON(bookmarks)
+      const jsonData = await exportToJSON(
+        null, // Export all bookmarks
+        includeIconData,
+        includeDateAdded,
+        includeDateLastUsed,
+        includeDateGroupModified,
+        hideOtherBookmarks,
+        hideParentFolder
+      )
       downloads.push(
         chrome.downloads.download({
           url: createDataUrl(
@@ -79,7 +109,13 @@ async function autoExportBookmarks() {
     }
 
     if (config.formats.includes("csv")) {
-      const csvData = await exportToCSV(bookmarks)
+      const csvData = await exportToCSV(
+        null, // Export all bookmarks
+        includeIconData,
+        includeDateAdded,
+        includeDateLastUsed,
+        hideParentFolder
+      )
       downloads.push(
         chrome.downloads.download({
           url: createDataUrl(csvData, "text/csv"),
