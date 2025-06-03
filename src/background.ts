@@ -63,8 +63,9 @@ async function autoExportBookmarks() {
     const hideParentFolder =
       (await storage.get<boolean>("hideParentFolder")) ?? false
 
-    const bookmarks = await chrome.bookmarks.getTree()
-    const timestamp = new Date().toISOString().split("T")[0]
+    const now = new Date()
+    const timestamp = `${now.toISOString().split("T")[0]} ${now.toTimeString().split(" ")[0].replace(/:/g, "-")}`
+    const baseName = chrome.i18n.getMessage("exportFileName")
     const downloads = []
 
     if (config.formats.includes("html")) {
@@ -80,7 +81,7 @@ async function autoExportBookmarks() {
       downloads.push(
         chrome.downloads.download({
           url: createDataUrl(htmlContent, "text/html"),
-          filename: `${config.path}bookmarks-${timestamp}.html`,
+          filename: `${config.path}${baseName} - ${timestamp}.html`,
           saveAs: false
         })
       )
@@ -102,7 +103,7 @@ async function autoExportBookmarks() {
             JSON.stringify(jsonData, null, 2),
             "application/json"
           ),
-          filename: `${config.path}bookmarks-${timestamp}.json`,
+          filename: `${config.path}${baseName} - ${timestamp}.json`,
           saveAs: false
         })
       )
@@ -119,7 +120,7 @@ async function autoExportBookmarks() {
       downloads.push(
         chrome.downloads.download({
           url: createDataUrl(csvData, "text/csv"),
-          filename: `${config.path}bookmarks-${timestamp}.csv`,
+          filename: `${config.path}${baseName} - ${timestamp}.csv`,
           saveAs: false
         })
       )
