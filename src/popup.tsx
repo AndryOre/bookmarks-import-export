@@ -39,22 +39,26 @@ function IndexPopup(): JSX.Element {
       let mimeType: string
       let fileName: string
 
+      const now = new Date()
+      const timestamp = `${now.toISOString().split("T")[0]} ${now.toTimeString().split(" ")[0].replace(/:/g, "-")}`
+      const baseName = chrome.i18n.getMessage("exportFileName")
+
       switch (format) {
         case "html":
           content = await exportToHTML()
           mimeType = "text/html"
-          fileName = chrome.i18n.getMessage("exportFileNameHTML")
+          fileName = `${baseName} - ${timestamp}.html`
           break
         case "json":
           const jsonData = await exportToJSON()
           content = JSON.stringify(jsonData, null, 2)
           mimeType = "application/json"
-          fileName = chrome.i18n.getMessage("exportFileNameJSON")
+          fileName = `${baseName} - ${timestamp}.json`
           break
         case "csv":
           content = await exportToCSV()
           mimeType = "text/csv"
-          fileName = chrome.i18n.getMessage("exportFileNameCSV")
+          fileName = `${baseName} - ${timestamp}.csv`
           break
       }
 

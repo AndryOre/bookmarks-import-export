@@ -315,14 +315,6 @@
       }
     }
   },
-  "exportFileNameHTML": {
-    "message": "Bookmarks.html",
-    "description": "Export file name"
-  },
-  "exportFileNameJSON": {
-    "message": "Bookmarks.json",
-    "description": "Export file name"
-  },
   "close": {
     "message": "Close",
     "description": "Close"
@@ -398,8 +390,8 @@
   "changelog_1_2_0_1": {
     "message": "Now automatically adapts to your browser's language! Available in English and Spanish."
   },
-  "exportFileNameCSV": {
-    "message": "Bookmarks.csv",
+  "exportFileName": {
+    "message": "Bookmarks",
     "description": "Export file name"
   },
   "exportError": {

@@ -315,12 +315,8 @@
       }
     }
   },
-  "exportFileNameHTML": {
-    "message": "Marcadores.html",
-    "description": "Nombre del archivo exportado"
-  },
-  "exportFileNameJSON": {
-    "message": "Marcadores.json",
+  "exportFileName": {
+    "message": "Marcadores",
     "description": "Nombre del archivo exportado"
   },
   "close": {
@@ -396,10 +392,6 @@
   },
   "changelog_1_2_0_1": {
     "message": "¡Ahora se adapta automáticamente al idioma de tu navegador! Disponible en español e inglés."
-  },
-  "exportFileNameCSV": {
-    "message": "Marcadores.csv",
-    "description": "Nombre del archivo exportado"
   },
   "exportError": {
     "message": "Error al exportar marcadores",
