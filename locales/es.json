@@ -248,6 +248,13 @@
       }
     }
   },
+  "changelog_1_4_0_date": {
+    "message": "29 de abril de 2025",
+    "description": "Fecha del changelog 1.4.0"
+  },
+  "changelog_1_4_0_1": {
+    "message": "Añadidas plantillas de nombre de archivo personalizables para las exportaciones — usa marcadores de fecha y hora como %yyyy, %mm, %dd para generar nombres únicos con timestamp automáticamente."
+  },
   "changelog_1_3_0_date": {
     "message": "16 de febrero de 2025",
     "description": "Fecha del changelog 1.3.0"
@@ -332,17 +339,21 @@
       }
     }
   },
-  "exportFileNameHTML": {
-    "message": "Marcadores.html",
-    "description": "Nombre del archivo exportado"
+  "exportFilenameTemplate": {
+    "message": "Plantilla de nombre de archivo",
+    "description": "Etiqueta del campo de plantilla de nombre de archivo de exportación"
   },
-  "exportFileNameJSON": {
-    "message": "Marcadores.json",
-    "description": "Nombre del archivo exportado"
+  "exportFilenameTemplateDescription": {
+    "message": "Personaliza el nombre del archivo exportado usando marcadores de fecha y hora",
+    "description": "Descripción del campo de plantilla de nombre de archivo de exportación"
   },
-  "exportFileNameCSV": {
-    "message": "Marcadores.csv",
-    "description": "Nombre del archivo exportado"
+  "exportFilenameTemplateTooltip": {
+    "message": "Marcadores disponibles: %yyyy (año), %yy (año corto), %mm (mes), %dd (día), %hh (hora), %min (minuto), %sec (segundo). Ejemplo: %yyyy-%mm-%dd_%hh-%min-%sec miPC",
+    "description": "Información sobre los marcadores disponibles para la plantilla de nombre de archivo"
+  },
+  "exportFilenameTemplatePreview": {
+    "message": "Vista previa:",
+    "description": "Etiqueta que se muestra antes de la vista previa del nombre de archivo"
   },
   "noBookmarksSelected": {
     "message": "No hay marcadores seleccionados",

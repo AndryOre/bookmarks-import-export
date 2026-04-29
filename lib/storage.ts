@@ -45,6 +45,11 @@ export const hideParentFolderStore = storage.defineItem<boolean>(
   { fallback: false }
 );
 
+export const exportFilenameTemplateStore = storage.defineItem<string>(
+  'local:exportFilenameTemplate',
+  { fallback: 'Bookmarks_%yyyy-%mm-%dd_%hh-%min-%sec' }
+);
+
 export const settingsStores = {
   showBookmarkIcon: showBookmarkIconStore,
   autoExpandFolders: autoExpandFoldersStore,

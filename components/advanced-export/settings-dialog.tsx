@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -5,6 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
@@ -27,7 +29,9 @@ import {
   includeDateGroupModifiedStore,
   hideOtherBookmarksStore,
   hideParentFolderStore,
+  exportFilenameTemplateStore,
 } from '@/lib/storage';
+import { formatFilenameTemplate } from '@/lib/filename-template';
 import type { SettingsDialogProps } from '@/lib/types';
 
 export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
@@ -39,6 +43,12 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   const [includeDateGroupModified, setIncludeDateGroupModified] = useStorageItem(includeDateGroupModifiedStore);
   const [hideOtherBookmarks, setHideOtherBookmarks] = useStorageItem(hideOtherBookmarksStore);
   const [hideParentFolder, setHideParentFolder] = useStorageItem(hideParentFolderStore);
+  const [filenameTemplate, setFilenameTemplate] = useStorageItem(exportFilenameTemplateStore);
+  const [localTemplate, setLocalTemplate] = useState(filenameTemplate);
+
+  useEffect(() => {
+    setLocalTemplate(filenameTemplate);
+  }, [filenameTemplate]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -76,6 +86,35 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
             </TabsContent>
 
             <TabsContent value="export" className="space-y-4 pt-2">
+              <div className="space-y-2">
+                <div className="flex items-center gap-1">
+                  <Label className="text-sm font-medium">
+                    {i18n.t('exportFilenameTemplate')}
+                  </Label>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Info className="size-3.5 text-muted-foreground cursor-help" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p className="max-w-xs text-xs">{i18n.t('exportFilenameTemplateTooltip')}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
+                <p className="text-xs text-muted-foreground">{i18n.t('exportFilenameTemplateDescription')}</p>
+                <Input
+                  value={localTemplate}
+                  onChange={(e) => setLocalTemplate(e.target.value)}
+                  onBlur={() => setFilenameTemplate(localTemplate)}
+                  className="h-8 text-sm"
+                />
+                <p className="text-xs text-muted-foreground">
+                  {i18n.t('exportFilenameTemplatePreview')}{' '}
+                  <span className="font-mono">{formatFilenameTemplate(localTemplate)}.html</span>
+                </p>
+              </div>
+
+              <Separator />
+
               <SettingRow
                 labelKey="includeIconData"
                 descKey="includeIconDataDescription"

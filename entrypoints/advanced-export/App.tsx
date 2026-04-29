@@ -9,10 +9,12 @@ import {
   includeDateGroupModifiedStore,
   hideOtherBookmarksStore,
   hideParentFolderStore,
+  exportFilenameTemplateStore,
 } from '@/lib/storage';
 import { exportToHTML } from '@/lib/exporters/export-html';
 import { exportToJSON } from '@/lib/exporters/export-json';
 import { exportToCSV } from '@/lib/exporters/export-csv';
+import { formatFilenameTemplate } from '@/lib/filename-template';
 import { i18n } from '#i18n';
 import type { BookmarkFormat, BookmarkTreeHandle } from '@/lib/types';
 
@@ -28,6 +30,7 @@ export default function App() {
   const [includeDateGroupModified] = useStorageItem(includeDateGroupModifiedStore);
   const [hideOtherBookmarks] = useStorageItem(hideOtherBookmarksStore);
   const [hideParentFolder] = useStorageItem(hideParentFolderStore);
+  const [filenameTemplate] = useStorageItem(exportFilenameTemplateStore);
 
   const handleExport = async (format: BookmarkFormat) => {
     const tree = treeRef.current;
@@ -53,6 +56,8 @@ export default function App() {
         hideParentFolder,
       };
 
+      const baseName = formatFilenameTemplate(filenameTemplate);
+
       switch (format) {
         case 'html': {
           content = await exportToHTML({
@@ -61,7 +66,7 @@ export default function App() {
             hideOtherBookmarks,
           });
           mimeType = 'text/html';
-          fileName = i18n.t('exportFileNameHTML');
+          fileName = `${baseName}.html`;
           break;
         }
         case 'json': {
@@ -72,7 +77,7 @@ export default function App() {
           });
           content = JSON.stringify(data, null, 2);
           mimeType = 'application/json';
-          fileName = i18n.t('exportFileNameJSON');
+          fileName = `${baseName}.json`;
           break;
         }
         case 'csv': {
@@ -81,7 +86,7 @@ export default function App() {
             includeDateLastUsed,
           });
           mimeType = 'text/csv';
-          fileName = i18n.t('exportFileNameCSV');
+          fileName = `${baseName}.csv`;
           break;
         }
         default:
