@@ -13,7 +13,20 @@ export interface ChangelogItem {
 export function getChangelog(): ChangelogEntry[] {
   const advancedExportUrl = browser.runtime.getURL('/advanced-export.html');
 
+  const advancedImportUrl = browser.runtime.getURL('/advanced-import.html');
+
   return [
+    {
+      version: '1.5.0',
+      dateKey: 'changelog_1_5_0_date',
+      items: [
+        {
+          textKey: 'changelog_1_5_0_1',
+          linkKey: 'changelog_1_5_0_1_link',
+          linkUrl: advancedImportUrl,
+        },
+      ],
+    },
     {
       version: '1.4.0',
       dateKey: 'changelog_1_4_0_date',

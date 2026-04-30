@@ -47,6 +47,16 @@ export interface DateOptions {
 
 export type BookmarkFormat = 'json' | 'html' | 'csv' | 'unknown';
 
+export type ImportMode = 'folder' | 'restore-merge' | 'restore-replace';
+
+export interface ImportPreview {
+  format: BookmarkFormat;
+  bookmarksBarCount: number;
+  otherBookmarksCount: number;
+  totalCount: number;
+  hasLocationData: boolean;
+}
+
 // ──────────────────────────────────────────
 // UI — Checkbox state
 // ──────────────────────────────────────────

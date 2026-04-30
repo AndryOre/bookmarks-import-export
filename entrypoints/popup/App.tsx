@@ -3,6 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ExportFormatSelector } from '@/components/export-format-selector';
 import { AdvancedExportButton } from '@/components/advanced-export-button';
 import { ImportBookmarksButton } from '@/components/import-bookmarks-button';
+import { AdvancedImportButton } from '@/components/advanced-import-button';
 import { i18n } from '#i18n';
 import { useStorageItem } from '@/lib/use-storage-item';
 import {
@@ -126,6 +127,7 @@ export default function App() {
           forceMount
         >
           <ImportBookmarksButton />
+          <AdvancedImportButton />
         </TabsContent>
       </Tabs>
     </div>

@@ -227,6 +227,95 @@
 		"message": "Advanced Export",
 		"description": "Advanced Export"
 	},
+	"advancedImport": {
+		"message": "Advanced Import",
+		"description": "Advanced Import"
+	},
+	"dropFileHere": {
+		"message": "Drop your bookmark file here",
+		"description": "File drop zone prompt"
+	},
+	"orClickToSelect": {
+		"message": "or click to select",
+		"description": "Secondary file drop zone prompt"
+	},
+	"supportedFormats": {
+		"message": "Supports HTML, JSON and CSV",
+		"description": "Supported import formats"
+	},
+	"changeFile": {
+		"message": "Change",
+		"description": "Button to change selected file"
+	},
+	"importMode": {
+		"message": "Import mode",
+		"description": "Import mode section label"
+	},
+	"importModeFolder": {
+		"message": "Create folder",
+		"description": "Import mode: create folder"
+	},
+	"importModeFolderDescription": {
+		"message": "Add all bookmarks to a new 'Imported Bookmarks' folder",
+		"description": "Import mode: create folder description"
+	},
+	"importModeRestoreMerge": {
+		"message": "Restore — merge",
+		"description": "Import mode: restore and merge"
+	},
+	"importModeRestoreMergeDescription": {
+		"message": "Place bookmarks in their original locations alongside existing ones",
+		"description": "Import mode: restore and merge description"
+	},
+	"importModeRestoreReplace": {
+		"message": "Restore — replace",
+		"description": "Import mode: restore and replace"
+	},
+	"importModeRestoreReplaceDescription": {
+		"message": "Clear existing bookmarks first, then restore to original locations",
+		"description": "Import mode: restore and replace description"
+	},
+	"importModeRestoreReplaceWarning": {
+		"message": "This will permanently delete all current bookmarks in your Bookmarks Bar and Other Bookmarks",
+		"description": "Warning shown for restore-replace mode"
+	},
+	"importModeNotAvailableForCSV": {
+		"message": "Restore modes are not available for CSV files",
+		"description": "Notice shown when CSV file is selected"
+	},
+	"importPreview": {
+		"message": "Preview",
+		"description": "Import preview section label"
+	},
+	"importPreviewNoFile": {
+		"message": "Select a file to see a preview",
+		"description": "Placeholder shown in preview when no file is selected"
+	},
+	"importPreviewCount": {
+		"message": "$COUNT$ bookmarks",
+		"description": "Bookmark count in preview",
+		"placeholders": {
+			"count": {
+				"content": "$1"
+			}
+		}
+	},
+	"replaceConfirmTitle": {
+		"message": "Replace existing bookmarks?",
+		"description": "Title of the replace confirmation dialog"
+	},
+	"replaceConfirmDescription": {
+		"message": "All bookmarks currently in your Bookmarks Bar and Other Bookmarks will be permanently deleted before importing. This cannot be undone.",
+		"description": "Body of the replace confirmation dialog"
+	},
+	"replaceConfirmButton": {
+		"message": "Yes, replace",
+		"description": "Confirm button in the replace dialog"
+	},
+	"cancel": {
+		"message": "Cancel",
+		"description": "Cancel button"
+	},
 	"unsupportedFileFormat": {
 		"message": "Unsupported file format",
 		"description": "Unsupported file format"
@@ -247,6 +336,16 @@
 				"content": "$1"
 			}
 		}
+	},
+	"changelog_1_5_0_date": {
+		"message": "April 29, 2025",
+		"description": "Changelog 1.5.0 date"
+	},
+	"changelog_1_5_0_1": {
+		"message": "Added Advanced Import — restore bookmarks to their original locations (Bookmarks Bar and Other Bookmarks), with merge or replace options."
+	},
+	"changelog_1_5_0_1_link": {
+		"message": "Try Advanced Import"
 	},
 	"changelog_1_4_0_date": {
 		"message": "April 29, 2025",

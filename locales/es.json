@@ -227,6 +227,95 @@
     "message": "Exportación Avanzada",
     "description": "Exportación Avanzada"
   },
+  "advancedImport": {
+    "message": "Importación Avanzada",
+    "description": "Importación Avanzada"
+  },
+  "dropFileHere": {
+    "message": "Suelta tu archivo de marcadores aquí",
+    "description": "Texto del área de soltar archivo"
+  },
+  "orClickToSelect": {
+    "message": "o haz clic para seleccionar",
+    "description": "Texto secundario del área de soltar archivo"
+  },
+  "supportedFormats": {
+    "message": "Compatible con HTML, JSON y CSV",
+    "description": "Formatos de importación admitidos"
+  },
+  "changeFile": {
+    "message": "Cambiar",
+    "description": "Botón para cambiar el archivo seleccionado"
+  },
+  "importMode": {
+    "message": "Modo de importación",
+    "description": "Etiqueta de la sección de modo de importación"
+  },
+  "importModeFolder": {
+    "message": "Crear carpeta",
+    "description": "Modo de importación: crear carpeta"
+  },
+  "importModeFolderDescription": {
+    "message": "Añade todos los marcadores a una nueva carpeta 'Marcadores importados'",
+    "description": "Descripción del modo crear carpeta"
+  },
+  "importModeRestoreMerge": {
+    "message": "Restaurar — combinar",
+    "description": "Modo de importación: restaurar y combinar"
+  },
+  "importModeRestoreMergeDescription": {
+    "message": "Coloca los marcadores en sus ubicaciones originales junto a los existentes",
+    "description": "Descripción del modo restaurar y combinar"
+  },
+  "importModeRestoreReplace": {
+    "message": "Restaurar — reemplazar",
+    "description": "Modo de importación: restaurar y reemplazar"
+  },
+  "importModeRestoreReplaceDescription": {
+    "message": "Elimina los marcadores actuales primero y luego restaura a las ubicaciones originales",
+    "description": "Descripción del modo restaurar y reemplazar"
+  },
+  "importModeRestoreReplaceWarning": {
+    "message": "Esto eliminará permanentemente todos los marcadores actuales de tu Barra de marcadores y Otros marcadores",
+    "description": "Aviso del modo restaurar y reemplazar"
+  },
+  "importModeNotAvailableForCSV": {
+    "message": "Los modos de restauración no están disponibles para archivos CSV",
+    "description": "Aviso cuando se selecciona un archivo CSV"
+  },
+  "importPreview": {
+    "message": "Vista previa",
+    "description": "Etiqueta de la sección de vista previa"
+  },
+  "importPreviewNoFile": {
+    "message": "Selecciona un archivo para ver una vista previa",
+    "description": "Texto cuando no hay archivo seleccionado"
+  },
+  "importPreviewCount": {
+    "message": "$COUNT$ marcadores",
+    "description": "Conteo de marcadores en la vista previa",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "replaceConfirmTitle": {
+    "message": "¿Reemplazar marcadores existentes?",
+    "description": "Título del diálogo de confirmación de reemplazo"
+  },
+  "replaceConfirmDescription": {
+    "message": "Todos los marcadores actuales de tu Barra de marcadores y Otros marcadores se eliminarán permanentemente antes de importar. Esta acción no se puede deshacer.",
+    "description": "Cuerpo del diálogo de confirmación de reemplazo"
+  },
+  "replaceConfirmButton": {
+    "message": "Sí, reemplazar",
+    "description": "Botón de confirmación en el diálogo de reemplazo"
+  },
+  "cancel": {
+    "message": "Cancelar",
+    "description": "Botón de cancelar"
+  },
   "unsupportedFileFormat": {
     "message": "Formato de archivo no soportado",
     "description": "Formato de archivo no soportado"
@@ -247,6 +336,16 @@
         "content": "$1"
       }
     }
+  },
+  "changelog_1_5_0_date": {
+    "message": "29 de abril de 2025",
+    "description": "Fecha del changelog 1.5.0"
+  },
+  "changelog_1_5_0_1": {
+    "message": "Añadida Importación Avanzada — restaura los marcadores a sus ubicaciones originales (Barra de marcadores y Otros marcadores), con opciones de combinar o reemplazar."
+  },
+  "changelog_1_5_0_1_link": {
+    "message": "Probar Importación Avanzada"
   },
   "changelog_1_4_0_date": {
     "message": "29 de abril de 2025",
