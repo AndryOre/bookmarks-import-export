@@ -1,8 +1,8 @@
 import { i18n } from '#i18n';
 import type { Browser } from '@wxt-dev/browser';
-import type { ParsedBookmark } from '@/lib/types';
+import type { ImportMode, ParsedBookmark } from '@/lib/types';
 
-export async function importFromHTML(html: string): Promise<void> {
+export async function importFromHTML(html: string, mode: ImportMode = 'folder'): Promise<void> {
   let parsed: ParsedBookmark[];
 
   try {
@@ -12,7 +12,7 @@ export async function importFromHTML(html: string): Promise<void> {
   }
 
   try {
-    await processBookmarks(parsed);
+    await processBookmarks(parsed, mode);
   } catch (error) {
     if (error instanceof Error && error.message.startsWith('PROCESS_ERROR')) {
       throw error;
@@ -21,14 +21,21 @@ export async function importFromHTML(html: string): Promise<void> {
   }
 }
 
-// ── Fase 1: Parseo DOM ────────────────────────────────────────────────────────
-
-function parseHTML(html: string): ParsedBookmark[] {
+export function parseHTML(html: string): ParsedBookmark[] {
   const doc = new DOMParser().parseFromString(html, 'text/html');
   const result: ParsedBookmark[] = [];
   const otherBookmarks: ParsedBookmark[] = [];
 
-  const topLevelDts = doc.querySelectorAll('body > dl > dt');
+  const toolbarH3 = doc.querySelector('h3[personal_toolbar_folder="true"]');
+  const outerDl = doc.querySelector('body > dl') ?? doc.querySelector('dl');
+  if (!outerDl) return result;
+
+  const workingDl =
+    toolbarH3?.parentElement?.parentElement?.tagName === 'DL'
+      ? toolbarH3.parentElement.parentElement
+      : outerDl;
+
+  const topLevelDts = workingDl.querySelectorAll(':scope > dt');
 
   topLevelDts.forEach((dt) => {
     const firstChild = dt.firstElementChild;
@@ -85,9 +92,12 @@ function parseFolderElement(h3: HTMLElement, dt: Element): ParsedBookmark {
     children: [],
   };
 
-  const nextDl = dt.nextElementSibling;
-  if (nextDl && nextDl.tagName === 'DL') {
-    const childDts = nextDl.querySelectorAll(':scope > dt');
+  const childDl =
+    (dt.querySelector(':scope > dl') as Element | null) ??
+    (dt.nextElementSibling?.tagName === 'DL' ? dt.nextElementSibling : null);
+
+  if (childDl) {
+    const childDts = childDl.querySelectorAll(':scope > dt');
     childDts.forEach((childDt) => {
       const firstChild = childDt.firstElementChild;
       if (!firstChild) return;
@@ -103,9 +113,7 @@ function parseFolderElement(h3: HTMLElement, dt: Element): ParsedBookmark {
   return folder;
 }
 
-// ── Fase 2: Creación en Chrome ────────────────────────────────────────────────
-
-async function processBookmarks(parsed: ParsedBookmark[]): Promise<void> {
+async function processBookmarks(parsed: ParsedBookmark[], mode: ImportMode): Promise<void> {
   const tree = await browser.bookmarks.getTree();
   const root = tree[0];
 
@@ -113,18 +121,40 @@ async function processBookmarks(parsed: ParsedBookmark[]): Promise<void> {
     throw new Error('PROCESS_ERROR:' + i18n.t('importFromHTMLProcessError'));
   }
 
-  const importedFolder = await createItem({ title: i18n.t('importedBookmarks') });
+  if (mode === 'folder') {
+    const importedFolder = await createItem({ title: i18n.t('importedBookmarks') });
 
-  const importedBookmarksBar = await createItem({
-    parentId: importedFolder.id,
-    title: i18n.t('bookmarksBar'),
-  });
+    const importedBookmarksBar = await createItem({
+      parentId: importedFolder.id,
+      title: i18n.t('bookmarksBar'),
+    });
 
-  for (const bookmark of parsed) {
-    if (bookmark.isBookmarksBar) {
-      await createBookmarks(bookmark.children ?? [], importedBookmarksBar.id);
-    } else if (bookmark.isOtherBookmarks) {
-      await createBookmarks(bookmark.children ?? [], importedFolder.id);
+    for (const bookmark of parsed) {
+      if (bookmark.isBookmarksBar) {
+        await createBookmarks(bookmark.children ?? [], importedBookmarksBar.id);
+      } else if (bookmark.isOtherBookmarks) {
+        await createBookmarks(bookmark.children ?? [], importedFolder.id);
+      }
+    }
+  } else {
+    const bookmarksBarId = root.children[0].id;
+    const otherBookmarksId = root.children[1].id;
+
+    if (mode === 'restore-replace') {
+      for (const child of root.children[0].children ?? []) {
+        await browser.bookmarks.removeTree(child.id);
+      }
+      for (const child of root.children[1].children ?? []) {
+        await browser.bookmarks.removeTree(child.id);
+      }
+    }
+
+    for (const bookmark of parsed) {
+      if (bookmark.isBookmarksBar) {
+        await createBookmarks(bookmark.children ?? [], bookmarksBarId);
+      } else if (bookmark.isOtherBookmarks) {
+        await createBookmarks(bookmark.children ?? [], otherBookmarksId);
+      }
     }
   }
 }

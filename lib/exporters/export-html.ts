@@ -51,8 +51,6 @@ export async function exportToHTML(options: ExportHTMLOptions): Promise<string> 
   return lines.join('\n');
 }
 
-// ── Generación recursiva ──────────────────────────────────────────────────────
-
 async function generateHtmlContent(
   lines: string[],
   nodes: ExtendedBookmarkTreeNode[],
@@ -66,7 +64,6 @@ async function generateHtmlContent(
       await appendBookmarkLine(lines, node, indent, opts);
     } else if (node.children) {
       if (node.id === '2' && opts.hideOtherBookmarks) {
-        // id="2" (Other Bookmarks) con hideOtherBookmarks: aplana sin emitir <H3>
         await generateHtmlContent(lines, node.children, level, opts);
       } else if (
         opts.hideParentFolder &&
@@ -74,8 +71,6 @@ async function generateHtmlContent(
         node.id !== '1' &&
         node.id !== '2'
       ) {
-        // Carpetas normales con hideParentFolder: aplana sin emitir <H3>
-        // Los ids especiales (0, 1, 2) se emiten siempre con su encabezado
         await generateHtmlContent(lines, node.children, level, opts);
       } else {
         await appendFolderLines(lines, node, level, indent, opts);
@@ -143,8 +138,6 @@ async function appendFolderLines(
   lines.push(`${indent}</DL><p>`);
 }
 
-// ── Escape helpers ────────────────────────────────────────────────────────────
-
 function escapeTitle(str: string): string {
   return str
     .replace(/&/g, '&amp;')
@@ -154,7 +147,6 @@ function escapeTitle(str: string): string {
     .replace(/'/g, '&#39;');
 }
 
-/** URLs no escapan & — solo < > " ' para no romper el atributo HTML. */
 function escapeUrl(url: string): string {
   return url
     .replace(/</g, '&lt;')

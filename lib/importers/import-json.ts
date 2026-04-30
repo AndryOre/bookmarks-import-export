@@ -1,11 +1,11 @@
 import { i18n } from '#i18n';
 import type { Browser } from '@wxt-dev/browser';
-import type { ParsedBookmark } from '@/lib/types';
+import type { ImportMode, ParsedBookmark } from '@/lib/types';
 
-export async function importFromJSON(bookmarks: ParsedBookmark[]): Promise<void> {
+export async function importFromJSON(bookmarks: ParsedBookmark[], mode: ImportMode = 'folder'): Promise<void> {
   try {
     const preprocessed = preprocessBookmarks(bookmarks);
-    await processBookmarks(preprocessed);
+    await processBookmarks(preprocessed, mode);
   } catch (error) {
     if (error instanceof Error && error.message.startsWith('PROCESS_ERROR')) {
       throw new Error(i18n.t('importFromJSONProcessError'));
@@ -20,7 +20,7 @@ export async function importFromJSON(bookmarks: ParsedBookmark[]): Promise<void>
  * Normaliza el array de nivel superior del JSON exportado a [ bookmarksBar?, otherBookmarks? ].
  * Maneja: nodo raíz id="0", ids explícitos "1"/"2", y nodos huérfanos con parentId="2".
  */
-function preprocessBookmarks(bookmarks: ParsedBookmark[]): ParsedBookmark[] {
+export function preprocessBookmarks(bookmarks: ParsedBookmark[]): ParsedBookmark[] {
   const result: ParsedBookmark[] = [];
   const orphans: ParsedBookmark[] = [];
 
@@ -56,7 +56,7 @@ function preprocessBookmarks(bookmarks: ParsedBookmark[]): ParsedBookmark[] {
 
 // ── Fase 2: Creación en Chrome ────────────────────────────────────────────────
 
-async function processBookmarks(parsed: ParsedBookmark[]): Promise<void> {
+async function processBookmarks(parsed: ParsedBookmark[], mode: ImportMode): Promise<void> {
   const tree = await browser.bookmarks.getTree();
   const root = tree[0];
 
@@ -64,19 +64,43 @@ async function processBookmarks(parsed: ParsedBookmark[]): Promise<void> {
     throw new Error('PROCESS_ERROR:' + i18n.t('importFromJSONProcessError'));
   }
 
-  const importedFolder = await createItem({ title: i18n.t('importedBookmarks') });
+  if (mode === 'folder') {
+    const importedFolder = await createItem({ title: i18n.t('importedBookmarks') });
 
-  for (const bookmark of parsed) {
-    if (bookmark.isBookmarksBar && bookmark.children && bookmark.children.length > 0) {
-      const importedBar = await createItem({
-        parentId: importedFolder.id,
-        title: i18n.t('bookmarksBar'),
-      });
-      await createBookmarks(bookmark.children, importedBar.id);
-    } else if (bookmark.isOtherBookmarks && bookmark.children) {
-      await createBookmarks(bookmark.children, importedFolder.id);
-    } else if (bookmark.url) {
-      await createItem({ parentId: importedFolder.id, title: bookmark.title, url: bookmark.url });
+    for (const bookmark of parsed) {
+      if (bookmark.isBookmarksBar && bookmark.children && bookmark.children.length > 0) {
+        const importedBar = await createItem({
+          parentId: importedFolder.id,
+          title: i18n.t('bookmarksBar'),
+        });
+        await createBookmarks(bookmark.children, importedBar.id);
+      } else if (bookmark.isOtherBookmarks && bookmark.children) {
+        await createBookmarks(bookmark.children, importedFolder.id);
+      } else if (bookmark.url) {
+        await createItem({ parentId: importedFolder.id, title: bookmark.title, url: bookmark.url });
+      }
+    }
+  } else {
+    const bookmarksBarId = root.children[0].id;
+    const otherBookmarksId = root.children[1].id;
+
+    if (mode === 'restore-replace') {
+      for (const child of root.children[0].children ?? []) {
+        await browser.bookmarks.removeTree(child.id);
+      }
+      for (const child of root.children[1].children ?? []) {
+        await browser.bookmarks.removeTree(child.id);
+      }
+    }
+
+    for (const bookmark of parsed) {
+      if (bookmark.isBookmarksBar && bookmark.children) {
+        await createBookmarks(bookmark.children, bookmarksBarId);
+      } else if (bookmark.isOtherBookmarks && bookmark.children) {
+        await createBookmarks(bookmark.children, otherBookmarksId);
+      } else if (bookmark.url) {
+        await createItem({ parentId: otherBookmarksId, title: bookmark.title, url: bookmark.url });
+      }
     }
   }
 }

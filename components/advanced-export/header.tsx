@@ -30,7 +30,7 @@ export function Header({
     <header className="flex items-center gap-3 px-4 py-2 border-b bg-background shrink-0">
       <div className="flex items-center gap-2 shrink-0">
         <img
-          src={browser.runtime.getURL('/icon/48.png')}
+          src={browser.runtime.getURL('/icons/48.png')}
           alt=""
           className="size-6"
           aria-hidden="true"

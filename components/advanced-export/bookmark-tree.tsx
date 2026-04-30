@@ -100,7 +100,6 @@ export const BookmarkTree = forwardRef<BookmarkTreeHandle, BookmarkTreeProps>(
     }
 
     function handleCheckedChange(node: BookmarkNode, value: CheckedState) {
-      // Radix emite "indeterminate" al hacer click sobre indeterminate → normalizar a false
       const newValue = value === 'indeterminate' ? false : value;
 
       setCheckedState((prev) => {
@@ -176,7 +175,6 @@ function NodeRow({
     <div>
       <div
         className="flex items-center gap-1.5 py-0.5 hover:bg-accent rounded cursor-pointer"
-        // FIX: style en lugar de clase dinámica ml-${level*4} que JIT no genera
         style={{ marginLeft: level * 16 }}
         onClick={() => {
           if (!node.url) onToggleExpand(node.id);
@@ -358,5 +356,5 @@ function pruneTree(
     return result;
   }
 
-  return prune(tree);
+  return prune(tree[0]?.children ?? []);
 }

@@ -13,7 +13,7 @@ export default function App() {
   return (
     <main className="flex flex-col items-center min-h-screen overflow-auto gap-6 p-6">
       <img
-        src={browser.runtime.getURL('/icon/96.png')}
+        src={browser.runtime.getURL('/icons/128.png')}
         alt={i18n.t('extensionName')}
         className="w-24 h-24"
       />
