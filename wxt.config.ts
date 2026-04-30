@@ -7,7 +7,7 @@ export default defineConfig({
     name: '__MSG_extensionName__',
     description: '__MSG_extensionDescription__',
     default_locale: 'en',
-    permissions: ['bookmarks', 'favicon', 'storage', 'tabs'],
+    permissions: ['bookmarks', 'favicon', 'storage', 'tabs', 'alarms', 'downloads'],
   },
   vite: () => ({
     plugins: [tailwindcss()],

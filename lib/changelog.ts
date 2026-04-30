@@ -17,6 +17,17 @@ export function getChangelog(): ChangelogEntry[] {
 
   return [
     {
+      version: '1.6.0',
+      dateKey: 'changelog_1_6_0_date',
+      items: [
+        {
+          textKey: 'changelog_1_6_0_1',
+          linkKey: 'changelog_1_6_0_1_link',
+          linkUrl: advancedExportUrl,
+        },
+      ],
+    },
+    {
       version: '1.5.0',
       dateKey: 'changelog_1_5_0_date',
       items: [

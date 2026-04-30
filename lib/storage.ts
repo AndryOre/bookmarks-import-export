@@ -1,4 +1,5 @@
 import { storage } from '#imports';
+import type { AutoExportConfig } from '@/lib/types';
 
 export const themeStore = storage.defineItem<'dark' | 'light' | 'system'>(
   'local:theme',
@@ -48,6 +49,24 @@ export const hideParentFolderStore = storage.defineItem<boolean>(
 export const exportFilenameTemplateStore = storage.defineItem<string>(
   'local:exportFilenameTemplate',
   { fallback: 'Bookmarks_%yyyy-%mm-%dd_%hh-%min-%sec' }
+);
+
+export const DEFAULT_AUTO_EXPORT_CONFIG: AutoExportConfig = {
+  enabled: false,
+  interval: '1d',
+  preferredTime: '00:00',
+  path: 'bookmarks-backup/',
+  formats: ['html'],
+};
+
+export const autoExportConfigStore = storage.defineItem<AutoExportConfig>(
+  'local:autoExportConfig',
+  { fallback: DEFAULT_AUTO_EXPORT_CONFIG }
+);
+
+export const autoExportLastRunStore = storage.defineItem<number | null>(
+  'local:autoExportLastRun',
+  { fallback: null }
 );
 
 export const settingsStores = {

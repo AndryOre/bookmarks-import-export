@@ -524,5 +524,99 @@
   "changelogTitle": {
     "message": "Novedades",
     "description": "Encabezado de la sección de changelog"
+  },
+  "autoSave": {
+    "message": "Guardado automático",
+    "description": "Etiqueta de la pestaña de guardado automático"
+  },
+  "enableAutoExport": {
+    "message": "Activar exportación automática",
+    "description": "Etiqueta del interruptor de exportación automática"
+  },
+  "enableAutoExportDescription": {
+    "message": "Exporta automáticamente tus marcadores en formato HTML, JSON y CSV.",
+    "description": "Descripción del interruptor de exportación automática"
+  },
+  "exportInterval": {
+    "message": "Intervalo de exportación",
+    "description": "Título de la sección de intervalo de exportación"
+  },
+  "selectExportInterval": {
+    "message": "Selecciona el intervalo de exportación",
+    "description": "Descripción de la sección de intervalo de exportación"
+  },
+  "intervalEvery12Hours": {
+    "message": "Cada 12 horas",
+    "description": "Opción de intervalo: cada 12 horas"
+  },
+  "intervalEveryDay": {
+    "message": "Cada día",
+    "description": "Opción de intervalo: cada día"
+  },
+  "intervalEvery3Days": {
+    "message": "Cada 3 días",
+    "description": "Opción de intervalo: cada 3 días"
+  },
+  "intervalEvery7Days": {
+    "message": "Cada 7 días",
+    "description": "Opción de intervalo: cada 7 días"
+  },
+  "preferredExportTime": {
+    "message": "Hora preferida de exportación",
+    "description": "Título de la sección de hora preferida"
+  },
+  "selectPreferredTime": {
+    "message": "Selecciona tu hora preferida para las exportaciones automáticas",
+    "description": "Descripción de la sección de hora preferida"
+  },
+  "timeSelectionUnavailable": {
+    "message": "La selección de hora solo está disponible para intervalos de 24 horas o más",
+    "description": "Nota cuando se selecciona el intervalo de 12h"
+  },
+  "hoursLabel": {
+    "message": "Horas",
+    "description": "Etiqueta del campo de horas en el selector de hora"
+  },
+  "minutesLabel": {
+    "message": "Minutos",
+    "description": "Etiqueta del campo de minutos en el selector de hora"
+  },
+  "periodLabel": {
+    "message": "Período",
+    "description": "Etiqueta del selector AM/PM"
+  },
+  "exportPath": {
+    "message": "Ruta de exportación",
+    "description": "Título de la sección de ruta de exportación"
+  },
+  "exportPathDescription": {
+    "message": "Ingresa la ruta donde exportar los marcadores",
+    "description": "Descripción de la sección de ruta de exportación"
+  },
+  "autoExportFormats": {
+    "message": "Formatos de exportación",
+    "description": "Título de la sección de formatos de exportación"
+  },
+  "autoExportFormatsDescription": {
+    "message": "Selecciona los formatos para exportar los marcadores",
+    "description": "Descripción de la sección de formatos de exportación"
+  },
+  "saveSettings": {
+    "message": "Guardar ajustes",
+    "description": "Etiqueta del botón de guardar ajustes"
+  },
+  "formatRequired": {
+    "message": "Selecciona al menos un formato",
+    "description": "Error de validación cuando no hay formato seleccionado"
+  },
+  "changelog_1_6_0_date": {
+    "message": "29 de abril de 2026",
+    "description": "Fecha del changelog 1.6.0"
+  },
+  "changelog_1_6_0_1": {
+    "message": "Añadida exportación automática — guarda tus marcadores automáticamente en intervalos personalizados (cada 12 horas, diariamente, cada 3 o 7 días) en tu carpeta de descargas preferida."
+  },
+  "changelog_1_6_0_1_link": {
+    "message": "Abrir ajustes de exportación automática"
   }
 }

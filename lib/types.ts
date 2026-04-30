@@ -49,6 +49,17 @@ export type BookmarkFormat = 'json' | 'html' | 'csv' | 'unknown';
 
 export type ImportMode = 'folder' | 'restore-merge' | 'restore-replace';
 
+export type AutoExportInterval = '12h' | '1d' | '3d' | '7d';
+export type AutoExportFormat = 'html' | 'json' | 'csv';
+
+export interface AutoExportConfig {
+  enabled: boolean;
+  interval: AutoExportInterval;
+  preferredTime: string; // HH:mm in 24h format — only used for intervals >= 1d
+  path: string;
+  formats: AutoExportFormat[];
+}
+
 export interface ImportPreview {
   format: BookmarkFormat;
   bookmarksBarCount: number;
