@@ -1,0 +1,17 @@
+zero='0000000000000000000000000000000000000000'
+valid='^(main|renovate/.+|(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)/[a-z0-9._-]+)$'
+
+while read -r _local_ref local_sha remote_ref _remote_sha; do
+  [ "$local_sha" = "$zero" ] && continue                       # branch deletion
+  case "$remote_ref" in refs/heads/*) ;; *) continue ;; esac   # tags/notes: skip
+  branch="${remote_ref#refs/heads/}"
+
+  if ! echo "$branch" | grep -qE "$valid"; then
+    echo ""
+    echo "Invalid branch name: $branch"
+    echo "Expected: <type>/<kebab-slug>   e.g. feat/add-export"
+    echo "Types: feat fix docs style refactor perf test build ci chore revert"
+    echo ""
+    exit 1
+  fi
+done
