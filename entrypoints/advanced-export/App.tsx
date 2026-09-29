@@ -1,52 +1,55 @@
-import { useRef, useState } from 'react';
-import { Header } from '@/components/advanced-export/header';
-import { BookmarkTree } from '@/components/advanced-export/bookmark-tree';
-import { useStorageItem } from '@/lib/use-storage-item';
+import { i18n } from '#i18n'
+import { useRef, useState } from 'react'
+
+import { BookmarkTree } from '@/components/advanced-export/bookmark-tree'
+import { Header } from '@/components/advanced-export/header'
+import { exportToCSV } from '@/lib/exporters/export-csv'
+import { exportToHTML } from '@/lib/exporters/export-html'
+import { exportToJSON } from '@/lib/exporters/export-json'
+import { formatFilenameTemplate } from '@/lib/filename-template'
 import {
-  includeIconDataStore,
-  includeDateAddedStore,
-  includeDateLastUsedStore,
-  includeDateGroupModifiedStore,
+  exportFilenameTemplateStore,
   hideOtherBookmarksStore,
   hideParentFolderStore,
-  exportFilenameTemplateStore,
-} from '@/lib/storage';
-import { exportToHTML } from '@/lib/exporters/export-html';
-import { exportToJSON } from '@/lib/exporters/export-json';
-import { exportToCSV } from '@/lib/exporters/export-csv';
-import { formatFilenameTemplate } from '@/lib/filename-template';
-import { i18n } from '#i18n';
-import type { BookmarkFormat, BookmarkTreeHandle } from '@/lib/types';
+  includeDateAddedStore,
+  includeDateGroupModifiedStore,
+  includeDateLastUsedStore,
+  includeIconDataStore,
+} from '@/lib/storage'
+import type { BookmarkFormat, BookmarkTreeHandle } from '@/lib/types'
+import { useStorageItem } from '@/lib/use-storage-item'
 
 export default function App() {
-  const treeRef = useRef<BookmarkTreeHandle>(null);
-  const [selectedCount, setSelectedCount] = useState(0);
-  const [totalCount, setTotalCount] = useState(0);
-  const [searchTerm, setSearchTerm] = useState('');
+  const treeRef = useRef<BookmarkTreeHandle>(null)
+  const [selectedCount, setSelectedCount] = useState(0)
+  const [totalCount, setTotalCount] = useState(0)
+  const [searchTerm, setSearchTerm] = useState('')
 
-  const [includeIconData] = useStorageItem(includeIconDataStore);
-  const [includeDateAdded] = useStorageItem(includeDateAddedStore);
-  const [includeDateLastUsed] = useStorageItem(includeDateLastUsedStore);
-  const [includeDateGroupModified] = useStorageItem(includeDateGroupModifiedStore);
-  const [hideOtherBookmarks] = useStorageItem(hideOtherBookmarksStore);
-  const [hideParentFolder] = useStorageItem(hideParentFolderStore);
-  const [filenameTemplate] = useStorageItem(exportFilenameTemplateStore);
+  const [includeIconData] = useStorageItem(includeIconDataStore)
+  const [includeDateAdded] = useStorageItem(includeDateAddedStore)
+  const [includeDateLastUsed] = useStorageItem(includeDateLastUsedStore)
+  const [includeDateGroupModified] = useStorageItem(
+    includeDateGroupModifiedStore,
+  )
+  const [hideOtherBookmarks] = useStorageItem(hideOtherBookmarksStore)
+  const [hideParentFolder] = useStorageItem(hideParentFolderStore)
+  const [filenameTemplate] = useStorageItem(exportFilenameTemplateStore)
 
   const handleExport = async (format: BookmarkFormat) => {
-    const tree = treeRef.current;
-    if (!tree) return;
+    const tree = treeRef.current
+    if (!tree) return
 
-    const selectedBookmarks = await tree.getSelectedBookmarks();
+    const selectedBookmarks = await tree.getSelectedBookmarks()
 
     if (selectedBookmarks.length === 0) {
-      alert(i18n.t('noBookmarksSelected'));
-      return;
+      alert(i18n.t('noBookmarksSelected'))
+      return
     }
 
     try {
-      let content: string;
-      let mimeType: string;
-      let fileName: string;
+      let content: string
+      let mimeType: string
+      let fileName: string
 
       const baseOptions = {
         selectedBookmarks,
@@ -54,9 +57,9 @@ export default function App() {
         includeDateAdded,
         includeDateLastUsed,
         hideParentFolder,
-      };
+      }
 
-      const baseName = formatFilenameTemplate(filenameTemplate);
+      const baseName = formatFilenameTemplate(filenameTemplate)
 
       switch (format) {
         case 'html': {
@@ -64,55 +67,55 @@ export default function App() {
             ...baseOptions,
             includeDateGroupModified,
             hideOtherBookmarks,
-          });
-          mimeType = 'text/html';
-          fileName = `${baseName}.html`;
-          break;
+          })
+          mimeType = 'text/html'
+          fileName = `${baseName}.html`
+          break
         }
         case 'json': {
           const data = await exportToJSON({
             ...baseOptions,
             includeDateGroupModified,
             hideOtherBookmarks,
-          });
-          content = JSON.stringify(data, null, 2);
-          mimeType = 'application/json';
-          fileName = `${baseName}.json`;
-          break;
+          })
+          content = JSON.stringify(data, null, 2)
+          mimeType = 'application/json'
+          fileName = `${baseName}.json`
+          break
         }
         case 'csv': {
           content = await exportToCSV({
             ...baseOptions,
             includeDateLastUsed,
-          });
-          mimeType = 'text/csv';
-          fileName = `${baseName}.csv`;
-          break;
+          })
+          mimeType = 'text/csv'
+          fileName = `${baseName}.csv`
+          break
         }
         default:
-          return;
+          return
       }
 
-      downloadFile(content, mimeType, fileName);
+      downloadFile(content, mimeType, fileName)
     } catch (error) {
-      alert((error as Error).message);
+      alert((error as Error).message)
     }
-  };
+  }
 
   const handleRefresh = async () => {
-    await treeRef.current?.refresh();
-  };
+    await treeRef.current?.refresh()
+  }
 
   const handleSelectAll = () => {
-    treeRef.current?.selectAll();
-  };
+    treeRef.current?.selectAll()
+  }
 
   const handleDeselectAll = () => {
-    treeRef.current?.deselectAll();
-  };
+    treeRef.current?.deselectAll()
+  }
 
   return (
-    <div className="h-screen overflow-hidden flex flex-col">
+    <div className="flex h-screen flex-col overflow-hidden">
       <Header
         selectedCount={selectedCount}
         totalCount={totalCount}
@@ -131,19 +134,19 @@ export default function App() {
         onTotalChange={setTotalCount}
       />
     </div>
-  );
+  )
 }
 
 function downloadFile(content: string, mimeType: string, fileName: string) {
-  const blob = new Blob([content], { type: mimeType });
-  const url = URL.createObjectURL(blob);
+  const blob = new Blob([content], { type: mimeType })
+  const url = URL.createObjectURL(blob)
 
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = fileName;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+  const a = document.createElement('a')
+  a.href = url
+  a.download = fileName
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
 
-  URL.revokeObjectURL(url);
+  URL.revokeObjectURL(url)
 }

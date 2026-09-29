@@ -1,65 +1,71 @@
-import { createContext, useContext, useEffect, useState } from 'react';
-import { themeStore } from '@/lib/storage';
-import { useStorageItem } from '@/lib/use-storage-item';
+import { createContext, useContext, useEffect, useState } from 'react'
 
-type Theme = 'dark' | 'light' | 'system';
+import { themeStore } from '@/lib/storage'
+import { useStorageItem } from '@/lib/use-storage-item'
+
+type Theme = 'dark' | 'light' | 'system'
 
 interface ThemeProviderContextValue {
-  theme: Theme;
-  setTheme: (theme: Theme) => Promise<void>;
+  theme: Theme
+  setTheme: (theme: Theme) => Promise<void>
 }
 
-const ThemeProviderContext = createContext<ThemeProviderContextValue | undefined>(undefined);
+const ThemeProviderContext = createContext<
+  ThemeProviderContextValue | undefined
+>(undefined)
 
 interface ThemeProviderProps {
-  children: React.ReactNode;
-  defaultTheme?: Theme;
+  children: React.ReactNode
+  defaultTheme?: Theme
 }
 
-export function ThemeProvider({ children, defaultTheme = 'system' }: ThemeProviderProps) {
-  const [theme, setThemeInStorage] = useStorageItem(themeStore);
+export function ThemeProvider({
+  children,
+  defaultTheme = 'system',
+}: ThemeProviderProps) {
+  const [theme, setThemeInStorage] = useStorageItem(themeStore)
 
   useEffect(() => {
-    const root = document.documentElement;
+    const root = document.documentElement
 
     function applyTheme(resolvedTheme: 'dark' | 'light') {
-      root.classList.remove('light', 'dark');
-      root.classList.add(resolvedTheme);
+      root.classList.remove('light', 'dark')
+      root.classList.add(resolvedTheme)
     }
 
     if (theme === 'system') {
-      const mql = window.matchMedia('(prefers-color-scheme: dark)');
+      const mql = window.matchMedia('(prefers-color-scheme: dark)')
 
-      applyTheme(mql.matches ? 'dark' : 'light');
+      applyTheme(mql.matches ? 'dark' : 'light')
 
       // BUG FIX #4: el original no tenía este listener.
       // "system" ahora responde en tiempo real al cambiar el tema del SO.
       const handleChange = (e: MediaQueryListEvent) => {
-        applyTheme(e.matches ? 'dark' : 'light');
-      };
+        applyTheme(e.matches ? 'dark' : 'light')
+      }
 
-      mql.addEventListener('change', handleChange);
-      return () => mql.removeEventListener('change', handleChange);
+      mql.addEventListener('change', handleChange)
+      return () => mql.removeEventListener('change', handleChange)
     } else {
-      applyTheme(theme);
+      applyTheme(theme)
     }
-  }, [theme]);
+  }, [theme])
 
   const setTheme = async (newTheme: Theme) => {
-    await setThemeInStorage(newTheme);
-  };
+    await setThemeInStorage(newTheme)
+  }
 
   return (
     <ThemeProviderContext.Provider value={{ theme, setTheme }}>
       {children}
     </ThemeProviderContext.Provider>
-  );
+  )
 }
 
 export function useTheme(): ThemeProviderContextValue {
-  const context = useContext(ThemeProviderContext);
+  const context = useContext(ThemeProviderContext)
   if (!context) {
-    throw new Error('useTheme must be used within a ThemeProvider');
+    throw new Error('useTheme must be used within a ThemeProvider')
   }
-  return context;
+  return context
 }

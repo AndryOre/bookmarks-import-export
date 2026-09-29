@@ -1,9 +1,10 @@
-import { Bookmark, Folder } from 'lucide-react';
-import { i18n } from '#i18n';
-import type { ImportPreview } from '@/lib/types';
+import { i18n } from '#i18n'
+import { Bookmark, Folder } from 'lucide-react'
+
+import type { ImportPreview } from '@/lib/types'
 
 interface ImportPreviewProps {
-  preview: ImportPreview | null;
+  preview: ImportPreview | null
 }
 
 export function ImportPreviewPanel({ preview }: ImportPreviewProps) {
@@ -12,7 +13,9 @@ export function ImportPreviewPanel({ preview }: ImportPreviewProps) {
       <p className="text-sm font-medium">{i18n.t('importPreview')}</p>
 
       {!preview ? (
-        <p className="text-xs text-muted-foreground">{i18n.t('importPreviewNoFile')}</p>
+        <p className="text-xs text-muted-foreground">
+          {i18n.t('importPreviewNoFile')}
+        </p>
       ) : preview.hasLocationData ? (
         <div className="space-y-2">
           <PreviewRow
@@ -34,23 +37,23 @@ export function ImportPreviewPanel({ preview }: ImportPreviewProps) {
         />
       )}
     </div>
-  );
+  )
 }
 
 interface PreviewRowProps {
-  icon: React.ReactNode;
-  label: string;
-  count: number;
+  icon: React.ReactNode
+  label: string
+  count: number
 }
 
 function PreviewRow({ icon, label, count }: PreviewRowProps) {
   return (
     <div className="flex items-center gap-2.5 rounded-lg border bg-muted/40 px-3 py-2.5">
       {icon}
-      <span className="text-sm flex-1">{label}</span>
+      <span className="flex-1 text-sm">{label}</span>
       <span className="text-xs text-muted-foreground tabular-nums">
         {i18n.t('importPreviewCount', [count.toString()])}
       </span>
     </div>
-  );
+  )
 }

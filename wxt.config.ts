@@ -1,15 +1,26 @@
-import { defineConfig } from 'wxt';
-import tailwindcss from '@tailwindcss/vite';
+import tailwindcss from '@tailwindcss/vite'
+import { defineConfig } from 'wxt'
 
 export default defineConfig({
-  modules: ['@wxt-dev/module-react', '@wxt-dev/i18n/module', '@wxt-dev/auto-icons'],
+  modules: [
+    '@wxt-dev/module-react',
+    '@wxt-dev/i18n/module',
+    '@wxt-dev/auto-icons',
+  ],
   manifest: {
     name: '__MSG_extensionName__',
     description: '__MSG_extensionDescription__',
     default_locale: 'en',
-    permissions: ['bookmarks', 'favicon', 'storage', 'tabs', 'alarms', 'downloads'],
+    permissions: [
+      'bookmarks',
+      'favicon',
+      'storage',
+      'tabs',
+      'alarms',
+      'downloads',
+    ],
   },
   vite: () => ({
     plugins: [tailwindcss()],
   }),
-});
+})
