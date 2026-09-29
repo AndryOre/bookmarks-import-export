@@ -12,7 +12,7 @@ export async function importFromCSV(csv: string): Promise<void> {
   })
 
   if (parsed.errors.length > 0) {
-    throw new Error(parsed.errors.map((e) => e.message).join('; '))
+    throw new Error(parsed.errors.map((error) => error.message).join('; '))
   }
 
   const tree = processCSVData(parsed.data)
@@ -59,7 +59,7 @@ function processCSVData(rows: Record<string, string>[]): ParsedBookmark[] {
         folderMemo[currentPath] = folder
       }
 
-      currentLevel = folder.children ?? (folder.children = [])
+      currentLevel = folder.children ??= []
     }
 
     currentLevel.push({ title, url, dateAdded: Date.now() })
@@ -75,7 +75,7 @@ async function createBookmarks(tree: ParsedBookmark[]): Promise<void> {
   const root = tree_chrome[0]
 
   if (!root?.children?.[0] || !root.children?.[1]) {
-    throw new Error(i18n.t('importFromCSVImportError' as any))
+    throw new Error(i18n.t('importFromCSVImportError'))
   }
 
   // BUG FIX #1: usar i18n en lugar de string hardcodeado en inglés
@@ -111,9 +111,13 @@ async function createBookmarksRecursive(
       const existing = await browser.bookmarks.search({ title: node.title })
       const match = existing.find((r) => r.parentId === parentId && !r.url)
 
-      const folderId = match
-        ? match.id
-        : (await createItem({ parentId, title: node.title })).id
+      let folderId: string
+      if (match) {
+        folderId = match.id
+      } else {
+        const created = await createItem({ parentId, title: node.title })
+        folderId = created.id
+      }
 
       await createBookmarksRecursive(node.children, folderId)
     }

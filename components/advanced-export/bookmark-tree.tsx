@@ -14,131 +14,130 @@ import { autoExpandFoldersStore, showBookmarkIconStore } from '@/lib/storage'
 import type {
   BookmarkNode,
   BookmarkTreeHandle,
-  BookmarkTreeProps,
+  BookmarkTreeProperties,
   CheckedState,
   ExtendedBookmarkTreeNode,
 } from '@/lib/types'
 import { useStorageItem } from '@/lib/use-storage-item'
 
-export const BookmarkTree = forwardRef<BookmarkTreeHandle, BookmarkTreeProps>(
-  function BookmarkTree({ searchTerm, onSelectionChange, onTotalChange }, ref) {
-    const [nodes, setNodes] = useState<BookmarkNode[]>([])
-    const [checkedState, setCheckedState] = useState<Map<string, boolean>>(
-      new Map(),
-    )
-    const [expandedFolders, setExpandedFolders] = useState<Set<string>>(
-      new Set(),
-    )
-    const preSearchExpandedRef = useRef<Set<string> | null>(null)
+export const BookmarkTree = forwardRef<
+  BookmarkTreeHandle,
+  BookmarkTreeProperties
+>(function BookmarkTree({ searchTerm, onSelectionChange, onTotalChange }, ref) {
+  const [nodes, setNodes] = useState<BookmarkNode[]>([])
+  const [checkedState, setCheckedState] = useState<Map<string, boolean>>(
+    new Map(),
+  )
+  const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set())
+  const preSearchExpandedRef = useRef<Set<string> | null>(null)
 
-    const [showBookmarkIcon] = useStorageItem(showBookmarkIconStore)
-    const [autoExpandFolders] = useStorageItem(autoExpandFoldersStore)
+  const [showBookmarkIcon] = useStorageItem(showBookmarkIconStore)
+  const [autoExpandFolders] = useStorageItem(autoExpandFoldersStore)
 
-    useImperativeHandle(ref, () => ({
-      selectAll: () => {
-        const allBookmarkIds = collectBookmarkIds(nodes)
-        const newState = new Map<string, boolean>()
-        allBookmarkIds.forEach((id) => newState.set(id, true))
-        setCheckedState(newState)
-      },
-      deselectAll: () => {
-        setCheckedState(new Map())
-      },
-      refresh: async () => {
-        await loadBookmarks()
-        setCheckedState(new Map())
-      },
-      getSelectedBookmarks: async () => {
-        const tree = await fetchFullTree()
-        return pruneTree(tree, checkedState)
-      },
-    }))
-
-    useEffect(() => {
-      loadBookmarks()
-    }, [autoExpandFolders])
-
-    useEffect(() => {
-      if (!searchTerm.trim()) {
-        if (preSearchExpandedRef.current !== null) {
-          setExpandedFolders(preSearchExpandedRef.current)
-          preSearchExpandedRef.current = null
-        }
-        return
-      }
-      if (preSearchExpandedRef.current === null) {
-        preSearchExpandedRef.current = new Set(expandedFolders)
-      }
-      const matchedAncestors = findAncestorsOfMatches(nodes, searchTerm)
-      setExpandedFolders(new Set(matchedAncestors))
-    }, [searchTerm, nodes])
-
-    useEffect(() => {
-      const total = collectBookmarkIds(nodes).length
-      onTotalChange(total)
-    }, [nodes])
-
-    useEffect(() => {
-      const count = countChecked(nodes, checkedState)
-      onSelectionChange(count)
-    }, [checkedState, nodes])
-
-    async function loadBookmarks() {
+  useImperativeHandle(ref, () => ({
+    selectAll: () => {
+      const allBookmarkIds = collectBookmarkIds(nodes)
+      const newState = new Map<string, boolean>()
+      allBookmarkIds.forEach((id) => newState.set(id, true))
+      setCheckedState(newState)
+    },
+    deselectAll: () => {
+      setCheckedState(new Map())
+    },
+    refresh: async () => {
+      await loadBookmarks()
+      setCheckedState(new Map())
+    },
+    getSelectedBookmarks: async () => {
       const tree = await fetchFullTree()
-      const rootNode = tree[0]
-      const withParentId = addParentIds(rootNode?.children ?? [])
-      setNodes(withParentId)
+      return pruneTree(tree, checkedState)
+    },
+  }))
 
-      if (autoExpandFolders) {
-        const allFolderIds = collectFolderIds(withParentId)
-        setExpandedFolders(new Set(allFolderIds))
+  useEffect(() => {
+    loadBookmarks()
+  }, [autoExpandFolders])
+
+  useEffect(() => {
+    if (!searchTerm.trim()) {
+      if (preSearchExpandedRef.current !== null) {
+        setExpandedFolders(preSearchExpandedRef.current)
+        preSearchExpandedRef.current = null
       }
+      return
     }
-
-    function handleToggleExpand(id: string) {
-      setExpandedFolders((prev) => {
-        const next = new Set(prev)
-        if (next.has(id)) next.delete(id)
-        else next.add(id)
-        return next
-      })
+    if (preSearchExpandedRef.current === null) {
+      preSearchExpandedRef.current = new Set(expandedFolders)
     }
+    const matchedAncestors = findAncestorsOfMatches(nodes, searchTerm)
+    setExpandedFolders(new Set(matchedAncestors))
+  }, [searchTerm, nodes])
 
-    function handleCheckedChange(node: BookmarkNode, value: CheckedState) {
-      const newValue = value === 'indeterminate' ? false : value
+  useEffect(() => {
+    const total = collectBookmarkIds(nodes).length
+    onTotalChange(total)
+  }, [nodes])
 
-      setCheckedState((prev) => {
-        const next = new Map(prev)
-        if (node.url) {
-          next.set(node.id, newValue)
-        } else {
-          const descendants = collectBookmarkIds(node.children ?? [])
-          descendants.forEach((id) => next.set(id, newValue))
-        }
-        return next
-      })
+  useEffect(() => {
+    const count = countChecked(nodes, checkedState)
+    onSelectionChange(count)
+  }, [checkedState, nodes])
+
+  async function loadBookmarks() {
+    const tree = await fetchFullTree()
+    const rootNode = tree[0]
+    const withParentId = addParentIds(rootNode?.children ?? [])
+    setNodes(withParentId)
+
+    if (autoExpandFolders) {
+      const allFolderIds = collectFolderIds(withParentId)
+      setExpandedFolders(new Set(allFolderIds))
     }
+  }
 
-    const visibleNodes = searchTerm.trim()
-      ? filterNodes(nodes, searchTerm)
-      : nodes
+  function handleToggleExpand(id: string) {
+    setExpandedFolders((prev) => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+  }
 
-    return (
-      <div className="flex-1 overflow-auto p-2">
-        <NodeList
-          nodes={visibleNodes}
-          level={0}
-          checkedState={checkedState}
-          expandedFolders={expandedFolders}
-          showBookmarkIcon={showBookmarkIcon}
-          searchTerm={searchTerm}
-          onToggleExpand={handleToggleExpand}
-          onCheckedChange={handleCheckedChange}
-        />
-      </div>
-    )
-  },
-)
+  function handleCheckedChange(node: BookmarkNode, value: CheckedState) {
+    const newValue = value === 'indeterminate' ? false : value
+
+    setCheckedState((prev) => {
+      const next = new Map(prev)
+      if (node.url) {
+        next.set(node.id, newValue)
+      } else {
+        const descendants = collectBookmarkIds(node.children ?? [])
+        descendants.forEach((id) => next.set(id, newValue))
+      }
+      return next
+    })
+  }
+
+  const visibleNodes = searchTerm.trim()
+    ? filterNodes(nodes, searchTerm)
+    : nodes
+
+  return (
+    <div className="flex-1 overflow-auto p-2">
+      <NodeList
+        nodes={visibleNodes}
+        level={0}
+        checkedState={checkedState}
+        expandedFolders={expandedFolders}
+        showBookmarkIcon={showBookmarkIcon}
+        searchTerm={searchTerm}
+        onToggleExpand={handleToggleExpand}
+        onCheckedChange={handleCheckedChange}
+      />
+    </div>
+  )
+})
 
 // ── Componentes de render ─────────────────────────────────────────────────────
 

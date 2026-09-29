@@ -7,7 +7,11 @@ export function useStorageItem<T>(
   const [value, setValue] = useState<T>(item.fallback)
 
   useEffect(() => {
-    item.getValue().then(setValue)
+    const loadValue = async () => {
+      setValue(await item.getValue())
+    }
+    void loadValue()
+
     const unwatch = item.watch((newValue) => {
       setValue(newValue ?? item.fallback)
     })

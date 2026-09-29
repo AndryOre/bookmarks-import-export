@@ -43,7 +43,7 @@ import {
   includeIconDataStore,
   showBookmarkIconStore,
 } from '@/lib/storage'
-import type { SettingsDialogProps } from '@/lib/types'
+import type { SettingsDialogProperties } from '@/lib/types'
 import type {
   AutoExportConfig,
   AutoExportFormat,
@@ -91,7 +91,10 @@ const INTERVALS: { value: AutoExportInterval; labelKey: string }[] = [
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
+export function SettingsDialog({
+  open,
+  onOpenChange,
+}: SettingsDialogProperties) {
   // ── Display + Export tab stores (immediate save) ───────────────────────────
   const [showBookmarkIcon, setShowBookmarkIcon] = useStorageItem(
     showBookmarkIconStore,

@@ -28,27 +28,30 @@ export async function exportToHTML(
   const rootNode = rootNodes[0]
   const nodesToExport = selectedBookmarks ?? rootNode?.children ?? []
 
-  const lines: string[] = []
-
-  lines.push('<!DOCTYPE NETSCAPE-Bookmark-file-1>')
-  lines.push('<!-- This is an automatically generated file.')
-  lines.push('     It will be read and overwritten.')
-  lines.push('     DO NOT EDIT! -->')
-  lines.push(
+  const lines: string[] = [
+    '<!DOCTYPE NETSCAPE-Bookmark-file-1>',
+    '<!-- This is an automatically generated file.',
+    '     It will be read and overwritten.',
+    '     DO NOT EDIT! -->',
     '<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">',
-  )
-  lines.push('<TITLE>Bookmarks</TITLE>')
-  lines.push('<H1>Bookmarks</H1>')
-  lines.push('<DL><p>')
+    '<TITLE>Bookmarks</TITLE>',
+    '<H1>Bookmarks</H1>',
+    '<DL><p>',
+  ]
 
-  await generateHtmlContent(lines, nodesToExport, 1, {
-    includeIconData,
-    includeDateAdded,
-    includeDateLastUsed,
-    includeDateGroupModified,
-    hideOtherBookmarks,
-    hideParentFolder,
-  })
+  await generateHtmlContent(
+    lines,
+    nodesToExport as ExtendedBookmarkTreeNode[],
+    1,
+    {
+      includeIconData,
+      includeDateAdded,
+      includeDateLastUsed,
+      includeDateGroupModified,
+      hideOtherBookmarks,
+      hideParentFolder,
+    },
+  )
 
   lines.push('</DL><p>')
 
@@ -59,25 +62,31 @@ async function generateHtmlContent(
   lines: string[],
   nodes: ExtendedBookmarkTreeNode[],
   level: number,
-  opts: Omit<ExportHTMLOptions, 'selectedBookmarks'>,
+  options: Omit<ExportHTMLOptions, 'selectedBookmarks'>,
 ): Promise<void> {
-  const indent = '    '.repeat(level)
+  const indent = ' '.repeat(4).repeat(level)
 
   for (const node of nodes) {
     if (node.url) {
-      await appendBookmarkLine(lines, node, indent, opts)
+      await appendBookmarkLine(lines, node, indent, options)
     } else if (node.children) {
-      if (node.id === '2' && opts.hideOtherBookmarks) {
-        await generateHtmlContent(lines, node.children, level, opts)
-      } else if (
-        opts.hideParentFolder &&
+      const isOtherBookmarksHidden =
+        node.id === '2' && options.hideOtherBookmarks
+      const isParentFolderHidden =
+        options.hideParentFolder &&
         node.id !== '0' &&
         node.id !== '1' &&
         node.id !== '2'
-      ) {
-        await generateHtmlContent(lines, node.children, level, opts)
+
+      if (isOtherBookmarksHidden || isParentFolderHidden) {
+        await generateHtmlContent(
+          lines,
+          node.children as ExtendedBookmarkTreeNode[],
+          level,
+          options,
+        )
       } else {
-        await appendFolderLines(lines, node, level, indent, opts)
+        await appendFolderLines(lines, node, level, indent, options)
       }
     }
   }
@@ -87,30 +96,30 @@ async function appendBookmarkLine(
   lines: string[],
   node: ExtendedBookmarkTreeNode,
   indent: string,
-  opts: Pick<
+  options: Pick<
     ExportHTMLOptions,
     'includeIconData' | 'includeDateAdded' | 'includeDateLastUsed'
   >,
 ): Promise<void> {
-  let attrs = `HREF="${escapeUrl(node.url!)}"`
+  let attributes = `HREF="${escapeUrl(node.url!)}"`
 
-  if (opts.includeDateAdded && node.dateAdded) {
-    attrs += ` ADD_DATE="${Math.floor(node.dateAdded / 1000)}"`
+  if (options.includeDateAdded && node.dateAdded) {
+    attributes += ` ADD_DATE="${Math.floor(node.dateAdded / 1000)}"`
   }
 
-  if (opts.includeDateLastUsed && node.dateLastUsed) {
-    attrs += ` LAST_USED="${Math.floor(node.dateLastUsed / 1000)}"`
+  if (options.includeDateLastUsed && node.dateLastUsed) {
+    attributes += ` LAST_USED="${Math.floor(node.dateLastUsed / 1000)}"`
   }
 
-  if (opts.includeIconData) {
+  if (options.includeIconData) {
     const iconData = await getFaviconBase64(node.url!)
     if (iconData) {
-      attrs += ` ICON="${iconData}"`
+      attributes += ` ICON="${iconData}"`
     }
   }
 
   const title = escapeTitle(node.title)
-  lines.push(`${indent}<DT><A ${attrs}>${title}</A>`)
+  lines.push(`${indent}<DT><A ${attributes}>${title}</A>`)
 }
 
 async function appendFolderLines(
@@ -118,51 +127,50 @@ async function appendFolderLines(
   node: ExtendedBookmarkTreeNode,
   level: number,
   indent: string,
-  opts: Omit<ExportHTMLOptions, 'selectedBookmarks'>,
+  options: Omit<ExportHTMLOptions, 'selectedBookmarks'>,
 ): Promise<void> {
-  let attrs = ''
+  let attributes = ''
 
-  if (opts.includeDateAdded && node.dateAdded) {
-    attrs += ` ADD_DATE="${Math.floor(node.dateAdded / 1000)}"`
+  if (options.includeDateAdded && node.dateAdded) {
+    attributes += ` ADD_DATE="${Math.floor(node.dateAdded / 1000)}"`
   }
 
-  if (opts.includeDateGroupModified && node.dateGroupModified) {
-    attrs += ` LAST_MODIFIED="${Math.floor(node.dateGroupModified / 1000)}"`
+  if (options.includeDateGroupModified && node.dateGroupModified) {
+    attributes += ` LAST_MODIFIED="${Math.floor(node.dateGroupModified / 1000)}"`
   }
 
   if (node.id === '1') {
-    attrs += ' PERSONAL_TOOLBAR_FOLDER="true"'
+    attributes += ' PERSONAL_TOOLBAR_FOLDER="true"'
   }
 
   const title = escapeTitle(node.title)
-  lines.push(`${indent}<DT><H3${attrs}>${title}</H3>`)
-  lines.push(`${indent}<DL><p>`)
+  lines.push(`${indent}<DT><H3${attributes}>${title}</H3>`, `${indent}<DL><p>`)
 
   if (node.children) {
     await generateHtmlContent(
       lines,
       node.children as ExtendedBookmarkTreeNode[],
       level + 1,
-      opts,
+      options,
     )
   }
 
   lines.push(`${indent}</DL><p>`)
 }
 
-function escapeTitle(str: string): string {
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;')
+function escapeTitle(string_: string): string {
+  return string_
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;')
 }
 
 function escapeUrl(url: string): string {
   return url
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#039;')
 }

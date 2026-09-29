@@ -11,7 +11,7 @@ interface ExportJSONOptions {
   hideParentFolder: boolean
 }
 
-type NodeOpts = Omit<ExportJSONOptions, 'selectedBookmarks'>
+type NodeOptions = Omit<ExportJSONOptions, 'selectedBookmarks'>
 
 const toSeconds = (ms: number): number => Math.floor(ms / 1000)
 
@@ -32,7 +32,7 @@ export async function exportToJSON(
   const rootNode = rootNodes[0] as ExtendedBookmarkTreeNode
   const nodesToExport = selectedBookmarks ?? rootNode.children ?? []
 
-  const opts: NodeOpts = {
+  const options_: NodeOptions = {
     includeIconData,
     includeDateAdded,
     includeDateLastUsed,
@@ -43,7 +43,7 @@ export async function exportToJSON(
 
   const processedChildren = await processNodes(
     nodesToExport as ExtendedBookmarkTreeNode[],
-    opts,
+    options_,
   )
 
   // Wrap en nodo raíz id="0" para compatibilidad bidireccional con el importador
@@ -69,11 +69,11 @@ export async function exportToJSON(
 
 async function processNodes(
   nodes: ExtendedBookmarkTreeNode[],
-  opts: NodeOpts,
+  options: NodeOptions,
 ): Promise<ExtendedBookmarkTreeNode[]> {
   const result: ExtendedBookmarkTreeNode[] = []
   for (const node of nodes) {
-    const processed = await processNode(node, opts)
+    const processed = await processNode(node, options)
     result.push(...processed)
   }
   return result
@@ -81,43 +81,44 @@ async function processNodes(
 
 async function processNode(
   node: ExtendedBookmarkTreeNode,
-  opts: NodeOpts,
+  options: NodeOptions,
 ): Promise<ExtendedBookmarkTreeNode[]> {
   if (node.url) {
     const processed: ExtendedBookmarkTreeNode = { ...node }
 
     if (processed.dateAdded)
       processed.dateAdded = toSeconds(processed.dateAdded)
-    if (!opts.includeDateAdded) delete processed.dateAdded
+    if (!options.includeDateAdded) delete processed.dateAdded
 
     if (processed.dateLastUsed)
       processed.dateLastUsed = toSeconds(processed.dateLastUsed)
-    if (!opts.includeDateLastUsed) delete processed.dateLastUsed
+    if (!options.includeDateLastUsed) delete processed.dateLastUsed
 
-    if (opts.includeIconData) {
+    if (options.includeIconData) {
       processed.iconData = await getFaviconBase64(node.url)
     }
 
     return [processed]
-  } else if (node.children !== undefined) {
+  }
+  if (node.children !== undefined) {
     // Aplanar "Other Bookmarks" (id="2") cuando hideOtherBookmarks está activo
-    if (node.id === '2' && opts.hideOtherBookmarks) {
-      return processNodes(node.children as ExtendedBookmarkTreeNode[], opts)
+    if (node.id === '2' && options.hideOtherBookmarks) {
+      return processNodes(node.children as ExtendedBookmarkTreeNode[], options)
     }
 
     // Aplanar carpetas normales (no id 0/1/2) cuando hideParentFolder está activo
     if (
-      opts.hideParentFolder &&
+      options.hideParentFolder &&
       node.id !== '0' &&
       node.id !== '1' &&
       node.id !== '2'
     ) {
-      return processNodes(node.children as ExtendedBookmarkTreeNode[], opts)
+      return processNodes(node.children as ExtendedBookmarkTreeNode[], options)
     }
 
     const processedChildren = await processNodes(
       node.children as ExtendedBookmarkTreeNode[],
-      opts,
+      options,
     )
 
     const folder: ExtendedBookmarkTreeNode = {
@@ -131,11 +132,11 @@ async function processNode(
     delete folder.iconData
 
     if (folder.dateAdded) folder.dateAdded = toSeconds(folder.dateAdded)
-    if (!opts.includeDateAdded) delete folder.dateAdded
+    if (!options.includeDateAdded) delete folder.dateAdded
 
     if (folder.dateGroupModified)
       folder.dateGroupModified = toSeconds(folder.dateGroupModified)
-    if (!opts.includeDateGroupModified) delete folder.dateGroupModified
+    if (!options.includeDateGroupModified) delete folder.dateGroupModified
 
     return [folder]
   }

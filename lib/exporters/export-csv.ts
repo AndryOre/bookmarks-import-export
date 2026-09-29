@@ -63,7 +63,7 @@ async function flattenToRows(
   nodes: ExtendedBookmarkTreeNode[],
   rows: CSVRow[],
   parentPath: string,
-  opts: Omit<ExportCSVOptions, 'selectedBookmarks'>,
+  options: Omit<ExportCSVOptions, 'selectedBookmarks'>,
 ): Promise<void> {
   for (const node of nodes) {
     if (node.url) {
@@ -73,25 +73,25 @@ async function flattenToRows(
         folder: parentPath,
       }
 
-      if (opts.includeDateAdded) {
+      if (options.includeDateAdded) {
         row.dateAdded = node.dateAdded
           ? Math.floor(node.dateAdded / 1000)
           : undefined
       }
 
-      if (opts.includeDateLastUsed) {
+      if (options.includeDateLastUsed) {
         row.dateLastUsed = node.dateLastUsed
           ? Math.floor(node.dateLastUsed / 1000)
           : undefined
       }
 
-      if (opts.includeIconData) {
+      if (options.includeIconData) {
         row.iconData = await getFaviconBase64(node.url)
       }
 
       rows.push(row)
     } else if (node.children) {
-      const folderLabel = getFolderLabel(node, opts.hideParentFolder)
+      const folderLabel = getFolderLabel(node, options.hideParentFolder)
       const childPath = parentPath
         ? folderLabel
           ? `${parentPath}/${folderLabel}`
@@ -102,7 +102,7 @@ async function flattenToRows(
         node.children as ExtendedBookmarkTreeNode[],
         rows,
         childPath,
-        opts,
+        options,
       )
     }
   }
@@ -115,11 +115,10 @@ async function flattenToRows(
  */
 function getFolderLabel(
   node: ExtendedBookmarkTreeNode,
-  hideParentFolder: boolean,
+  shouldHideParentFolder: boolean,
 ): string {
   if (node.id === '0') return ''
   if (node.id === '1') return i18n.t('bookmarksBar')
   if (node.id === '2') return i18n.t('otherBookmarks')
-  if (hideParentFolder) return ''
-  return node.title
+  return shouldHideParentFolder ? '' : node.title
 }

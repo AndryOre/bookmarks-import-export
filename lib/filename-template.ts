@@ -15,13 +15,13 @@ export function formatFilenameTemplate(
   // Longest tokens first (already ordered above: %yyyy before %yy, %min/%sec before single-char)
   let result = template
   for (const [pattern, resolver] of PLACEHOLDERS) {
-    result = result.replace(pattern, resolver(date))
+    result = result.replace(pattern, () => resolver(date))
   }
 
   // Sanitize for all major filesystems
   result = result
-    .replace(/[/\\:*?"<>|]/g, '_')
-    .replace(/\s+/g, ' ')
+    .replaceAll(/[/\\:*?"<>|]/g, '_')
+    .replaceAll(/\s+/g, ' ')
     .trim()
 
   return result || 'Bookmarks'

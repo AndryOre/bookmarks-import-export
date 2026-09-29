@@ -4,7 +4,7 @@ import { useState } from 'react'
 
 import { ExportFormatSelector } from '@/components/export-format-selector'
 import { Button } from '@/components/ui/button'
-import type { HeaderProps } from '@/lib/types'
+import type { HeaderProperties } from '@/lib/types'
 
 import { SearchBar } from './search-bar'
 import { SettingsDialog } from './settings-dialog'
@@ -18,7 +18,7 @@ export function Header({
   onSelectAll,
   onDeselectAll,
   onExport,
-}: HeaderProps) {
+}: HeaderProperties) {
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [isRefreshing, setIsRefreshing] = useState(false)
 

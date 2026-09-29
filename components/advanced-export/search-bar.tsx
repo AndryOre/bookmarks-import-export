@@ -2,9 +2,9 @@ import { i18n } from '#i18n'
 import { Search } from 'lucide-react'
 
 import { Input } from '@/components/ui/input'
-import type { SearchBarProps } from '@/lib/types'
+import type { SearchBarProperties } from '@/lib/types'
 
-export function SearchBar({ value, onChange }: SearchBarProps) {
+export function SearchBar({ value, onChange }: SearchBarProperties) {
   return (
     <div className="relative">
       <Search

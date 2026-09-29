@@ -7,6 +7,11 @@ export default defineConfig({
     '@wxt-dev/i18n/module',
     '@wxt-dev/auto-icons',
   ],
+  imports: {
+    eslintrc: {
+      enabled: 9,
+    },
+  },
   manifest: {
     name: '__MSG_extensionName__',
     description: '__MSG_extensionDescription__',

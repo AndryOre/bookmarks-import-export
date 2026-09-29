@@ -6,11 +6,15 @@ import { preprocessBookmarks } from './importers/import-json'
 import type { ImportPreview, ParsedBookmark } from './types'
 
 function countBookmarks(nodes: ParsedBookmark[]): number {
-  return nodes.reduce((acc, node) => {
-    if (node.url) return acc + 1
-    if (node.children) return acc + countBookmarks(node.children)
-    return acc
-  }, 0)
+  let count = 0
+  for (const node of nodes) {
+    if (node.url) {
+      count += 1
+    } else if (node.children) {
+      count += countBookmarks(node.children)
+    }
+  }
+  return count
 }
 
 export function getImportPreview(

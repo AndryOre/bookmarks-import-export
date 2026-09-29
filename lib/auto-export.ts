@@ -21,7 +21,7 @@ const INTERVAL_MINUTES: Record<AutoExportInterval, number> = {
   '12h': 720,
   '1d': 1440,
   '3d': 4320,
-  '7d': 10080,
+  '7d': 10_080,
 }
 
 export function getNextExportDate(
@@ -58,7 +58,7 @@ export async function syncAlarm(): Promise<void> {
   const nextDate = getNextExportDate(config.interval, config.preferredTime)
   const delayInMinutes = Math.max(
     0.1,
-    (nextDate.getTime() - Date.now()) / 60000,
+    (nextDate.getTime() - Date.now()) / 60_000,
   )
 
   await browser.alarms.create(ALARM_NAME, {
@@ -70,8 +70,8 @@ export async function syncAlarm(): Promise<void> {
 function sanitizePath(path: string): string {
   return path
     .replace(/^\/+/, '')
-    .replace(/\.\./g, '')
-    .replace(/\/+/g, '/')
+    .replaceAll('..', '')
+    .replaceAll(/\/+/g, '/')
     .trim()
 }
 
@@ -79,7 +79,7 @@ function toDataUrl(content: string, mimeType: string): string {
   const bytes = new TextEncoder().encode(content)
   let binary = ''
   for (const byte of bytes) {
-    binary += String.fromCharCode(byte)
+    binary += String.fromCodePoint(byte)
   }
   return `data:${mimeType};base64,${btoa(binary)}`
 }

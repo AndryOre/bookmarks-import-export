@@ -9,14 +9,18 @@ export function detectFormat(
   const type = mimeType.toLowerCase()
 
   switch (type) {
-    case 'application/json':
+    case 'application/json': {
       return isValidJSON(content) ? 'json' : 'unknown'
-    case 'text/csv':
+    }
+    case 'text/csv': {
       return isValidCSV(content) ? 'csv' : 'unknown'
-    case 'text/html':
+    }
+    case 'text/html': {
       return isValidHTML(content) ? 'html' : 'unknown'
-    default:
+    }
+    default: {
       return 'unknown'
+    }
   }
 }
 
@@ -30,7 +34,7 @@ function isValidJSON(content: string): boolean {
 }
 
 function isValidHTML(content: string): boolean {
-  return content.trim().startsWith('<!DOCTYPE NETSCAPE-Bookmark-file-1>')
+  return content.trimStart().startsWith('<!DOCTYPE NETSCAPE-Bookmark-file-1>')
 }
 
 function isValidCSV(content: string): boolean {

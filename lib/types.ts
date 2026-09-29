@@ -17,7 +17,7 @@ export interface ExtendedBookmarkTreeNode
   dateGroupModified?: number
   dateLastUsed?: number
   iconData?: string
-  [key: string]: any
+  [key: string]: unknown
 }
 
 /**
@@ -106,17 +106,19 @@ export interface BookmarkTreeHandle {
 // Component Props
 // ──────────────────────────────────────────
 
-export interface SearchBarProps {
+export interface SearchBarProperties {
   value: string
   onChange: (value: string) => void
 }
 
-export interface SettingsDialogProps {
+export interface SettingsDialogProperties {
+  // Matches Radix/shadcn Dialog's controlled `open`/`onOpenChange` prop
+  // convention — renaming it would fight that API at every call site.
   open: boolean
-  onOpenChange: (open: boolean) => void
+  onOpenChange: (isOpen: boolean) => void
 }
 
-export interface HeaderProps {
+export interface HeaderProperties {
   selectedCount: number
   totalCount: number
   searchTerm: string
@@ -127,7 +129,7 @@ export interface HeaderProps {
   onExport: (format: BookmarkFormat) => void
 }
 
-export interface BookmarkTreeProps {
+export interface BookmarkTreeProperties {
   searchTerm: string
   onSelectionChange: (count: number) => void
   onTotalChange: (count: number) => void

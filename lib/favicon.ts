@@ -10,10 +10,10 @@ const DEFAULT_CHROME_FAVICON =
   'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
 
 export function getFaviconUrl(url: string, size: number = 16): string {
-  const faviconUrl = new URL(browser.runtime.getURL('/_favicon/' as any))
+  const faviconUrl = new URL(browser.runtime.getURL('/_favicon/?'))
   faviconUrl.searchParams.set('pageUrl', url)
   faviconUrl.searchParams.set('size', size.toString())
-  return faviconUrl.toString()
+  return faviconUrl.href
 }
 
 export async function getFaviconBase64(
@@ -27,15 +27,15 @@ export async function getFaviconBase64(
 
     return new Promise((resolve, reject) => {
       const reader = new FileReader()
-      reader.onloadend = () => {
+      reader.addEventListener('loadend', () => {
         const result = reader.result as string
         if (result === DEFAULT_CHROME_FAVICON) {
           resolve('')
         } else {
           resolve(result)
         }
-      }
-      reader.onerror = reject
+      })
+      reader.addEventListener('error', () => reject(reader.error))
       reader.readAsDataURL(blob)
     })
   } catch (error) {

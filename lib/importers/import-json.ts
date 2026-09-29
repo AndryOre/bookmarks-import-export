@@ -26,13 +26,18 @@ export async function importFromJSON(
  * Normaliza el array de nivel superior del JSON exportado a [ bookmarksBar?, otherBookmarks? ].
  * Maneja: nodo raíz id="0", ids explícitos "1"/"2", y nodos huérfanos con parentId="2".
  */
-export function preprocessBookmarks(
-  bookmarks: ParsedBookmark[],
-): ParsedBookmark[] {
+interface PreprocessLevelResult {
+  result: ParsedBookmark[]
+  orphans: ParsedBookmark[]
+  virtualRootChildren: ParsedBookmark[] | undefined
+}
+
+function preprocessLevel(level: ParsedBookmark[]): PreprocessLevelResult {
   const result: ParsedBookmark[] = []
   const orphans: ParsedBookmark[] = []
+  let virtualRootChildren: ParsedBookmark[] | undefined
 
-  for (const bookmark of bookmarks) {
+  for (const bookmark of level) {
     if (bookmark.id === '1') {
       bookmark.isBookmarksBar = true
       result.unshift(bookmark)
@@ -41,25 +46,43 @@ export function preprocessBookmarks(
       result.push(bookmark)
     } else if (bookmark.parentId === '2') {
       orphans.push(bookmark)
-    } else {
-      // Nodo raíz virtual id="0": recursar en sus children
-      if (bookmark.children) {
-        return preprocessBookmarks(bookmark.children as ParsedBookmark[])
-      }
+    } else if (bookmark.children) {
+      virtualRootChildren = bookmark.children as ParsedBookmark[]
+      break
     }
   }
 
-  if (orphans.length > 0 && !result.some((b) => b.isOtherBookmarks)) {
-    result.push({
-      id: '2',
-      isOtherBookmarks: true,
-      title: i18n.t('otherBookmarks'),
-      dateAdded: Date.now(),
-      children: orphans,
-    })
-  }
+  return { result, orphans, virtualRootChildren }
+}
 
-  return result
+export function preprocessBookmarks(
+  bookmarks: ParsedBookmark[],
+): ParsedBookmark[] {
+  // Nodo raíz virtual id="0": en vez de recursar en sus children, esta
+  // iteración avanza `currentLevel` y vuelve a recorrer.
+  let currentLevel = bookmarks
+
+  for (;;) {
+    const { result, orphans, virtualRootChildren } =
+      preprocessLevel(currentLevel)
+
+    if (virtualRootChildren) {
+      currentLevel = virtualRootChildren
+      continue
+    }
+
+    if (orphans.length > 0 && result.every((b) => !b.isOtherBookmarks)) {
+      result.push({
+        id: '2',
+        isOtherBookmarks: true,
+        title: i18n.t('otherBookmarks'),
+        dateAdded: Date.now(),
+        children: orphans,
+      })
+    }
+
+    return result
+  }
 }
 
 // ── Fase 2: Creación en Chrome ────────────────────────────────────────────────
@@ -102,14 +125,22 @@ async function processBookmarks(
       }
     }
   } else {
-    const bookmarksBarId = root.children[0].id
-    const otherBookmarksId = root.children[1].id
+    const bookmarksBarNode = root.children.at(0)
+    const otherBookmarksNode = root.children.at(1)
+    const bookmarksBarId = bookmarksBarNode?.id
+    const otherBookmarksId = otherBookmarksNode?.id
+
+    if (!bookmarksBarId || !otherBookmarksId) {
+      throw new Error('PROCESS_ERROR:' + i18n.t('importFromJSONProcessError'))
+    }
 
     if (mode === 'restore-replace') {
-      for (const child of root.children[0].children ?? []) {
+      const bookmarksBarChildren = bookmarksBarNode?.children ?? []
+      for (const child of bookmarksBarChildren) {
         await browser.bookmarks.removeTree(child.id)
       }
-      for (const child of root.children[1].children ?? []) {
+      const otherBookmarksChildren = otherBookmarksNode?.children ?? []
+      for (const child of otherBookmarksChildren) {
         await browser.bookmarks.removeTree(child.id)
       }
     }

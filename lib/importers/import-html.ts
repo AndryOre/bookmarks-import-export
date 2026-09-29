@@ -30,18 +30,16 @@ export async function importFromHTML(
 }
 
 export function parseHTML(html: string): ParsedBookmark[] {
-  const doc = new DOMParser().parseFromString(html, 'text/html')
+  const document = new DOMParser().parseFromString(html, 'text/html')
   const result: ParsedBookmark[] = []
   const otherBookmarks: ParsedBookmark[] = []
 
-  const toolbarH3 = doc.querySelector('h3[personal_toolbar_folder="true"]')
-  const outerDl = doc.querySelector('body > dl') ?? doc.querySelector('dl')
+  const toolbarH3 = document.querySelector('h3[personal_toolbar_folder="true"]')
+  const outerDl =
+    document.querySelector('body > dl') ?? document.querySelector('dl')
   if (!outerDl) return result
 
-  const workingDl =
-    toolbarH3?.parentElement?.parentElement?.tagName === 'DL'
-      ? toolbarH3.parentElement.parentElement
-      : outerDl
+  const workingDl = toolbarH3?.closest('dl') ?? outerDl
 
   const topLevelDts = workingDl.querySelectorAll(':scope > dt')
 
@@ -81,23 +79,27 @@ export function parseHTML(html: string): ParsedBookmark[] {
 }
 
 function parseBookmarkElement(a: HTMLAnchorElement): ParsedBookmark {
-  const addDateAttr = a.getAttribute('add_date')
+  const dateAddedAttribute = a.getAttribute('add_date')
   return {
     title: a.textContent?.trim() ?? '',
     url: a.getAttribute('href') ?? undefined,
-    dateAdded: addDateAttr ? parseInt(addDateAttr) * 1000 : Date.now(),
+    dateAdded: dateAddedAttribute
+      ? parseInt(dateAddedAttribute) * 1000
+      : Date.now(),
   }
 }
 
 function parseFolderElement(h3: HTMLElement, dt: Element): ParsedBookmark {
-  const addDateAttr = h3.getAttribute('add_date')
-  const lastModifiedAttr = h3.getAttribute('last_modified')
+  const dateAddedAttribute = h3.getAttribute('add_date')
+  const lastModifiedAttribute = h3.getAttribute('last_modified')
 
   const folder: ParsedBookmark = {
     title: h3.textContent?.trim() ?? '',
-    dateAdded: addDateAttr ? parseInt(addDateAttr) * 1000 : Date.now(),
-    dateGroupModified: lastModifiedAttr
-      ? parseInt(lastModifiedAttr) * 1000
+    dateAdded: dateAddedAttribute
+      ? parseInt(dateAddedAttribute) * 1000
+      : Date.now(),
+    dateGroupModified: lastModifiedAttribute
+      ? parseInt(lastModifiedAttribute) * 1000
       : Date.now(),
     children: [],
   }
@@ -156,14 +158,22 @@ async function processBookmarks(
       }
     }
   } else {
-    const bookmarksBarId = root.children[0].id
-    const otherBookmarksId = root.children[1].id
+    const bookmarksBarNode = root.children.at(0)
+    const otherBookmarksNode = root.children.at(1)
+    const bookmarksBarId = bookmarksBarNode?.id
+    const otherBookmarksId = otherBookmarksNode?.id
+
+    if (!bookmarksBarId || !otherBookmarksId) {
+      throw new Error('PROCESS_ERROR:' + i18n.t('importFromHTMLProcessError'))
+    }
 
     if (mode === 'restore-replace') {
-      for (const child of root.children[0].children ?? []) {
+      const bookmarksBarChildren = bookmarksBarNode?.children ?? []
+      for (const child of bookmarksBarChildren) {
         await browser.bookmarks.removeTree(child.id)
       }
-      for (const child of root.children[1].children ?? []) {
+      const otherBookmarksChildren = otherBookmarksNode?.children ?? []
+      for (const child of otherBookmarksChildren) {
         await browser.bookmarks.removeTree(child.id)
       }
     }
