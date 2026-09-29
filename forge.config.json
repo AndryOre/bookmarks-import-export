@@ -48,6 +48,6 @@
     "stalledMinutes": 10
   },
   "commands": {
-    "selfCheck": ["bun run typecheck"]
+    "selfCheck": ["bun run check", "bun run test"]
   }
 }
