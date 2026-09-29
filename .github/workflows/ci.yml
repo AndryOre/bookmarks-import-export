@@ -2,9 +2,6 @@ name: CI
 
 on:
   pull_request:
-    paths-ignore:
-      - '**/*.md'
-      - 'docs/**'
   push:
     branches: [main] # only permanent branches — avoids duplicate runs when a feature branch has an open PR
 
@@ -126,3 +123,24 @@ jobs:
         run:
           bunx commitlint --from ${{ github.event.pull_request.base.sha }} --to
           ${{ github.event.pull_request.head.sha }} --verbose
+
+  # Stable status-check name for branch protection: aggregates quality/build/commitlint
+  # so a single required check covers the whole pipeline regardless of which jobs
+  # run for a given trigger (e.g. commitlint is skipped on push).
+  ci-passed:
+    name: CI passed
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: [quality, build, commitlint]
+    if: always()
+    steps:
+      - name: Check job results
+        env:
+          FAILED:
+            ${{ contains(needs.*.result, 'failure') || contains(needs.*.result,
+            'cancelled') }}
+        run: |
+          if [[ "${FAILED}" == "true" ]]; then
+            echo "One or more required jobs failed or were cancelled."
+            exit 1
+          fi

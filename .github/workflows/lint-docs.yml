@@ -26,5 +26,6 @@ jobs:
         with:
           args: >-
             --offline --include-fragments=anchor-only --no-progress README.md
-            PRIVACY_POLICY.md 'docs/**/*.md' '.github/*.md'
+            PRIVACY_POLICY.md CODE_OF_CONDUCT.md CONTRIBUTING.md 'docs/**/*.md'
+            '.github/*.md'
           fail: true

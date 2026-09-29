@@ -34,6 +34,14 @@ Hooks are installed via Husky and live in `.husky/`:
 - **`pre-push`** — rejects a push if the current branch name doesn't match
   `^(main|renovate/.+|(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)/[a-z0-9._-]+)$`.
 
+## CI
+
+Every PR — including docs-only changes — runs the full `ci.yml` pipeline:
+`quality`, `build`, and `commitlint`. The `CI passed` job aggregates their
+results and is the single status check required to merge; it passes once every
+needed job is `success` or `skipped` (e.g. `commitlint` is skipped on `push`
+runs), and fails if any needed job is `failure` or `cancelled`.
+
 ## Commit format
 
 `<type>: <emoji> <lowercase subject>`, e.g. `feat: ✨ add dark mode`.

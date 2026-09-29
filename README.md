@@ -34,6 +34,7 @@ accessible, and transferable between browsers.
 - [![shadcn/ui][Shadcn/UI]][Shadcn/UI-url]
 - [![Lucide Icons][Lucide]][Lucide-url]
 - [![TypeScript][TypeScript]][TypeScript-url]
+- [![OpenSSF Scorecard][OpenSSF Scorecard]][OpenSSF Scorecard-url]
 
 ## Installation 🔧
 
@@ -115,7 +116,9 @@ bun run zip
 
 **We welcome your contributions!** If you'd like to be part of this list, simply
 fork this repository, make your changes, and open a pull request. Once merged,
-your avatar will appear below automatically.
+your avatar will appear below automatically. See
+[`CONTRIBUTING.md`](CONTRIBUTING.md) for setup, branch naming, and commit/PR
+conventions.
 
 <!-- readme: contributors,AndryOre/- -start -->
 <table>
@@ -165,5 +168,9 @@ for details.
 [TypeScript-url]: https://www.typescriptlang.org/
 [Chrome Web Store]:
   https://img.shields.io/badge/Chrome%20Web%20Store-4285F4.svg?style=for-the-badge&logo=Chrome-Web-Store&logoColor=white
+[OpenSSF Scorecard]:
+  https://api.securityscorecards.dev/projects/github.com/AndryOre/bookmarks-import-export-new/badge
+[OpenSSF Scorecard-url]:
+  https://scorecard.dev/viewer/?uri=github.com/AndryOre/bookmarks-import-export-new
 [Chrome Web Store-url]:
   https://chromewebstore.google.com/detail/bookmark-importexport/gdhpeilfkeeajillmcncaelnppiakjhn

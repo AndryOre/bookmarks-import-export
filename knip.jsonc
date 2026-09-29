@@ -1,12 +1,18 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
   "paths": {
-    "#imports": [".wxt/types/imports-module.d.ts"]
+    "#imports": [".wxt/types/imports-module.d.ts"],
   },
   "ignore": [
     // shadcn-managed primitives (regenerated wholesale by the `shadcn` CLI):
     // ship the full upstream export surface even when this app only uses
     // part of it today, so exports here are never "dead" in the usual sense.
-    "components/ui/**"
-  ]
+    "components/ui/**",
+    // AO-826: ported ahead of its first consumer. `resolveLockDirectory`,
+    // `readLockHolder`, and `isLockStale` are only exercised (indirectly)
+    // by `locks.test.ts` today, so knip sees them as unused exports.
+    // AO-828 (docs-lint parity) wires this module into `lint:docs` in the
+    // next wave — remove this ignore once that ticket lands.
+    "scripts/locks.ts",
+  ],
 }
