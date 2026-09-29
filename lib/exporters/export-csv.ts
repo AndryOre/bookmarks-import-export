@@ -1,23 +1,24 @@
-import Papa from 'papaparse';
-import { getFaviconBase64 } from '@/lib/favicon';
-import type { ExtendedBookmarkTreeNode } from '@/lib/types';
-import { i18n } from '#i18n';
+import { i18n } from '#i18n'
+import Papa from 'papaparse'
+
+import { getFaviconBase64 } from '@/lib/favicon'
+import type { ExtendedBookmarkTreeNode } from '@/lib/types'
 
 interface ExportCSVOptions {
-  selectedBookmarks: ExtendedBookmarkTreeNode[] | null;
-  includeIconData: boolean;
-  includeDateAdded: boolean;
-  includeDateLastUsed: boolean;
-  hideParentFolder: boolean;
+  selectedBookmarks: ExtendedBookmarkTreeNode[] | null
+  includeIconData: boolean
+  includeDateAdded: boolean
+  includeDateLastUsed: boolean
+  hideParentFolder: boolean
 }
 
 interface CSVRow {
-  title: string;
-  url: string;
-  folder: string;
-  dateAdded?: number;
-  dateLastUsed?: number;
-  iconData?: string;
+  title: string
+  url: string
+  folder: string
+  dateAdded?: number
+  dateLastUsed?: number
+  iconData?: string
 }
 
 export async function exportToCSV(options: ExportCSVOptions): Promise<string> {
@@ -27,25 +28,25 @@ export async function exportToCSV(options: ExportCSVOptions): Promise<string> {
     includeDateAdded,
     includeDateLastUsed,
     hideParentFolder,
-  } = options;
+  } = options
 
-  const rootNodes = await browser.bookmarks.getTree();
-  const rootNode = rootNodes[0];
-  const nodesToExport = selectedBookmarks ?? rootNode.children ?? [];
+  const rootNodes = await browser.bookmarks.getTree()
+  const rootNode = rootNodes[0]
+  const nodesToExport = selectedBookmarks ?? rootNode.children ?? []
 
-  const rows: CSVRow[] = [];
+  const rows: CSVRow[] = []
 
   await flattenToRows(nodesToExport as ExtendedBookmarkTreeNode[], rows, '', {
     includeIconData,
     includeDateAdded,
     includeDateLastUsed,
     hideParentFolder,
-  });
+  })
 
-  const fields: string[] = ['title', 'url', 'folder'];
-  if (includeDateAdded) fields.push('dateAdded');
-  if (includeDateLastUsed) fields.push('dateLastUsed');
-  if (includeIconData) fields.push('iconData');
+  const fields: string[] = ['title', 'url', 'folder']
+  if (includeDateAdded) fields.push('dateAdded')
+  if (includeDateLastUsed) fields.push('dateLastUsed')
+  if (includeIconData) fields.push('iconData')
 
   return Papa.unparse(rows, {
     quotes: true,
@@ -53,7 +54,7 @@ export async function exportToCSV(options: ExportCSVOptions): Promise<string> {
     newline: '\r\n',
     header: true,
     columns: fields,
-  });
+  })
 }
 
 // ── Aplanado recursivo ────────────────────────────────────────────────────────
@@ -62,7 +63,7 @@ async function flattenToRows(
   nodes: ExtendedBookmarkTreeNode[],
   rows: CSVRow[],
   parentPath: string,
-  opts: Omit<ExportCSVOptions, 'selectedBookmarks'>
+  opts: Omit<ExportCSVOptions, 'selectedBookmarks'>,
 ): Promise<void> {
   for (const node of nodes) {
     if (node.url) {
@@ -70,28 +71,39 @@ async function flattenToRows(
         title: node.title,
         url: node.url,
         folder: parentPath,
-      };
+      }
 
       if (opts.includeDateAdded) {
-        row.dateAdded = node.dateAdded ? Math.floor(node.dateAdded / 1000) : undefined;
+        row.dateAdded = node.dateAdded
+          ? Math.floor(node.dateAdded / 1000)
+          : undefined
       }
 
       if (opts.includeDateLastUsed) {
         row.dateLastUsed = node.dateLastUsed
           ? Math.floor(node.dateLastUsed / 1000)
-          : undefined;
+          : undefined
       }
 
       if (opts.includeIconData) {
-        row.iconData = await getFaviconBase64(node.url);
+        row.iconData = await getFaviconBase64(node.url)
       }
 
-      rows.push(row);
+      rows.push(row)
     } else if (node.children) {
-      const folderLabel = getFolderLabel(node, opts.hideParentFolder);
-      const childPath = parentPath ? (folderLabel ? `${parentPath}/${folderLabel}` : parentPath) : folderLabel;
+      const folderLabel = getFolderLabel(node, opts.hideParentFolder)
+      const childPath = parentPath
+        ? folderLabel
+          ? `${parentPath}/${folderLabel}`
+          : parentPath
+        : folderLabel
 
-      await flattenToRows(node.children as ExtendedBookmarkTreeNode[], rows, childPath, opts);
+      await flattenToRows(
+        node.children as ExtendedBookmarkTreeNode[],
+        rows,
+        childPath,
+        opts,
+      )
     }
   }
 }
@@ -101,10 +113,13 @@ async function flattenToRows(
  * id="0" siempre vacío; id="1"/"2" usan claves i18n.
  * Carpetas normales retornan "" si hideParentFolder=true (aplana todos los niveles).
  */
-function getFolderLabel(node: ExtendedBookmarkTreeNode, hideParentFolder: boolean): string {
-  if (node.id === '0') return '';
-  if (node.id === '1') return i18n.t('bookmarksBar');
-  if (node.id === '2') return i18n.t('otherBookmarks');
-  if (hideParentFolder) return '';
-  return node.title;
+function getFolderLabel(
+  node: ExtendedBookmarkTreeNode,
+  hideParentFolder: boolean,
+): string {
+  if (node.id === '0') return ''
+  if (node.id === '1') return i18n.t('bookmarksBar')
+  if (node.id === '2') return i18n.t('otherBookmarks')
+  if (hideParentFolder) return ''
+  return node.title
 }

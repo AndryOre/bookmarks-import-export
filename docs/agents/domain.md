@@ -27,7 +27,8 @@ suggest creating them upfront.
 
 ## File structure
 
-Single-context repo (no monorepo signals detected: no `pnpm-workspace.yaml`, no `workspaces` field, no populated `packages/*`).
+Single-context repo (no monorepo signals detected: no `pnpm-workspace.yaml`, no
+`workspaces` field, no populated `packages/*`).
 
 ```
 /
@@ -39,9 +40,9 @@ Single-context repo (no monorepo signals detected: no `pnpm-workspace.yaml`, no 
 
 ## Use the glossary's vocabulary
 
-When your output names a domain concept (an issue title, a ticket, a test
-name), use the term as defined in `CONTEXT.md`. Don't drift to synonyms the
-glossary explicitly avoids.
+When your output names a domain concept (an issue title, a ticket, a test name),
+use the term as defined in `CONTEXT.md`. Don't drift to synonyms the glossary
+explicitly avoids.
 
 If the concept you need isn't in the glossary yet, that's a signal: either
 you're inventing language the project doesn't use (reconsider), or there's a

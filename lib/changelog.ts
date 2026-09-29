@@ -1,19 +1,19 @@
 export interface ChangelogEntry {
-  version: string;
-  dateKey: string;
-  items: ChangelogItem[];
+  version: string
+  dateKey: string
+  items: ChangelogItem[]
 }
 
 export interface ChangelogItem {
-  textKey: string;
-  linkKey?: string;
-  linkUrl?: string;
+  textKey: string
+  linkKey?: string
+  linkUrl?: string
 }
 
 export function getChangelog(): ChangelogEntry[] {
-  const advancedExportUrl = browser.runtime.getURL('/advanced-export.html');
+  const advancedExportUrl = browser.runtime.getURL('/advanced-export.html')
 
-  const advancedImportUrl = browser.runtime.getURL('/advanced-import.html');
+  const advancedImportUrl = browser.runtime.getURL('/advanced-import.html')
 
   return [
     {
@@ -41,23 +41,17 @@ export function getChangelog(): ChangelogEntry[] {
     {
       version: '1.4.0',
       dateKey: 'changelog_1_4_0_date',
-      items: [
-        { textKey: 'changelog_1_4_0_1' },
-      ],
+      items: [{ textKey: 'changelog_1_4_0_1' }],
     },
     {
       version: '1.3.0',
       dateKey: 'changelog_1_3_0_date',
-      items: [
-        { textKey: 'changelog_1_3_0_1' },
-      ],
+      items: [{ textKey: 'changelog_1_3_0_1' }],
     },
     {
       version: '1.2.0',
       dateKey: 'changelog_1_2_0_date',
-      items: [
-        { textKey: 'changelog_1_2_0_1' },
-      ],
+      items: [{ textKey: 'changelog_1_2_0_1' }],
     },
     {
       version: '1.1.0',
@@ -103,5 +97,5 @@ export function getChangelog(): ChangelogEntry[] {
         { textKey: 'changelog_0_1_0_3' },
       ],
     },
-  ];
+  ]
 }

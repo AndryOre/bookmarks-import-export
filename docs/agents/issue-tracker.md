@@ -1,17 +1,17 @@
 # Issue tracker: Linear
 
-Issues and specs for bookmarks-import-export-new live in Linear. Every operation goes
-through the `mcp__linear-server__*` MCP tools — there is no CLI equivalent to
-`gh`/`glab` for Linear in this setup.
+Issues and specs for bookmarks-import-export-new live in Linear. Every operation
+goes through the `mcp__linear-server__*` MCP tools — there is no CLI equivalent
+to `gh`/`glab` for Linear in this setup.
 
 - Team: `AndryOre` (key `AO`). Project: `Bookmarks Import/Export` (exists —
-  every `Spec:` issue must pass `project: "Bookmarks Import/Export"`
-  explicitly when created — an issue with `Auto-close stale issues` enabled
-  and no active cycle/project is only exempt from that auto-close while it
-  belongs to one. A `Spec:` can sit untouched for months while its tickets get
-  worked, so without `project` set it risks auto-closing out from under its
-  own ticket cascade. Sub-issues inherit the parent's project automatically —
-  no need to pass it on ticket creation.
+  every `Spec:` issue must pass `project: "Bookmarks Import/Export"` explicitly
+  when created — an issue with `Auto-close stale issues` enabled and no active
+  cycle/project is only exempt from that auto-close while it belongs to one. A
+  `Spec:` can sit untouched for months while its tickets get worked, so without
+  `project` set it risks auto-closing out from under its own ticket cascade.
+  Sub-issues inherit the parent's project automatically — no need to pass it on
+  ticket creation.
 
 ## Conventions
 
@@ -28,7 +28,8 @@ through the `mcp__linear-server__*` MCP tools — there is no CLI equivalent to
 - **Read a ticket**: `get_issue({ id, includeRelations: true })` — always pass
   `includeRelations: true`; it defaults to `false` and is the only way to see
   `relations.blockedBy`. `list_issues` never surfaces relations at all.
-- **List sub-issues of a spec**: `list_issues({ team: "AndryOre", parentId: <Spec: issue id> })`.
+- **List sub-issues of a spec**:
+  `list_issues({ team: "AndryOre", parentId: <Spec: issue id> })`.
 - **Comment**: `save_comment({ issueId, body })` / `list_comments({ issueId })`.
 - **Apply/remove labels**: `save_issue({ id, labels: [...] })` — replaces the
   full label set; read the current labels first if adding one.
@@ -42,13 +43,13 @@ through the `mcp__linear-server__*` MCP tools — there is no CLI equivalent to
 `tracker.transitions`: `onStart: worker`, `onPrOpen: automatic`,
 `onPrMerge: automatic` — this team's Linear↔GitHub integration is configured
 (`On PR or commit open → In Review`, `On PR or commit merge → Done`), same as
-`andryore-dev`. If that integration ever gets disconnected for this repo,
-switch both to `coordinator` here and in `forge.config.json`'s
-`tracker.transitions` so the coordinator writes them explicitly instead.
+`andryore-dev`. If that integration ever gets disconnected for this repo, switch
+both to `coordinator` here and in `forge.config.json`'s `tracker.transitions` so
+the coordinator writes them explicitly instead.
 
 Also verify **Settings → My Account → Preferences → Behavior → "On move to
-started status, assign to yourself"** is OFF — if it's on, every ticket a
-worker moves to `In Progress` gets silently retro-assigned, breaking the
+started status, assign to yourself"** is OFF — if it's on, every ticket a worker
+moves to `In Progress` gets silently retro-assigned, breaking the
 `assignee: null` frontier filter.
 
 ---

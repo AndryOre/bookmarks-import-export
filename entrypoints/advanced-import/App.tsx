@@ -1,9 +1,12 @@
-import { useState } from 'react';
-import { CheckCircle, XCircle } from 'lucide-react';
-import { Header } from '@/components/advanced-import/header';
-import { FileDropZone } from '@/components/advanced-import/file-drop-zone';
-import { ImportModeSelector } from '@/components/advanced-import/import-mode-selector';
-import { ImportPreviewPanel } from '@/components/advanced-import/import-preview';
+import { i18n } from '#i18n'
+import { CheckCircle, XCircle } from 'lucide-react'
+import { useState } from 'react'
+
+import { FileDropZone } from '@/components/advanced-import/file-drop-zone'
+import { Header } from '@/components/advanced-import/header'
+import { ImportModeSelector } from '@/components/advanced-import/import-mode-selector'
+import { ImportPreviewPanel } from '@/components/advanced-import/import-preview'
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
@@ -11,87 +14,85 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { detectFormat } from '@/lib/detect-format';
-import { getImportPreview } from '@/lib/import-preview';
-import { importFromHTML } from '@/lib/importers/import-html';
-import { importFromJSON } from '@/lib/importers/import-json';
-import { importFromCSV } from '@/lib/importers/import-csv';
-import { i18n } from '#i18n';
-import type { ImportMode, ImportPreview } from '@/lib/types';
+} from '@/components/ui/dialog'
+import { detectFormat } from '@/lib/detect-format'
+import { getImportPreview } from '@/lib/import-preview'
+import { importFromCSV } from '@/lib/importers/import-csv'
+import { importFromHTML } from '@/lib/importers/import-html'
+import { importFromJSON } from '@/lib/importers/import-json'
+import type { ImportMode, ImportPreview } from '@/lib/types'
 
-type ImportStatus = 'idle' | 'importing' | 'success' | 'error';
+type ImportStatus = 'idle' | 'importing' | 'success' | 'error'
 
 export default function App() {
-  const [file, setFile] = useState<File | null>(null);
-  const [fileText, setFileText] = useState('');
-  const [preview, setPreview] = useState<ImportPreview | null>(null);
-  const [mode, setMode] = useState<ImportMode>('folder');
-  const [status, setStatus] = useState<ImportStatus>('idle');
-  const [errorMessage, setErrorMessage] = useState('');
-  const [showConfirm, setShowConfirm] = useState(false);
+  const [file, setFile] = useState<File | null>(null)
+  const [fileText, setFileText] = useState('')
+  const [preview, setPreview] = useState<ImportPreview | null>(null)
+  const [mode, setMode] = useState<ImportMode>('folder')
+  const [status, setStatus] = useState<ImportStatus>('idle')
+  const [errorMessage, setErrorMessage] = useState('')
+  const [showConfirm, setShowConfirm] = useState(false)
 
   const handleFile = async (selected: File) => {
-    const text = await selected.text();
-    const parsed = getImportPreview(text, selected.type);
+    const text = await selected.text()
+    const parsed = getImportPreview(text, selected.type)
 
-    setFile(selected);
-    setFileText(text);
-    setPreview(parsed);
-    setStatus('idle');
-    setErrorMessage('');
+    setFile(selected)
+    setFileText(text)
+    setPreview(parsed)
+    setStatus('idle')
+    setErrorMessage('')
 
     if (!parsed.hasLocationData) {
-      setMode('folder');
+      setMode('folder')
     }
-  };
+  }
 
   const handleImportClick = () => {
     if (mode === 'restore-replace') {
-      setShowConfirm(true);
+      setShowConfirm(true)
     } else {
-      void executeImport();
+      void executeImport()
     }
-  };
+  }
 
   const executeImport = async () => {
-    if (!file || !fileText) return;
+    if (!file || !fileText) return
 
-    setStatus('importing');
-    setErrorMessage('');
+    setStatus('importing')
+    setErrorMessage('')
 
     try {
-      const format = detectFormat(fileText, file.type);
+      const format = detectFormat(fileText, file.type)
 
       switch (format) {
         case 'html':
-          await importFromHTML(fileText, mode);
-          break;
+          await importFromHTML(fileText, mode)
+          break
         case 'json':
-          await importFromJSON(JSON.parse(fileText), mode);
-          break;
+          await importFromJSON(JSON.parse(fileText), mode)
+          break
         case 'csv':
-          await importFromCSV(fileText);
-          break;
+          await importFromCSV(fileText)
+          break
         default:
-          throw new Error(i18n.t('unsupportedFileFormat'));
+          throw new Error(i18n.t('unsupportedFileFormat'))
       }
 
-      setStatus('success');
+      setStatus('success')
     } catch (error) {
-      setStatus('error');
-      setErrorMessage((error as Error).message);
+      setStatus('error')
+      setErrorMessage((error as Error).message)
     }
-  };
+  }
 
   const handleConfirm = () => {
-    setShowConfirm(false);
-    void executeImport();
-  };
+    setShowConfirm(false)
+    void executeImport()
+  }
 
   return (
-    <div className="h-screen overflow-hidden flex flex-col">
+    <div className="flex h-screen flex-col overflow-hidden">
       <Header
         canImport={!!file && status !== 'importing'}
         isImporting={status === 'importing'}
@@ -99,7 +100,7 @@ export default function App() {
       />
 
       <main className="flex-1 overflow-auto p-6">
-        <div className="max-w-2xl mx-auto space-y-4">
+        <div className="mx-auto max-w-2xl space-y-4">
           <FileDropZone file={file} onFile={handleFile} />
 
           {preview && (
@@ -115,7 +116,7 @@ export default function App() {
 
           {status === 'success' && (
             <div className="flex items-center gap-3 rounded-lg border border-green-500/40 bg-green-500/5 px-4 py-3">
-              <CheckCircle className="size-5 text-green-600 shrink-0" />
+              <CheckCircle className="size-5 shrink-0 text-green-600" />
               <p className="text-sm text-green-700 dark:text-green-400">
                 {i18n.t('bookmarksImportedSuccessfully')}
               </p>
@@ -124,7 +125,7 @@ export default function App() {
 
           {status === 'error' && (
             <div className="flex items-start gap-3 rounded-lg border border-destructive/40 bg-destructive/5 px-4 py-3">
-              <XCircle className="size-5 text-destructive shrink-0 mt-0.5" />
+              <XCircle className="mt-0.5 size-5 shrink-0 text-destructive" />
               <p className="text-sm text-destructive">{errorMessage}</p>
             </div>
           )}
@@ -135,7 +136,9 @@ export default function App() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>{i18n.t('replaceConfirmTitle')}</DialogTitle>
-            <DialogDescription>{i18n.t('replaceConfirmDescription')}</DialogDescription>
+            <DialogDescription>
+              {i18n.t('replaceConfirmDescription')}
+            </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowConfirm(false)}>
@@ -148,5 +151,5 @@ export default function App() {
         </DialogContent>
       </Dialog>
     </div>
-  );
+  )
 }

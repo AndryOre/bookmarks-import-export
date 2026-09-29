@@ -1,11 +1,13 @@
-import { useState } from 'react';
-import { RefreshCw, Settings } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { ExportFormatSelector } from '@/components/export-format-selector';
-import { SearchBar } from './search-bar';
-import { SettingsDialog } from './settings-dialog';
-import { i18n } from '#i18n';
-import type { HeaderProps } from '@/lib/types';
+import { i18n } from '#i18n'
+import { RefreshCw, Settings } from 'lucide-react'
+import { useState } from 'react'
+
+import { ExportFormatSelector } from '@/components/export-format-selector'
+import { Button } from '@/components/ui/button'
+import type { HeaderProps } from '@/lib/types'
+
+import { SearchBar } from './search-bar'
+import { SettingsDialog } from './settings-dialog'
 
 export function Header({
   selectedCount,
@@ -17,25 +19,25 @@ export function Header({
   onDeselectAll,
   onExport,
 }: HeaderProps) {
-  const [settingsOpen, setSettingsOpen] = useState(false);
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false)
+  const [isRefreshing, setIsRefreshing] = useState(false)
 
   const handleRefresh = async () => {
-    setIsRefreshing(true);
-    await onRefresh();
-    setTimeout(() => setIsRefreshing(false), 1000);
-  };
+    setIsRefreshing(true)
+    await onRefresh()
+    setTimeout(() => setIsRefreshing(false), 1000)
+  }
 
   return (
-    <header className="flex items-center gap-3 px-4 py-2 border-b bg-background shrink-0">
-      <div className="flex items-center gap-2 shrink-0">
+    <header className="flex shrink-0 items-center gap-3 border-b bg-background px-4 py-2">
+      <div className="flex shrink-0 items-center gap-2">
         <img
           src={browser.runtime.getURL('/icons/48.png')}
           alt=""
           className="size-6"
           aria-hidden="true"
         />
-        <span className="font-semibold text-sm">{i18n.t('extensionName')}</span>
+        <span className="text-sm font-semibold">{i18n.t('extensionName')}</span>
       </div>
 
       <div className="flex-1" />
@@ -63,7 +65,9 @@ export function Header({
           disabled={isRefreshing}
           aria-label={i18n.t('refresh')}
         >
-          <RefreshCw className={`size-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+          <RefreshCw
+            className={`size-4 ${isRefreshing ? 'animate-spin' : ''}`}
+          />
         </Button>
 
         <Button variant="outline" size="sm" onClick={onSelectAll}>
@@ -74,12 +78,12 @@ export function Header({
           {i18n.t('deselectAll')}
         </Button>
 
-        <span className="text-xs text-muted-foreground whitespace-nowrap">
+        <span className="text-xs whitespace-nowrap text-muted-foreground">
           {selectedCount} / {totalCount}
         </span>
       </div>
 
       <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
     </header>
-  );
+  )
 }
