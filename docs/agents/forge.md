@@ -37,8 +37,8 @@ the main checkout; this extension has no runtime secrets.
 ## Self-check
 
 Commands a worker runs before considering its own change done: see
-`commands.selfCheck` in `forge.config.json` (`bun run typecheck`, the only check
-script this repo has — no lint or test script exists yet).
+`commands.selfCheck` in `forge.config.json` (`bun run check` — format, lint, and
+typecheck — followed by `bun run test`).
 
 ## Concurrency
 

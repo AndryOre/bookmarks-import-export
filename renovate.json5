@@ -1,0 +1,126 @@
+{
+  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
+  extends: [
+    'config:recommended',
+    ':dependencyDashboard',
+    ':semanticCommits',
+    ':semanticCommitTypeAll(chore)',
+    'helpers:pinGitHubActionDigests',
+    'group:monorepos',
+    'group:recommended',
+  ],
+
+  timezone: 'UTC',
+  schedule: ['before 12pm on monday'],
+
+  // Rate limits — low noise for solo dev
+  prConcurrentLimit: 3,
+  prHourlyLimit: 2,
+  branchConcurrentLimit: 5,
+
+  rangeStrategy: 'bump',
+  rebaseWhen: 'conflicted',
+
+  // Wait 3 days before opening a PR — guards against supply-chain attacks on freshly published versions
+  minimumReleaseAge: '3 days',
+
+  labels: ['dependencies'],
+
+  // Renovate opens an immediate PR when a vulnerability is found — no Dependabot needed
+  osvVulnerabilityAlerts: true,
+  vulnerabilityAlerts: {
+    enabled: true,
+    labels: ['Priority: Critical', 'Type: Security'],
+    assignees: ['AndryOre'],
+  },
+
+  // Lockfile refresh — fixed in PR #38694; remaining bugs (#24459, #41593) are Bun workspace-only
+  lockFileMaintenance: {
+    enabled: true,
+    schedule: ['before 12pm on monday'],
+  },
+
+  packageRules: [
+    {
+      matchDepTypes: ['devDependencies'],
+      semanticCommitScope: 'deps-dev',
+    },
+    {
+      matchDepTypes: ['dependencies'],
+      semanticCommitScope: 'deps',
+    },
+
+    {
+      matchUpdateTypes: ['minor', 'patch'],
+      groupName: 'all non-major',
+      groupSlug: 'all-minor-patch',
+    },
+
+    // WXT framework bundle — keep these in sync
+    {
+      groupName: 'wxt',
+      matchPackageNames: ['wxt', '@wxt-dev/**'],
+    },
+    {
+      groupName: 'react',
+      matchPackageNames: ['react', 'react-dom', '@types/react*'],
+    },
+    {
+      groupName: 'radix + lucide',
+      matchPackageNames: ['radix-ui', 'lucide-react'],
+    },
+    {
+      groupName: 'tailwindcss',
+      matchPackageNames: [
+        'tailwindcss',
+        '@tailwindcss/**',
+        'prettier-plugin-tailwindcss',
+      ],
+    },
+    {
+      groupName: 'eslint',
+      matchPackageNames: [
+        'eslint',
+        'typescript-eslint',
+        'eslint-plugin-*',
+        'eslint-config-prettier',
+      ],
+    },
+    {
+      groupName: 'vitest',
+      matchPackageNames: ['vitest', '@vitest/**'],
+    },
+    {
+      groupName: 'type definitions',
+      matchPackageNames: ['@types/**'],
+    },
+
+    {
+      groupName: 'github-actions',
+      matchManagers: ['github-actions'],
+    },
+
+    // Bun runtime is not managed via package.json engines — bump manually
+    {
+      matchPackageNames: ['bun'],
+      matchManagers: ['npm'],
+      enabled: false,
+    },
+
+    // OPT-IN AUTOMERGE — uncomment once branch protection + required status checks are active
+    // Uses 7-day release age (stricter than global 3-day) as extra supply-chain buffer
+    // {
+    //   matchDepTypes: ['devDependencies'],
+    //   matchUpdateTypes: ['patch', 'minor'],
+    //   automerge: true,
+    //   automergeType: 'pr',
+    //   minimumReleaseAge: '7 days',
+    // },
+    // {
+    //   matchManagers: ['github-actions'],
+    //   automerge: true,
+    //   automergeType: 'pr',
+    //   minimumReleaseAge: '7 days',
+    // },
+  ],
+}

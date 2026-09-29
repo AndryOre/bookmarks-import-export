@@ -68,6 +68,9 @@ browsers as well.
 
 ## Local Development 🛠️
 
+See [`docs/development.md`](docs/development.md) for scripts, git hooks,
+commit/branch conventions, and how `fakeBrowser` testing works.
+
 To set up the project for local development:
 
 1. Clone the repository
