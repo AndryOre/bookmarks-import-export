@@ -3,7 +3,7 @@ import { TriangleAlert } from 'lucide-react'
 
 import type { ImportMode } from '@/lib/types'
 
-interface ImportModeSelectorProps {
+interface ImportModeSelectorProperties {
   value: ImportMode
   onChange: (mode: ImportMode) => void
   hasLocationData: boolean
@@ -19,7 +19,7 @@ export function ImportModeSelector({
   value,
   onChange,
   hasLocationData,
-}: ImportModeSelectorProps) {
+}: ImportModeSelectorProperties) {
   const options: ModeOption[] = [
     {
       value: 'folder',
@@ -44,19 +44,19 @@ export function ImportModeSelector({
 
       <div className="space-y-2">
         {options.map((option) => {
-          const disabled = !hasLocationData && option.value !== 'folder'
-          const selected = value === option.value
+          const isDisabled = !hasLocationData && option.value !== 'folder'
+          const isSelected = value === option.value
 
           return (
             <button
               key={option.value}
-              onClick={() => !disabled && onChange(option.value)}
-              disabled={disabled}
+              onClick={() => !isDisabled && onChange(option.value)}
+              disabled={isDisabled}
               className={[
                 'w-full rounded-lg border px-3 py-2.5 text-left transition-colors',
-                selected
+                isSelected
                   ? 'border-primary bg-primary/5'
-                  : disabled
+                  : isDisabled
                     ? 'cursor-not-allowed border-border opacity-40'
                     : 'cursor-pointer border-border hover:border-muted-foreground',
               ].join(' ')}
@@ -65,10 +65,10 @@ export function ImportModeSelector({
                 <div
                   className={[
                     'mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full border-2',
-                    selected ? 'border-primary' : 'border-muted-foreground',
+                    isSelected ? 'border-primary' : 'border-muted-foreground',
                   ].join(' ')}
                 >
-                  {selected && (
+                  {isSelected && (
                     <div className="size-2 rounded-full bg-primary" />
                   )}
                 </div>

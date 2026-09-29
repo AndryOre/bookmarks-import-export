@@ -14,9 +14,11 @@ stats-*.json
 .wxt
 web-ext.config.ts
 .eslintcache
+coverage
 
 # forge coordination artifacts
 .forge
+.claude/worktrees
 
 # Editor directories and files
 .vscode/*

@@ -6,7 +6,7 @@ import { ThemeProvider } from '@/components/theme-provider'
 import App from './App'
 import './style.css'
 
-createRoot(document.getElementById('root')!).render(
+createRoot(document.querySelector('#root')!).render(
   <StrictMode>
     <ThemeProvider>
       <App />

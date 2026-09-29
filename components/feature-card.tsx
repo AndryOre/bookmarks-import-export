@@ -1,4 +1,3 @@
-import { i18n } from '#i18n'
 import type { LucideIcon } from 'lucide-react'
 
 import {
@@ -7,11 +6,13 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { t } from '@/lib/types'
+import type { MessageKey } from '@/lib/types'
 
-interface FeatureCardProps {
+interface FeatureCardProperties {
   icon: LucideIcon
-  titleKey: string
-  descriptionKey: string
+  titleKey: MessageKey
+  descriptionKey: MessageKey
   className?: string
 }
 
@@ -20,18 +21,16 @@ export function FeatureCard({
   titleKey,
   descriptionKey,
   className,
-}: FeatureCardProps) {
+}: FeatureCardProperties) {
   return (
     <Card className={className}>
       <CardHeader>
         <div className="w-fit rounded-lg bg-muted p-2">
           <Icon className="size-6" />
         </div>
-        <CardTitle className="text-sm font-semibold">
-          {i18n.t(titleKey as any)}
-        </CardTitle>
+        <CardTitle className="text-sm font-semibold">{t(titleKey)}</CardTitle>
         <CardDescription className="text-xs">
-          {i18n.t(descriptionKey as any)}
+          {t(descriptionKey)}
         </CardDescription>
       </CardHeader>
     </Card>

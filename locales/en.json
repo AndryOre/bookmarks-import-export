@@ -586,6 +586,14 @@
     "message": "Period",
     "description": "AM/PM selector label in time picker"
   },
+  "periodAM": {
+    "message": "AM",
+    "description": "AM option in the 12-hour period selector"
+  },
+  "periodPM": {
+    "message": "PM",
+    "description": "PM option in the 12-hour period selector"
+  },
   "exportPath": {
     "message": "Export Path",
     "description": "Export path section title"
@@ -619,5 +627,13 @@
   },
   "changelog_1_6_0_1_link": {
     "message": "Open Auto Export settings"
+  },
+  "twitterHandle": {
+    "message": "@AndryOre",
+    "description": "Developer's X (Twitter) handle, shown as a footer link"
+  },
+  "githubLink": {
+    "message": "GitHub",
+    "description": "Link label to the project's GitHub repository"
   }
 }

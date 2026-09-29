@@ -66,17 +66,21 @@ export default function App() {
       const format = detectFormat(fileText, file.type)
 
       switch (format) {
-        case 'html':
+        case 'html': {
           await importFromHTML(fileText, mode)
           break
-        case 'json':
+        }
+        case 'json': {
           await importFromJSON(JSON.parse(fileText), mode)
           break
-        case 'csv':
+        }
+        case 'csv': {
           await importFromCSV(fileText)
           break
-        default:
+        }
+        default: {
           throw new Error(i18n.t('unsupportedFileFormat'))
+        }
       }
 
       setStatus('success')
@@ -115,9 +119,9 @@ export default function App() {
           )}
 
           {status === 'success' && (
-            <div className="flex items-center gap-3 rounded-lg border border-green-500/40 bg-green-500/5 px-4 py-3">
-              <CheckCircle className="size-5 shrink-0 text-green-600" />
-              <p className="text-sm text-green-700 dark:text-green-400">
+            <div className="flex items-center gap-3 rounded-lg border border-success/40 bg-success/5 px-4 py-3">
+              <CheckCircle className="size-5 shrink-0 text-success" />
+              <p className="text-sm text-success">
                 {i18n.t('bookmarksImportedSuccessfully')}
               </p>
             </div>

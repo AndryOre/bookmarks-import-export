@@ -1,4 +1,31 @@
+import { i18n } from '#i18n'
+import type { GeneratedI18nStructure } from '#i18n'
 import type { Browser } from '@wxt-dev/browser'
+
+// ──────────────────────────────────────────
+// i18n
+// ──────────────────────────────────────────
+
+/**
+A valid `i18n.t()` message key.
+*/
+export type MessageKey = keyof GeneratedI18nStructure
+
+/**
+ * Type-safe wrapper for a dynamic `i18n.t()` call (e.g. a message key
+ * chosen from a component prop or a lookup table). `i18n.t` is generic and
+ * overloaded per message's plural/substitution shape, so passing it an
+ * already-widened `MessageKey` union does not type-check — none of the
+ * overloads' filtered-by-shape parameter types accept a plain union that
+ * isn't a "naked" generic parameter from `i18n.t`'s own perspective. Every
+ * generated message this app has is non-plural, and this helper is only
+ * for the ones with no substitutions, so the narrower internal signature
+ * below is exactly the plain-string overload's real runtime behavior.
+ */
+export function t<K extends MessageKey>(key: K): string {
+  const getMessage = i18n.t as (key: MessageKey) => string
+  return getMessage(key)
+}
 
 // ──────────────────────────────────────────
 // Bookmark Node types

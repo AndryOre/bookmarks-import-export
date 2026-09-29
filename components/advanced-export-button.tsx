@@ -3,13 +3,13 @@ import { Settings2 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 
-export function AdvancedExportButton() {
-  const handleClick = () => {
-    browser.tabs.create({
-      url: browser.runtime.getURL('/advanced-export.html' as any),
-    })
-  }
+function handleClick() {
+  void browser.tabs.create({
+    url: browser.runtime.getURL('/advanced-export.html'),
+  })
+}
 
+export function AdvancedExportButton() {
   return (
     <Button
       variant="outline"

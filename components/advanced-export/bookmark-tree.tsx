@@ -2,6 +2,7 @@ import type { Browser } from '@wxt-dev/browser'
 import { File, Folder } from 'lucide-react'
 import {
   forwardRef,
+  useCallback,
   useEffect,
   useImperativeHandle,
   useRef,
@@ -23,22 +24,37 @@ import { useStorageItem } from '@/lib/use-storage-item'
 export const BookmarkTree = forwardRef<
   BookmarkTreeHandle,
   BookmarkTreeProperties
->(function BookmarkTree({ searchTerm, onSelectionChange, onTotalChange }, ref) {
+>(function BookmarkTree(
+  { searchTerm, onSelectionChange, onTotalChange },
+  reference,
+) {
   const [nodes, setNodes] = useState<BookmarkNode[]>([])
   const [checkedState, setCheckedState] = useState<Map<string, boolean>>(
     new Map(),
   )
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set())
-  const preSearchExpandedRef = useRef<Set<string> | null>(null)
+  const preSearchExpandedReference = useRef<Set<string> | null>(null)
 
   const [showBookmarkIcon] = useStorageItem(showBookmarkIconStore)
   const [autoExpandFolders] = useStorageItem(autoExpandFoldersStore)
 
-  useImperativeHandle(ref, () => ({
+  const loadBookmarks = useCallback(async () => {
+    const tree = await fetchFullTree()
+    const rootNode = tree[0]
+    const withParentId = addParentIds(rootNode?.children ?? [])
+    setNodes(withParentId)
+
+    if (!autoExpandFolders) return
+
+    const allFolderIds = collectFolderIds(withParentId)
+    setExpandedFolders(new Set(allFolderIds))
+  }, [autoExpandFolders])
+
+  useImperativeHandle(reference, () => ({
     selectAll: () => {
       const allBookmarkIds = collectBookmarkIds(nodes)
       const newState = new Map<string, boolean>()
-      allBookmarkIds.forEach((id) => newState.set(id, true))
+      for (const id of allBookmarkIds) newState.set(id, true)
       setCheckedState(newState)
     },
     deselectAll: () => {
@@ -55,49 +71,41 @@ export const BookmarkTree = forwardRef<
   }))
 
   useEffect(() => {
-    loadBookmarks()
-  }, [autoExpandFolders])
+    const load = async () => {
+      await loadBookmarks()
+    }
+    void load()
+  }, [loadBookmarks])
 
   useEffect(() => {
     if (!searchTerm.trim()) {
-      if (preSearchExpandedRef.current !== null) {
-        setExpandedFolders(preSearchExpandedRef.current)
-        preSearchExpandedRef.current = null
+      if (preSearchExpandedReference.current !== null) {
+        setExpandedFolders(preSearchExpandedReference.current)
+        preSearchExpandedReference.current = null
       }
       return
     }
-    if (preSearchExpandedRef.current === null) {
-      preSearchExpandedRef.current = new Set(expandedFolders)
-    }
-    const matchedAncestors = findAncestorsOfMatches(nodes, searchTerm)
-    setExpandedFolders(new Set(matchedAncestors))
+    setExpandedFolders((current) => {
+      if (preSearchExpandedReference.current === null) {
+        preSearchExpandedReference.current = new Set(current)
+      }
+      return new Set(findAncestorsOfMatches(nodes, searchTerm))
+    })
   }, [searchTerm, nodes])
 
   useEffect(() => {
     const total = collectBookmarkIds(nodes).length
     onTotalChange(total)
-  }, [nodes])
+  }, [nodes, onTotalChange])
 
   useEffect(() => {
     const count = countChecked(nodes, checkedState)
     onSelectionChange(count)
-  }, [checkedState, nodes])
-
-  async function loadBookmarks() {
-    const tree = await fetchFullTree()
-    const rootNode = tree[0]
-    const withParentId = addParentIds(rootNode?.children ?? [])
-    setNodes(withParentId)
-
-    if (autoExpandFolders) {
-      const allFolderIds = collectFolderIds(withParentId)
-      setExpandedFolders(new Set(allFolderIds))
-    }
-  }
+  }, [checkedState, nodes, onSelectionChange])
 
   function handleToggleExpand(id: string) {
-    setExpandedFolders((prev) => {
-      const next = new Set(prev)
+    setExpandedFolders((previous) => {
+      const next = new Set(previous)
       if (next.has(id)) next.delete(id)
       else next.add(id)
       return next
@@ -105,15 +113,15 @@ export const BookmarkTree = forwardRef<
   }
 
   function handleCheckedChange(node: BookmarkNode, value: CheckedState) {
-    const newValue = value === 'indeterminate' ? false : value
+    const isChecked = value !== 'indeterminate' && value
 
-    setCheckedState((prev) => {
-      const next = new Map(prev)
+    setCheckedState((previous) => {
+      const next = new Map(previous)
       if (node.url) {
-        next.set(node.id, newValue)
+        next.set(node.id, isChecked)
       } else {
         const descendants = collectBookmarkIds(node.children ?? [])
-        descendants.forEach((id) => next.set(id, newValue))
+        for (const id of descendants) next.set(id, isChecked)
       }
       return next
     })
@@ -141,7 +149,7 @@ export const BookmarkTree = forwardRef<
 
 // ── Componentes de render ─────────────────────────────────────────────────────
 
-interface NodeListProps {
+interface NodeListProperties {
   nodes: BookmarkNode[]
   level: number
   checkedState: Map<string, boolean>
@@ -152,11 +160,11 @@ interface NodeListProps {
   onCheckedChange: (node: BookmarkNode, value: CheckedState) => void
 }
 
-function NodeList(props: NodeListProps) {
+function NodeList(properties: NodeListProperties) {
   return (
     <>
-      {props.nodes.map((node) => (
-        <NodeRow key={node.id} node={node} {...props} />
+      {properties.nodes.map((node) => (
+        <NodeRow key={node.id} node={node} {...properties} />
       ))}
     </>
   )
@@ -171,19 +179,29 @@ function NodeRow({
   searchTerm,
   onToggleExpand,
   onCheckedChange,
-}: NodeListProps & { node: BookmarkNode }) {
+}: NodeListProperties & { node: BookmarkNode }) {
   const isExpanded = expandedFolders.has(node.id)
   const checked = node.url
     ? (checkedState.get(node.id) ?? false)
     : determineCheckedState(node.children ?? [], checkedState)
+  const isFolder = !node.url
 
   return (
     <div>
       <div
-        className="flex cursor-pointer items-center gap-1.5 rounded py-0.5 hover:bg-accent"
-        style={{ marginLeft: level * 16 }}
+        className="ml-(--tree-indent) flex items-center gap-1.5 rounded py-0.5 hover:bg-accent data-[folder=true]:cursor-pointer"
+        style={{ '--tree-indent': `${level * 16}px` } as React.CSSProperties}
+        data-folder={isFolder}
+        role={isFolder ? 'button' : undefined}
+        tabIndex={isFolder ? 0 : undefined}
         onClick={() => {
-          if (!node.url) onToggleExpand(node.id)
+          if (isFolder) onToggleExpand(node.id)
+        }}
+        onKeyDown={(event) => {
+          if (!isFolder) return
+          if (event.key !== 'Enter' && event.key !== ' ') return
+          event.preventDefault()
+          onToggleExpand(node.id)
         }}
       >
         <Checkbox
@@ -191,7 +209,7 @@ function NodeRow({
           onCheckedChange={(value) =>
             onCheckedChange(node, value as CheckedState)
           }
-          onClick={(e) => e.stopPropagation()}
+          onClick={(event) => event.stopPropagation()}
           aria-label={node.title}
         />
 
@@ -202,19 +220,19 @@ function NodeRow({
               alt=""
               className="size-4 shrink-0"
               aria-hidden="true"
-              onError={(e) => {
-                ;(e.target as HTMLImageElement).style.display = 'none'
+              onError={(event) => {
+                ;(event.target as HTMLImageElement).style.display = 'none'
               }}
             />
           ) : (
             <File
-              className="size-4 shrink-0 text-blue-500"
+              className="size-4 shrink-0 text-bookmark-file"
               aria-hidden="true"
             />
           )
         ) : (
           <Folder
-            className="size-4 shrink-0 text-yellow-500"
+            className="size-4 shrink-0 text-bookmark-folder"
             fill="currentColor"
             aria-hidden="true"
           />
@@ -249,9 +267,10 @@ function determineCheckedState(
   if (bookmarkIds.length === 0) return false
 
   const checkedCount = bookmarkIds.filter((id) => checkedState.get(id)).length
-  if (checkedCount === 0) return false
-  if (checkedCount === bookmarkIds.length) return true
-  return 'indeterminate'
+  return (
+    checkedCount !== 0 &&
+    (checkedCount === bookmarkIds.length || 'indeterminate')
+  )
 }
 
 function collectBookmarkIds(nodes: BookmarkNode[]): string[] {
@@ -269,30 +288,29 @@ function collectBookmarkIds(nodes: BookmarkNode[]): string[] {
 function collectFolderIds(nodes: BookmarkNode[]): string[] {
   const ids: string[] = []
   for (const node of nodes) {
-    if (!node.url && node.children) {
-      ids.push(node.id)
-      ids.push(...collectFolderIds(node.children))
-    }
+    if (node.url || !node.children) continue
+    ids.push(node.id, ...collectFolderIds(node.children))
   }
   return ids
 }
 
 function filterNodes(nodes: BookmarkNode[], term: string): BookmarkNode[] {
   const lower = term.toLowerCase()
-  return nodes.reduce<BookmarkNode[]>((acc, node) => {
+  const result: BookmarkNode[] = []
+  for (const node of nodes) {
     if (node.url) {
-      if (nodeMatchesSearch(node, lower)) acc.push(node)
+      if (isSearchMatch(node, lower)) result.push(node)
     } else {
       const matchedChildren = filterNodes(node.children ?? [], lower)
-      if (matchedChildren.length > 0 || nodeMatchesSearch(node, lower)) {
-        acc.push({ ...node, children: matchedChildren })
+      if (matchedChildren.length > 0 || isSearchMatch(node, lower)) {
+        result.push({ ...node, children: matchedChildren })
       }
     }
-    return acc
-  }, [])
+  }
+  return result
 }
 
-function nodeMatchesSearch(node: BookmarkNode, lowerTerm: string): boolean {
+function isSearchMatch(node: BookmarkNode, lowerTerm: string): boolean {
   return (
     node.title.toLowerCase().includes(lowerTerm) ||
     (node.url?.toLowerCase().includes(lowerTerm) ?? false)
@@ -303,23 +321,23 @@ function findAncestorsOfMatches(nodes: BookmarkNode[], term: string): string[] {
   const lower = term.toLowerCase()
   const ancestors: string[] = []
 
-  function traverse(nodes: BookmarkNode[]): boolean {
-    let hasMatch = false
+  function hasMatchingDescendant(nodes: BookmarkNode[]): boolean {
+    let didMatch = false
     for (const node of nodes) {
       if (node.url) {
-        if (nodeMatchesSearch(node, lower)) hasMatch = true
+        if (isSearchMatch(node, lower)) didMatch = true
       } else {
-        const childHasMatch = traverse(node.children ?? [])
-        if (childHasMatch) {
+        const didChildMatch = hasMatchingDescendant(node.children ?? [])
+        if (didChildMatch) {
           ancestors.push(node.id)
-          hasMatch = true
+          didMatch = true
         }
       }
     }
-    return hasMatch
+    return didMatch
   }
 
-  traverse(nodes)
+  hasMatchingDescendant(nodes)
   return ancestors
 }
 

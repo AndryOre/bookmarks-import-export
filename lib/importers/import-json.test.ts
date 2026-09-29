@@ -1,0 +1,189 @@
+import { beforeEach, describe, expect, it } from 'vitest'
+
+import {
+  getFakeBookmarksRoot,
+  resetFakeBookmarks,
+} from '@/lib/testing/fake-bookmarks'
+import type { ParsedBookmark } from '@/lib/types'
+
+import { importFromJSON, preprocessBookmarks } from './import-json'
+
+beforeEach(() => {
+  resetFakeBookmarks()
+})
+
+describe('preprocessBookmarks', () => {
+  it('unwraps a virtual root node (id "0") to its children', () => {
+    const input: ParsedBookmark[] = [
+      {
+        id: '0',
+        title: '',
+        dateAdded: 0,
+        children: [
+          { id: '1', title: 'Bookmarks bar', dateAdded: 0, children: [] },
+        ],
+      },
+    ]
+
+    const result = preprocessBookmarks(input)
+
+    expect(result).toHaveLength(1)
+    expect(result[0]?.isBookmarksBar).toBe(true)
+  })
+
+  it('marks id "1" as bookmarks bar and moves it first, id "2" as other bookmarks', () => {
+    const input: ParsedBookmark[] = [
+      { id: '2', title: 'Other', dateAdded: 0, children: [] },
+      { id: '1', title: 'Bar', dateAdded: 0, children: [] },
+    ]
+
+    const result = preprocessBookmarks(input)
+
+    expect(result[0]?.id).toBe('1')
+    expect(result[0]?.isBookmarksBar).toBe(true)
+    expect(result[1]?.id).toBe('2')
+    expect(result[1]?.isOtherBookmarks).toBe(true)
+  })
+
+  it('synthesizes an "other bookmarks" folder for orphans with parentId "2"', () => {
+    const input: ParsedBookmark[] = [
+      {
+        title: 'Orphan',
+        url: 'https://example.com',
+        parentId: '2',
+        dateAdded: 0,
+      },
+    ]
+
+    const result = preprocessBookmarks(input)
+
+    expect(result).toHaveLength(1)
+    expect(result[0]?.isOtherBookmarks).toBe(true)
+    expect(result[0]?.title).toBe('Other bookmarks')
+    expect(result[0]?.children?.[0]?.title).toBe('Orphan')
+  })
+})
+
+describe('importFromJSON', () => {
+  it('creates an "Imported bookmarks" folder tree in folder mode', async () => {
+    const bookmarks: ParsedBookmark[] = [
+      {
+        id: '1',
+        title: 'Bookmarks bar',
+        isBookmarksBar: true,
+        dateAdded: 0,
+        children: [{ title: 'A', url: 'https://a.example', dateAdded: 0 }],
+      },
+      {
+        id: '2',
+        title: 'Other bookmarks',
+        isOtherBookmarks: true,
+        dateAdded: 0,
+        children: [{ title: 'B', url: 'https://b.example', dateAdded: 0 }],
+      },
+    ]
+
+    await importFromJSON(bookmarks, 'folder')
+
+    const root = getFakeBookmarksRoot()
+    // browser.bookmarks.create() with no parentId defaults to the "Other
+    // bookmarks" folder (id "2") — that's where "Imported bookmarks" lands.
+    const otherBookmarks = root.children?.find((n) => n.id === '2')
+    const importedFolder = otherBookmarks?.children?.find(
+      (n) => n.title === 'Imported bookmarks',
+    )
+    expect(importedFolder).toBeDefined()
+
+    const importedBar = importedFolder?.children?.find(
+      (n) => n.title === 'Bookmarks bar',
+    )
+    expect(importedBar?.children?.[0]?.url).toBe('https://a.example')
+
+    const importedOther = importedFolder?.children?.find(
+      (n) => n.url === 'https://b.example',
+    )
+    expect(importedOther).toBeDefined()
+  })
+
+  it('creates bookmarks directly under the bar/other folders in restore-merge mode', async () => {
+    const bookmarks: ParsedBookmark[] = [
+      {
+        id: '1',
+        title: 'Bookmarks bar',
+        isBookmarksBar: true,
+        dateAdded: 0,
+        children: [{ title: 'A', url: 'https://a.example', dateAdded: 0 }],
+      },
+    ]
+
+    await importFromJSON(bookmarks, 'restore-merge')
+
+    const root = getFakeBookmarksRoot()
+    const bar = root.children?.find((n) => n.id === '1')
+    expect(bar?.children?.[0]?.url).toBe('https://a.example')
+  })
+
+  it('removes existing children before importing in restore-replace mode', async () => {
+    await importFromJSON(
+      [
+        {
+          id: '1',
+          title: 'Bookmarks bar',
+          isBookmarksBar: true,
+          dateAdded: 0,
+          children: [
+            { title: 'Old', url: 'https://old.example', dateAdded: 0 },
+          ],
+        },
+      ],
+      'restore-merge',
+    )
+
+    await importFromJSON(
+      [
+        {
+          id: '1',
+          title: 'Bookmarks bar',
+          isBookmarksBar: true,
+          dateAdded: 0,
+          children: [
+            { title: 'New', url: 'https://new.example', dateAdded: 0 },
+          ],
+        },
+      ],
+      'restore-replace',
+    )
+
+    const root = getFakeBookmarksRoot()
+    const bar = root.children?.find((n) => n.id === '1')
+    const urls = bar?.children?.map((n) => n.url)
+    expect(urls).toEqual(['https://new.example'])
+  })
+
+  it('preserves nested folder structure', async () => {
+    const bookmarks: ParsedBookmark[] = [
+      {
+        id: '1',
+        title: 'Bookmarks bar',
+        isBookmarksBar: true,
+        dateAdded: 0,
+        children: [
+          {
+            title: 'Nested',
+            dateAdded: 0,
+            children: [
+              { title: 'Deep', url: 'https://deep.example', dateAdded: 0 },
+            ],
+          },
+        ],
+      },
+    ]
+
+    await importFromJSON(bookmarks, 'restore-merge')
+
+    const root = getFakeBookmarksRoot()
+    const bar = root.children?.find((n) => n.id === '1')
+    const nested = bar?.children?.find((n) => n.title === 'Nested')
+    expect(nested?.children?.[0]?.url).toBe('https://deep.example')
+  })
+})

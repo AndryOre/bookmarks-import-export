@@ -79,8 +79,9 @@ export default function App() {
           fileName = `${baseName}.csv`
           break
         }
-        default:
+        default: {
           return
+        }
       }
 
       const blob = new Blob([content], { type: mimeType })
@@ -89,9 +90,9 @@ export default function App() {
       const a = document.createElement('a')
       a.href = url
       a.download = fileName
-      document.body.appendChild(a)
+      document.body.append(a)
       a.click()
-      document.body.removeChild(a)
+      a.remove()
 
       URL.revokeObjectURL(url)
     } catch (error) {

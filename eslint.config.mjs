@@ -9,6 +9,58 @@ import tseslint from 'typescript-eslint'
 
 import wxtAutoImports from './.wxt/eslint-auto-imports.mjs'
 
+// Punctuation/symbol-only JSX text that `react/jsx-no-literals` would
+// otherwise flag as copy — none of these carry translatable meaning.
+const JSX_NO_LITERALS_ALLOWED_STRINGS = [
+  '/',
+  // The exported HTML file's fixed extension — a technical suffix, not
+  // translatable copy.
+  '.html',
+  '—',
+]
+
+// Per-component exceptions to `shadcn/no-restyle`, each encoding one real,
+// bounded design decision rather than disabling the rule outright.
+const shadcnNoRestyleContracts = [
+  {
+    // The popup/dialog UI has no responsive breakpoints, so every Input
+    // locks in the `md:` text-sm size instead of also carrying the
+    // mobile-only text-base. A few inputs also overlay a leading icon and
+    // need matching start padding to keep typed text clear of it.
+    pattern: '^Input$',
+    allow: ['layout', 'text-sm', 'pl-8'],
+  },
+  {
+    // The time-picker's Hours/Minutes/Period captions intentionally use a
+    // smaller, muted treatment instead of Label's default typography —
+    // there is no dedicated caption variant for this yet.
+    pattern: '^Label$',
+    allow: ['layout', 'text-xs', 'text-muted-foreground'],
+  },
+  {
+    // FeatureCard renders a deliberately compact title/description scale
+    // (bolder + smaller than Card's own defaults) to fit four cards in the
+    // welcome page grid.
+    pattern: '^CardTitle$',
+    allow: ['layout', 'text-sm', 'font-semibold'],
+  },
+  {
+    pattern: '^CardDescription$',
+    allow: ['layout', 'text-xs'],
+  },
+  {
+    // `Tabs`/`TabsList`/`TabsTrigger`/`TabsContent` (components/ui/tabs.tsx)
+    // need consumer-provided layout/spacing classes (flex sizing, width,
+    // the `data-[state=inactive]:hidden` visibility hook used to keep every
+    // tab mounted, the settings-dialog's own vertical rhythm) to fill the
+    // popup's fixed viewport — there is no parent element to push them onto,
+    // since these primitives themselves define the flex/grid context their
+    // own layout classes participate in.
+    pattern: '^Tabs(List|Trigger|Content)?$',
+    allow: ['layout', 'spacing', 'space-y-4', 'pt-2'],
+  },
+]
+
 const eslintConfig = defineConfig([
   wxtAutoImports,
   {
@@ -32,6 +84,7 @@ const eslintConfig = defineConfig([
     },
   },
   react.configs.flat.recommended,
+  react.configs.flat['jsx-runtime'],
   {
     // Explicit plugin registration + rules extraction instead of spreading
     // `reactHooks.configs['recommended-latest']` directly: combining that
@@ -74,7 +127,10 @@ const eslintConfig = defineConfig([
     files: ['**/*.{js,jsx,ts,tsx}'],
     plugins: { shadcn },
     rules: {
-      'shadcn/no-restyle': 'error',
+      'shadcn/no-restyle': [
+        'error',
+        { allow: ['layout'], contracts: shadcnNoRestyleContracts },
+      ],
       'shadcn/no-raw-colors': 'error',
       'shadcn/no-arbitrary-values': 'error',
       'shadcn/no-inline-styles': 'error',
@@ -104,15 +160,13 @@ const eslintConfig = defineConfig([
         {
           noStrings: true,
           ignoreProps: true,
-          allowedStrings: [],
+          allowedStrings: JSX_NO_LITERALS_ALLOWED_STRINGS,
         },
       ],
     },
   },
   prettierConfig,
-  globalIgnores(['.output/**', '.wxt/**']),
-  { ignores: ['components/**'] }, // removed by AO-804
-  { ignores: ['entrypoints/**/*.tsx'] }, // removed by AO-805
+  globalIgnores(['.output/**', '.wxt/**', 'coverage/**']),
 ])
 
 export default eslintConfig

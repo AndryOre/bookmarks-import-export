@@ -585,6 +585,14 @@
     "message": "Período",
     "description": "Etiqueta del selector AM/PM"
   },
+  "periodAM": {
+    "message": "a. m.",
+    "description": "Opción AM en el selector de período de 12 horas"
+  },
+  "periodPM": {
+    "message": "p. m.",
+    "description": "Opción PM en el selector de período de 12 horas"
+  },
   "exportPath": {
     "message": "Ruta de exportación",
     "description": "Título de la sección de ruta de exportación"
@@ -618,5 +626,13 @@
   },
   "changelog_1_6_0_1_link": {
     "message": "Abrir ajustes de exportación automática"
+  },
+  "twitterHandle": {
+    "message": "@AndryOre",
+    "description": "Usuario de X (Twitter) del desarrollador, mostrado como enlace en el pie de página"
+  },
+  "githubLink": {
+    "message": "GitHub",
+    "description": "Texto del enlace al repositorio de GitHub del proyecto"
   }
 }

@@ -14,12 +14,12 @@ const ThemeProviderContext = createContext<
   ThemeProviderContextValue | undefined
 >(undefined)
 
-interface ThemeProviderProps {
+interface ThemeProviderProperties {
   children: React.ReactNode
   defaultTheme?: Theme
 }
 
-export function ThemeProvider({ children }: ThemeProviderProps) {
+export function ThemeProvider({ children }: ThemeProviderProperties) {
   const [theme, setThemeInStorage] = useStorageItem(themeStore)
 
   useEffect(() => {
@@ -31,21 +31,20 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     }
 
     if (theme === 'system') {
-      const mql = window.matchMedia('(prefers-color-scheme: dark)')
+      const mql = globalThis.matchMedia('(prefers-color-scheme: dark)')
 
       applyTheme(mql.matches ? 'dark' : 'light')
 
       // BUG FIX #4: el original no tenía este listener.
       // "system" ahora responde en tiempo real al cambiar el tema del SO.
-      const handleChange = (e: MediaQueryListEvent) => {
-        applyTheme(e.matches ? 'dark' : 'light')
+      const handleChange = (event: MediaQueryListEvent) => {
+        applyTheme(event.matches ? 'dark' : 'light')
       }
 
       mql.addEventListener('change', handleChange)
       return () => mql.removeEventListener('change', handleChange)
-    } else {
-      applyTheme(theme)
     }
+    applyTheme(theme)
   }, [theme])
 
   const setTheme = async (newTheme: Theme) => {

@@ -43,12 +43,14 @@ import {
   includeIconDataStore,
   showBookmarkIconStore,
 } from '@/lib/storage'
-import type { SettingsDialogProperties } from '@/lib/types'
 import type {
   AutoExportConfig,
   AutoExportFormat,
   AutoExportInterval,
+  MessageKey,
+  SettingsDialogProperties,
 } from '@/lib/types'
+import { t } from '@/lib/types'
 import { useStorageItem } from '@/lib/use-storage-item'
 import { cn } from '@/lib/utils'
 
@@ -82,7 +84,10 @@ function formatTime(
 
 // ─── Interval options ─────────────────────────────────────────────────────────
 
-const INTERVALS: { value: AutoExportInterval; labelKey: string }[] = [
+const INTERVALS: {
+  value: AutoExportInterval
+  labelKey: MessageKey
+}[] = [
   { value: '12h', labelKey: 'intervalEvery12Hours' },
   { value: '1d', labelKey: 'intervalEveryDay' },
   { value: '3d', labelKey: 'intervalEvery3Days' },
@@ -122,10 +127,16 @@ export function SettingsDialog({
     exportFilenameTemplateStore,
   )
   const [localTemplate, setLocalTemplate] = useState(filenameTemplate)
+  const [syncedFilenameTemplate, setSyncedFilenameTemplate] =
+    useState(filenameTemplate)
 
-  useEffect(() => {
+  // Reset the draft whenever the stored template changes underneath us —
+  // computed during render instead of an effect, per
+  // https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes.
+  if (filenameTemplate !== syncedFilenameTemplate) {
+    setSyncedFilenameTemplate(filenameTemplate)
     setLocalTemplate(filenameTemplate)
-  }, [filenameTemplate])
+  }
 
   // ── Auto-save tab local state (explicit Save button) ───────────────────────
   const [localConfig, setLocalConfig] = useState<AutoExportConfig>(
@@ -135,24 +146,27 @@ export function SettingsDialog({
 
   useEffect(() => {
     if (!open) return
-    autoExportConfigStore.getValue().then(setLocalConfig)
-    setFormatError(false)
+    const loadConfig = async () => {
+      setLocalConfig(await autoExportConfigStore.getValue())
+      setFormatError(false)
+    }
+    void loadConfig()
   }, [open])
 
   const updateConfig = <K extends keyof AutoExportConfig>(
     key: K,
     value: AutoExportConfig[K],
   ) => {
-    setLocalConfig((prev) => ({ ...prev, [key]: value }))
+    setLocalConfig((previous) => ({ ...previous, [key]: value }))
   }
 
   const toggleFormat = (fmt: AutoExportFormat) => {
     setFormatError(false)
-    setLocalConfig((prev) => {
-      const formats = prev.formats.includes(fmt)
-        ? prev.formats.filter((f) => f !== fmt)
-        : [...prev.formats, fmt]
-      return { ...prev, formats }
+    setLocalConfig((previous) => {
+      const formats = previous.formats.includes(fmt)
+        ? previous.formats.filter((f) => f !== fmt)
+        : [...previous.formats, fmt]
+      return { ...previous, formats }
     })
   }
 
@@ -168,24 +182,24 @@ export function SettingsDialog({
   // ── Time picker derived values ─────────────────────────────────────────────
   const { hour: hour12, minute, period } = parseTo12h(localConfig.preferredTime)
 
-  const updateHour = (val: string) => {
-    const h = Math.min(12, Math.max(1, parseInt(val) || 1))
+  const updateHour = (value: string) => {
+    const h = Math.min(12, Math.max(1, parseInt(value) || 1))
     updateConfig('preferredTime', formatTime(h, minute, period))
   }
 
-  const updateMinute = (val: string) => {
-    const m = Math.min(59, Math.max(0, parseInt(val) || 0))
+  const updateMinute = (value: string) => {
+    const m = Math.min(59, Math.max(0, parseInt(value) || 0))
     updateConfig('preferredTime', formatTime(hour12, m, period))
   }
 
-  const updatePeriod = (val: string) => {
+  const updatePeriod = (value: string) => {
     updateConfig(
       'preferredTime',
-      formatTime(hour12, minute, val as 'AM' | 'PM'),
+      formatTime(hour12, minute, value as 'AM' | 'PM'),
     )
   }
 
-  const showTimePicker = localConfig.interval !== '12h'
+  const isShowTimePicker = localConfig.interval !== '12h'
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -207,7 +221,7 @@ export function SettingsDialog({
                 {i18n.t('export')}
               </TabsTrigger>
               <TabsTrigger value="auto-save" className="flex-1">
-                {i18n.t('autoSave' as any)}
+                {i18n.t('autoSave')}
               </TabsTrigger>
             </TabsList>
 
@@ -232,9 +246,7 @@ export function SettingsDialog({
             <TabsContent value="export" className="space-y-4 pt-2">
               <div className="space-y-2">
                 <div className="flex items-center gap-1">
-                  <Label className="text-sm font-medium">
-                    {i18n.t('exportFilenameTemplate')}
-                  </Label>
+                  <Label>{i18n.t('exportFilenameTemplate')}</Label>
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Info className="size-3.5 cursor-help text-muted-foreground" />
@@ -251,7 +263,7 @@ export function SettingsDialog({
                 </p>
                 <Input
                   value={localTemplate}
-                  onChange={(e) => setLocalTemplate(e.target.value)}
+                  onChange={(event) => setLocalTemplate(event.target.value)}
                   onBlur={() => setFilenameTemplate(localTemplate)}
                   className="h-8 text-sm"
                 />
@@ -312,20 +324,25 @@ export function SettingsDialog({
 
             {/* ── Auto-save tab ─────────────────────────────────────────────── */}
             <TabsContent value="auto-save" className="pt-2">
-              <div className="max-h-[55vh] space-y-4 overflow-y-auto pr-0.5">
+              <div
+                className="max-h-(--settings-scroll-max) space-y-4 overflow-y-auto pr-0.5"
+                style={
+                  { '--settings-scroll-max': '55vh' } as React.CSSProperties
+                }
+              >
                 {/* Enable toggle */}
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 space-y-0.5">
-                    <Label className="text-sm font-medium">
-                      {i18n.t('enableAutoExport' as any)}
-                    </Label>
+                    <Label>{i18n.t('enableAutoExport')}</Label>
                     <p className="text-xs text-muted-foreground">
-                      {i18n.t('enableAutoExportDescription' as any)}
+                      {i18n.t('enableAutoExportDescription')}
                     </p>
                   </div>
                   <Switch
                     checked={localConfig.enabled}
-                    onCheckedChange={(v) => updateConfig('enabled', v)}
+                    onCheckedChange={(isEnabled) =>
+                      updateConfig('enabled', isEnabled)
+                    }
                   />
                 </div>
 
@@ -333,11 +350,9 @@ export function SettingsDialog({
 
                 {/* Export Interval */}
                 <div className="space-y-2">
-                  <Label className="text-sm font-medium">
-                    {i18n.t('exportInterval' as any)}
-                  </Label>
+                  <Label>{i18n.t('exportInterval')}</Label>
                   <p className="text-xs text-muted-foreground">
-                    {i18n.t('selectExportInterval' as any)}
+                    {i18n.t('selectExportInterval')}
                   </p>
                   <div
                     className={cn(
@@ -359,9 +374,7 @@ export function SettingsDialog({
                             : 'border-border hover:bg-accent',
                         )}
                       >
-                        <span className="font-medium">
-                          {i18n.t(labelKey as any)}
-                        </span>
+                        <span className="font-medium">{t(labelKey)}</span>
                         <div
                           className={cn(
                             'flex size-4 shrink-0 items-center justify-center rounded-full border-2',
@@ -383,13 +396,11 @@ export function SettingsDialog({
 
                 {/* Preferred Export Time */}
                 <div className="space-y-2">
-                  <Label className="text-sm font-medium">
-                    {i18n.t('preferredExportTime' as any)}
-                  </Label>
+                  <Label>{i18n.t('preferredExportTime')}</Label>
                   <p className="text-xs text-muted-foreground">
-                    {i18n.t('selectPreferredTime' as any)}
+                    {i18n.t('selectPreferredTime')}
                   </p>
-                  {showTimePicker ? (
+                  {isShowTimePicker ? (
                     <div
                       className={cn(
                         'flex items-end gap-2',
@@ -399,48 +410,52 @@ export function SettingsDialog({
                     >
                       <div className="flex flex-col gap-1">
                         <Label className="text-xs text-muted-foreground">
-                          {i18n.t('hoursLabel' as any)}
+                          {i18n.t('hoursLabel')}
                         </Label>
                         <Input
                           type="number"
                           min={1}
                           max={12}
                           value={hour12}
-                          onChange={(e) => updateHour(e.target.value)}
+                          onChange={(event) => updateHour(event.target.value)}
                           className="h-8 w-16 text-center text-sm"
                         />
                       </div>
                       <div className="flex flex-col gap-1">
                         <Label className="text-xs text-muted-foreground">
-                          {i18n.t('minutesLabel' as any)}
+                          {i18n.t('minutesLabel')}
                         </Label>
                         <Input
                           type="number"
                           min={0}
                           max={59}
                           value={String(minute).padStart(2, '0')}
-                          onChange={(e) => updateMinute(e.target.value)}
+                          onChange={(event) => updateMinute(event.target.value)}
                           className="h-8 w-16 text-center text-sm"
                         />
                       </div>
                       <div className="flex flex-col gap-1">
                         <Label className="text-xs text-muted-foreground">
-                          {i18n.t('periodLabel' as any)}
+                          {i18n.t('periodLabel')}
                         </Label>
                         <Select value={period} onValueChange={updatePeriod}>
-                          <SelectTrigger className="h-8 w-20 text-sm">
+                          <SelectTrigger className="h-8 w-20">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="AM">AM</SelectItem>
-                            <SelectItem value="PM">PM</SelectItem>
+                            <SelectItem value="AM">
+                              {i18n.t('periodAM')}
+                            </SelectItem>
+                            <SelectItem value="PM">
+                              {i18n.t('periodPM')}
+                            </SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
                     </div>
                   ) : (
                     <p className="text-xs text-muted-foreground italic">
-                      {i18n.t('timeSelectionUnavailable' as any)}
+                      {i18n.t('timeSelectionUnavailable')}
                     </p>
                   )}
                 </div>
@@ -449,11 +464,9 @@ export function SettingsDialog({
 
                 {/* Export Path */}
                 <div className="space-y-2">
-                  <Label className="text-sm font-medium">
-                    {i18n.t('exportPath' as any)}
-                  </Label>
+                  <Label>{i18n.t('exportPath')}</Label>
                   <p className="text-xs text-muted-foreground">
-                    {i18n.t('exportPathDescription' as any)}
+                    {i18n.t('exportPathDescription')}
                   </p>
                   <div
                     className={cn(
@@ -464,7 +477,9 @@ export function SettingsDialog({
                     <Folder className="absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-muted-foreground" />
                     <Input
                       value={localConfig.path}
-                      onChange={(e) => updateConfig('path', e.target.value)}
+                      onChange={(event) =>
+                        updateConfig('path', event.target.value)
+                      }
                       placeholder="bookmarks-backup/"
                       className="h-8 pl-8 text-sm"
                     />
@@ -475,11 +490,9 @@ export function SettingsDialog({
 
                 {/* Export Formats */}
                 <div className="space-y-2">
-                  <Label className="text-sm font-medium">
-                    {i18n.t('autoExportFormats' as any)}
-                  </Label>
+                  <Label>{i18n.t('autoExportFormats')}</Label>
                   <p className="text-xs text-muted-foreground">
-                    {i18n.t('autoExportFormatsDescription' as any)}
+                    {i18n.t('autoExportFormatsDescription')}
                   </p>
                   <div
                     className={cn(
@@ -489,34 +502,35 @@ export function SettingsDialog({
                   >
                     {(['html', 'json', 'csv'] as AutoExportFormat[]).map(
                       (fmt) => (
-                        <div
+                        // A native <label> (not the shadcn Label primitive,
+                        // to avoid nesting <label> elements) makes the
+                        // whole chip toggle the checkbox without a manual
+                        // click handler or extra keyboard/role wiring.
+                        <label
                           key={fmt}
+                          htmlFor={`fmt-${fmt}`}
                           className={cn(
                             'flex flex-1 cursor-pointer items-center gap-2 rounded-md border px-3 py-2 transition-colors',
                             localConfig.formats.includes(fmt)
                               ? 'border-primary bg-primary/5'
                               : 'border-border hover:bg-accent',
                           )}
-                          onClick={() => toggleFormat(fmt)}
                         >
                           <Checkbox
                             id={`fmt-${fmt}`}
                             checked={localConfig.formats.includes(fmt)}
                             onCheckedChange={() => toggleFormat(fmt)}
                           />
-                          <Label
-                            htmlFor={`fmt-${fmt}`}
-                            className="cursor-pointer text-sm font-medium uppercase"
-                          >
+                          <span className="text-sm font-medium uppercase">
                             {fmt.toUpperCase()}
-                          </Label>
-                        </div>
+                          </span>
+                        </label>
                       ),
                     )}
                   </div>
                   {formatError && (
                     <p className="text-xs text-destructive">
-                      {i18n.t('formatRequired' as any)}
+                      {i18n.t('formatRequired')}
                     </p>
                   )}
                 </div>
@@ -526,7 +540,7 @@ export function SettingsDialog({
                 {/* Save button */}
                 <Button onClick={handleSave} className="w-full">
                   <Save className="size-4" />
-                  {i18n.t('saveSettings' as any)}
+                  {i18n.t('saveSettings')}
                 </Button>
               </div>
             </TabsContent>
@@ -539,12 +553,12 @@ export function SettingsDialog({
 
 // ─── SettingRow ───────────────────────────────────────────────────────────────
 
-interface SettingRowProps {
-  labelKey: string
-  descKey: string
-  tooltipKey?: string
+interface SettingRowProperties {
+  labelKey: MessageKey
+  descKey: MessageKey
+  tooltipKey?: MessageKey
   checked: boolean
-  onCheckedChange: (value: boolean) => Promise<void>
+  onCheckedChange: (isChecked: boolean) => Promise<void>
 }
 
 function SettingRow({
@@ -553,28 +567,24 @@ function SettingRow({
   tooltipKey,
   checked,
   onCheckedChange,
-}: SettingRowProps) {
+}: SettingRowProperties) {
   return (
     <div className="flex items-start justify-between gap-4">
       <div className="flex-1 space-y-0.5">
         <div className="flex items-center gap-1">
-          <Label className="text-sm font-medium">
-            {i18n.t(labelKey as any)}
-          </Label>
+          <Label>{t(labelKey)}</Label>
           {tooltipKey && (
             <Tooltip>
               <TooltipTrigger asChild>
                 <Info className="size-3.5 cursor-help text-muted-foreground" />
               </TooltipTrigger>
               <TooltipContent>
-                <p className="max-w-xs text-xs">{i18n.t(tooltipKey as any)}</p>
+                <p className="max-w-xs text-xs">{t(tooltipKey)}</p>
               </TooltipContent>
             </Tooltip>
           )}
         </div>
-        <p className="text-xs text-muted-foreground">
-          {i18n.t(descKey as any)}
-        </p>
+        <p className="text-xs text-muted-foreground">{t(descKey)}</p>
       </div>
       <Switch checked={checked} onCheckedChange={onCheckedChange} />
     </div>

@@ -20,7 +20,7 @@ import type { BookmarkFormat, BookmarkTreeHandle } from '@/lib/types'
 import { useStorageItem } from '@/lib/use-storage-item'
 
 export default function App() {
-  const treeRef = useRef<BookmarkTreeHandle>(null)
+  const treeReference = useRef<BookmarkTreeHandle>(null)
   const [selectedCount, setSelectedCount] = useState(0)
   const [totalCount, setTotalCount] = useState(0)
   const [searchTerm, setSearchTerm] = useState('')
@@ -36,7 +36,7 @@ export default function App() {
   const [filenameTemplate] = useStorageItem(exportFilenameTemplateStore)
 
   const handleExport = async (format: BookmarkFormat) => {
-    const tree = treeRef.current
+    const tree = treeReference.current
     if (!tree) return
 
     const selectedBookmarks = await tree.getSelectedBookmarks()
@@ -92,8 +92,9 @@ export default function App() {
           fileName = `${baseName}.csv`
           break
         }
-        default:
+        default: {
           return
+        }
       }
 
       downloadFile(content, mimeType, fileName)
@@ -103,15 +104,15 @@ export default function App() {
   }
 
   const handleRefresh = async () => {
-    await treeRef.current?.refresh()
+    await treeReference.current?.refresh()
   }
 
   const handleSelectAll = () => {
-    treeRef.current?.selectAll()
+    treeReference.current?.selectAll()
   }
 
   const handleDeselectAll = () => {
-    treeRef.current?.deselectAll()
+    treeReference.current?.deselectAll()
   }
 
   return (
@@ -128,7 +129,7 @@ export default function App() {
       />
 
       <BookmarkTree
-        ref={treeRef}
+        ref={treeReference}
         searchTerm={searchTerm}
         onSelectionChange={setSelectedCount}
         onTotalChange={setTotalCount}
@@ -144,9 +145,9 @@ function downloadFile(content: string, mimeType: string, fileName: string) {
   const a = document.createElement('a')
   a.href = url
   a.download = fileName
-  document.body.appendChild(a)
+  document.body.append(a)
   a.click()
-  document.body.removeChild(a)
+  a.remove()
 
   URL.revokeObjectURL(url)
 }

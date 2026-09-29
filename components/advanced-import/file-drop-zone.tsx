@@ -4,36 +4,36 @@ import { useRef, useState } from 'react'
 
 import { Button } from '@/components/ui/button'
 
-interface FileDropZoneProps {
+interface FileDropZoneProperties {
   file: File | null
   onFile: (file: File) => void
 }
 
-export function FileDropZone({ file, onFile }: FileDropZoneProps) {
-  const fileInputRef = useRef<HTMLInputElement>(null)
+export function FileDropZone({ file, onFile }: FileDropZoneProperties) {
+  const fileInputReference = useRef<HTMLInputElement>(null)
   const [isDragging, setIsDragging] = useState(false)
 
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault()
+  const handleDragOver = (event: React.DragEvent) => {
+    event.preventDefault()
     setIsDragging(true)
   }
 
-  const handleDragLeave = (e: React.DragEvent) => {
-    e.preventDefault()
+  const handleDragLeave = (event: React.DragEvent) => {
+    event.preventDefault()
     setIsDragging(false)
   }
 
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault()
+  const handleDrop = (event: React.DragEvent) => {
+    event.preventDefault()
     setIsDragging(false)
-    const dropped = e.dataTransfer.files[0]
+    const dropped = event.dataTransfer.files[0]
     if (dropped) onFile(dropped)
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selected = e.target.files?.[0]
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selected = event.target.files?.[0]
     if (selected) onFile(selected)
-    e.target.value = ''
+    event.target.value = ''
   }
 
   if (file) {
@@ -44,12 +44,12 @@ export function FileDropZone({ file, onFile }: FileDropZoneProps) {
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => fileInputRef.current?.click()}
+          onClick={() => fileInputReference.current?.click()}
         >
           {i18n.t('changeFile')}
         </Button>
         <input
-          ref={fileInputRef}
+          ref={fileInputReference}
           type="file"
           accept=".csv,.json,.html,.htm"
           className="hidden"
@@ -60,11 +60,15 @@ export function FileDropZone({ file, onFile }: FileDropZoneProps) {
   }
 
   return (
-    <div
+    // A native <label> targeting the hidden file input makes the whole
+    // zone clickable/keyboard-activatable without a manual click handler
+    // or extra role/tabIndex/keyboard wiring — drag-and-drop is layered on
+    // top via the drag event handlers.
+    <label
+      htmlFor="file-drop-zone-input"
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
-      onClick={() => fileInputRef.current?.click()}
       className={[
         'flex cursor-pointer flex-col items-center justify-center gap-3 rounded-lg border-2 border-dashed p-12 text-center transition-colors select-none',
         isDragging
@@ -83,12 +87,13 @@ export function FileDropZone({ file, onFile }: FileDropZoneProps) {
         {i18n.t('supportedFormats')}
       </p>
       <input
-        ref={fileInputRef}
+        id="file-drop-zone-input"
+        ref={fileInputReference}
         type="file"
         accept=".csv,.json,.html,.htm"
         className="hidden"
         onChange={handleChange}
       />
-    </div>
+    </label>
   )
 }

@@ -1,12 +1,26 @@
+import type { GeneratedI18nStructure } from '#i18n'
+
+// Every changelog key is rendered as plain, argument-less text, so this
+// narrows to the subset of `i18n.t()` keys valid for that call shape
+// (matches the first overload of `TFunction` in `@wxt-dev/i18n`).
+type I18nKey = {
+  [K in keyof GeneratedI18nStructure]: GeneratedI18nStructure[K] extends {
+    plural: false
+    substitutions: 0
+  }
+    ? K
+    : never
+}[keyof GeneratedI18nStructure]
+
 export interface ChangelogEntry {
   version: string
-  dateKey: string
+  dateKey: I18nKey
   items: ChangelogItem[]
 }
 
 export interface ChangelogItem {
-  textKey: string
-  linkKey?: string
+  textKey: I18nKey
+  linkKey?: I18nKey
   linkUrl?: string
 }
 

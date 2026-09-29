@@ -12,11 +12,13 @@ import {
 } from '@/components/ui/select'
 import type { BookmarkFormat } from '@/lib/types'
 
-interface ExportFormatSelectorProps {
+interface ExportFormatSelectorProperties {
   onExport: (format: BookmarkFormat) => void
 }
 
-export function ExportFormatSelector({ onExport }: ExportFormatSelectorProps) {
+export function ExportFormatSelector({
+  onExport,
+}: ExportFormatSelectorProperties) {
   const [format, setFormat] = useState<BookmarkFormat>('html')
 
   return (
@@ -29,9 +31,11 @@ export function ExportFormatSelector({ onExport }: ExportFormatSelectorProps) {
           <SelectValue placeholder={i18n.t('exportFormat')} />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="html">HTML</SelectItem>
-          <SelectItem value="json">JSON</SelectItem>
-          <SelectItem value="csv">CSV</SelectItem>
+          {(['html', 'json', 'csv'] as BookmarkFormat[]).map((value) => (
+            <SelectItem key={value} value={value}>
+              {value.toUpperCase()}
+            </SelectItem>
+          ))}
         </SelectContent>
       </Select>
 

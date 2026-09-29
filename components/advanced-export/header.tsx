@@ -22,9 +22,9 @@ export function Header({
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [isRefreshing, setIsRefreshing] = useState(false)
 
-  const handleRefresh = async () => {
+  const handleRefresh = () => {
     setIsRefreshing(true)
-    await onRefresh()
+    onRefresh()
     setTimeout(() => setIsRefreshing(false), 1000)
   }
 

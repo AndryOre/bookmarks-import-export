@@ -3,13 +3,13 @@ import { Upload } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 
-export function AdvancedImportButton() {
-  const handleClick = () => {
-    browser.tabs.create({
-      url: browser.runtime.getURL('/advanced-import.html' as any),
-    })
-  }
+function handleClick() {
+  void browser.tabs.create({
+    url: browser.runtime.getURL('/advanced-import.html'),
+  })
+}
 
+export function AdvancedImportButton() {
   return (
     <Button
       variant="outline"

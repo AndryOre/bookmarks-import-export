@@ -39,7 +39,7 @@ export default function App() {
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 text-sm font-medium hover:underline"
         >
-          <Star className="h-6 w-6 fill-yellow-400 text-yellow-400" />
+          <Star className="h-6 w-6 fill-rating text-rating" />
           {i18n.t('feedbackLink')}
         </a>
       </section>
@@ -56,13 +56,13 @@ export default function App() {
               <h3 className="text-base font-semibold">
                 {v} —{' '}
                 <span className="font-normal text-muted-foreground">
-                  {i18n.t(dateKey as any)}
+                  {i18n.t(dateKey)}
                 </span>
               </h3>
               <ul className="mt-1 ml-4 list-outside list-disc space-y-1">
                 {items.map(({ textKey, linkKey, linkUrl }) => (
                   <li key={textKey} className="text-sm text-muted-foreground">
-                    {i18n.t(textKey as any)}
+                    {i18n.t(textKey)}
                     {linkKey && linkUrl && (
                       <>
                         {' '}
@@ -70,7 +70,7 @@ export default function App() {
                           href={linkUrl}
                           className="text-foreground underline hover:no-underline"
                         >
-                          {i18n.t(linkKey as any)}
+                          {i18n.t(linkKey)}
                         </a>
                       </>
                     )}
@@ -89,7 +89,7 @@ export default function App() {
           rel="noopener noreferrer"
           className="hover:underline"
         >
-          @AndryOre
+          {i18n.t('twitterHandle')}
         </a>
         <a
           href={GITHUB_URL}
@@ -97,7 +97,7 @@ export default function App() {
           rel="noopener noreferrer"
           className="hover:underline"
         >
-          GitHub
+          {i18n.t('githubLink')}
         </a>
       </footer>
     </main>

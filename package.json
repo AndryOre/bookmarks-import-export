@@ -20,6 +20,9 @@
     "lint:fix": "bunx eslint . --fix --max-warnings=0 --cache --cache-strategy content",
     "format:check": "bunx --bun prettier --check \"**/*.{ts,tsx,js,jsx,mjs,mdx,json,json5,md,css,scss,yml,yaml}\" --cache",
     "format:write": "bunx --bun prettier --write \"**/*.{ts,tsx,js,jsx,mjs,mdx,json,json5,md,css,scss,yml,yaml}\" --cache",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest",
     "postinstall": "wxt prepare"
   },
   "dependencies": {
@@ -44,6 +47,7 @@
     "@types/papaparse": "^5.5.2",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
+    "@vitest/coverage-v8": "^5.0.2",
     "@wxt-dev/auto-icons": "^1.1.1",
     "@wxt-dev/module-react": "^1.2.2",
     "eslint": "^10",
@@ -52,10 +56,12 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-unicorn": "^76.0.0",
+    "jsdom": "^30.1.1",
     "prettier": "^3.9.9",
     "prettier-plugin-tailwindcss": "^0.8.1",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.71.0",
+    "vitest": "^5.0.2",
     "wxt": "^0.20.25"
   }
 }

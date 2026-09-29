@@ -9,34 +9,40 @@ import { importFromHTML } from '@/lib/importers/import-html'
 import { importFromJSON } from '@/lib/importers/import-json'
 
 export function ImportBookmarksButton() {
-  const fileInputRef = useRef<HTMLInputElement>(null)
+  const fileInputReference = useRef<HTMLInputElement>(null)
 
   const handleButtonClick = () => {
-    fileInputRef.current?.click()
+    fileInputReference.current?.click()
   }
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = event.target.files?.[0]
     if (!file) return
 
-    e.target.value = ''
+    event.target.value = ''
 
     try {
       const text = await file.text()
       const format = detectFormat(text, file.type)
 
       switch (format) {
-        case 'csv':
+        case 'csv': {
           await importFromCSV(text)
           break
-        case 'json':
+        }
+        case 'json': {
           await importFromJSON(JSON.parse(text))
           break
-        case 'html':
+        }
+        case 'html': {
           await importFromHTML(text)
           break
-        default:
+        }
+        default: {
           throw new Error(i18n.t('unsupportedFileFormat'))
+        }
       }
 
       alert(i18n.t('bookmarksImportedSuccessfully'))
@@ -48,7 +54,7 @@ export function ImportBookmarksButton() {
   return (
     <>
       <input
-        ref={fileInputRef}
+        ref={fileInputReference}
         type="file"
         accept=".csv,.json,.html,.htm"
         className="hidden"

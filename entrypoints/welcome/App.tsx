@@ -79,12 +79,13 @@ export default function App() {
             />
           ))}
 
-          <FeatureCard
-            icon={Globe}
-            titleKey="compatibleBrowsers"
-            descriptionKey="compatibleBrowsersDescription"
-            className="col-span-2"
-          />
+          <div className="col-span-2">
+            <FeatureCard
+              icon={Globe}
+              titleKey="compatibleBrowsers"
+              descriptionKey="compatibleBrowsersDescription"
+            />
+          </div>
         </div>
       </section>
 
@@ -94,7 +95,7 @@ export default function App() {
         rel="noopener noreferrer"
         className="flex items-center gap-2 text-sm font-medium hover:underline"
       >
-        <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+        <Star className="h-5 w-5 fill-rating text-rating" />
         {i18n.t('feedbackLink')}
       </a>
 
@@ -105,7 +106,7 @@ export default function App() {
           rel="noopener noreferrer"
           className="hover:underline"
         >
-          @AndryOre
+          {i18n.t('twitterHandle')}
         </a>
         <a
           href={GITHUB_URL}
@@ -113,7 +114,7 @@ export default function App() {
           rel="noopener noreferrer"
           className="hover:underline"
         >
-          GitHub
+          {i18n.t('githubLink')}
         </a>
       </footer>
     </main>

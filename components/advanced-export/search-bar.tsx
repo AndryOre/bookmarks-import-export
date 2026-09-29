@@ -14,7 +14,7 @@ export function SearchBar({ value, onChange }: SearchBarProperties) {
       <Input
         type="search"
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(event) => onChange(event.target.value)}
         placeholder={i18n.t('searchBookmarks')}
         className="h-8 w-48 pl-8"
         aria-label={i18n.t('searchBookmarks')}
