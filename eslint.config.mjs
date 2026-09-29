@@ -1,4 +1,5 @@
 import { plugin as shadcn } from '@shadcn/lint'
+import vitest from '@vitest/eslint-plugin'
 import prettierConfig from 'eslint-config-prettier'
 import jsxA11y from 'eslint-plugin-jsx-a11y'
 import react from 'eslint-plugin-react'
@@ -163,6 +164,13 @@ const eslintConfig = defineConfig([
           allowedStrings: JSX_NO_LITERALS_ALLOWED_STRINGS,
         },
       ],
+    },
+  },
+  {
+    files: ['**/*.test.ts'],
+    plugins: { vitest },
+    rules: {
+      ...vitest.configs.recommended.rules,
     },
   },
   prettierConfig,

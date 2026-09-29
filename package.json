@@ -69,6 +69,7 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitest/coverage-v8": "^5.0.2",
+    "@vitest/eslint-plugin": "^1.6.27",
     "@wxt-dev/auto-icons": "^1.1.1",
     "@wxt-dev/browser": "^0.2.0",
     "@wxt-dev/module-react": "^1.2.2",

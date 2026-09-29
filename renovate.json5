@@ -84,6 +84,7 @@
         'typescript-eslint',
         'eslint-plugin-*',
         'eslint-config-prettier',
+        '@vitest/eslint-plugin',
       ],
     },
     {
