@@ -3,7 +3,9 @@ const config = {
     'bunx --bun prettier --write --cache',
     'bunx eslint --fix --max-warnings=0 --no-warn-ignored',
   ],
-  '*.{json,md,mdx,css,scss,yml,yaml}': ['bunx --bun prettier --write --cache'],
+  '*.{json,json5,md,mdx,css,scss,yml,yaml}': [
+    'bunx --bun prettier --write --cache',
+  ],
 }
 
 export default config

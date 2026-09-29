@@ -5,13 +5,13 @@
 | Script                  | What it does                                                                    |
 | ----------------------- | ------------------------------------------------------------------------------- |
 | `bun run dev`           | Starts the WXT dev server (Chrome MV3).                                         |
-| `bun run dev:firefox`   | Starts the WXT dev server, targeting Firefox.                                   |
 | `bun run build`         | Produces a production build (Chrome MV3).                                       |
-| `bun run build:firefox` | Produces a production build, targeting Firefox.                                 |
 | `bun run zip`           | Builds and packages the extension into a distributable `.zip`.                  |
-| `bun run zip:firefox`   | Same as `zip`, targeting Firefox.                                               |
 | `bun run check`         | Aggregate gate: `format:check` → `lint` → `typecheck`. Run before opening a PR. |
 | `bun run fix`           | Aggregate autofix: `format:write` → `lint:fix` → `typecheck`.                   |
+| `bun run ci:local`      | Reproduces CI locally: frozen-lockfile install → `check` → `test`.              |
+| `bun run clean`         | Removes build output and `node_modules`.                                        |
+| `bun run cache:clear`   | Clears ESLint and `node_modules/.cache` caches.                                 |
 | `bun run format:check`  | Checks formatting with Prettier (no writes).                                    |
 | `bun run format:write`  | Formats the repo with Prettier.                                                 |
 | `bun run lint`          | Runs ESLint (`--max-warnings=0`, cached).                                       |

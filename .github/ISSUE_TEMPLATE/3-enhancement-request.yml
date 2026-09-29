@@ -1,0 +1,50 @@
+name: Enhancement Request
+description: Suggest an improvement to an existing feature or behavior
+title: 'feat: '
+labels: ['Type: Enhancement', 'Status: Needs Info']
+body:
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Pre-flight checklist
+      options:
+        - label:
+            I have searched the existing issues and confirmed this hasn't been
+            proposed.
+          required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve the project! Enhancements are improvements to something that already exists — if you have a brand-new idea, use the **Feature Request** template instead.
+
+        > Before submitting, please search [existing issues](https://github.com/AndryOre/bookmarks-import-export-new/issues) to avoid duplicates.
+
+  - type: textarea
+    id: current
+    attributes:
+      label: Current behavior
+      description: Describe how the existing feature currently works.
+    validations:
+      required: true
+
+  - type: textarea
+    id: improvement
+    attributes:
+      label: Proposed improvement
+      description: Describe what you'd like to change or improve and why.
+    validations:
+      required: true
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Expected impact
+      description: How would this improvement benefit users or the codebase?
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description:
+        Screenshots, references, related issues, or any other context.

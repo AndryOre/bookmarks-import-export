@@ -1,0 +1,102 @@
+# Labels are synced automatically by .github/workflows/labels.yml
+# Run the workflow manually after editing this file to preview changes (dry-run on PR, live on push to main)
+
+# ── Type ──────────────────────────────────────────────────────────────────────
+
+- name: 'Type: Bug'
+  color: 'd73a4a'
+  description: Something isn't working correctly
+
+- name: 'Type: Feature'
+  color: '0075ca'
+  description: A brand-new feature or capability
+
+- name: 'Type: Enhancement'
+  color: '54aeff'
+  description: Improvement to an existing feature or behavior
+
+- name: 'Type: Docs'
+  color: '0052cc'
+  description: Documentation additions, corrections, or improvements
+
+- name: 'Type: Security'
+  color: 'b60205'
+  description: Security vulnerability or hardening
+
+# ── Status ────────────────────────────────────────────────────────────────────
+
+- name: 'Status: Needs Info'
+  color: 'd876e3'
+  description: Waiting for more information from the reporter
+
+- name: 'Status: In Progress'
+  color: 'fbca04'
+  description: Actively being worked on
+
+- name: 'Status: Blocked'
+  color: 'e11d48'
+  description: Blocked by another issue or external dependency
+
+# ── Priority ──────────────────────────────────────────────────────────────────
+
+- name: 'Priority: Critical'
+  color: 'b60205'
+  description: Drop-everything urgency; security or production-breaking
+
+- name: 'Priority: Low'
+  color: 'c2e0c6'
+  description: Low urgency; address when convenient
+
+- name: 'Priority: Medium'
+  color: 'ffd33d'
+  description: Normal priority
+
+- name: 'Priority: High'
+  color: 'ff7b00'
+  description: High urgency; address soon
+
+# ── Resolution ────────────────────────────────────────────────────────────────
+
+- name: 'Resolution: Duplicate'
+  color: 'cfd3d7'
+  description: This issue or PR already exists
+
+- name: "Resolution: Won't Fix"
+  color: 'cfd3d7'
+  description: This will not be worked on
+
+# ── Area ──────────────────────────────────────────────────────────────────────
+
+- name: 'Area: ui'
+  color: 'fbca04'
+  description: UI components and styling
+
+- name: 'Area: i18n'
+  color: '1d76db'
+  description: Locales and translations
+
+- name: 'Area: ci'
+  color: '2088ff'
+  description: CI/CD workflows and automation
+
+# ── Misc ──────────────────────────────────────────────────────────────────────
+
+- name: 'breaking-change'
+  color: 'b60205'
+  description: Introduces a breaking change
+
+- name: 'dependencies'
+  color: '0366d6'
+  description: Dependency updates (used by Renovate)
+
+- name: 'github-actions'
+  color: '2088ff'
+  description: GitHub Actions workflow changes
+
+- name: 'good first issue'
+  color: '7057ff'
+  description: Good for newcomers
+
+- name: 'help wanted'
+  color: '008672'
+  description: Extra attention is needed
