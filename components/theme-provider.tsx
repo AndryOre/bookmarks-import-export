@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect } from 'react'
 
 import { themeStore } from '@/lib/storage'
 import { useStorageItem } from '@/lib/use-storage-item'
@@ -19,10 +19,7 @@ interface ThemeProviderProps {
   defaultTheme?: Theme
 }
 
-export function ThemeProvider({
-  children,
-  defaultTheme = 'system',
-}: ThemeProviderProps) {
+export function ThemeProvider({ children }: ThemeProviderProps) {
   const [theme, setThemeInStorage] = useStorageItem(themeStore)
 
   useEffect(() => {

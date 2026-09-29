@@ -134,7 +134,7 @@ async function processBookmarks(
   const tree = await browser.bookmarks.getTree()
   const root = tree[0]
 
-  if (!root.children?.[0] || !root.children?.[1]) {
+  if (!root?.children?.[0] || !root.children?.[1]) {
     throw new Error('PROCESS_ERROR:' + i18n.t('importFromHTMLProcessError'))
   }
 

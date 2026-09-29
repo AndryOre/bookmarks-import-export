@@ -15,7 +15,7 @@
     "build:firefox": "wxt build -b firefox",
     "zip": "wxt zip",
     "zip:firefox": "wxt zip -b firefox",
-    "compile": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
     "format:check": "bunx --bun prettier --check \"**/*.{ts,tsx,js,jsx,mjs,mdx,json,json5,md,css,scss,yml,yaml}\" --cache",
     "format:write": "bunx --bun prettier --write \"**/*.{ts,tsx,js,jsx,mjs,mdx,json,json5,md,css,scss,yml,yaml}\" --cache",
     "postinstall": "wxt prepare"
