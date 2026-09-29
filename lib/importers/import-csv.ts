@@ -47,18 +47,19 @@ function processCSVData(rows: Record<string, string>[]): ParsedBookmark[] {
     for (const segment of segments) {
       currentPath = currentPath ? `${currentPath}/${segment}` : segment
 
-      if (!folderMemo[currentPath]) {
-        const newFolder: ParsedBookmark = {
+      let folder = folderMemo[currentPath]
+      if (!folder) {
+        folder = {
           title: segment,
           dateAdded: Date.now(),
           dateGroupModified: Date.now(),
           children: [],
         }
-        currentLevel.push(newFolder)
-        folderMemo[currentPath] = newFolder
+        currentLevel.push(folder)
+        folderMemo[currentPath] = folder
       }
 
-      currentLevel = folderMemo[currentPath].children!
+      currentLevel = folder.children ?? (folder.children = [])
     }
 
     currentLevel.push({ title, url, dateAdded: Date.now() })
@@ -73,7 +74,7 @@ async function createBookmarks(tree: ParsedBookmark[]): Promise<void> {
   const tree_chrome = await browser.bookmarks.getTree()
   const root = tree_chrome[0]
 
-  if (!root.children?.[0] || !root.children?.[1]) {
+  if (!root?.children?.[0] || !root.children?.[1]) {
     throw new Error(i18n.t('importFromCSVImportError' as any))
   }
 
@@ -86,8 +87,9 @@ async function createBookmarks(tree: ParsedBookmark[]): Promise<void> {
 
   let importedFolderId: string
 
-  if (existing.length > 0) {
-    importedFolderId = existing[0].id
+  const existingFolder = existing[0]
+  if (existingFolder) {
+    importedFolderId = existingFolder.id
   } else {
     const created = await createItem({ title: importedFolderTitle })
     importedFolderId = created.id

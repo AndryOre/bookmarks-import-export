@@ -34,7 +34,9 @@ export function getNextExportDate(
     return new Date(now.getTime() + 12 * 60 * 60 * 1000)
   }
 
-  const [hours, minutes] = preferredTime.split(':').map(Number)
+  const [hoursRaw, minutesRaw] = preferredTime.split(':').map(Number)
+  const hours = hoursRaw ?? 0
+  const minutes = minutesRaw ?? 0
   const days = interval === '1d' ? 1 : interval === '3d' ? 3 : 7
 
   const next = new Date(now)

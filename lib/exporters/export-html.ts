@@ -26,7 +26,7 @@ export async function exportToHTML(
 
   const rootNodes = await browser.bookmarks.getTree()
   const rootNode = rootNodes[0]
-  const nodesToExport = selectedBookmarks ?? rootNode.children ?? []
+  const nodesToExport = selectedBookmarks ?? rootNode?.children ?? []
 
   const lines: string[] = []
 

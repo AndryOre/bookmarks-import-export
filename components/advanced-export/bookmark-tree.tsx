@@ -2,7 +2,6 @@ import type { Browser } from '@wxt-dev/browser'
 import { File, Folder } from 'lucide-react'
 import {
   forwardRef,
-  useCallback,
   useEffect,
   useImperativeHandle,
   useRef,
@@ -86,7 +85,8 @@ export const BookmarkTree = forwardRef<BookmarkTreeHandle, BookmarkTreeProps>(
 
     async function loadBookmarks() {
       const tree = await fetchFullTree()
-      const withParentId = addParentIds(tree[0].children ?? [])
+      const rootNode = tree[0]
+      const withParentId = addParentIds(rootNode?.children ?? [])
       setNodes(withParentId)
 
       if (autoExpandFolders) {

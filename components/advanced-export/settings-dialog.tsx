@@ -59,7 +59,9 @@ function parseTo12h(time: string): {
   minute: number
   period: 'AM' | 'PM'
 } {
-  const [h, m] = time.split(':').map(Number)
+  const [hRaw, mRaw] = time.split(':').map(Number)
+  const h = hRaw ?? 0
+  const m = mRaw ?? 0
   return {
     hour: h === 0 ? 12 : h > 12 ? h - 12 : h,
     minute: m,
