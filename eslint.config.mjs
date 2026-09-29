@@ -113,8 +113,13 @@ const eslintConfig = defineConfig([
       ],
       // `lib/utils.ts` is shadcn/ui's own generated convention
       // (components.json `aliases.utils` -> `@/lib/utils`) — renaming it
-      // would fight every future `shadcn add`.
-      'unicorn/name-replacements': ['error', { allowList: { utils: true } }],
+      // would fight every future `shadcn add`. `scripts/lint-docs.ts` mirrors
+      // `.github/workflows/lint-docs.yml`'s name (and andryore-dev's own
+      // `scripts/lint-docs.ts`) — renaming it would break that parity.
+      'unicorn/name-replacements': [
+        'error',
+        { allowList: { utils: true, docs: true } },
+      ],
     },
   },
   {

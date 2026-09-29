@@ -2,24 +2,25 @@
 
 ## Scripts
 
-| Script                  | What it does                                                                    |
-| ----------------------- | ------------------------------------------------------------------------------- |
-| `bun run dev`           | Starts the WXT dev server (Chrome MV3).                                         |
-| `bun run build`         | Produces a production build (Chrome MV3).                                       |
-| `bun run zip`           | Builds and packages the extension into a distributable `.zip`.                  |
-| `bun run check`         | Aggregate gate: `format:check` → `lint` → `typecheck`. Run before opening a PR. |
-| `bun run fix`           | Aggregate autofix: `format:write` → `lint:fix` → `typecheck`.                   |
-| `bun run ci:local`      | Reproduces CI locally: frozen-lockfile install → `check` → `test`.              |
-| `bun run clean`         | Removes build output and `node_modules`.                                        |
-| `bun run cache:clear`   | Clears ESLint and `node_modules/.cache` caches.                                 |
-| `bun run format:check`  | Checks formatting with Prettier (no writes).                                    |
-| `bun run format:write`  | Formats the repo with Prettier.                                                 |
-| `bun run lint`          | Runs ESLint (`--max-warnings=0`, cached).                                       |
-| `bun run lint:fix`      | Runs ESLint with `--fix` (`--max-warnings=0`, cached).                          |
-| `bun run typecheck`     | Runs `tsc --noEmit`.                                                            |
-| `bun run test`          | Runs the Vitest suite once.                                                     |
-| `bun run test:coverage` | Runs the Vitest suite with coverage (`lib/**`, v8 provider, 50% thresholds).    |
-| `bun run test:watch`    | Runs Vitest in watch mode.                                                      |
+| Script                  | What it does                                                                     |
+| ----------------------- | -------------------------------------------------------------------------------- |
+| `bun run dev`           | Starts the WXT dev server (Chrome MV3).                                          |
+| `bun run build`         | Produces a production build (Chrome MV3).                                        |
+| `bun run zip`           | Builds and packages the extension into a distributable `.zip`.                   |
+| `bun run check`         | Aggregate gate: `format:check` → `lint` → `typecheck`. Run before opening a PR.  |
+| `bun run fix`           | Aggregate autofix: `format:write` → `lint:fix` → `typecheck`.                    |
+| `bun run ci:local`      | Reproduces CI locally: frozen-lockfile install → `check` → `lint:docs` → `test`. |
+| `bun run clean`         | Removes build output and `node_modules`.                                         |
+| `bun run cache:clear`   | Clears ESLint and `node_modules/.cache` caches.                                  |
+| `bun run format:check`  | Checks formatting with Prettier (no writes).                                     |
+| `bun run format:write`  | Formats the repo with Prettier.                                                  |
+| `bun run lint`          | Runs ESLint (`--max-warnings=0`, cached).                                        |
+| `bun run lint:docs`     | Local `lychee` link check, matching `lint-docs.yml`'s markdown link gate.        |
+| `bun run lint:fix`      | Runs ESLint with `--fix` (`--max-warnings=0`, cached).                           |
+| `bun run typecheck`     | Runs `tsc --noEmit`.                                                             |
+| `bun run test`          | Runs the Vitest suite once.                                                      |
+| `bun run test:coverage` | Runs the Vitest suite with coverage (`lib/**`, v8 provider, 50% thresholds).     |
+| `bun run test:watch`    | Runs Vitest in watch mode.                                                       |
 
 ## Git hooks
 
@@ -105,3 +106,29 @@ if used) alongside it in `beforeEach`.
 
 Coverage is scoped to `lib/**` only (see `vitest.config.ts`), with a 50%
 threshold on lines/statements/branches/functions.
+
+## Repository settings
+
+This repo's GitHub settings (rulesets on `main` and `v*` tags, merge strategy,
+private vulnerability reporting, SHA-pinned Actions, immutable releases,
+workflow execution protections, and feature/metadata flags) are codified and
+applied via `gh api` rather than clicked through the Settings UI. See
+`docs/adr/0001-public-repo-security-posture.md` for the full target state and
+the reasoning behind each choice.
+
+To (re-)apply them:
+
+```sh
+scripts/repo-settings/apply.sh <owner/repo>
+```
+
+The script is idempotent — running it again against the same repo leaves the
+same end state — and logs a warning (without aborting) for any setting the
+GitHub API refuses, e.g. `secret_scanning_non_provider_patterns`, which this
+repo's plan does not currently support.
+
+**This script and the `scripts/repo-settings/` folder are temporary.** This
+repository is planned to migrate to `AndryOre/bookmarks-import-export`. Once
+that migration happens and `apply.sh` has been re-run against the new repo,
+delete `scripts/repo-settings/` entirely — it is not meant to be permanent
+settings-as-code infrastructure.

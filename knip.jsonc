@@ -8,11 +8,11 @@
     // ship the full upstream export surface even when this app only uses
     // part of it today, so exports here are never "dead" in the usual sense.
     "components/ui/**",
-    // AO-826: ported ahead of its first consumer. `resolveLockDirectory`,
-    // `readLockHolder`, and `isLockStale` are only exercised (indirectly)
-    // by `locks.test.ts` today, so knip sees them as unused exports.
-    // AO-828 (docs-lint parity) wires this module into `lint:docs` in the
-    // next wave — remove this ignore once that ticket lands.
+    // `readLockHolder` and `isLockStale` are part of this module's public
+    // lock API (mirrored from its original e2e-queue.ts extraction) but are
+    // only exercised directly by scripts/locks.test.ts today — no current
+    // caller needs them, since acquireLock/releaseLock/resolveLockDirectory
+    // cover every consumer so far (scripts/lint-docs.ts included).
     "scripts/locks.ts",
   ],
 }
