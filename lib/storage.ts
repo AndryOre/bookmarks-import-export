@@ -69,16 +69,3 @@ export const autoExportLastRunStore = storage.defineItem<number | null>(
   'local:autoExportLastRun',
   { fallback: null },
 )
-
-export const settingsStores = {
-  showBookmarkIcon: showBookmarkIconStore,
-  autoExpandFolders: autoExpandFoldersStore,
-  includeIconData: includeIconDataStore,
-  includeDateAdded: includeDateAddedStore,
-  includeDateLastUsed: includeDateLastUsedStore,
-  includeDateGroupModified: includeDateGroupModifiedStore,
-  hideOtherBookmarks: hideOtherBookmarksStore,
-  hideParentFolder: hideParentFolderStore,
-} as const
-
-export type SettingKey = keyof typeof settingsStores

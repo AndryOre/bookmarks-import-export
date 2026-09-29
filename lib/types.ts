@@ -63,16 +63,6 @@ export interface ParsedBookmark {
   parentId?: string
 }
 
-// ──────────────────────────────────────────
-// Export options
-// ──────────────────────────────────────────
-
-export interface DateOptions {
-  includeDateAdded: boolean
-  includeDateLastUsed: boolean
-  includeDateGroupModified: boolean
-}
-
 export type BookmarkFormat = 'json' | 'html' | 'csv' | 'unknown'
 
 export type ImportMode = 'folder' | 'restore-merge' | 'restore-replace'

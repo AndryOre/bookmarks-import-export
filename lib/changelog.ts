@@ -18,7 +18,7 @@ export interface ChangelogEntry {
   items: ChangelogItem[]
 }
 
-export interface ChangelogItem {
+interface ChangelogItem {
   textKey: I18nKey
   linkKey?: I18nKey
   linkUrl?: string

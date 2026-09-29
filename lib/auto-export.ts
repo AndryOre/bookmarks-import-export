@@ -24,7 +24,7 @@ const INTERVAL_MINUTES: Record<AutoExportInterval, number> = {
   '7d': 10_080,
 }
 
-export function getNextExportDate(
+function getNextExportDate(
   interval: AutoExportInterval,
   preferredTime: string,
 ): Date {

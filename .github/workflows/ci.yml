@@ -17,7 +17,7 @@ permissions:
 
 jobs:
   quality:
-    name: Quality (format · lint · typecheck · test)
+    name: Quality (format · lint · typecheck · knip · test)
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -53,8 +53,46 @@ jobs:
       - name: Typecheck
         run: bun run typecheck
 
+      - name: Knip
+        run: bun run knip
+
       - name: Unit tests
         run: bun run test:coverage
+
+  build:
+    name: Build (extension zip)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+        with:
+          bun-version-file: package.json
+
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lock') }}
+          restore-keys: ${{ runner.os }}-bun-
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build extension zip
+        run: bun run zip
+
+      - name: Report zip size
+        run: |
+          zip_path=$(ls .output/*-chrome.zip)
+          zip_size=$(du -h "$zip_path" | cut -f1)
+          echo "**Extension zip size:** \`${zip_size}\` (\`$(basename "$zip_path")\`)" >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: extension-chrome-zip
+          path: .output/*-chrome.zip
+          retention-days: 7
 
   commitlint:
     name: Commitlint

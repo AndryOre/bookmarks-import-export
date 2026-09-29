@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect } from 'react'
+import { createContext, useEffect } from 'react'
 
 import { themeStore } from '@/lib/storage'
 import { useStorageItem } from '@/lib/use-storage-item'
@@ -56,12 +56,4 @@ export function ThemeProvider({ children }: ThemeProviderProperties) {
       {children}
     </ThemeProviderContext.Provider>
   )
-}
-
-export function useTheme(): ThemeProviderContextValue {
-  const context = useContext(ThemeProviderContext)
-  if (!context) {
-    throw new Error('useTheme must be used within a ThemeProvider')
-  }
-  return context
 }
