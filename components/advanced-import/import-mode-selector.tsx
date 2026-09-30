@@ -7,10 +7,10 @@ interface ImportModeSelectorProperties {
   value: ImportMode
   onChange: (mode: ImportMode) => void
   /**
-   * Whether the parsed file carries folder/location data. The `html` and
-   * `json` formats do; `csv` does not. When `false`, the restore modes
-   * are disabled since there is nothing to merge or replace bookmark
-   * locations against.
+   * True when the parsed file identifies a Bookmarks Bar or Other Bookmarks
+   * root (possible for `html`/`json`, never for `csv`). When `false`, the
+   * restore modes are disabled since there is nothing to merge or replace
+   * bookmark locations against.
    */
   hasLocationData: boolean
 }
