@@ -6,6 +6,7 @@ import {
   resolveImportRootTitles,
 } from '@/lib/importers/resolve-roots'
 import type { ResolvedImportRootTitles } from '@/lib/importers/resolve-roots'
+import { isAllowedBookmarkUrl } from '@/lib/importers/url-validation'
 import type { ImportMode, ParsedBookmark } from '@/lib/types'
 
 /**
@@ -218,15 +219,25 @@ function buildKnownTitleSet(
  * is a Unix timestamp in seconds (the Netscape export format), so it's
  * multiplied by 1000 to match the millisecond timestamps `Date.now()` and
  * the rest of this codebase use. Falls back to the current time when
- * `add_date` is absent.
+ * `add_date` is absent. The `href` is validated with `isAllowedBookmarkUrl`;
+ * a missing, invalid, or disallowed-scheme `href` all result in an
+ * `undefined` `url`.
  * @param a The anchor element to parse.
  * @returns The parsed bookmark.
  */
 function parseBookmarkElement(a: HTMLAnchorElement): ParsedBookmark {
   const dateAddedAttribute = a.getAttribute('add_date')
+  const href = a.getAttribute('href') ?? undefined
+
+  if (href && !isAllowedBookmarkUrl(href)) {
+    console.warn('[importFromHTML] Invalid URL, skipping bookmark:', href)
+  }
+
+  const url = isAllowedBookmarkUrl(href) ? href : undefined
+
   return {
     title: a.textContent?.trim() ?? '',
-    url: a.getAttribute('href') ?? undefined,
+    url,
     dateAdded: dateAddedAttribute
       ? parseInt(dateAddedAttribute) * 1000
       : Date.now(),

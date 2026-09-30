@@ -95,9 +95,12 @@ so HTML embedded in a title (e.g. a crafted `<script>` or `<img onerror>`) is
 captured as inert text, not executed. A document missing the expected
 `<DL>`/`<DT>` structure, or with unknown/extra tags, simply yields fewer or no
 parsed nodes rather than throwing — `parseHTML` returns an empty array when it
-finds no outer `<dl>` at all. A row with no `href` becomes a bookmark with no
-URL and is silently skipped at write time (see `createBookmarks`, which only
-creates a node when `node.url` is set).
+finds no outer `<dl>` at all. A row with no `href`, or whose `href` fails
+`isAllowedBookmarkUrl` validation (`lib/importers/url-validation.ts`, which
+requires a `new URL()`-parseable string using an `http:`/`https:`/`ftp:` scheme
+— logged via `console.warn` when rejected), becomes a bookmark with no URL and
+is silently skipped at write time (see `createBookmarks`, which only creates a
+node when `node.url` is set).
 
 **Malformed or hostile JSON input** (`lib/importers/import-json.ts`): a
 non-array or deeply nested payload is normalized rather than rejected —
@@ -107,13 +110,15 @@ a synthetic "Other bookmarks" node instead of discarding it or throwing. Invalid
 JSON syntax is rejected earlier: the caller (the popup's Quick import or
 Advanced Import) parses the raw text with `JSON.parse` and format-detects it
 before `importFromJSON` ever runs, so a malformed file never reaches the
-importer at all.
+importer at all. A node whose `url` field fails `isAllowedBookmarkUrl`
+validation is treated the same as a node with no `url` at all (skipped, logged
+via `console.warn`) rather than being passed to `browser.bookmarks.create`.
 
 **Malformed or hostile CSV input** (`lib/importers/import-csv.ts`): rows missing
-a `title` or `url`, or whose `url` fails `new URL()` validation, are skipped
-individually (logged via `console.warn`) without aborting the rest of the
-import. Header matching is case-insensitive and trimmed, so inconsistent casing
-or whitespace in a hand-edited CSV doesn't cause a false rejection.
+a `title` or `url`, or whose `url` fails `isAllowedBookmarkUrl` validation, are
+skipped individually (logged via `console.warn`) without aborting the rest of
+the import. Header matching is case-insensitive and trimmed, so inconsistent
+casing or whitespace in a hand-edited CSV doesn't cause a false rejection.
 
 **The Import preview gate** (`lib/import-preview.ts`, surfaced by the Advanced
 Import page): before anything is written to `chrome.bookmarks`, the dropped file
@@ -128,13 +133,6 @@ matching the format they expected) or clearly didn't — and back out.
 
 ## Known limitations
 
-- **No URL scheme validation on HTML/JSON import.** The CSV importer validates
-  every `url` with `new URL()` before creating it; the HTML and JSON importers
-  do not — a bookmark's `href` (HTML) or `url` field (JSON) is passed to
-  `browser.bookmarks.create` as-is. A crafted file could in principle carry a
-  non-`http(s)` scheme (e.g. a `javascript:` URL) into an imported bookmark.
-  This is a real gap, not yet closed by matching code — tracked here rather than
-  fixed silently.
 - **No sanitization beyond structural parsing.** Defenses described above rely
   on `DOMParser` never executing content and on `chrome.bookmarks`' own
   validation, not on an extra allowlist/sanitization pass over titles or URLs. A

@@ -188,6 +188,38 @@ describe('importFromJSON', () => {
     expect(importedOther).toBeDefined()
   })
 
+  it('skips nodes whose url fails allowlist validation, same as a missing url', async () => {
+    const bookmarks: ParsedBookmark[] = [
+      {
+        id: '2',
+        title: 'Other bookmarks',
+        isOtherBookmarks: true,
+        dateAdded: 0,
+        children: [
+          { title: 'Bare string', url: 'not-a-url', dateAdded: 0 },
+          { title: 'Empty', url: '', dateAdded: 0 },
+          {
+            title: 'Disallowed scheme',
+            url: 'javascript:alert(1)',
+            dateAdded: 0,
+          },
+          { title: 'Valid', url: 'https://valid.example', dateAdded: 0 },
+        ],
+      },
+    ]
+
+    await importFromJSON(bookmarks, 'folder')
+
+    const root = getFakeBookmarksRoot()
+    const otherBookmarks = root.children?.find((n) => n.id === '2')
+    const importedFolder = otherBookmarks?.children?.find(
+      (n) => n.title === 'Imported bookmarks',
+    )
+
+    expect(importedFolder?.children).toHaveLength(1)
+    expect(importedFolder?.children?.[0]?.url).toBe('https://valid.example')
+  })
+
   it('creates bookmarks directly under the bar/other folders in restore-merge mode', async () => {
     const bookmarks: ParsedBookmark[] = [
       {
