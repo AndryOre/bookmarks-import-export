@@ -18,7 +18,7 @@ body:
       value: |
         Thanks for suggesting a new feature! Please describe it clearly so it can be properly evaluated.
 
-        > Before submitting, please search [existing issues](https://github.com/AndryOre/bookmarks-import-export-new/issues) and [discussions](https://github.com/AndryOre/bookmarks-import-export-new/discussions) to avoid duplicates.
+        > Before submitting, please search [existing issues](https://github.com/AndryOre/bookmarks-import-export/issues) and [discussions](https://github.com/AndryOre/bookmarks-import-export/discussions) to avoid duplicates.
 
   - type: textarea
     id: problem

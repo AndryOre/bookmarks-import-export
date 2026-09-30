@@ -48,7 +48,7 @@ If you have any questions about this Privacy Policy, please contact us:
 
 - By email: hello@andryore.dev
 - By opening an issue on our GitHub repository:
-  https://github.com/AndryOre/bookmarks-import-export-new/issues
+  https://github.com/AndryOre/bookmarks-import-export/issues
 
 ## Consent
 

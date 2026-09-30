@@ -8,13 +8,13 @@
     "chrome",
     "wxt"
   ],
-  "homepage": "https://github.com/AndryOre/bookmarks-import-export-new",
+  "homepage": "https://github.com/AndryOre/bookmarks-import-export",
   "bugs": {
-    "url": "https://github.com/AndryOre/bookmarks-import-export-new/issues"
+    "url": "https://github.com/AndryOre/bookmarks-import-export/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AndryOre/bookmarks-import-export-new.git"
+    "url": "git+https://github.com/AndryOre/bookmarks-import-export.git"
   },
   "license": "MIT",
   "author": "Andry Orellana <me@andryore.dev>",

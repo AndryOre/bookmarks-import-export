@@ -1,4 +1,4 @@
-# `/forge` operational specifics for bookmarks-import-export-new
+# `/forge` operational specifics for bookmarks-import-export
 
 Repo-specific config the global `/forge` command reads before running any of its
 9 phases. Machine-checkable values (trunk/remote, ticket id shape, concurrency,

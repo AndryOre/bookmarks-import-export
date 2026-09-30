@@ -1,6 +1,6 @@
 # Issue tracker: Linear
 
-Issues and specs for bookmarks-import-export-new live in Linear. Every operation
+Issues and specs for bookmarks-import-export live in Linear. Every operation
 goes through the `mcp__linear-server__*` MCP tools — there is no CLI equivalent
 to `gh`/`glab` for Linear in this setup.
 

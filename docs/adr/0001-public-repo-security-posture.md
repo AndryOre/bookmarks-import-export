@@ -6,12 +6,12 @@ Accepted
 
 ## Context
 
-`bookmarks-import-export-new` is a public repository maintained by one person.
-It had no branch protection, no repository rulesets, and its security and
-community settings were close to GitHub's defaults. A survey of current
-(2025-2026) GitHub documentation, the OpenSSF SCM best-practices guide and
-OpenSSF Scorecard's checks produced a set of settings to adopt, plus several
-that were deliberately rejected for this repository.
+`bookmarks-import-export` is a public repository maintained by one person. It
+had no branch protection, no repository rulesets, and its security and community
+settings were close to GitHub's defaults. A survey of current (2025-2026) GitHub
+documentation, the OpenSSF SCM best-practices guide and OpenSSF Scorecard's
+checks produced a set of settings to adopt, plus several that were deliberately
+rejected for this repository.
 
 ## Decision
 
@@ -69,14 +69,14 @@ that were deliberately rejected for this repository.
 
 ### Settings application
 
-The rulesets, merge, security, Actions, feature and metadata settings are
+The rulesets, merge, security, Actions, feature and metadata settings were
 applied by a script kept in `scripts/repo-settings/` rather than a one-off,
-uncommitted script, because this repository is planned to move to
-`AndryOre/bookmarks-import-export` later. The script takes the target
-`owner/repo` as an argument and is idempotent, so it runs once against this repo
-now and once against the final repo after the migration. It will be deleted once
-that migration completes; it is not meant to be permanent settings-as-code
-infrastructure.
+uncommitted script, because this repository was rewritten under
+`AndryOre/bookmarks-import-export-new` and later migrated back into this repo.
+The script took the target `owner/repo` as an argument and was idempotent, so it
+ran once against `-new` and once against this repo after the migration. It was
+deleted once that migration completed; it was never meant to be permanent
+settings-as-code infrastructure.
 
 ## Consequences
 
@@ -90,6 +90,5 @@ infrastructure.
 - Docs-only PRs now spend CI minutes on the full quality/build pipeline where
   they previously skipped it. This is deliberate: a stricter gate applies
   equally regardless of who or what opens the PR.
-- The `scripts/repo-settings/` folder is temporary technical debt with a known
-  removal trigger (the repository migration), not a permanent part of the
-  toolchain.
+- The `scripts/repo-settings/` folder was temporary technical debt, removed once
+  the repository migration (the trigger it was waiting on) completed.

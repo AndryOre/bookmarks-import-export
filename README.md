@@ -169,8 +169,8 @@ for details.
 [Chrome Web Store]:
   https://img.shields.io/badge/Chrome%20Web%20Store-4285F4.svg?style=for-the-badge&logo=Chrome-Web-Store&logoColor=white
 [OpenSSF Scorecard]:
-  https://api.securityscorecards.dev/projects/github.com/AndryOre/bookmarks-import-export-new/badge
+  https://api.securityscorecards.dev/projects/github.com/AndryOre/bookmarks-import-export/badge
 [OpenSSF Scorecard-url]:
-  https://scorecard.dev/viewer/?uri=github.com/AndryOre/bookmarks-import-export-new
+  https://scorecard.dev/viewer/?uri=github.com/AndryOre/bookmarks-import-export
 [Chrome Web Store-url]:
   https://chromewebstore.google.com/detail/bookmark-importexport/gdhpeilfkeeajillmcncaelnppiakjhn
