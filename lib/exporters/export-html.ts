@@ -11,6 +11,13 @@ interface ExportHTMLOptions {
   hideParentFolder: boolean
 }
 
+/**
+Exports bookmarks as a Netscape-format bookmarks file (the `<!DOCTYPE
+NETSCAPE-Bookmark-file-1>` HTML dialect used by every major browser's
+import/export). Timestamps are converted from the milliseconds Chrome
+stores to whole seconds for the `ADD_DATE`/`LAST_MODIFIED`/`LAST_USED`
+attributes.
+*/
 export async function exportToHTML(
   options: ExportHTMLOptions,
 ): Promise<string> {
@@ -58,6 +65,12 @@ export async function exportToHTML(
   return lines.join('\n')
 }
 
+/**
+Recursively appends one `<DT>` line per bookmark and one folder block (with
+its own nested `<DL>`) per folder onto `lines`. The bookmarks bar and other
+bookmarks folders are never hidden by `hideParentFolder`; "other bookmarks"
+can independently be flattened away via `hideOtherBookmarks`.
+*/
 async function generateHtmlContent(
   lines: string[],
   nodes: ExtendedBookmarkTreeNode[],
@@ -92,6 +105,9 @@ async function generateHtmlContent(
   }
 }
 
+/**
+Appends a single `<DT><A ...>` line for `node` onto `lines`.
+*/
 async function appendBookmarkLine(
   lines: string[],
   node: ExtendedBookmarkTreeNode,
@@ -122,6 +138,10 @@ async function appendBookmarkLine(
   lines.push(`${indent}<DT><A ${attributes}>${title}</A>`)
 }
 
+/**
+Appends a folder's opening `<DT><H3>`/`<DL><p>` lines, recurses into its
+children at the next indent level, then appends the closing `</DL><p>`.
+*/
 async function appendFolderLines(
   lines: string[],
   node: ExtendedBookmarkTreeNode,
@@ -158,6 +178,11 @@ async function appendFolderLines(
   lines.push(`${indent}</DL><p>`)
 }
 
+/**
+Escapes text for use inside an `<A>`/`<H3>` element's content. Unlike
+{@link escapeUrl}, this also escapes `&`, since bookmark titles are free
+text that commonly contains literal ampersands.
+*/
 function escapeTitle(string_: string): string {
   return string_
     .replaceAll('&', '&amp;')
@@ -167,6 +192,12 @@ function escapeTitle(string_: string): string {
     .replaceAll("'", '&#39;')
 }
 
+/**
+Escapes a URL for use in the `HREF` attribute. Unlike {@link escapeTitle},
+this does not escape `&`, since Netscape-format bookmark files leave `&` in
+URLs unescaped (URLs rarely contain literal `<`/`>`/quotes, but commonly
+contain `&` as a query-parameter separator, which escaping would corrupt).
+*/
 function escapeUrl(url: string): string {
   return url
     .replaceAll('<', '&lt;')
