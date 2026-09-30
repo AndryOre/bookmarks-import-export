@@ -1,0 +1,31 @@
+[
+  {
+    "id": "1",
+    "title": "Bookmarks bar",
+    "dateAdded": 0,
+    "children": [
+      {
+        "title": "JSON Bar A",
+        "url": "https://json-bar-a.example/page",
+        "dateAdded": 0
+      }
+    ]
+  },
+  {
+    "id": "2",
+    "title": "Other bookmarks",
+    "dateAdded": 0,
+    "children": [
+      {
+        "title": "JSON Other A",
+        "url": "https://json-other-a.example/page",
+        "dateAdded": 0
+      },
+      {
+        "title": "JSON Other B",
+        "url": "https://json-other-b.example/page",
+        "dateAdded": 0
+      }
+    ]
+  }
+]
