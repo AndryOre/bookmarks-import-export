@@ -268,15 +268,20 @@ export function SettingsDialog({
       formats: localConfig.formats,
       path: localConfig.path,
     }
-    const response = (await browser.runtime.sendMessage(
-      message,
-    )) as RunManualExportResponse
 
-    if (response.ok) {
-      setExportNowState('success')
-    } else {
+    try {
+      const response = (await browser.runtime.sendMessage(message)) as
+        RunManualExportResponse | undefined
+
+      if (response?.ok) {
+        setExportNowState('success')
+      } else {
+        setExportNowState('error')
+        setExportNowError(response?.error ?? '')
+      }
+    } catch (error) {
       setExportNowState('error')
-      setExportNowError(response.error ?? '')
+      setExportNowError(error instanceof Error ? error.message : String(error))
     }
 
     const [lastRun, nextRun] = await Promise.all([
