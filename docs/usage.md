@@ -19,10 +19,18 @@
 
 1. Choose the "Import" tab.
 2. For basic importing:
+   - Optionally change the "Default import mode" select above the Import button
+     — it starts on **Restore — merge** and is shared with Advanced Import's
+     mode choice below.
    - Click the "Import" button.
    - Select a CSV, JSON or HTML file containing bookmarks.
-   - The extension will automatically detect the format and import the
-     bookmarks.
+   - The extension automatically detects the format and imports the bookmarks
+     using the default import mode. A CSV file — or an HTML/JSON file with no
+     Bookmarks Bar/Other Bookmarks data — always imports into a new "Imported
+     Bookmarks" folder instead, regardless of the default mode.
+   - If the default mode is **Restore — replace**, you're asked to confirm
+     before the import runs, since it permanently deletes your current
+     bookmarks; canceling imports nothing.
 3. For advanced importing:
    - Click the "Advanced Import" button.
    - Drop or select a CSV, JSON or HTML file — a preview shows the bookmark
