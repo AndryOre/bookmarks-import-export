@@ -654,6 +654,19 @@
     "message": "Select at least one format",
     "description": "Validation error when no format is selected"
   },
+  "changelog_1_7_0_date": {
+    "message": "October 1, 2026",
+    "description": "Changelog 1.7.0 date"
+  },
+  "changelog_1_7_0_1": {
+    "message": "Added a status card and an Export now button to Auto-export settings, plus a popup status line showing whether auto-export is on, off, or failed."
+  },
+  "changelog_1_7_0_1_link": {
+    "message": "Open Auto-export settings"
+  },
+  "changelog_1_7_0_2": {
+    "message": "Hardened bookmark imports to reject disallowed URL schemes (e.g. javascript:) in CSV, HTML, and JSON files."
+  },
   "changelog_1_6_0_date": {
     "message": "April 29, 2026",
     "description": "Changelog 1.6.0 date"
