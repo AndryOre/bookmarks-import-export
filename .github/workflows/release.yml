@@ -1,0 +1,73 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    name: Build and publish release
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+        with:
+          bun-version-file: package.json
+          no-cache: true
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Check tag matches package.json version
+        run: |
+          tag_version="${GITHUB_REF_NAME#v}"
+          pkg_version=$(node -p "require('./package.json').version")
+          if [[ "${tag_version}" != "${pkg_version}" ]]; then
+            echo "Tag ${GITHUB_REF_NAME} does not match package.json version ${pkg_version}"
+            exit 1
+          fi
+
+      - name: Build extension zip
+        run: bun run zip
+
+      - name: Extract changelog section
+        run: |
+          tag_version="${GITHUB_REF_NAME#v}"
+          awk -v ver="${tag_version}" '
+            /^## \[/ {
+              if (found) exit
+              if ($0 ~ "^## \\[" ver "\\]") { found = 1; next }
+              next
+            }
+            found { print }
+          ' CHANGELOG.md > release-notes.md
+          if [[ ! -s release-notes.md ]]; then
+            echo "No CHANGELOG.md section found for version ${tag_version}"
+            exit 1
+          fi
+
+      - name: Attest build provenance
+        id: attest
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: .output/*-chrome.zip
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          zip_path=$(ls .output/*-chrome.zip)
+          gh release create "${GITHUB_REF_NAME}" "${zip_path}" \
+            --title "${GITHUB_REF_NAME}" \
+            --notes-file release-notes.md

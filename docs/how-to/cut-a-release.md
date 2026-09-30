@@ -24,4 +24,8 @@
 6. After the release PR merges, tag the merge commit `vX.Y.Z` and push the tag
    (`git tag vX.Y.Z <merge-commit-sha> && git push origin vX.Y.Z`). A `v*` tag
    ruleset already protects these tags — see
-   [ADR 0001](../adr/0001-public-repo-security-posture.md).
+   [ADR 0001](../adr/0001-public-repo-security-posture.md). Pushing the tag
+   triggers the `release.yml` workflow, which builds the extension zip, extracts
+   that version's `CHANGELOG.md` section as release notes, attests build
+   provenance, and publishes the GitHub Release — no manual `gh release create`
+   needed.
