@@ -6,7 +6,8 @@
    `lib/changelog.ts`: a `version`, a `dateKey`, and one or more `items` (each
    an object with a `textKey` and, optionally, a `linkKey` + `linkUrl` for
    entries that link to a specific page, e.g. the advanced export/import pages
-   via `browser.runtime.getURL`).
+   via `browser.runtime.getURL`). Add the same entry (version, date, and items)
+   to the top of the root `CHANGELOG.md` at the same time.
 
 3. Add the i18n keys that entry references (its `dateKey`, every item's
    `textKey`, and any `linkKey`) to **both** `locales/en.json` and
@@ -19,3 +20,8 @@
 
 5. Run `bun run zip` (the `zip` script, which runs `wxt zip`) to produce the
    distributable extension archive for the new version.
+
+6. After the release PR merges, tag the merge commit `vX.Y.Z` and push the tag
+   (`git tag vX.Y.Z <merge-commit-sha> && git push origin vX.Y.Z`). A `v*` tag
+   ruleset already protects these tags — see
+   [ADR 0001](../adr/0001-public-repo-security-posture.md).

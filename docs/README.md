@@ -6,6 +6,8 @@ An index of every document in this repository.
 
 - [`README.md`](../README.md) — user-facing overview: features, install,
   screenshots.
+- [`CHANGELOG.md`](../CHANGELOG.md) — human-readable release notes, newest
+  first, in [Keep a Changelog](https://keepachangelog.com/) format.
 - [`CONTRIBUTING.md`](../CONTRIBUTING.md) — pull request conventions: setup,
   branch/commit format, merging, CI, security reporting.
 - [`docs/development.md`](development.md) — the local development guide:
