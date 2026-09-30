@@ -39,12 +39,13 @@ describe('importFromCSV', () => {
     ).toBe(true)
   })
 
-  it('skips rows with a missing title, url, or an invalid url', async () => {
+  it('skips rows with a missing title, url, or a disallowed url', async () => {
     const csv = [
       'title,url,folder',
       ',https://missing-title.example,',
       'Missing URL,,',
       'Invalid,not-a-url,',
+      'Disallowed scheme,javascript:alert(1),',
       'Valid,https://valid.example,',
     ].join('\n')
 

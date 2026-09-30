@@ -46,11 +46,12 @@ describe('parseHTML', () => {
     expect(other?.children?.[0]?.url).toBe('https://b.example')
   })
 
-  it('leaves url undefined for a malformed href, same as a missing href', () => {
+  it('leaves url undefined for a malformed or disallowed-scheme href, same as a missing href', () => {
     const html = `${HTML_HEADER}
 <DL><p>
     <DT><A HREF="not-a-url">Bare string</A>
     <DT><A HREF="">Empty</A>
+    <DT><A HREF="javascript:alert(1)">Disallowed scheme</A>
     <DT><A HREF="https://valid.example">Valid</A>
 </DL><p>`
 
@@ -58,6 +59,7 @@ describe('parseHTML', () => {
     const other = parsed.find((n) => n.isOtherBookmarks)
 
     expect(other?.children?.map((n) => n.url)).toEqual([
+      undefined,
       undefined,
       undefined,
       'https://valid.example',

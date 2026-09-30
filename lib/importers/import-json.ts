@@ -2,6 +2,7 @@ import { i18n } from '#i18n'
 import type { Browser } from '@wxt-dev/browser'
 
 import { resolveImportRoots } from '@/lib/importers/resolve-roots'
+import { isAllowedBookmarkUrl } from '@/lib/importers/url-validation'
 import type { ImportMode, ParsedBookmark } from '@/lib/types'
 
 /**
@@ -228,7 +229,7 @@ async function processBookmarks(
           title: i18n.t('mobileBookmarks'),
         })
         await createBookmarks(bookmark.children, importedMobile.id)
-      } else if (isValidUrl(bookmark.url)) {
+      } else if (isAllowedBookmarkUrl(bookmark.url)) {
         await createItem({
           parentId: importedFolder.id,
           title: bookmark.title,
@@ -263,7 +264,7 @@ async function processBookmarks(
           mobileId,
           otherBookmarksId,
         )
-      } else if (isValidUrl(bookmark.url)) {
+      } else if (isAllowedBookmarkUrl(bookmark.url)) {
         await createItem({
           parentId: otherBookmarksId,
           title: bookmark.title,
@@ -271,26 +272,6 @@ async function processBookmarks(
         })
       }
     }
-  }
-}
-
-/**
- * Validates `url` with `new URL()`, the same check the CSV and HTML
- * importers apply to their own untrusted input. Used as a type guard so
- * callers can narrow `bookmark.url`/`node.url` to a validated `string`
- * before passing it to `createItem`.
- * @param url The URL to validate, possibly `undefined`.
- * @returns Whether `url` is a non-empty, `new URL()`-parseable string.
- */
-function isValidUrl(url: string | undefined): url is string {
-  if (!url) return false
-
-  try {
-    new URL(url)
-    return true
-  } catch {
-    console.warn('[importFromJSON] Invalid URL, skipping bookmark:', url)
-    return false
   }
 }
 
@@ -348,7 +329,7 @@ async function createBookmarks(
   parentId: string,
 ): Promise<void> {
   for (const node of nodes) {
-    if (isValidUrl(node.url)) {
+    if (isAllowedBookmarkUrl(node.url)) {
       await createItem({ parentId, title: node.title, url: node.url })
     } else if (node.children && node.children.length > 0) {
       const folder = await createItem({ parentId, title: node.title })

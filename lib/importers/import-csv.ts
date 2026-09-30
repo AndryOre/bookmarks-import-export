@@ -2,6 +2,7 @@ import { i18n } from '#i18n'
 import type { Browser } from '@wxt-dev/browser'
 import Papa from 'papaparse'
 
+import { isAllowedBookmarkUrl } from '@/lib/importers/url-validation'
 import type { ParsedBookmark } from '@/lib/types'
 
 /**
@@ -30,10 +31,10 @@ export async function importFromCSV(csv: string): Promise<void> {
 
 /**
  * Builds a folder tree from the flat CSV rows. Rows missing a `title` or
- * `url`, or whose `url` fails `new URL()` validation, are skipped without
- * throwing or rejecting the import — an invalid URL only logs a
- * `console.warn`. Folder path segments (split on `/`) are memoized by
- * their full path so that rows sharing a folder path reuse the same
+ * `url`, or whose `url` fails `isAllowedBookmarkUrl` validation, are
+ * skipped without throwing or rejecting the import — an invalid URL only
+ * logs a `console.warn`. Folder path segments (split on `/`) are memoized
+ * by their full path so that rows sharing a folder path reuse the same
  * folder node instead of creating duplicates within this batch.
  * @param rows The parsed CSV rows.
  * @returns The resulting folder tree.
@@ -48,9 +49,7 @@ function processCSVData(rows: Record<string, string>[]): ParsedBookmark[] {
 
     if (!title || !url) continue
 
-    try {
-      new URL(url)
-    } catch {
+    if (!isAllowedBookmarkUrl(url)) {
       console.warn('[importFromCSV] Invalid URL, skipping row:', row)
       continue
     }

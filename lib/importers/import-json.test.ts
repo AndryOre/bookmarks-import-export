@@ -188,7 +188,7 @@ describe('importFromJSON', () => {
     expect(importedOther).toBeDefined()
   })
 
-  it('skips nodes whose url fails new URL() validation, same as a missing url', async () => {
+  it('skips nodes whose url fails allowlist validation, same as a missing url', async () => {
     const bookmarks: ParsedBookmark[] = [
       {
         id: '2',
@@ -198,6 +198,11 @@ describe('importFromJSON', () => {
         children: [
           { title: 'Bare string', url: 'not-a-url', dateAdded: 0 },
           { title: 'Empty', url: '', dateAdded: 0 },
+          {
+            title: 'Disallowed scheme',
+            url: 'javascript:alert(1)',
+            dateAdded: 0,
+          },
           { title: 'Valid', url: 'https://valid.example', dateAdded: 0 },
         ],
       },
