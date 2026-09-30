@@ -1,6 +1,7 @@
 import { i18n } from '#i18n'
 import type { Browser } from '@wxt-dev/browser'
 
+import { resolveImportRoots } from '@/lib/importers/resolve-roots'
 import type { ImportMode, ParsedBookmark } from '@/lib/types'
 
 /**
@@ -11,9 +12,9 @@ import type { ImportMode, ParsedBookmark } from '@/lib/types'
  * first).
  *
  * Note: `preprocessBookmarks` mutates nodes of the `bookmarks` argument
- * in place (it sets `isBookmarksBar`/`isOtherBookmarks` on nodes it
- * finds), so the array passed in should not be reused elsewhere as if it
- * were untouched.
+ * in place (it sets `isBookmarksBar`/`isOtherBookmarks`/`isMobileBookmarks`
+ * on nodes it finds), so the array passed in should not be reused
+ * elsewhere as if it were untouched.
  * @param bookmarks The previously exported bookmark tree to import.
  * @param mode Where and how the tree is written.
  * @returns Resolves once the import has finished.
@@ -53,8 +54,8 @@ interface PreprocessLevelResult {
  * bookmarks" (see `preprocessLevel`). A folder only counts as a virtual
  * root when it is the sole node at its level (so scanning it can't
  * discard any sibling already classified), or when its own children
- * contain an `id === '1'`/`'2'` node (so it demonstrably wraps the real
- * bookmarks bar / "Other bookmarks" pair).
+ * contain an `id === '1'`/`'2'`/`'3'` node (so it demonstrably wraps the
+ * real bookmarks bar / "Other bookmarks" / Mobile bookmarks roots).
  * @param bookmark The node being considered as a virtual root.
  * @param level The full sibling array `bookmark` was found in.
  * @returns Whether `bookmark` should be unwrapped as a virtual root.
@@ -65,8 +66,8 @@ function isVirtualRoot(
 ): boolean {
   return (
     level.length === 1 ||
-    (bookmark.children ?? []).some(
-      (child) => child.id === '1' || child.id === '2',
+    (bookmark.children ?? []).some((child) =>
+      ['1', '2', '3'].includes(child.id ?? ''),
     )
   )
 }
@@ -77,6 +78,9 @@ function isVirtualRoot(
  *   `isBookmarksBar` and moved to the front of `result`.
  * - `id === '2'` is "Other bookmarks" (Chrome's fixed id for it); marked
  *   `isOtherBookmarks` and appended to `result`.
+ * - `id === '3'` is Mobile bookmarks (Chrome's fixed id for it, present only
+ *   on browsers that have a Mobile root); marked `isMobileBookmarks` and
+ *   appended to `result`.
  * - `parentId === '2'` is an orphaned node (exported with a reference to
  *   "Other bookmarks" but not nested under it); collected into `orphans`.
  * - a folder recognized as a virtual root by `isVirtualRoot` has its
@@ -96,13 +100,25 @@ function preprocessLevel(level: ParsedBookmark[]): PreprocessLevelResult {
   let virtualRootChildren: ParsedBookmark[] | undefined
 
   for (const bookmark of level) {
-    if (bookmark.id === '1') {
-      bookmark.isBookmarksBar = true
-      result.unshift(bookmark)
-    } else if (bookmark.id === '2') {
-      bookmark.isOtherBookmarks = true
-      result.push(bookmark)
-    } else if (bookmark.parentId === '2') {
+    switch (bookmark.id) {
+      case '1': {
+        bookmark.isBookmarksBar = true
+        result.unshift(bookmark)
+        continue
+      }
+      case '2': {
+        bookmark.isOtherBookmarks = true
+        result.push(bookmark)
+        continue
+      }
+      case '3': {
+        bookmark.isMobileBookmarks = true
+        result.push(bookmark)
+        continue
+      }
+    }
+
+    if (bookmark.parentId === '2') {
       orphans.push(bookmark)
     } else if (bookmark.children && isVirtualRoot(bookmark, level)) {
       virtualRootChildren = bookmark.children as ParsedBookmark[]
@@ -117,16 +133,18 @@ function preprocessLevel(level: ParsedBookmark[]): PreprocessLevelResult {
 
 /**
  * Normalizes the top-level array of an exported JSON tree down to
- * `[ bookmarksBar?, otherBookmarks? ]`. Handles three shapes a JSON export
- * can arrive in: a virtual root node with `id === '0'` wrapping everything
- * (its children are unwrapped by looping with `currentLevel` reassigned
- * to them, rather than recursing, until a non-wrapping level is found);
- * explicit `id === '1'`/`'2'` nodes for the bookmarks bar and "Other
- * bookmarks"; and orphaned nodes (`parentId === '2'` but not nested under
- * an `id === '2'` node), which are collected into a synthetic "Other
- * bookmarks" node if one wasn't already present in the result.
+ * `[ bookmarksBar?, otherBookmarks?, mobileBookmarks? ]`. Handles three
+ * shapes a JSON export can arrive in: a virtual root node with `id === '0'`
+ * wrapping everything (its children are unwrapped by looping with
+ * `currentLevel` reassigned to them, rather than recursing, until a
+ * non-wrapping level is found); explicit `id === '1'`/`'2'`/`'3'` nodes for
+ * the bookmarks bar, "Other bookmarks", and Mobile bookmarks; and orphaned
+ * nodes (`parentId === '2'` but not nested under an `id === '2'` node),
+ * which are collected into a synthetic "Other bookmarks" node if one wasn't
+ * already present in the result.
  * @param bookmarks The raw top-level array from an exported JSON tree.
- * @returns The normalized `[ bookmarksBar?, otherBookmarks? ]` array.
+ * @returns The normalized
+ *   `[ bookmarksBar?, otherBookmarks?, mobileBookmarks? ]` array.
  */
 export function preprocessBookmarks(
   bookmarks: ParsedBookmark[],
@@ -174,8 +192,11 @@ async function processBookmarks(
 ): Promise<void> {
   const tree = await browser.bookmarks.getTree()
   const root = tree[0]
+  const { bookmarksBarId, otherBookmarksId, mobileId } = resolveImportRoots(
+    root?.children ?? [],
+  )
 
-  if (!root?.children?.[0] || !root.children?.[1]) {
+  if (!bookmarksBarId || !otherBookmarksId) {
     throw new Error('PROCESS_ERROR:' + i18n.t('importFromJSONProcessError'))
   }
 
@@ -197,6 +218,16 @@ async function processBookmarks(
         await createBookmarks(bookmark.children, importedBar.id)
       } else if (bookmark.isOtherBookmarks && bookmark.children) {
         await createBookmarks(bookmark.children, importedFolder.id)
+      } else if (
+        bookmark.isMobileBookmarks &&
+        bookmark.children &&
+        bookmark.children.length > 0
+      ) {
+        const importedMobile = await createItem({
+          parentId: importedFolder.id,
+          title: i18n.t('mobileBookmarks'),
+        })
+        await createBookmarks(bookmark.children, importedMobile.id)
       } else if (bookmark.url) {
         await createItem({
           parentId: importedFolder.id,
@@ -206,23 +237,18 @@ async function processBookmarks(
       }
     }
   } else {
-    const bookmarksBarNode = root.children.at(0)
-    const otherBookmarksNode = root.children.at(1)
-    const bookmarksBarId = bookmarksBarNode?.id
-    const otherBookmarksId = otherBookmarksNode?.id
-
-    if (!bookmarksBarId || !otherBookmarksId) {
-      throw new Error('PROCESS_ERROR:' + i18n.t('importFromJSONProcessError'))
-    }
+    const hasMobileContent = parsed.some(
+      (bookmark) =>
+        bookmark.isMobileBookmarks &&
+        bookmark.children &&
+        bookmark.children.length > 0,
+    )
 
     if (mode === 'restore-replace') {
-      const bookmarksBarChildren = bookmarksBarNode?.children ?? []
-      for (const child of bookmarksBarChildren) {
-        await browser.bookmarks.removeTree(child.id)
-      }
-      const otherBookmarksChildren = otherBookmarksNode?.children ?? []
-      for (const child of otherBookmarksChildren) {
-        await browser.bookmarks.removeTree(child.id)
+      await removeAllChildren(bookmarksBarId, root)
+      await removeAllChildren(otherBookmarksId, root)
+      if (hasMobileContent && mobileId) {
+        await removeAllChildren(mobileId, root)
       }
     }
 
@@ -231,6 +257,12 @@ async function processBookmarks(
         await createBookmarks(bookmark.children, bookmarksBarId)
       } else if (bookmark.isOtherBookmarks && bookmark.children) {
         await createBookmarks(bookmark.children, otherBookmarksId)
+      } else if (bookmark.isMobileBookmarks && bookmark.children) {
+        await writeMobileBookmarks(
+          bookmark.children,
+          mobileId,
+          otherBookmarksId,
+        )
       } else if (bookmark.url) {
         await createItem({
           parentId: otherBookmarksId,
@@ -240,6 +272,47 @@ async function processBookmarks(
       }
     }
   }
+}
+
+/**
+ * Removes every existing child of the root node identified by `rootId`, as
+ * found in `treeRoot` (the tree snapshot `processBookmarks` already fetched
+ * — this never re-fetches). Used by `restore-replace` mode to clear a root
+ * before writing the imported tree into it.
+ * @param rootId The id of the root whose children should be removed.
+ * @param treeRoot The tree root node (`browser.bookmarks.getTree()`'s
+ *   `tree[0]`) to look up `rootId`'s current children in.
+ * @returns Resolves once every child has been removed.
+ */
+async function removeAllChildren(
+  rootId: string,
+  treeRoot: Browser.bookmarks.BookmarkTreeNode | undefined,
+): Promise<void> {
+  const rootNode = treeRoot?.children?.find((node) => node.id === rootId)
+  const children = rootNode?.children ?? []
+  for (const child of children) {
+    await browser.bookmarks.removeTree(child.id)
+  }
+}
+
+/**
+ * Writes Mobile bookmarks content into the Mobile root when one was
+ * resolved, otherwise into "Other bookmarks" (e.g. the current browser has
+ * no Mobile root). Does not retry into "Other bookmarks" on a failed Mobile
+ * write — `createBookmarks` creates nodes one at a time, so a partial
+ * failure there would otherwise leave a duplicated subset of the content in
+ * both roots.
+ * @param nodes The Mobile bookmarks content to write.
+ * @param mobileId The resolved Mobile root id, if any.
+ * @param otherBookmarksId The "Other bookmarks" root id to fall back to.
+ * @returns Resolves once the content has been written.
+ */
+async function writeMobileBookmarks(
+  nodes: ParsedBookmark[],
+  mobileId: string | undefined,
+  otherBookmarksId: string,
+): Promise<void> {
+  await createBookmarks(nodes, mobileId ?? otherBookmarksId)
 }
 
 /**

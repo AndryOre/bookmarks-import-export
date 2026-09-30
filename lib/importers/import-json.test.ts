@@ -269,4 +269,160 @@ describe('importFromJSON', () => {
     const nested = bar?.children?.find((n) => n.title === 'Nested')
     expect(nested?.children?.[0]?.url).toBe('https://deep.example')
   })
+
+  it('writes Mobile bookmarks content into the Mobile root when one exists', async () => {
+    resetFakeBookmarks({ withMobileRoot: true })
+
+    const bookmarks: ParsedBookmark[] = [
+      {
+        id: '3',
+        title: 'Mobile bookmarks',
+        isMobileBookmarks: true,
+        dateAdded: 0,
+        children: [{ title: 'M', url: 'https://mobile.example', dateAdded: 0 }],
+      },
+    ]
+
+    await importFromJSON(bookmarks, 'restore-merge')
+
+    const root = getFakeBookmarksRoot()
+    const mobile = root.children?.find((n) => n.id === '3')
+    expect(mobile?.children?.[0]?.url).toBe('https://mobile.example')
+    const other = root.children?.find((n) => n.id === '2')
+    expect(other?.children ?? []).toHaveLength(0)
+  })
+
+  it('falls back to Other bookmarks when the browser has no Mobile root', async () => {
+    const bookmarks: ParsedBookmark[] = [
+      {
+        id: '3',
+        title: 'Mobile bookmarks',
+        isMobileBookmarks: true,
+        dateAdded: 0,
+        children: [{ title: 'M', url: 'https://mobile.example', dateAdded: 0 }],
+      },
+    ]
+
+    await importFromJSON(bookmarks, 'restore-merge')
+
+    const root = getFakeBookmarksRoot()
+    expect(root.children?.some((n) => n.id === '3')).toBe(false)
+    const other = root.children?.find((n) => n.id === '2')
+    expect(other?.children?.[0]?.url).toBe('https://mobile.example')
+  })
+
+  it('leaves an existing Mobile root untouched on restore-replace when the imported file has no Mobile content', async () => {
+    resetFakeBookmarks({ withMobileRoot: true })
+
+    await importFromJSON(
+      [
+        {
+          id: '3',
+          title: 'Mobile bookmarks',
+          isMobileBookmarks: true,
+          dateAdded: 0,
+          children: [
+            {
+              title: 'Existing',
+              url: 'https://existing.example',
+              dateAdded: 0,
+            },
+          ],
+        },
+      ],
+      'restore-merge',
+    )
+
+    await importFromJSON(
+      [
+        {
+          id: '1',
+          title: 'Bookmarks bar',
+          isBookmarksBar: true,
+          dateAdded: 0,
+          children: [
+            { title: 'New bar', url: 'https://new-bar.example', dateAdded: 0 },
+          ],
+        },
+      ],
+      'restore-replace',
+    )
+
+    const root = getFakeBookmarksRoot()
+    const mobile = root.children?.find((n) => n.id === '3')
+    expect(mobile?.children?.[0]?.url).toBe('https://existing.example')
+  })
+
+  it('leaves an existing Mobile root untouched on restore-replace when the imported file carries an empty Mobile node', async () => {
+    resetFakeBookmarks({ withMobileRoot: true })
+
+    await importFromJSON(
+      [
+        {
+          id: '3',
+          title: 'Mobile bookmarks',
+          isMobileBookmarks: true,
+          dateAdded: 0,
+          children: [
+            {
+              title: 'Existing',
+              url: 'https://existing.example',
+              dateAdded: 0,
+            },
+          ],
+        },
+      ],
+      'restore-merge',
+    )
+
+    await importFromJSON(
+      [
+        {
+          id: '1',
+          title: 'Bookmarks bar',
+          isBookmarksBar: true,
+          dateAdded: 0,
+          children: [
+            { title: 'New bar', url: 'https://new-bar.example', dateAdded: 0 },
+          ],
+        },
+        {
+          id: '3',
+          title: 'Mobile bookmarks',
+          isMobileBookmarks: true,
+          dateAdded: 0,
+          children: [],
+        },
+      ],
+      'restore-replace',
+    )
+
+    const root = getFakeBookmarksRoot()
+    const mobile = root.children?.find((n) => n.id === '3')
+    expect(mobile?.children?.[0]?.url).toBe('https://existing.example')
+  })
+
+  it('nests a "Mobile bookmarks" subfolder in folder mode when Mobile content is present', async () => {
+    const bookmarks: ParsedBookmark[] = [
+      {
+        id: '3',
+        title: 'Mobile bookmarks',
+        isMobileBookmarks: true,
+        dateAdded: 0,
+        children: [{ title: 'M', url: 'https://mobile.example', dateAdded: 0 }],
+      },
+    ]
+
+    await importFromJSON(bookmarks, 'folder')
+
+    const root = getFakeBookmarksRoot()
+    const otherBookmarks = root.children?.find((n) => n.id === '2')
+    const importedFolder = otherBookmarks?.children?.find(
+      (n) => n.title === 'Imported bookmarks',
+    )
+    const importedMobile = importedFolder?.children?.find(
+      (n) => n.title === 'Mobile bookmarks',
+    )
+    expect(importedMobile?.children?.[0]?.url).toBe('https://mobile.example')
+  })
 })
