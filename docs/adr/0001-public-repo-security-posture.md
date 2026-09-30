@@ -46,7 +46,8 @@ rejected for this repository.
 - **CodeQL** — the extension has no dangerous sinks (no `innerHTML`, `eval`, or
   dynamic `href`s), React escapes JSX text, and it makes no network calls.
   User-supplied bookmark files are parsed at runtime inside the installed
-  extension, not in this repository.
+  extension, not in this repository. Superseded by
+  [ADR 0004](0004-enable-codeql-sast.md).
 - **`bun audit` as a CI gate** — every current advisory traces to WXT's dev-only
   dependency chain and never ships in the built zip. Renovate's
   `osvVulnerabilityAlerts` already covers real supply-chain risk.

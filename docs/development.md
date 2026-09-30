@@ -48,6 +48,11 @@ their results and is the single status check required to merge; it passes once
 every needed job is `success` or `skipped` (e.g. `commitlint` is skipped on
 `push` runs), and fails if any needed job is `failure` or `cancelled`.
 
+`.github/workflows/codeql.yml` runs CodeQL static analysis
+(`javascript-typescript`) on every PR, on push to `main`, and weekly. It's not
+part of the `CI passed` aggregator — findings surface via code scanning, not as
+a gate. See [ADR 0004](adr/0004-enable-codeql-sast.md).
+
 ## Commit format
 
 `<type>: <emoji> <lowercase subject>`, e.g. `feat: ✨ add dark mode`.
