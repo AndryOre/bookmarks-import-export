@@ -2,6 +2,13 @@ import { storage } from '#imports'
 
 import type { AutoExportConfig } from '@/lib/types'
 
+/**
+ * All persisted extension settings, defined with `storage.defineItem` so
+ * every store lives under a `local:` key (per-browser-profile storage, not
+ * synced). `entrypoints/background.ts` watches {@link autoExportConfigStore}
+ * specifically, so any change to auto-export settings re-syncs the
+ * `auto-export` alarm without waiting for the next `onStartup`.
+ */
 export const themeStore = storage.defineItem<'dark' | 'light' | 'system'>(
   'local:theme',
   { fallback: 'system' },
