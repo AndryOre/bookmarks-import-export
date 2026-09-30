@@ -48,6 +48,30 @@ interface PreprocessLevelResult {
 }
 
 /**
+ * Decides whether `bookmark` is a virtual root wrapping the real tree,
+ * rather than an ordinary top-level folder that belongs in "Other
+ * bookmarks" (see `preprocessLevel`). A folder only counts as a virtual
+ * root when it is the sole node at its level (so scanning it can't
+ * discard any sibling already classified), or when its own children
+ * contain an `id === '1'`/`'2'` node (so it demonstrably wraps the real
+ * bookmarks bar / "Other bookmarks" pair).
+ * @param bookmark The node being considered as a virtual root.
+ * @param level The full sibling array `bookmark` was found in.
+ * @returns Whether `bookmark` should be unwrapped as a virtual root.
+ */
+function isVirtualRoot(
+  bookmark: ParsedBookmark,
+  level: ParsedBookmark[],
+): boolean {
+  return (
+    level.length === 1 ||
+    (bookmark.children ?? []).some(
+      (child) => child.id === '1' || child.id === '2',
+    )
+  )
+}
+
+/**
  * Scans a single array of sibling nodes and classifies each one:
  * - `id === '1'` is the bookmarks bar (Chrome's fixed id for it); marked
  *   `isBookmarksBar` and moved to the front of `result`.
@@ -55,9 +79,14 @@ interface PreprocessLevelResult {
  *   `isOtherBookmarks` and appended to `result`.
  * - `parentId === '2'` is an orphaned node (exported with a reference to
  *   "Other bookmarks" but not nested under it); collected into `orphans`.
- * - a node with `children` and none of the above is treated as a virtual
- *   root (see `preprocessBookmarks`) and its children are returned via
- *   `virtualRootChildren`; scanning of this level stops there.
+ * - a folder recognized as a virtual root by `isVirtualRoot` has its
+ *   children returned via `virtualRootChildren`; scanning of this level
+ *   stops there.
+ * - any other unclassified node (a folder that isn't a virtual root, or a
+ *   bookmark) is collected into `orphans` alongside the true orphans, so
+ *   it ends up in the synthetic "Other bookmarks" node rather than
+ *   silently discarding whatever else was already classified at this
+ *   level.
  * @param level The sibling nodes to scan.
  * @returns The classified nodes, orphans, and any virtual root's children.
  */
@@ -75,9 +104,11 @@ function preprocessLevel(level: ParsedBookmark[]): PreprocessLevelResult {
       result.push(bookmark)
     } else if (bookmark.parentId === '2') {
       orphans.push(bookmark)
-    } else if (bookmark.children) {
+    } else if (bookmark.children && isVirtualRoot(bookmark, level)) {
       virtualRootChildren = bookmark.children as ParsedBookmark[]
       break
+    } else {
+      orphans.push(bookmark)
     }
   }
 

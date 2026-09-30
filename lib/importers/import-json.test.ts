@@ -62,6 +62,91 @@ describe('preprocessBookmarks', () => {
     expect(result[0]?.title).toBe('Other bookmarks')
     expect(result[0]?.children?.[0]?.title).toBe('Orphan')
   })
+
+  it('keeps the bookmarks bar intact when a later top-level folder is not a virtual root (default-export shape)', () => {
+    const input: ParsedBookmark[] = [
+      {
+        id: '1',
+        title: 'Bookmarks bar',
+        dateAdded: 0,
+        children: [{ title: 'A', url: 'https://a.example', dateAdded: 0 }],
+      },
+      {
+        title: 'Folder A',
+        dateAdded: 0,
+        children: [{ title: 'B', url: 'https://b.example', dateAdded: 0 }],
+      },
+      { title: 'Folder B', dateAdded: 0, children: [] },
+    ]
+
+    const result = preprocessBookmarks(input)
+
+    const bar = result.find((b) => b.isBookmarksBar)
+    expect(bar?.children?.[0]?.url).toBe('https://a.example')
+
+    const other = result.find((b) => b.isOtherBookmarks)
+    expect(other?.children?.map((c) => c.title)).toEqual([
+      'Folder A',
+      'Folder B',
+    ])
+  })
+
+  it('unwraps a nested wrapper (sole node at each level) before classifying', () => {
+    const input: ParsedBookmark[] = [
+      {
+        title: 'Wrapper',
+        dateAdded: 0,
+        children: [
+          {
+            title: 'Inner wrapper',
+            dateAdded: 0,
+            children: [
+              { id: '1', title: 'Bar', dateAdded: 0, children: [] },
+              { id: '2', title: 'Other', dateAdded: 0, children: [] },
+            ],
+          },
+        ],
+      },
+    ]
+
+    const result = preprocessBookmarks(input)
+
+    expect(result[0]?.id).toBe('1')
+    expect(result[0]?.isBookmarksBar).toBe(true)
+    expect(result[1]?.id).toBe('2')
+    expect(result[1]?.isOtherBookmarks).toBe(true)
+  })
+
+  it('restores the bookmarks bar from an id "0" root whose Other-bookmarks folders were flattened to the top level', () => {
+    const input: ParsedBookmark[] = [
+      {
+        id: '0',
+        title: '',
+        dateAdded: 0,
+        children: [
+          {
+            id: '1',
+            title: 'Bookmarks bar',
+            dateAdded: 0,
+            children: [{ title: 'A', url: 'https://a.example', dateAdded: 0 }],
+          },
+          {
+            title: 'Folder A',
+            dateAdded: 0,
+            children: [{ title: 'B', url: 'https://b.example', dateAdded: 0 }],
+          },
+        ],
+      },
+    ]
+
+    const result = preprocessBookmarks(input)
+
+    const bar = result.find((b) => b.isBookmarksBar)
+    expect(bar?.children?.[0]?.url).toBe('https://a.example')
+
+    const other = result.find((b) => b.isOtherBookmarks)
+    expect(other?.children?.[0]?.title).toBe('Folder A')
+  })
 })
 
 describe('importFromJSON', () => {
