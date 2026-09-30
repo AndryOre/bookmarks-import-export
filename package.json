@@ -1,6 +1,6 @@
 {
   "name": "bookmarks-import-export",
-  "description": "Import and export browser bookmarks as CSV, with a Chrome MV3 extension UI.",
+  "description": "Browser extension to import and export bookmarks as HTML, JSON or CSV, with selective export, restore and scheduled backups.",
   "keywords": [
     "browser-extension",
     "bookmarks",
