@@ -63,9 +63,11 @@ function seedSourceTree(): void {
 }
 
 /**
-Collects the URLs of every bookmark (nodes with a `url`) found under `node`,
-sorted for order-independent comparison.
-*/
+ * Collects the URLs of every bookmark (nodes with a `url`) found under
+ * `node`, sorted for order-independent comparison.
+ * @param node The subtree to collect bookmark URLs from.
+ * @returns The sorted list of bookmark URLs.
+ */
 function collectUrls(node: ExtendedBookmarkTreeNode | undefined): string[] {
   if (!node) return []
   const urls: string[] = []
@@ -94,7 +96,7 @@ describe('round trip: JSON', () => {
     only the importer's *input* shape), but the runtime shape matches once
     serialized, so this cast documents that boundary rather than papering
     over an actual mismatch.
-    */
+     */
     const reparsed = structuredClone(exported) as unknown as ParsedBookmark[]
 
     resetFakeBookmarks()

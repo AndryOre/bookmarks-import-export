@@ -21,6 +21,8 @@ const WORKFLOW_PATH = path.join(REPO_ROOT, '.github/workflows/lint-docs.yml')
  * `'single quoted'` run as one token (quotes stripped) the way a shell would
  * — mirrors how the workflow's quoting keeps `docs/**\/*.md` and
  * `.github/*.md` from being glob-expanded before lychee sees them.
+ * @param input The folded-scalar-joined argument string to tokenize.
+ * @returns The individual argument tokens, in order.
  */
 function tokenizeShellLikeArguments(input: string): string[] {
   const tokens: string[] = []
@@ -44,6 +46,8 @@ function tokenizeShellLikeArguments(input: string): string[] {
  * full YAML parser — the block's shape is simple and stable enough (a fixed
  * indentation, no nested structures) that a small anchor-based extraction is
  * both sufficient and easier to audit than a parser dependency would be.
+ * @param workflowYaml The workflow file's raw YAML content.
+ * @returns The tokenized `args:` list, in the same order lychee receives them.
  */
 function extractLycheeArgumentsFromWorkflow(workflowYaml: string): string[] {
   const blockMatch = /args:\s*>-\s*\n([\s\S]*?)\n\s*fail:/.exec(workflowYaml)

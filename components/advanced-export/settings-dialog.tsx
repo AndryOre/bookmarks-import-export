@@ -100,6 +100,10 @@ const INTERVALS: {
  * `localConfig`, a local draft, and nothing is written to
  * `autoExportConfigStore` until the user presses Save (`handleSave`) — so a
  * change on that tab has no effect if the dialog is closed without saving.
+ * @param root0 This component's properties.
+ * @param root0.open Whether the dialog is open.
+ * @param root0.onOpenChange Called when the dialog's open state should change.
+ * @returns The dialog element, tabbed across Display, Export, and Auto-export.
  */
 export function SettingsDialog({
   open,
@@ -334,10 +338,6 @@ export function SettingsDialog({
               />
             </TabsContent>
 
-            {/**
-             * Auto-export tab: every control below edits `localConfig`
-             * only. Nothing here takes effect until Save is pressed.
-             */}
             <TabsContent value="auto-save" className="pt-2">
               <div
                 className="max-h-(--settings-scroll-max) space-y-4 overflow-y-auto pr-0.5"
@@ -518,6 +518,7 @@ export function SettingsDialog({
                          * makes the whole chip toggle the checkbox without
                          * a manual click handler or extra keyboard/role
                          * wiring.
+                         * @returns The format's toggle chip.
                          */
                         <label
                           key={fmt}

@@ -34,6 +34,9 @@ const INTERVAL_MINUTES: Record<AutoExportInterval, number> = {
  * daily/multi-day intervals instead target `preferredTime` on the current or
  * next eligible day, advancing by the interval's day count whenever that
  * time has already passed today.
+ * @param interval The configured auto-export interval.
+ * @param preferredTime `HH:mm` time of day, used for day-or-longer intervals.
+ * @returns The next date auto-export should run.
  */
 function getNextExportDate(
   interval: AutoExportInterval,
@@ -69,6 +72,7 @@ function getNextExportDate(
  * `0.1` because `browser.alarms.create` rejects a delay of `0` or less, which
  * a `nextDate` in the past — or equal to `Date.now()` — would otherwise
  * produce.
+ * @returns Resolves once the alarm has been cleared and, if applicable, recreated.
  */
 export async function syncAlarm(): Promise<void> {
   const config = await autoExportConfigStore.getValue()
@@ -94,6 +98,8 @@ export async function syncAlarm(): Promise<void> {
  * path is relative to the browser's downloads folder, not absolute), removes
  * `..` segments to prevent escaping that folder, and collapses repeated
  * slashes.
+ * @param path The user-configured output path.
+ * @returns The sanitized, downloads-relative path.
  */
 function sanitizePath(path: string): string {
   return path
@@ -108,6 +114,9 @@ function sanitizePath(path: string): string {
  * needs a URL, and a service worker (unlike a page context) has no `URL`
  * object with `createObjectURL`, so a data URL is the only way to hand it
  * in-memory content directly.
+ * @param content The export content to encode.
+ * @param mimeType The content's MIME type.
+ * @returns A base64 data URL encoding `content`.
  */
 function toDataUrl(content: string, mimeType: string): string {
   const bytes = new TextEncoder().encode(content)

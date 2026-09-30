@@ -30,6 +30,7 @@ type ImportStatus = 'idle' | 'importing' | 'success' | 'error'
  * Choosing `restore-replace` — which clears the existing bookmark roots
  * before importing — first opens a confirmation dialog, since that mode is
  * destructive and cannot be undone.
+ * @returns The Advanced Import page.
  */
 export default function App() {
   const [file, setFile] = useState<File | null>(null)

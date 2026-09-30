@@ -21,6 +21,7 @@ import {
 /**
  * A pid that is guaranteed to belong to an already-exited process, obtained
  * by synchronously spawning and waiting on a trivial child process.
+ * @returns A pid known to belong to an exited process.
  */
 function deadPid(): number {
   const child = spawnSync(process.execPath, ['-e', '0'])

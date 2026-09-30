@@ -28,6 +28,11 @@ interface ModeOption {
  * (`restore-replace`). The two restore modes are disabled whenever
  * `hasLocationData` is `false`, since they depend on location data the
  * source file doesn't provide.
+ * @param root0 This component's properties.
+ * @param root0.value The currently selected import mode.
+ * @param root0.onChange Called with the newly selected import mode.
+ * @param root0.hasLocationData Whether the restore modes should be enabled.
+ * @returns The radio group of import mode options.
  */
 export function ImportModeSelector({
   value,

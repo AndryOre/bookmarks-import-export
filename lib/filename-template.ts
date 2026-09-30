@@ -5,6 +5,8 @@
  * directly against user input. Order matters: `%yyyy` must precede `%yy`,
  * and `%min`/`%sec` must precede any pattern that could match a prefix of
  * them, so a longer token is never partially consumed by a shorter one.
+ * @param d The date to resolve the matched token against.
+ * @returns The token's resolved value for `d`.
  */
 const PLACEHOLDERS: [RegExp, (d: Date) => string][] = [
   [/%yyyy/gi, (d) => String(d.getFullYear())],
@@ -27,6 +29,9 @@ const PLACEHOLDERS: [RegExp, (d: Date) => string][] = [
  * this fallback does not apply when sanitization alone produces a non-empty
  * result (e.g. an all-illegal-character template becomes underscores, not
  * the fallback).
+ * @param template The user-supplied filename template.
+ * @param date The date each `%token` resolves against.
+ * @returns The sanitized, non-empty filename.
  */
 export function formatFilenameTemplate(
   template: string,
