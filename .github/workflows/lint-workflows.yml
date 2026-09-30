@@ -39,7 +39,9 @@ jobs:
         run: actionlint -color
 
       # advanced-security is disabled (default annotations instead) since
-      # this repo doesn't use GitHub Advanced Security / CodeQL — see AO-809.
+      # this job has no security-events: write permission to post SARIF via
+      # the code-scanning API — see AO-809. codeql.yml (ADR 0004) is a
+      # separate workflow with its own security-events: write permission.
       - name: Run zizmor
         uses: zizmorcore/zizmor-action@cc914d7f3750a2d13d75c7f184a1060aa0e9d482 # v0.6.4
         with:

@@ -2,27 +2,27 @@
 
 ## Scripts
 
-| Script                  | What it does                                                                             |
-| ----------------------- | ---------------------------------------------------------------------------------------- |
-| `bun run dev`           | Starts the WXT dev server (Chrome MV3).                                                  |
-| `bun run build`         | Produces a production build (Chrome MV3).                                                |
-| `bun run zip`           | Builds and packages the extension into a distributable `.zip`.                           |
-| `bun run check`         | Aggregate gate: `format:check` → `lint` → `typecheck` → `knip`. Run before opening a PR. |
-| `bun run fix`           | Aggregate autofix: `format:write` → `lint:fix` → `typecheck`.                            |
-| `bun run knip`          | Finds unused files, exports, and dependencies (`bunx knip`).                             |
-| `bun run ci:local`      | Reproduces CI locally: frozen-lockfile install → `check` → `lint:docs` → `test`.         |
-| `bun run clean`         | Removes build output and `node_modules`.                                                 |
-| `bun run cache:clear`   | Clears ESLint and `node_modules/.cache` caches.                                          |
-| `bun run format:check`  | Checks formatting with Prettier (no writes).                                             |
-| `bun run format:write`  | Formats the repo with Prettier.                                                          |
-| `bun run lint`          | Runs ESLint (`--max-warnings=0`, cached).                                                |
-| `bun run lint:docs`     | Local `lychee` link check, matching `lint-docs.yml`'s markdown link gate.                |
-| `bun run lint:fix`      | Runs ESLint with `--fix` (`--max-warnings=0`, cached).                                   |
-| `bun run typecheck`     | Runs `tsc --noEmit`.                                                                     |
-| `bun run test`          | Runs the Vitest suite once.                                                              |
-| `bun run test:coverage` | Runs the Vitest suite with coverage (`lib/**`, v8 provider, 50% thresholds).             |
-| `bun run test:watch`    | Runs Vitest in watch mode.                                                               |
-| `bun run test:e2e`      | Builds the extension (`wxt build`), then runs the Playwright E2E suite (`e2e/**`).       |
+| Script                  | What it does                                                                                               |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `bun run dev`           | Starts the WXT dev server (Chrome MV3).                                                                    |
+| `bun run build`         | Produces a production build (Chrome MV3).                                                                  |
+| `bun run zip`           | Builds and packages the extension into a distributable `.zip`.                                             |
+| `bun run check`         | Aggregate gate: `format:check` → `lint` → `typecheck` → `knip`. Run before opening a PR.                   |
+| `bun run fix`           | Aggregate autofix: `format:write` → `lint:fix` → `typecheck`.                                              |
+| `bun run knip`          | Finds unused files, exports, and dependencies (`bunx knip`).                                               |
+| `bun run ci:local`      | Reproduces CI locally: frozen-lockfile install → `check` → `lint:docs` → `test`.                           |
+| `bun run clean`         | Removes build output and `node_modules`.                                                                   |
+| `bun run cache:clear`   | Clears ESLint and `node_modules/.cache` caches.                                                            |
+| `bun run format:check`  | Checks formatting with Prettier (no writes).                                                               |
+| `bun run format:write`  | Formats the repo with Prettier.                                                                            |
+| `bun run lint`          | Runs ESLint (`--max-warnings=0`, cached).                                                                  |
+| `bun run lint:docs`     | Local `lychee` link check, matching `lint-docs.yml`'s markdown link gate.                                  |
+| `bun run lint:fix`      | Runs ESLint with `--fix` (`--max-warnings=0`, cached).                                                     |
+| `bun run typecheck`     | Runs `tsc --noEmit`.                                                                                       |
+| `bun run test`          | Runs the Vitest suite once.                                                                                |
+| `bun run test:coverage` | Runs the Vitest suite with coverage (`lib/**`, v8 provider, 80% lines/statements/functions, 50% branches). |
+| `bun run test:watch`    | Runs Vitest in watch mode.                                                                                 |
+| `bun run test:e2e`      | Builds the extension (`wxt build`), then runs the Playwright E2E suite (`e2e/**`).                         |
 
 ## Git hooks
 
@@ -47,6 +47,11 @@ Every PR — including docs-only changes — runs the full `ci.yml` pipeline:
 their results and is the single status check required to merge; it passes once
 every needed job is `success` or `skipped` (e.g. `commitlint` is skipped on
 `push` runs), and fails if any needed job is `failure` or `cancelled`.
+
+`.github/workflows/codeql.yml` runs CodeQL static analysis
+(`javascript-typescript`) on every PR, on push to `main`, and weekly. It's not
+part of the `CI passed` aggregator — findings surface via code scanning, not as
+a gate. See [ADR 0004](adr/0004-enable-codeql-sast.md).
 
 ## Commit format
 
@@ -109,8 +114,11 @@ a minimal in-memory bookmark tree onto `fakeBrowser.bookmarks` via
 implement `resetState`), so call `resetFakeBookmarks()` (and `resetFakeI18n()`,
 if used) alongside it in `beforeEach`.
 
-Coverage is scoped to `lib/**` only (see `vitest.config.ts`), with a 50%
-threshold on lines/statements/branches/functions.
+Coverage is scoped to `lib/**` only (see `vitest.config.ts`), with an 80%
+threshold on lines/statements/functions and 50% on branches.
+
+See [CONTRIBUTING's `## Tests`](../CONTRIBUTING.md#tests) section for this
+repository's testing policy: what a PR is expected to cover and when.
 
 ## E2E testing
 
@@ -137,6 +145,31 @@ for why this runs against the built extension instead of a component-test layer.
   job (`.github/workflows/ci.yml`), which installs browsers with
   `bunx playwright install --with-deps chromium` and uploads the Playwright HTML
   report as an artifact on failure.
+
+## Accessibility
+
+- **Linting**: `eslint-plugin-jsx-a11y`'s `recommended` config is enabled in
+  `eslint.config.mjs` and runs as part of `bun run lint` (`--max-warnings=0`, so
+  an a11y violation fails the same way any other lint error does). It catches
+  issues like missing alt text, non-interactive elements with click handlers but
+  no keyboard equivalent, and invalid ARIA attributes.
+- **Accessible primitives**: interactive UI is built from `components/ui/**`
+  (shadcn/ui components on top of Radix UI primitives), which ship correct ARIA
+  roles, keyboard handling, and focus management out of the box. Prefer
+  composing these primitives over hand-rolling interactive elements from
+  `div`/`span`.
+- **Keyboard operability**: every interactive control (buttons, links, form
+  fields, dialogs) must be reachable and operable via keyboard alone — no
+  handler that only responds to `onClick`/`onMouseOver` without a keyboard
+  equivalent.
+- **Labels**: every form control needs an accessible name — a visible `<label>`,
+  an `aria-label`, or `aria-labelledby`. Icon-only buttons need an `aria-label`
+  describing the action.
+- **Focus visibility**: don't suppress the browser's focus ring (no
+  `outline: none` without a replacement focus style). shadcn/ui's components
+  already include a visible focus-visible style; keep it when customizing a
+  component per this repo's
+  [`@shadcn/lint` contract](#adding-a-shadcnlint-contract) rules.
 
 ## Repository settings
 

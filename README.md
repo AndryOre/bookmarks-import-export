@@ -46,6 +46,9 @@ your browser's own bookmarks tree, locally. See the
   shape.
 - [`CHANGELOG.md`](CHANGELOG.md) — release notes.
 - [`CONTRIBUTING.md`](CONTRIBUTING.md) — pull request conventions.
+- [`GOVERNANCE.md`](GOVERNANCE.md) — how the project is governed and how
+  decisions get made.
+- [`ROADMAP.md`](ROADMAP.md) — where the project is headed.
 - [`.github/SECURITY.md`](.github/SECURITY.md) — how to report a security
   vulnerability privately.
 

@@ -23,9 +23,29 @@ vulnerability before a fix is available.
 
 ## Supported Versions
 
-Only the latest commit on `main` is actively supported.
+Only the latest published version of the extension is supported. There are no
+maintained release branches — a fix lands on `main` and ships in the next
+release.
 
 | Version | Supported |
 | ------- | --------- |
-| `main`  | ✅        |
+| latest  | ✅        |
 | older   | ❌        |
+
+## Upgrade Path
+
+Fixes ship through the Chrome Web Store's auto-update mechanism: once a patch is
+published, installs update automatically in the background, with no action
+required from you. There's no separate patch channel or manual download step.
+
+## Credit
+
+Reporters are credited by name (or handle) in the GitHub Security Advisory and
+in [`CHANGELOG.md`](../CHANGELOG.md), unless you ask to stay anonymous when you
+report. Let us know your preference in the initial report.
+
+## Security Design
+
+For what security this extension provides — its threat model, the permissions it
+requests and why, and how it handles malformed or hostile import files — see
+[`docs/security.md`](../docs/security.md).

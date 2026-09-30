@@ -10,6 +10,10 @@ An index of every document in this repository.
   first, in [Keep a Changelog](https://keepachangelog.com/) format.
 - [`CONTRIBUTING.md`](../CONTRIBUTING.md) — pull request conventions: setup,
   branch/commit format, merging, CI, security reporting.
+- [`GOVERNANCE.md`](../GOVERNANCE.md) — the BDFL governance model, decision
+  process, roles, and project continuity.
+- [`ROADMAP.md`](../ROADMAP.md) — the project's direction for the next 12 months
+  and what's out of scope.
 - [`docs/development.md`](development.md) — the local development guide:
   scripts, git hooks, CI, commit/branch format, the `@shadcn/lint` contract
   workflow, `fakeBrowser` testing, and the code documentation policy.
@@ -26,6 +30,9 @@ An index of every document in this repository.
   — the ADR documenting why E2E runs Playwright against the built extension
   (`wxt build` output) instead of a component-test layer, and why bookmarks are
   seeded/read through the extension's service worker.
+- [`docs/adr/0004-enable-codeql-sast.md`](adr/0004-enable-codeql-sast.md) — the
+  ADR documenting why CodeQL now runs (superseding ADR 0001's rejection) and the
+  accepted branch-protection limitation.
 
 ## How-to
 
@@ -54,4 +61,6 @@ An index of every document in this repository.
   privacy policy.
 - [`.github/SECURITY.md`](../.github/SECURITY.md) — how to report a security
   vulnerability privately.
+- [`docs/security.md`](security.md) — the extension's assurance case: what
+  security it provides, its threat model, and its known limitations.
 - [`CODE_OF_CONDUCT.md`](../CODE_OF_CONDUCT.md) — the project's code of conduct.
