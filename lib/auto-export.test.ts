@@ -17,29 +17,122 @@ import {
 import type { AutoExportConfig, AutoExportInterval } from '@/lib/types'
 
 import { ALARM_NAME, runAutoExport, syncAlarm } from './auto-export'
+import { CREATE_BLOB_URL_MESSAGE_TYPE } from './offscreen-download'
 
-function decodeDataUrlContent(url: string): string {
-  const base64 = url.slice(url.indexOf(',') + 1)
+type OnChangedListener = (delta: Browser.downloads.DownloadDelta) => void
+
+/**
+ * Replaces `chrome.offscreen` (unimplemented in `fakeBrowser`) with `vi.fn`
+ * stubs so `downloadViaOffscreenDocument` can create/close the offscreen
+ * document `runAutoExport`'s downloads now go through.
+ */
+function mockOffscreenApi(): void {
+  chrome.offscreen = {
+    createDocument: vi.fn(async () => {}),
+    closeDocument: vi.fn(async () => {}),
+  } as unknown as typeof chrome.offscreen
+}
+
+/**
+ * Replaces `browser.runtime.sendMessage` (unimplemented in `fakeBrowser`)
+ * with a `vi.fn` that answers a blob-url-creation request with the request's
+ * own `content` decoded as a fake `blob:` URL, so a test can recover the
+ * exported content each download was asked to save without a real `Blob`
+ * registry.
+ */
+function mockRuntimeSendMessage(): void {
+  const mock = vi.fn(
+    async (message: { type: string; content?: string; url?: string }) => {
+      if (message.type === CREATE_BLOB_URL_MESSAGE_TYPE) {
+        return {
+          url: `blob:${Buffer.from(message.content ?? '', 'utf8').toString('base64')}`,
+        }
+      }
+      return
+    },
+  )
+  browser.runtime.sendMessage =
+    mock as unknown as typeof browser.runtime.sendMessage
+}
+
+function decodeBlobUrlContent(url: string): string {
+  const base64 = url.slice('blob:'.length)
   return Buffer.from(base64, 'base64').toString('utf8')
 }
 
 /**
- * Replaces `browser.downloads.download` (unimplemented in `fakeBrowser`)
- * with a `vi.fn`, typed against the library's `Promise`-returning overload
- * rather than its callback overload — `vi.spyOn` on an overloaded method
- * otherwise infers the callback (`void`-returning) signature, which rejects
- * `mockResolvedValue`/`mockImplementation` calls that resolve a value.
- * @param implementation Optional stub; defaults to resolving download id `1`.
- * @returns The installed mock, for call-count/call-args assertions.
+ * Replaces `browser.downloads.download` and `browser.downloads.onChanged`
+ * (unimplemented in `fakeBrowser`) with `vi.fn` stubs: `download` resolves
+ * with incrementing ids (or the given `implementation`), and `completeAll`
+ * dispatches a `'complete'` `onChanged` event to every id issued so far, for
+ * a test to call once it knows every expected download has started.
+ * @param implementation Optional stub; defaults to resolving with an
+ *   incrementing id.
+ * @returns The installed `download` mock plus a `completeAll` helper.
  */
 function mockDownload(
-  implementation: (
+  implementation?: (
     details: Browser.downloads.DownloadOptions,
-  ) => Promise<number> = async () => 1,
+  ) => Promise<number>,
 ) {
-  const mock = vi.fn(implementation)
+  let nextId = 1
+  const issuedIds: number[] = []
+  const listeners: OnChangedListener[] = []
+
+  const mock = vi.fn(
+    implementation ??
+      (async () => {
+        const id = nextId++
+        issuedIds.push(id)
+        return id
+      }),
+  )
   browser.downloads.download = mock as typeof browser.downloads.download
-  return mock
+  browser.downloads.onChanged.addListener = vi.fn((listener: unknown) => {
+    listeners.push(listener as OnChangedListener)
+  }) as typeof browser.downloads.onChanged.addListener
+  browser.downloads.onChanged.removeListener = vi.fn((listener: unknown) => {
+    const index = listeners.indexOf(listener as OnChangedListener)
+    if (index !== -1) listeners.splice(index, 1)
+  }) as typeof browser.downloads.onChanged.removeListener
+
+  function fire(id: number, state: 'complete' | 'interrupted' = 'complete') {
+    for (const listener of listeners) {
+      listener({
+        id,
+        state: { current: state },
+      } as Browser.downloads.DownloadDelta)
+    }
+  }
+
+  function completeAll(): void {
+    for (const id of issuedIds) fire(id, 'complete')
+  }
+
+  return { mock, completeAll, fire }
+}
+
+/**
+ * Runs `runAutoExport()` to completion against the `mockDownload` helper
+ * above: awaits (via `vi.waitFor`, so it tolerates the real async work
+ * `exportToHTML`'s favicon fetch does) until every expected download has
+ * called `browser.downloads.download`, fires `'complete'` for each of them,
+ * then awaits the run itself.
+ * @param downloadSpy The `mock` returned by `mockDownload`.
+ * @param completeAll The `completeAll` helper returned by `mockDownload`.
+ * @param expectedDownloadCount How many downloads this run should start.
+ */
+async function runAutoExportAndSettle(
+  downloadSpy: ReturnType<typeof mockDownload>['mock'],
+  completeAll: () => void,
+  expectedDownloadCount: number,
+): Promise<void> {
+  const runPromise = runAutoExport()
+  await vi.waitFor(() =>
+    expect(downloadSpy).toHaveBeenCalledTimes(expectedDownloadCount),
+  )
+  completeAll()
+  await runPromise
 }
 
 function baseConfig(
@@ -58,6 +151,8 @@ function baseConfig(
 beforeEach(() => {
   fakeBrowser.reset()
   resetFakeBookmarks()
+  mockOffscreenApi()
+  mockRuntimeSendMessage()
 })
 
 afterEach(() => {
@@ -227,7 +322,7 @@ describe('syncAlarm', () => {
 describe('runAutoExport', () => {
   it('no-ops when auto-export is disabled', async () => {
     await autoExportConfigStore.setValue(baseConfig({ enabled: false }))
-    const downloadSpy = mockDownload()
+    const { mock: downloadSpy } = mockDownload()
 
     await runAutoExport()
 
@@ -237,7 +332,7 @@ describe('runAutoExport', () => {
 
   it('no-ops when no format is selected', async () => {
     await autoExportConfigStore.setValue(baseConfig({ formats: [] }))
-    const downloadSpy = mockDownload()
+    const { mock: downloadSpy } = mockDownload()
 
     await runAutoExport()
 
@@ -259,9 +354,9 @@ describe('runAutoExport', () => {
       baseConfig({ path: 'backups/auto/', formats: ['html', 'json', 'csv'] }),
     )
     await exportFilenameTemplateStore.setValue('AutoExport')
-    const downloadSpy = mockDownload()
+    const { mock: downloadSpy, completeAll } = mockDownload()
 
-    await runAutoExport()
+    await runAutoExportAndSettle(downloadSpy, completeAll, 3)
 
     expect(downloadSpy).toHaveBeenCalledTimes(3)
 
@@ -270,19 +365,19 @@ describe('runAutoExport', () => {
 
     const html = byFilename.get('backups/auto/AutoExport.html')
     expect(html).toBeDefined()
-    expect(html?.url.startsWith('data:text/html;base64,')).toBe(true)
+    expect(html?.url.startsWith('blob:')).toBe(true)
     expect(html?.saveAs).toBe(false)
     expect(html?.conflictAction).toBe('uniquify')
 
     const json = byFilename.get('backups/auto/AutoExport.json')
     expect(json).toBeDefined()
-    expect(json?.url.startsWith('data:application/json;base64,')).toBe(true)
+    expect(json?.url.startsWith('blob:')).toBe(true)
     expect(json?.saveAs).toBe(false)
     expect(json?.conflictAction).toBe('uniquify')
 
     const csv = byFilename.get('backups/auto/AutoExport.csv')
     expect(csv).toBeDefined()
-    expect(csv?.url.startsWith('data:text/csv;base64,')).toBe(true)
+    expect(csv?.url.startsWith('blob:')).toBe(true)
     expect(csv?.saveAs).toBe(false)
     expect(csv?.conflictAction).toBe('uniquify')
   })
@@ -306,18 +401,18 @@ describe('runAutoExport', () => {
     await exportFilenameTemplateStore.setValue('AutoExport')
     await hideOtherBookmarksStore.setValue(true)
     await includeDateGroupModifiedStore.setValue(true)
-    const downloadSpy = mockDownload()
+    const { mock: downloadSpy, completeAll } = mockDownload()
 
-    await runAutoExport()
+    await runAutoExportAndSettle(downloadSpy, completeAll, 1)
 
     expect(downloadSpy).toHaveBeenCalledTimes(1)
     const [details] = downloadSpy.mock.calls[0] ?? []
-    const csvContent = decodeDataUrlContent(details?.url ?? '')
+    const csvContent = decodeBlobUrlContent(details?.url ?? '')
     expect(csvContent).toContain('https://other-only.example')
   })
 
-  it('sets autoExportLastRunStore only after every selected download resolves', async () => {
-    vi.useFakeTimers()
+  it('sets autoExportLastRunStore only after every selected download settles', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
     vi.setSystemTime(new Date(2024, 5, 1, 8, 0, 0, 0))
     seedFakeBookmarksTree([
       {
@@ -333,24 +428,22 @@ describe('runAutoExport', () => {
     )
     await exportFilenameTemplateStore.setValue('AutoExport')
 
-    const resolvers: (() => void)[] = []
-    mockDownload(
-      async () =>
-        new Promise<number>((resolve) => {
-          resolvers.push(() => resolve(1))
-        }),
-    )
+    const { mock: downloadSpy, fire } = mockDownload()
 
     const runPromise = runAutoExport()
 
-    await vi.waitFor(() => expect(resolvers).toHaveLength(2))
+    await vi.waitFor(() => expect(downloadSpy).toHaveBeenCalledTimes(2))
     expect(await autoExportLastRunStore.getValue()).toBeNull()
 
-    resolvers[0]?.()
-    await Promise.resolve()
+    fire(1, 'complete')
+    await vi.waitFor(() =>
+      expect(browser.runtime.sendMessage).toHaveBeenCalledWith(
+        expect.objectContaining({ url: expect.stringContaining('blob:') }),
+      ),
+    )
     expect(await autoExportLastRunStore.getValue()).toBeNull()
 
-    resolvers[1]?.()
+    fire(2, 'complete')
     await runPromise
 
     expect(await autoExportLastRunStore.getValue()).toBe(Date.now())
@@ -360,6 +453,9 @@ describe('runAutoExport', () => {
     ['/leading/slash/', 'leading/slash/'],
     ['exports/../attempt/', 'exports/attempt/'],
     ['double//slash///path/', 'double/slash/path/'],
+    ['back<up>s:"|/?*/', 'backups/'],
+    ['exports/My:Drive/', 'exports/MyDrive/'],
+    [`exports/tab\ttest/`, 'exports/tabtest/'],
   ])(
     'sanitizes the configured path %s -> %s',
     async (rawPath, expectedPrefix) => {
@@ -376,9 +472,9 @@ describe('runAutoExport', () => {
         baseConfig({ path: rawPath, formats: ['html'] }),
       )
       await exportFilenameTemplateStore.setValue('AutoExport')
-      const downloadSpy = mockDownload()
+      const { mock: downloadSpy, completeAll } = mockDownload()
 
-      await runAutoExport()
+      await runAutoExportAndSettle(downloadSpy, completeAll, 1)
 
       expect(downloadSpy).toHaveBeenCalledWith(
         expect.objectContaining({

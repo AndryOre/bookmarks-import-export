@@ -23,6 +23,7 @@ export default defineConfig({
       'tabs',
       'alarms',
       'downloads',
+      'offscreen',
     ],
   },
   vite: () => ({
