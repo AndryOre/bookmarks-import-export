@@ -54,8 +54,6 @@ import { t } from '@/lib/types'
 import { useStorageItem } from '@/lib/use-storage-item'
 import { cn } from '@/lib/utils'
 
-// ─── Time helpers ────────────────────────────────────────────────────────────
-
 function parseTo12h(time: string): {
   hour: number
   minute: number
@@ -82,8 +80,6 @@ function formatTime(
   return `${String(h).padStart(2, '0')}:${String(minute).padStart(2, '0')}`
 }
 
-// ─── Interval options ─────────────────────────────────────────────────────────
-
 const INTERVALS: {
   value: AutoExportInterval
   labelKey: MessageKey
@@ -94,13 +90,21 @@ const INTERVALS: {
   { value: '7d', labelKey: 'intervalEvery7Days' },
 ]
 
-// ─── Component ────────────────────────────────────────────────────────────────
-
+/**
+ * Settings dialog for the advanced export flow, split into Display, Export
+ * and Auto-export tabs.
+ *
+ * The Display and Export tabs are backed directly by
+ * {@link useStorageItem}, so every change there is persisted immediately.
+ * The Auto-export tab is different on purpose: its controls only edit
+ * `localConfig`, a local draft, and nothing is written to
+ * `autoExportConfigStore` until the user presses Save (`handleSave`) — so a
+ * change on that tab has no effect if the dialog is closed without saving.
+ */
 export function SettingsDialog({
   open,
   onOpenChange,
 }: SettingsDialogProperties) {
-  // ── Display + Export tab stores (immediate save) ───────────────────────────
   const [showBookmarkIcon, setShowBookmarkIcon] = useStorageItem(
     showBookmarkIconStore,
   )
@@ -130,15 +134,21 @@ export function SettingsDialog({
   const [syncedFilenameTemplate, setSyncedFilenameTemplate] =
     useState(filenameTemplate)
 
-  // Reset the draft whenever the stored template changes underneath us —
-  // computed during render instead of an effect, per
-  // https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes.
+  /**
+   * Resets the draft whenever the stored template changes underneath us —
+   * computed during render instead of an effect, per
+   * {@link https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes}.
+   */
   if (filenameTemplate !== syncedFilenameTemplate) {
     setSyncedFilenameTemplate(filenameTemplate)
     setLocalTemplate(filenameTemplate)
   }
 
-  // ── Auto-save tab local state (explicit Save button) ───────────────────────
+  /**
+   * Local draft of the auto-export config for the Auto-export tab. Unlike
+   * the Display/Export tabs' storage-backed state above, changes here are
+   * not persisted until {@link handleSave} runs.
+   */
   const [localConfig, setLocalConfig] = useState<AutoExportConfig>(
     DEFAULT_AUTO_EXPORT_CONFIG,
   )
@@ -170,6 +180,11 @@ export function SettingsDialog({
     })
   }
 
+  /**
+   * Validates and commits the Auto-export tab's draft (`localConfig`) to
+   * storage, then closes the dialog. This is the only place that draft is
+   * ever persisted — closing the dialog any other way discards it.
+   */
   const handleSave = async () => {
     if (localConfig.formats.length === 0) {
       setFormatError(true)
@@ -179,7 +194,6 @@ export function SettingsDialog({
     onOpenChange(false)
   }
 
-  // ── Time picker derived values ─────────────────────────────────────────────
   const { hour: hour12, minute, period } = parseTo12h(localConfig.preferredTime)
 
   const updateHour = (value: string) => {
@@ -225,7 +239,6 @@ export function SettingsDialog({
               </TabsTrigger>
             </TabsList>
 
-            {/* ── Display tab ───────────────────────────────────────────────── */}
             <TabsContent value="display" className="space-y-4 pt-2">
               <SettingRow
                 labelKey="showBookmarkIcon"
@@ -242,7 +255,6 @@ export function SettingsDialog({
               />
             </TabsContent>
 
-            {/* ── Export tab ────────────────────────────────────────────────── */}
             <TabsContent value="export" className="space-y-4 pt-2">
               <div className="space-y-2">
                 <div className="flex items-center gap-1">
@@ -322,7 +334,10 @@ export function SettingsDialog({
               />
             </TabsContent>
 
-            {/* ── Auto-save tab ─────────────────────────────────────────────── */}
+            {/**
+             * Auto-export tab: every control below edits `localConfig`
+             * only. Nothing here takes effect until Save is pressed.
+             */}
             <TabsContent value="auto-save" className="pt-2">
               <div
                 className="max-h-(--settings-scroll-max) space-y-4 overflow-y-auto pr-0.5"
@@ -330,7 +345,6 @@ export function SettingsDialog({
                   { '--settings-scroll-max': '55vh' } as React.CSSProperties
                 }
               >
-                {/* Enable toggle */}
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 space-y-0.5">
                     <Label>{i18n.t('enableAutoExport')}</Label>
@@ -348,7 +362,6 @@ export function SettingsDialog({
 
                 <Separator />
 
-                {/* Export Interval */}
                 <div className="space-y-2">
                   <Label>{i18n.t('exportInterval')}</Label>
                   <p className="text-xs text-muted-foreground">
@@ -394,7 +407,6 @@ export function SettingsDialog({
 
                 <Separator />
 
-                {/* Preferred Export Time */}
                 <div className="space-y-2">
                   <Label>{i18n.t('preferredExportTime')}</Label>
                   <p className="text-xs text-muted-foreground">
@@ -462,7 +474,6 @@ export function SettingsDialog({
 
                 <Separator />
 
-                {/* Export Path */}
                 <div className="space-y-2">
                   <Label>{i18n.t('exportPath')}</Label>
                   <p className="text-xs text-muted-foreground">
@@ -488,7 +499,6 @@ export function SettingsDialog({
 
                 <Separator />
 
-                {/* Export Formats */}
                 <div className="space-y-2">
                   <Label>{i18n.t('autoExportFormats')}</Label>
                   <p className="text-xs text-muted-foreground">
@@ -502,10 +512,13 @@ export function SettingsDialog({
                   >
                     {(['html', 'json', 'csv'] as AutoExportFormat[]).map(
                       (fmt) => (
-                        // A native <label> (not the shadcn Label primitive,
-                        // to avoid nesting <label> elements) makes the
-                        // whole chip toggle the checkbox without a manual
-                        // click handler or extra keyboard/role wiring.
+                        /**
+                         * A native `<label>` (not the shadcn `Label`
+                         * primitive, to avoid nesting `<label>` elements)
+                         * makes the whole chip toggle the checkbox without
+                         * a manual click handler or extra keyboard/role
+                         * wiring.
+                         */
                         <label
                           key={fmt}
                           htmlFor={`fmt-${fmt}`}
@@ -537,7 +550,6 @@ export function SettingsDialog({
 
                 <Separator />
 
-                {/* Save button */}
                 <Button onClick={handleSave} className="w-full">
                   <Save className="size-4" />
                   {i18n.t('saveSettings')}
@@ -550,8 +562,6 @@ export function SettingsDialog({
     </Dialog>
   )
 }
-
-// ─── SettingRow ───────────────────────────────────────────────────────────────
 
 interface SettingRowProperties {
   labelKey: MessageKey
