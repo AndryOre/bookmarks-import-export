@@ -174,12 +174,36 @@ test('the ?settings=auto-export deep link opens settings on the Auto-export tab'
   await expect(
     page.getByRole('tab', { name: 'Auto-export', selected: true }),
   ).toBeVisible()
+
+  await page.keyboard.press('Escape')
+  await expect(page.getByRole('dialog', { name: 'Settings' })).toBeHidden()
+  await page.getByRole('button', { name: 'Settings' }).click()
+  await expect(
+    page.getByRole('tab', { name: 'Display', selected: true }),
+  ).toBeVisible()
 })
 
-test('opening the page with no settings param leaves the dialog closed', async ({
+test('opening the page with no settings param leaves the dialog closed, defaulting to the Display tab when opened manually', async ({
   openExtensionPage,
 }) => {
   const page = await openExtensionPage('advanced-export.html')
 
   await expect(page.getByRole('dialog', { name: 'Settings' })).toBeHidden()
+
+  await page.getByRole('button', { name: 'Settings' }).click()
+  await expect(
+    page.getByRole('tab', { name: 'Display', selected: true }),
+  ).toBeVisible()
+
+  await page.getByRole('tab', { name: 'Export', exact: true }).click()
+  await expect(
+    page.getByRole('tab', { name: 'Export', exact: true, selected: true }),
+  ).toBeVisible()
+
+  await page.keyboard.press('Escape')
+  await expect(page.getByRole('dialog', { name: 'Settings' })).toBeHidden()
+  await page.getByRole('button', { name: 'Settings' }).click()
+  await expect(
+    page.getByRole('tab', { name: 'Display', selected: true }),
+  ).toBeVisible()
 })
