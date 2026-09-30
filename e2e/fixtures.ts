@@ -36,6 +36,7 @@ type ExtensionFixtures = {
   openExtensionPage: (pageName: string) => Promise<Page>
   seedBookmarks: (nodes: SeedBookmark[]) => Promise<void>
   readBookmarkTree: () => Promise<chrome.bookmarks.BookmarkTreeNode[]>
+  seedStorage: (values: Record<string, unknown>) => Promise<void>
 }
 
 /**
@@ -112,6 +113,24 @@ export const test = base.extend<ExtensionFixtures>({
 
   readBookmarkTree: async ({ serviceWorker }, use) => {
     await use(() => serviceWorker.evaluate(() => chrome.bookmarks.getTree()))
+  },
+
+  /**
+   * Writes directly to `chrome.storage.local`, keyed the way
+   * `storage.defineItem('local:key', ...)` reads it: the `local:` area
+   * prefix is stripped before hitting `chrome.storage.local`, so callers
+   * pass the raw key (e.g. `autoExportConfig` for `autoExportConfigStore`).
+   * @param root0 The fixture context.
+   * @param root0.serviceWorker The extension's service worker fixture.
+   * @param use Playwright's fixture callback, called with the `seedStorage` function.
+   */
+  seedStorage: async ({ serviceWorker }, use) => {
+    await use(async (values) => {
+      await serviceWorker.evaluate(
+        (seed: Record<string, unknown>) => chrome.storage.local.set(seed),
+        values,
+      )
+    })
   },
 })
 

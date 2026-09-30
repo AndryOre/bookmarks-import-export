@@ -3,6 +3,7 @@ import { useState } from 'react'
 
 import { AdvancedExportButton } from '@/components/advanced-export-button'
 import { AdvancedImportButton } from '@/components/advanced-import-button'
+import { AutoExportStatusLine } from '@/components/auto-export-status-line'
 import { ExportFormatSelector } from '@/components/export-format-selector'
 import { ImportBookmarksButton } from '@/components/import-bookmarks-button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -101,11 +102,11 @@ export default function App() {
   }
 
   return (
-    <div className="flex h-64 w-60 flex-col p-3">
+    <div data-testid="popup-frame" className="flex h-64 w-60 flex-col p-3">
       <Tabs
         value={activeTab}
         onValueChange={(v) => setActiveTab(v as 'export' | 'import')}
-        className="flex flex-1 flex-col"
+        className="flex min-h-0 flex-1 flex-col"
       >
         <TabsList className="w-full">
           <TabsTrigger value="export" className="flex-1">
@@ -134,6 +135,8 @@ export default function App() {
           <AdvancedImportButton />
         </TabsContent>
       </Tabs>
+
+      <AutoExportStatusLine />
     </div>
   )
 }
