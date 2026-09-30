@@ -567,7 +567,7 @@
     "description": "Inline message shown after Export now fails"
   },
   "enableAutoExport": {
-    "message": "Enable Auto Export",
+    "message": "Enable Auto-export",
     "description": "Enable auto export toggle label"
   },
   "enableAutoExportDescription": {
@@ -659,7 +659,7 @@
     "description": "Changelog 1.6.0 date"
   },
   "changelog_1_6_0_1": {
-    "message": "Added Auto Export — automatically save your bookmarks at custom intervals (every 12 hours, daily, every 3 or 7 days) to your preferred download folder."
+    "message": "Added Auto-export — automatically save your bookmarks at custom intervals (every 12 hours, daily, every 3 or 7 days) to your preferred download folder."
   },
   "changelog_1_6_0_1_link": {
     "message": "Open Auto-export settings"
