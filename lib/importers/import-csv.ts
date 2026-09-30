@@ -10,6 +10,8 @@ import type { ParsedBookmark } from '@/lib/types'
  * importers, this importer has no `ImportMode` parameter and always
  * imports into a reused, localized "Imported bookmarks" folder — it never
  * writes into the browser's bookmarks bar or "Other bookmarks" roots.
+ * @param csv The CSV text to import.
+ * @returns Resolves once every valid row has been created.
  */
 export async function importFromCSV(csv: string): Promise<void> {
   const parsed = Papa.parse<Record<string, string>>(csv.trim(), {
@@ -33,6 +35,8 @@ export async function importFromCSV(csv: string): Promise<void> {
  * `console.warn`. Folder path segments (split on `/`) are memoized by
  * their full path so that rows sharing a folder path reuse the same
  * folder node instead of creating duplicates within this batch.
+ * @param rows The parsed CSV rows.
+ * @returns The resulting folder tree.
  */
 function processCSVData(rows: Record<string, string>[]): ParsedBookmark[] {
   const root: ParsedBookmark[] = []
@@ -86,6 +90,8 @@ function processCSVData(rows: Record<string, string>[]): ParsedBookmark[] {
  * is looked up by its localized title via `browser.bookmarks.search()` so
  * that a folder created under one locale is still found (and reused
  * rather than duplicated) after the browser's locale changes.
+ * @param tree The folder tree to create.
+ * @returns Resolves once the whole tree has been created.
  */
 async function createBookmarks(tree: ParsedBookmark[]): Promise<void> {
   const tree_chrome = await browser.bookmarks.getTree()
@@ -119,6 +125,9 @@ async function createBookmarks(tree: ParsedBookmark[]): Promise<void> {
  * URL already exists. Folders, however, are deduplicated by matching an
  * existing folder with the same title under the same parent and reusing
  * it instead of creating a duplicate.
+ * @param nodes The nodes to create.
+ * @param parentId The id of the folder to create them under.
+ * @returns Resolves once every node has been created.
  */
 async function createBookmarksRecursive(
   nodes: ParsedBookmark[],

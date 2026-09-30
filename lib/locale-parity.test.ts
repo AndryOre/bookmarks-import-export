@@ -7,6 +7,8 @@ import esMessages from '@/locales/es.json'
  * `description` is a translator note, not shipped copy, so it's excluded from
  * the comparison — locales are allowed to diverge there (today `en.json` has
  * a `changelog_1_2_0_date` description that `es.json` lacks).
+ * @param messages A locale's parsed messages object.
+ * @returns The message keys, sorted for order-independent comparison.
  */
 function messageKeys(messages: Record<string, unknown>): string[] {
   return Object.keys(messages).toSorted((a, b) => a.localeCompare(b))

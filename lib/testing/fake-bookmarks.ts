@@ -152,6 +152,8 @@ export function resetFakeBookmarks(): void {
 /**
  * Replaces the "Bookmarks bar" (id "1") and "Other bookmarks" (id "2")
  * children directly, for exporter tests that read a pre-built tree.
+ * @param bookmarksBarChildren Nodes to seed under "Bookmarks bar".
+ * @param otherBookmarksChildren Nodes to seed under "Other bookmarks".
  */
 export function seedFakeBookmarksTree(
   bookmarksBarChildren: ExtendedBookmarkTreeNode[],
@@ -170,6 +172,7 @@ export function seedFakeBookmarksTree(
 
 /**
  * Returns a deep clone of the current in-memory tree's root node.
+ * @returns A deep clone of the fake tree's root node.
  */
 export function getFakeBookmarksRoot(): ExtendedBookmarkTreeNode {
   return clone(store.root)

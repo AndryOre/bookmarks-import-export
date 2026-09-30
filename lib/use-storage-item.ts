@@ -7,6 +7,8 @@ import { useEffect, useState } from 'react'
  * loaded value replaces it once the initial read resolves. If a later watch
  * callback fires with `null` (the item was removed), the value falls back to
  * `item.fallback` again rather than staying stale or turning into `null`.
+ * @param item The WXT storage item to subscribe to.
+ * @returns A `[value, setValue]` tuple mirroring `useState`'s shape.
  */
 export function useStorageItem<T>(
   item: WxtStorageItem<T, Record<string, unknown>>,

@@ -16,11 +16,13 @@ type NodeOptions = Omit<ExportJSONOptions, 'selectedBookmarks'>
 const toSeconds = (ms: number): number => Math.floor(ms / 1000)
 
 /**
-Exports bookmarks as a single-element array wrapping an `id="0"` root node,
-so the output round-trips through `importFromJSON` (which expects that same
-root-wrapped shape) without losing the root. Timestamps are converted from
-the milliseconds Chrome stores to whole seconds.
-*/
+ * Exports bookmarks as a single-element array wrapping an `id="0"` root node,
+ * so the output round-trips through `importFromJSON` (which expects that same
+ * root-wrapped shape) without losing the root. Timestamps are converted from
+ * the milliseconds Chrome stores to whole seconds.
+ * @param options Which bookmarks to export and which optional fields to include.
+ * @returns The single-element array wrapping the exported root node.
+ */
 export async function exportToJSON(
   options: ExportJSONOptions,
 ): Promise<ExtendedBookmarkTreeNode[]> {
@@ -71,9 +73,12 @@ export async function exportToJSON(
 }
 
 /**
-Processes each of `nodes` via {@link processNode} and flattens the results
-into a single array.
-*/
+ * Processes each of `nodes` via {@link processNode} and flattens the results
+ * into a single array.
+ * @param nodes The nodes to process.
+ * @param options Which optional fields and folder-hiding behavior to apply.
+ * @returns The processed nodes, flattened into a single array.
+ */
 async function processNodes(
   nodes: ExtendedBookmarkTreeNode[],
   options: NodeOptions,
@@ -87,13 +92,16 @@ async function processNodes(
 }
 
 /**
-Processes a single node into zero or one output nodes: a bookmark is
-returned as-is (with timestamps converted and optional fields applied); a
-folder is returned with its children processed recursively, unless it is
-"other bookmarks" (id `"2"`) with `hideOtherBookmarks` set, or a regular
-folder with `hideParentFolder` set — in which case the folder itself is
-dropped and its children are spliced directly into the parent's output.
-*/
+ * Processes a single node into zero or one output nodes: a bookmark is
+ * returned as-is (with timestamps converted and optional fields applied); a
+ * folder is returned with its children processed recursively, unless it is
+ * "other bookmarks" (id `"2"`) with `hideOtherBookmarks` set, or a regular
+ * folder with `hideParentFolder` set — in which case the folder itself is
+ * dropped and its children are spliced directly into the parent's output.
+ * @param node The node to process.
+ * @param options Which optional fields and folder-hiding behavior to apply.
+ * @returns Zero or one processed nodes, depending on folder-hiding rules.
+ */
 async function processNode(
   node: ExtendedBookmarkTreeNode,
   options: NodeOptions,

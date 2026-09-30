@@ -12,6 +12,7 @@ const TWITTER_URL = 'https://x.com/andryore'
  * Post-update landing page. Shows the feedback link before the changelog
  * so a freshly updated user is prompted to rate the extension before
  * reading what changed.
+ * @returns The post-update landing page.
  */
 export default function App() {
   const version = browser.runtime.getManifest().version

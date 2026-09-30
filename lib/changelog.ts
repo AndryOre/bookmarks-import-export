@@ -40,6 +40,7 @@ interface ChangelogItem {
  * `GeneratedI18nStructure` for the actual message strings). `linkUrl`
  * pairs with `linkKey` to make an item's link label point at an
  * extension-internal page.
+ * @returns The changelog entries, newest release first.
  */
 export function getChangelog(): ChangelogEntry[] {
   const advancedExportUrl = browser.runtime.getURL('/advanced-export.html')

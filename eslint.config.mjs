@@ -104,25 +104,13 @@ const localCommentRules = {
 }
 
 /**
- * The three comment-policy rule groups this wave introduces, combined.
- * Kept as one named object so the temporary wave-2 exemption block below
- * can turn exactly these rules back off without re-listing them.
+ * The three comment-policy rule groups this wave introduces, combined into
+ * one named object for reuse across the config below.
  */
 const commentPolicyRules = {
   ...jsdocRules,
   ...eslintCommentsRules,
   ...localCommentRules,
-}
-
-/**
- * Builds a rules object that turns every rule in `rules` off — used to
- * disable the comment-policy rule groups for directories wave-2 hasn't
- * migrated yet.
- * @param rules A rules object whose keys are ESLint rule ids.
- * @returns The same rule ids, each mapped to `'off'`.
- */
-function turnOffAll(rules) {
-  return Object.fromEntries(Object.keys(rules).map((ruleId) => [ruleId, 'off']))
 }
 
 const eslintConfig = defineConfig([
@@ -266,26 +254,6 @@ const eslintConfig = defineConfig([
       '@eslint-community/eslint-comments': eslintComments,
     },
     rules: commentPolicyRules,
-  },
-  {
-    /**
-     * Temporary wave-2 migration exemption (AO-837/AO-836) — turns the
-     * comment-policy rule groups back off for every directory wave-2
-     * tickets haven't migrated to TSDoc yet. Deleted by the final ticket
-     * once every file below has been migrated.
-     *
-     * Wave-2 tickets must NOT edit this block, to avoid merge conflicts —
-     * verify your own files instead with:
-     * `bunx eslint <files> --rule '{"local/no-non-doc-comments":"error","jsdoc/informative-docs":"error"}'`
-     */
-    files: [
-      'scripts/**/*.{ts,tsx,mjs}',
-      'lib/**/*.{ts,tsx,mjs}',
-      'entrypoints/**/*.{ts,tsx,mjs}',
-      'components/**/*.{ts,tsx,mjs}',
-    ],
-    ignores: ['components/ui/**'],
-    rules: turnOffAll(commentPolicyRules),
   },
   prettierConfig,
   globalIgnores(['.output/**', '.wxt/**', 'coverage/**']),

@@ -3,8 +3,8 @@ import type { GeneratedI18nStructure } from '#i18n'
 import type { Browser } from '@wxt-dev/browser'
 
 /**
-A valid `i18n.t()` message key.
-*/
+ * A valid `i18n.t()` message key.
+ */
 export type MessageKey = keyof GeneratedI18nStructure
 
 /**
@@ -17,6 +17,8 @@ export type MessageKey = keyof GeneratedI18nStructure
  * generated message this app has is non-plural, and this helper is only
  * for the ones with no substitutions, so the narrower internal signature
  * below is exactly the plain-string overload's real runtime behavior.
+ * @param key The message key to translate.
+ * @returns The translated string.
  */
 export function t<K extends MessageKey>(key: K): string {
   const getMessage = i18n.t as (key: MessageKey) => string
@@ -82,8 +84,8 @@ export interface AutoExportConfig {
   enabled: boolean
   interval: AutoExportInterval
   /**
-  `HH:mm` in 24h format — only used for intervals >= 1d.
-  */
+   * `HH:mm` in 24h format — only used for intervals >= 1d.
+   */
   preferredTime: string
   path: string
   formats: AutoExportFormat[]

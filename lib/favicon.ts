@@ -20,6 +20,9 @@ const DEFAULT_CHROME_FAVICON =
  * favicons for any page URL without a network fetch to the site itself.
  * This is a Chrome-only extension API and requires the `favicon` permission
  * in the manifest.
+ * @param url The page URL to fetch a favicon for.
+ * @param size The requested favicon size, in pixels.
+ * @returns The `_favicon` API URL for that page and size.
  */
 export function getFaviconUrl(url: string, size: number = 16): string {
   const faviconUrl = new URL(browser.runtime.getURL('/_favicon/?'))
@@ -34,6 +37,9 @@ export function getFaviconUrl(url: string, size: number = 16): string {
  * Chrome's default globe placeholder (see {@link DEFAULT_CHROME_FAVICON}) and
  * when fetching or reading the response fails for any other reason, so
  * callers can treat "no favicon" uniformly instead of handling a rejection.
+ * @param url The page URL to resolve a favicon for.
+ * @param size The requested favicon size, in pixels.
+ * @returns The favicon as a base64 data URL, or `''` if none is available.
  */
 export async function getFaviconBase64(
   url: string,

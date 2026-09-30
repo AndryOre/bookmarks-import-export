@@ -20,6 +20,10 @@ interface FileDropZoneProperties {
  * drop zone or by clicking to open the native file picker. Once a file is
  * selected, the drop zone is replaced with a compact summary row that
  * offers a "change file" action instead of the drag target.
+ * @param root0 This component's properties.
+ * @param root0.file The currently selected file, if any.
+ * @param root0.onFile Called with the newly selected file.
+ * @returns The drop zone, or the selected-file summary row.
  */
 export function FileDropZone({ file, onFile }: FileDropZoneProperties) {
   const fileInputReference = useRef<HTMLInputElement>(null)

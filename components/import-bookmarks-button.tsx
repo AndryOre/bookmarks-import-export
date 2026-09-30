@@ -13,6 +13,7 @@ import { importFromJSON } from '@/lib/importers/import-json'
  * immediately in `folder` mode (added under a new folder), without
  * exposing the restore modes that {@link ImportModeSelector} offers in the
  * Advanced Import flow.
+ * @returns The quick-import button and its hidden file input.
  */
 export function ImportBookmarksButton() {
   const fileInputReference = useRef<HTMLInputElement>(null)

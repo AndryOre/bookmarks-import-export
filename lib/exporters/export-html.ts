@@ -12,12 +12,14 @@ interface ExportHTMLOptions {
 }
 
 /**
-Exports bookmarks as a Netscape-format bookmarks file (the `<!DOCTYPE
-NETSCAPE-Bookmark-file-1>` HTML dialect used by every major browser's
-import/export). Timestamps are converted from the milliseconds Chrome
-stores to whole seconds for the `ADD_DATE`/`LAST_MODIFIED`/`LAST_USED`
-attributes.
-*/
+ * Exports bookmarks as a Netscape-format bookmarks file (the `<!DOCTYPE
+ * NETSCAPE-Bookmark-file-1>` HTML dialect used by every major browser's
+ * import/export). Timestamps are converted from the milliseconds Chrome
+ * stores to whole seconds for the `ADD_DATE`/`LAST_MODIFIED`/`LAST_USED`
+ * attributes.
+ * @param options Which bookmarks to export and which optional attributes to include.
+ * @returns The Netscape-format bookmarks HTML text.
+ */
 export async function exportToHTML(
   options: ExportHTMLOptions,
 ): Promise<string> {
@@ -66,11 +68,16 @@ export async function exportToHTML(
 }
 
 /**
-Recursively appends one `<DT>` line per bookmark and one folder block (with
-its own nested `<DL>`) per folder onto `lines`. The bookmarks bar and other
-bookmarks folders are never hidden by `hideParentFolder`; "other bookmarks"
-can independently be flattened away via `hideOtherBookmarks`.
-*/
+ * Recursively appends one `<DT>` line per bookmark and one folder block (with
+ * its own nested `<DL>`) per folder onto `lines`. The bookmarks bar and other
+ * bookmarks folders are never hidden by `hideParentFolder`; "other bookmarks"
+ * can independently be flattened away via `hideOtherBookmarks`.
+ * @param lines The accumulator lines are pushed onto.
+ * @param nodes The nodes to walk.
+ * @param level The current indent level.
+ * @param options Which optional attributes and folder-hiding behavior to apply.
+ * @returns Resolves once every node has been appended.
+ */
 async function generateHtmlContent(
   lines: string[],
   nodes: ExtendedBookmarkTreeNode[],
@@ -106,8 +113,13 @@ async function generateHtmlContent(
 }
 
 /**
-Appends a single `<DT><A ...>` line for `node` onto `lines`.
-*/
+ * Appends a single `<DT><A ...>` line for `node` onto `lines`.
+ * @param lines The accumulator lines are pushed onto.
+ * @param node The bookmark node to append.
+ * @param indent The leading whitespace for this line.
+ * @param options Which optional attributes to include.
+ * @returns Resolves once the line has been appended.
+ */
 async function appendBookmarkLine(
   lines: string[],
   node: ExtendedBookmarkTreeNode,
@@ -139,9 +151,15 @@ async function appendBookmarkLine(
 }
 
 /**
-Appends a folder's opening `<DT><H3>`/`<DL><p>` lines, recurses into its
-children at the next indent level, then appends the closing `</DL><p>`.
-*/
+ * Appends a folder's opening `<DT><H3>`/`<DL><p>` lines, recurses into its
+ * children at the next indent level, then appends the closing `</DL><p>`.
+ * @param lines The accumulator lines are pushed onto.
+ * @param node The folder node to append.
+ * @param level The current indent level.
+ * @param indent The leading whitespace for this folder's own lines.
+ * @param options Which optional attributes and folder-hiding behavior to apply.
+ * @returns Resolves once the folder and its children have been appended.
+ */
 async function appendFolderLines(
   lines: string[],
   node: ExtendedBookmarkTreeNode,
@@ -179,10 +197,12 @@ async function appendFolderLines(
 }
 
 /**
-Escapes text for use inside an `<A>`/`<H3>` element's content. Unlike
-{@link escapeUrl}, this also escapes `&`, since bookmark titles are free
-text that commonly contains literal ampersands.
-*/
+ * Escapes text for use inside an `<A>`/`<H3>` element's content. Unlike
+ * {@link escapeUrl}, this also escapes `&`, since bookmark titles are free
+ * text that commonly contains literal ampersands.
+ * @param string_ The title text to escape.
+ * @returns The escaped title text.
+ */
 function escapeTitle(string_: string): string {
   return string_
     .replaceAll('&', '&amp;')
@@ -193,11 +213,13 @@ function escapeTitle(string_: string): string {
 }
 
 /**
-Escapes a URL for use in the `HREF` attribute. Unlike {@link escapeTitle},
-this does not escape `&`, since Netscape-format bookmark files leave `&` in
-URLs unescaped (URLs rarely contain literal `<`/`>`/quotes, but commonly
-contain `&` as a query-parameter separator, which escaping would corrupt).
-*/
+ * Escapes a URL for use in the `HREF` attribute. Unlike {@link escapeTitle},
+ * this does not escape `&`, since Netscape-format bookmark files leave `&` in
+ * URLs unescaped (URLs rarely contain literal `<`/`>`/quotes, but commonly
+ * contain `&` as a query-parameter separator, which escaping would corrupt).
+ * @param url The URL to escape.
+ * @returns The escaped URL.
+ */
 function escapeUrl(url: string): string {
   return url
     .replaceAll('<', '&lt;')
