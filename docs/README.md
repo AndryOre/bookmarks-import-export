@@ -4,8 +4,8 @@ An index of every document in this repository.
 
 ## Core
 
-- [`README.md`](../README.md) — user-facing overview: features, install,
-  screenshots.
+- [`README.md`](../README.md) — user-facing portal: pitch, features, install,
+  and links to the rest of the docs.
 - [`CHANGELOG.md`](../CHANGELOG.md) — human-readable release notes, newest
   first, in [Keep a Changelog](https://keepachangelog.com/) format.
 - [`CONTRIBUTING.md`](../CONTRIBUTING.md) — pull request conventions: setup,
@@ -25,6 +25,7 @@ An index of every document in this repository.
 
 ## How-to
 
+- [`docs/usage.md`](usage.md) — exporting, importing, and automatic backups.
 - [`docs/how-to/add-a-locale.md`](how-to/add-a-locale.md) — steps to add a new
   locale.
 - [`docs/how-to/cut-a-release.md`](how-to/cut-a-release.md) — steps to cut a new
