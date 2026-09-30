@@ -26,6 +26,9 @@ An index of every document in this repository.
   — the ADR documenting why E2E runs Playwright against the built extension
   (`wxt build` output) instead of a component-test layer, and why bookmarks are
   seeded/read through the extension's service worker.
+- [`docs/adr/0004-enable-codeql-sast.md`](adr/0004-enable-codeql-sast.md) — the
+  ADR documenting why CodeQL now runs (superseding ADR 0001's rejection) and the
+  accepted branch-protection limitation.
 
 ## How-to
 
