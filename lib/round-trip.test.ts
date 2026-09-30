@@ -105,6 +105,63 @@ describe('round trip: JSON', () => {
     const importedUrls = collectUrls(getFakeBookmarksRoot())
     expect(importedUrls).toEqual(originalUrls)
   })
+
+  it('export (hideOtherBookmarks) -> import (restore-merge) restores each bookmark under its original root', async () => {
+    seedFakeBookmarksTree(
+      [
+        {
+          id: '10',
+          parentId: '1',
+          title: 'Dev',
+          syncing: false,
+          children: [
+            {
+              id: '11',
+              parentId: '10',
+              title: 'Repo',
+              url: 'https://github.example/repo',
+              syncing: false,
+            },
+          ],
+        },
+      ],
+      [
+        {
+          id: '20',
+          parentId: '2',
+          title: 'Reading',
+          syncing: false,
+          children: [
+            {
+              id: '21',
+              parentId: '20',
+              title: 'Article',
+              url: 'https://reading.example/article',
+              syncing: false,
+            },
+          ],
+        },
+      ],
+    )
+
+    const exported = await exportToJSON({
+      ...exportOptions,
+      hideOtherBookmarks: true,
+    })
+    const reparsed = structuredClone(exported) as unknown as ParsedBookmark[]
+
+    resetFakeBookmarks()
+    await importFromJSON(reparsed[0]?.children ?? [], 'restore-merge')
+
+    const root = getFakeBookmarksRoot()
+    const bar = root.children?.find((n) => n.id === '1') as
+      ExtendedBookmarkTreeNode | undefined
+    const other = root.children?.find((n) => n.id === '2') as
+      ExtendedBookmarkTreeNode | undefined
+
+    expect(collectUrls(bar)).toEqual(['https://github.example/repo'])
+    expect(collectUrls(other)).toEqual(['https://reading.example/article'])
+  })
 })
 
 describe('round trip: HTML', () => {
