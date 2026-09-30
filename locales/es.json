@@ -496,6 +496,10 @@
     "message": "Otros marcadores",
     "description": "Otros marcadores"
   },
+  "mobileBookmarks": {
+    "message": "Marcadores de dispositivos móviles",
+    "description": "Marcadores de dispositivos móviles"
+  },
   "importFromJSONImportError": {
     "message": "Error al importar marcadores: $ERROR$",
     "description": "Error al importar marcadores",

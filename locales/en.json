@@ -497,6 +497,10 @@
     "message": "Other bookmarks",
     "description": "Other bookmarks"
   },
+  "mobileBookmarks": {
+    "message": "Mobile bookmarks",
+    "description": "Mobile bookmarks"
+  },
   "importFromJSONImportError": {
     "message": "Import failed: $ERROR$",
     "description": "Import failed",

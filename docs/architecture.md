@@ -44,6 +44,8 @@ tree with the others.
   `import-csv.ts`) — each turns one file format into `chrome.bookmarks` API
   calls. HTML and JSON share an internal `ParsedBookmark` tree shape and
   understand the three `ImportMode`s (folder / restore-merge / restore-replace).
+  Both also share `lib/importers/resolve-roots.ts`'s `resolveImportRoots` to
+  locate the bookmarks-bar/Other/Mobile roots to write into — see Invariants.
   CSV is flat rows with an optional `folder` path column and only ever imports
   into a single deduplicated folder — it has no mode selector because it has no
   bar/other placement to restore.
@@ -148,8 +150,17 @@ the service worker.
 ## Invariants
 
 - Chrome's bookmark tree root node ids are fixed and always the same: `"0"` is
-  the invisible root, `"1"` is the bookmarks bar, `"2"` is "other bookmarks".
-  Every importer/exporter branches on these literal id strings.
+  the invisible root, `"1"` is the bookmarks bar, `"2"` is "other bookmarks",
+  and `"3"` is Mobile bookmarks (present only on browsers that have a Mobile
+  root). Restore-mode importers never look these roots up positionally
+  (`root.children[0]`/`[1]`) — both the HTML and JSON write paths resolve them
+  through the shared `resolveImportRoots` helper
+  (`lib/importers/resolve-roots.ts`), in order: the node's `folderType`
+  (`"bookmarks-bar"`/`"other"`/`"mobile"`, a newer Chrome API not yet present on
+  every channel), then the fixed id, then position. `mobileId` resolves to
+  `undefined` when none of the three match (e.g. desktop Chrome, which has no
+  Mobile root) — callers must treat that as "no Mobile root", not a structural
+  failure; only a missing bookmarks-bar or other-bookmarks root is one.
 - Timestamps are stored in **seconds** in every exported/imported file format
   (HTML's `add_date`/`last_modified` attributes, and the CSV
   `dateAdded`/`dateLastUsed` columns), while `chrome.bookmarks`' own API returns

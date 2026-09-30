@@ -1,0 +1,73 @@
+import type { Browser } from '@wxt-dev/browser'
+
+/**
+ * The three fixed top-level roots a restore-mode import writes into,
+ * resolved by {@link resolveImportRoots}. `mobileId` is `undefined` when the
+ * current browser has no Mobile bookmarks root (e.g. desktop Chrome) — every
+ * caller must fall back to `otherBookmarksId` in that case rather than
+ * treat it as a structural failure.
+ */
+export interface ResolvedImportRoots {
+  bookmarksBarId: string | undefined
+  otherBookmarksId: string | undefined
+  mobileId: string | undefined
+}
+
+/**
+ * A single node of `browser.bookmarks.getTree()`'s root's `children` — the
+ * minimal shape {@link resolveImportRoots} needs from it.
+ */
+export type RootChildNode = Pick<
+  Browser.bookmarks.BookmarkTreeNode,
+  'id' | 'folderType'
+>
+
+/**
+ * Resolves one root node from `rootChildren` by, in order: its
+ * `folderType` (the browser-assigned semantic marker, when the runtime
+ * supports it), then the Chrome-fixed literal id, then its position. The
+ * three-step fallback exists because `folderType` is a recent Chrome
+ * addition (not yet present on every channel/browser), the fixed ids only
+ * hold on Chrome itself, and position is the last resort for anything else
+ * (e.g. a browser that reorders its roots).
+ * @param rootChildren The root node's `children` array to search.
+ * @param folderType The `folderType` value that identifies this root.
+ * @param fallbackId The Chrome-fixed id that identifies this root.
+ * @param fallbackPosition The index this root normally occupies.
+ * @returns The resolved node, or `undefined` if none of the three matched.
+ */
+function resolveRoot<T extends RootChildNode>(
+  rootChildren: T[],
+  folderType: string,
+  fallbackId: string,
+  fallbackPosition: number,
+): T | undefined {
+  return (
+    rootChildren.find((node) => node.folderType === folderType) ??
+    rootChildren.find((node) => node.id === fallbackId) ??
+    rootChildren.at(fallbackPosition)
+  )
+}
+
+/**
+ * Resolves the bookmarks-bar, Other bookmarks, and Mobile bookmarks roots
+ * from the bookmarks tree root's `children` — the single source of truth
+ * both the HTML and JSON importers' write paths use instead of a positional
+ * `children[0]`/`children[1]` lookup. See {@link resolveRoot} for the
+ * per-root resolution order.
+ * @param rootChildren `browser.bookmarks.getTree()`'s root node's `children`.
+ * @returns The resolved bar/Other/Mobile root ids.
+ */
+export function resolveImportRoots<T extends RootChildNode>(
+  rootChildren: T[],
+): ResolvedImportRoots {
+  const bookmarksBarNode = resolveRoot(rootChildren, 'bookmarks-bar', '1', 0)
+  const otherBookmarksNode = resolveRoot(rootChildren, 'other', '2', 1)
+  const mobileNode = resolveRoot(rootChildren, 'mobile', '3', 2)
+
+  return {
+    bookmarksBarId: bookmarksBarNode?.id,
+    otherBookmarksId: otherBookmarksNode?.id,
+    mobileId: mobileNode?.id,
+  }
+}

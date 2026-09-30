@@ -90,4 +90,16 @@ describe('importFromHTML', () => {
     expect(importedFolder?.children).toHaveLength(1)
     expect(importedFolder?.children?.[0]?.children).toEqual([])
   })
+
+  it('resolves the bookmarks bar and Other bookmarks by folderType, not position', async () => {
+    resetFakeBookmarks({ withMobileRoot: true })
+
+    await importFromHTML(buildHtml(), 'restore-merge')
+
+    const root = getFakeBookmarksRoot()
+    const bar = root.children?.find((n) => n.id === '1')
+    const other = root.children?.find((n) => n.id === '2')
+    expect(bar?.children?.[0]?.url).toBe('https://a.example')
+    expect(other?.children?.[0]?.url).toBe('https://b.example')
+  })
 })
