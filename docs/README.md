@@ -10,6 +10,10 @@ An index of every document in this repository.
   first, in [Keep a Changelog](https://keepachangelog.com/) format.
 - [`CONTRIBUTING.md`](../CONTRIBUTING.md) — pull request conventions: setup,
   branch/commit format, merging, CI, security reporting.
+- [`GOVERNANCE.md`](../GOVERNANCE.md) — the BDFL governance model, decision
+  process, roles, and project continuity.
+- [`ROADMAP.md`](../ROADMAP.md) — the project's direction for the next 12 months
+  and what's out of scope.
 - [`docs/development.md`](development.md) — the local development guide:
   scripts, git hooks, CI, commit/branch format, the `@shadcn/lint` contract
   workflow, `fakeBrowser` testing, and the code documentation policy.
