@@ -57,4 +57,6 @@ An index of every document in this repository.
   privacy policy.
 - [`.github/SECURITY.md`](../.github/SECURITY.md) — how to report a security
   vulnerability privately.
+- [`docs/security.md`](security.md) — the extension's assurance case: what
+  security it provides, its threat model, and its known limitations.
 - [`CODE_OF_CONDUCT.md`](../CODE_OF_CONDUCT.md) — the project's code of conduct.
