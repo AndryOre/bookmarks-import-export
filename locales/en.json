@@ -1,0 +1,639 @@
+{
+  "extensionName": {
+    "message": "Bookmark Import/Export",
+    "description": "Name of the extension."
+  },
+  "extensionDescription": {
+    "message": "Import and export your bookmarks easily",
+    "description": "Description of the extension"
+  },
+  "welcomeTitle": {
+    "message": "Welcome to Bookmark Import/Export",
+    "description": "Welcome page title"
+  },
+  "welcomeSubtitle": {
+    "message": "Easily import and export your bookmarks across browsers",
+    "description": "Welcome page subtitle"
+  },
+  "gettingStarted": {
+    "message": "Getting Started",
+    "description": "Getting started section heading"
+  },
+  "exportFeature": {
+    "message": "Export Bookmarks",
+    "description": "Export feature card title"
+  },
+  "exportFeatureDescription": {
+    "message": "Export your bookmarks to HTML, JSON, or CSV format",
+    "description": "Export feature card description"
+  },
+  "importFeature": {
+    "message": "Import Bookmarks",
+    "description": "Import feature card title"
+  },
+  "importFeatureDescription": {
+    "message": "Restore bookmarks from HTML, JSON, or CSV files",
+    "description": "Import feature card description"
+  },
+  "advancedExportFeature": {
+    "message": "Advanced Export",
+    "description": "Advanced export feature card title"
+  },
+  "advancedExportFeatureDescription": {
+    "message": "Selectively export specific bookmarks and folders with full control",
+    "description": "Advanced export feature card description"
+  },
+  "multiFormatFeature": {
+    "message": "Multiple Formats",
+    "description": "Multi-format feature card title"
+  },
+  "multiFormatFeatureDescription": {
+    "message": "Supports HTML, JSON, and CSV for maximum compatibility",
+    "description": "Multi-format feature card description"
+  },
+  "settingsFeature": {
+    "message": "Customizable Settings",
+    "description": "Settings feature card title"
+  },
+  "settingsFeatureDescription": {
+    "message": "Fine-tune display options, date fields, and export behavior",
+    "description": "Settings feature card description"
+  },
+  "i18nFeature": {
+    "message": "Multi-language",
+    "description": "i18n feature card title"
+  },
+  "i18nFeatureDescription": {
+    "message": "Automatically adapts to your browser's language — English and Spanish supported",
+    "description": "i18n feature card description"
+  },
+  "compatibleBrowsers": {
+    "message": "Compatible with all Chromium-based browsers, including Google Chrome, Microsoft Edge, Opera, and Brave.",
+    "description": "Compatible Browsers"
+  },
+  "compatibleBrowsersDescription": {
+    "message": "Works with all Chromium-based browsers: Chrome, Edge, Opera, and Brave",
+    "description": "Compatible browsers feature card description"
+  },
+  "feedbackLink": {
+    "message": "Enjoying the extension? We'd love your feedback!",
+    "description": "Feedback Link"
+  },
+  "settings": {
+    "message": "Settings",
+    "description": "Settings"
+  },
+  "settingsDescription": {
+    "message": "Customize your bookmark import/export experience.",
+    "description": "Settings description"
+  },
+  "exportHTML": {
+    "message": "Export HTML",
+    "description": "Export HTML"
+  },
+  "exportJSON": {
+    "message": "Export JSON",
+    "description": "Export JSON"
+  },
+  "exportCSV": {
+    "message": "Export CSV",
+    "description": "Export CSV"
+  },
+  "exportFormat": {
+    "message": "Export format",
+    "description": "Placeholder text for the export format selector"
+  },
+  "exportBookmarks": {
+    "message": "Export",
+    "description": "Export Bookmarks tab label in the popup"
+  },
+  "importBookmarks": {
+    "message": "Import",
+    "description": "Import Bookmarks"
+  },
+  "refresh": {
+    "message": "Refresh",
+    "description": "Refresh"
+  },
+  "selectAll": {
+    "message": "Select All",
+    "description": "Select All"
+  },
+  "deselectAll": {
+    "message": "Deselect All",
+    "description": "Deselect All"
+  },
+  "selected": {
+    "message": "Selected",
+    "description": "Selected"
+  },
+  "searchBookmarks": {
+    "message": "Search bookmarks",
+    "description": "Search bookmarks"
+  },
+  "display": {
+    "message": "Display",
+    "description": "Display"
+  },
+  "export": {
+    "message": "Export",
+    "description": "Export"
+  },
+  "showBookmarkIcon": {
+    "message": "Show bookmark icon",
+    "description": "Show bookmark icon"
+  },
+  "showBookmarkIconDescription": {
+    "message": "Display icons next to bookmarks",
+    "description": "Show bookmark icon description"
+  },
+  "autoExpandFolders": {
+    "message": "Auto expand folders",
+    "description": "Auto expand folders"
+  },
+  "autoExpandFoldersDescription": {
+    "message": "Automatically expand folders in the bookmark tree",
+    "description": "Auto expand folders description"
+  },
+  "autoExpandFoldersTooltip": {
+    "message": "Note: May impact performance with large numbers of bookmarks",
+    "description": "Auto expand folders tooltip"
+  },
+  "includeIconData": {
+    "message": "Include icon data",
+    "description": "Include icon data"
+  },
+  "includeIconDataDescription": {
+    "message": "Add website favicon data to the exported file",
+    "description": "Include icon data description"
+  },
+  "includeIconDataTooltip": {
+    "message": "Note: Increases export time and file size significantly",
+    "description": "Include icon data tooltip"
+  },
+  "includeDateAdded": {
+    "message": "Include creation dates",
+    "description": "Include creation dates"
+  },
+  "includeDateAddedDescription": {
+    "message": "Add creation dates to the exported file",
+    "description": "Include creation dates description"
+  },
+  "includeDateLastUsed": {
+    "message": "Include last used dates",
+    "description": "Include last used dates"
+  },
+  "includeDateLastUsedDescription": {
+    "message": "Add last used dates to the exported file",
+    "description": "Include last used dates description"
+  },
+  "includeDateGroupModified": {
+    "message": "Include folder modification dates",
+    "description": "Include folder modification dates"
+  },
+  "includeDateGroupModifiedDescription": {
+    "message": "Add last modification dates for folders to the exported file",
+    "description": "Include folder modification dates description"
+  },
+  "includeDateGroupModifiedTooltip": {
+    "message": "Note: Only available for HTML and JSON exports. Not applicable for CSV exports as they only include individual bookmarks.",
+    "description": "Include folder modification dates tooltip"
+  },
+  "hideOtherBookmarks": {
+    "message": "Hide 'Other bookmarks' folder",
+    "description": "Hide 'Other bookmarks' folder"
+  },
+  "hideOtherBookmarksDescription": {
+    "message": "Exclude the root 'Other bookmarks' folder from the export",
+    "description": "Hide 'Other bookmarks' folder description"
+  },
+  "hideOtherBookmarksTooltip": {
+    "message": "Note: Matches browser's native export behavior, placing 'Other bookmarks' content at the same level as 'Bookmarks bar'",
+    "description": "Hide 'Other bookmarks' folder tooltip"
+  },
+  "hideParentFolder": {
+    "message": "Hide parent folder",
+    "description": "Hide parent folder"
+  },
+  "hideParentFolderDescription": {
+    "message": "Exclude parent folders from the exported file",
+    "description": "Hide parent folder description"
+  },
+  "hideParentFolderTooltip": {
+    "message": "Note: Excludes parent folders from the exported file",
+    "description": "Hide parent folder tooltip"
+  },
+  "advancedExport": {
+    "message": "Advanced Export",
+    "description": "Advanced Export"
+  },
+  "advancedImport": {
+    "message": "Advanced Import",
+    "description": "Advanced Import"
+  },
+  "dropFileHere": {
+    "message": "Drop your bookmark file here",
+    "description": "File drop zone prompt"
+  },
+  "orClickToSelect": {
+    "message": "or click to select",
+    "description": "Secondary file drop zone prompt"
+  },
+  "supportedFormats": {
+    "message": "Supports HTML, JSON and CSV",
+    "description": "Supported import formats"
+  },
+  "changeFile": {
+    "message": "Change",
+    "description": "Button to change selected file"
+  },
+  "importMode": {
+    "message": "Import mode",
+    "description": "Import mode section label"
+  },
+  "importModeFolder": {
+    "message": "Create folder",
+    "description": "Import mode: create folder"
+  },
+  "importModeFolderDescription": {
+    "message": "Add all bookmarks to a new 'Imported Bookmarks' folder",
+    "description": "Import mode: create folder description"
+  },
+  "importModeRestoreMerge": {
+    "message": "Restore — merge",
+    "description": "Import mode: restore and merge"
+  },
+  "importModeRestoreMergeDescription": {
+    "message": "Place bookmarks in their original locations alongside existing ones",
+    "description": "Import mode: restore and merge description"
+  },
+  "importModeRestoreReplace": {
+    "message": "Restore — replace",
+    "description": "Import mode: restore and replace"
+  },
+  "importModeRestoreReplaceDescription": {
+    "message": "Clear existing bookmarks first, then restore to original locations",
+    "description": "Import mode: restore and replace description"
+  },
+  "importModeRestoreReplaceWarning": {
+    "message": "This will permanently delete all current bookmarks in your Bookmarks Bar and Other Bookmarks",
+    "description": "Warning shown for restore-replace mode"
+  },
+  "importModeNotAvailableForCSV": {
+    "message": "Restore modes are not available for CSV files",
+    "description": "Notice shown when CSV file is selected"
+  },
+  "importPreview": {
+    "message": "Preview",
+    "description": "Import preview section label"
+  },
+  "importPreviewNoFile": {
+    "message": "Select a file to see a preview",
+    "description": "Placeholder shown in preview when no file is selected"
+  },
+  "importPreviewCount": {
+    "message": "$COUNT$ bookmarks",
+    "description": "Bookmark count in preview",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "replaceConfirmTitle": {
+    "message": "Replace existing bookmarks?",
+    "description": "Title of the replace confirmation dialog"
+  },
+  "replaceConfirmDescription": {
+    "message": "All bookmarks currently in your Bookmarks Bar and Other Bookmarks will be permanently deleted before importing. This cannot be undone.",
+    "description": "Body of the replace confirmation dialog"
+  },
+  "replaceConfirmButton": {
+    "message": "Yes, replace",
+    "description": "Confirm button in the replace dialog"
+  },
+  "cancel": {
+    "message": "Cancel",
+    "description": "Cancel button"
+  },
+  "unsupportedFileFormat": {
+    "message": "Unsupported file format",
+    "description": "Unsupported file format"
+  },
+  "bookmarksImportedSuccessfully": {
+    "message": "Bookmarks imported successfully!",
+    "description": "Bookmarks imported successfully"
+  },
+  "import": {
+    "message": "Import",
+    "description": "Import"
+  },
+  "currentVersion": {
+    "message": "You're now using version $VERSION$. Check out what's new below.",
+    "description": "Current version message",
+    "placeholders": {
+      "version": {
+        "content": "$1"
+      }
+    }
+  },
+  "changelog_1_5_0_date": {
+    "message": "April 29, 2025",
+    "description": "Changelog 1.5.0 date"
+  },
+  "changelog_1_5_0_1": {
+    "message": "Added Advanced Import — restore bookmarks to their original locations (Bookmarks Bar and Other Bookmarks), with merge or replace options."
+  },
+  "changelog_1_5_0_1_link": {
+    "message": "Try Advanced Import"
+  },
+  "changelog_1_4_0_date": {
+    "message": "April 29, 2025",
+    "description": "Changelog 1.4.0 date"
+  },
+  "changelog_1_4_0_1": {
+    "message": "Added customizable filename templates for exports — use date/time placeholders like %yyyy, %mm, %dd to create unique, timestamped filenames automatically."
+  },
+  "changelog_1_3_0_date": {
+    "message": "February 16, 2025",
+    "description": "Changelog 1.3.0 date"
+  },
+  "changelog_1_3_0_1": {
+    "message": "Added dark mode support that automatically matches your system theme preferences."
+  },
+  "changelog_1_2_0_date": {
+    "message": "February 14, 2024",
+    "description": "Changelog 1.2.0 date"
+  },
+  "changelog_1_2_0_1": {
+    "message": "Now automatically adapts to your browser's language! Available in English and Spanish."
+  },
+  "changelog_1_1_0_date": {
+    "message": "February 13, 2025",
+    "description": "Changelog 1.1.0 date"
+  },
+  "changelog_1_1_0_1": {
+    "message": "Imported bookmarks now go to their own folder to avoid mixing with your existing bookmarks"
+  },
+  "changelog_1_1_0_2": {
+    "message": "More precise control over which dates to include in your exports"
+  },
+  "changelog_1_1_0_2_link": {
+    "message": "Try the new export options"
+  },
+  "changelog_1_0_0_date": {
+    "message": "August 5, 2024",
+    "description": "Changelog 1.0.0 date"
+  },
+  "changelog_1_0_0_1": {
+    "message": "Added new Advanced Export feature for more control over your bookmarks."
+  },
+  "changelog_1_0_0_1_link": {
+    "message": "Try advanced export"
+  },
+  "changelog_1_0_0_2": {
+    "message": "Introduced welcome and update pages to keep you informed about new features."
+  },
+  "changelog_1_0_0_3": {
+    "message": "Improved overall performance for a smoother experience."
+  },
+  "changelog_0_1_1_date": {
+    "message": "August 4, 2024",
+    "description": "Changelog 0.1.1 date"
+  },
+  "changelog_0_1_1_1": {
+    "message": "Fixed a critical bug that affected users with non-English browser languages."
+  },
+  "changelog_0_1_1_2": {
+    "message": "Improved reliability for both import and export functions."
+  },
+  "changelog_0_1_1_3": {
+    "message": "Fixed an issue where the extension icon was not showing in the browser toolbar."
+  },
+  "changelog_0_1_1_4": {
+    "message": "Fixed an issue where the extension was not working in some browsers."
+  },
+  "changelog_0_1_0_date": {
+    "message": "August 3, 2024",
+    "description": "Changelog 0.1.0 date"
+  },
+  "changelog_0_1_0_1": {
+    "message": "Initial release of Bookmark Import/Export extension."
+  },
+  "changelog_0_1_0_2": {
+    "message": "Simple import feature for HTML and JSON files."
+  },
+  "changelog_0_1_0_3": {
+    "message": "Basic functionality for exporting bookmarks to HTML and JSON formats."
+  },
+  "extensionInstalled": {
+    "message": "Bookmark Import/Export extension installed",
+    "description": "Extension installed"
+  },
+  "extensionUpdated": {
+    "message": "Bookmark Import/Export extension updated to version $VERSION$",
+    "description": "Extension updated",
+    "placeholders": {
+      "version": {
+        "content": "$1"
+      }
+    }
+  },
+  "exportFilenameTemplate": {
+    "message": "Filename template",
+    "description": "Label for the export filename template input"
+  },
+  "exportFilenameTemplateDescription": {
+    "message": "Customize the exported filename using date/time placeholders",
+    "description": "Description for the export filename template input"
+  },
+  "exportFilenameTemplateTooltip": {
+    "message": "Available placeholders: %yyyy (year), %yy (short year), %mm (month), %dd (day), %hh (hour), %min (minute), %sec (second). Example: %yyyy-%mm-%dd_%hh-%min-%sec myPc",
+    "description": "Tooltip explaining the available placeholders for the export filename template"
+  },
+  "exportFilenameTemplatePreview": {
+    "message": "Preview:",
+    "description": "Label shown before the live filename preview"
+  },
+  "noBookmarksSelected": {
+    "message": "No bookmarks selected",
+    "description": "No bookmarks selected"
+  },
+  "faviconError": {
+    "message": "Error fetching favicon",
+    "description": "Error fetching favicon"
+  },
+  "importFromHTMLLoadError": {
+    "message": "Failed to parse HTML: $ERROR$",
+    "description": "Failed to parse HTML",
+    "placeholders": {
+      "error": {
+        "content": "$1"
+      }
+    }
+  },
+  "importFromHTMLCreateError": {
+    "message": "Failed to create bookmarks from HTML: $ERROR$",
+    "description": "Failed to create bookmarks from HTML",
+    "placeholders": {
+      "error": {
+        "content": "$1"
+      }
+    }
+  },
+  "importFromHTMLProcessError": {
+    "message": "Could not find Bookmarks bar or Other bookmarks folder",
+    "description": "Could not find Bookmarks bar or Other bookmarks folder"
+  },
+  "bookmarksBar": {
+    "message": "Bookmarks bar",
+    "description": "Bookmarks bar"
+  },
+  "importedBookmarks": {
+    "message": "Imported bookmarks",
+    "description": "Imported bookmarks"
+  },
+  "otherBookmarks": {
+    "message": "Other bookmarks",
+    "description": "Other bookmarks"
+  },
+  "importFromJSONImportError": {
+    "message": "Import failed: $ERROR$",
+    "description": "Import failed",
+    "placeholders": {
+      "error": {
+        "content": "$1"
+      }
+    }
+  },
+  "importFromJSONProcessError": {
+    "message": "Could not find Bookmarks bar or Other bookmarks folder",
+    "description": "Error when JSON import cannot find required folders"
+  },
+  "importFromCSVImportError": {
+    "message": "Failed to import CSV file",
+    "description": "Error when CSV import fails"
+  },
+  "updateFeedback": {
+    "message": "Enjoying the update?",
+    "description": "Update page feedback section heading"
+  },
+  "updateFeedbackDescription": {
+    "message": "If you like the new features, a quick rating goes a long way!",
+    "description": "Update page feedback section description"
+  },
+  "changelogTitle": {
+    "message": "What's New",
+    "description": "Changelog section heading"
+  },
+  "autoSave": {
+    "message": "Auto-save",
+    "description": "Auto-save settings tab label"
+  },
+  "enableAutoExport": {
+    "message": "Enable Auto Export",
+    "description": "Enable auto export toggle label"
+  },
+  "enableAutoExportDescription": {
+    "message": "Automatically export your bookmarks to HTML, JSON, and CSV formats.",
+    "description": "Enable auto export toggle description"
+  },
+  "exportInterval": {
+    "message": "Export Interval",
+    "description": "Export interval section title"
+  },
+  "selectExportInterval": {
+    "message": "Select export interval",
+    "description": "Export interval section description"
+  },
+  "intervalEvery12Hours": {
+    "message": "Every 12 hours",
+    "description": "Export interval option: every 12 hours"
+  },
+  "intervalEveryDay": {
+    "message": "Every day",
+    "description": "Export interval option: every day"
+  },
+  "intervalEvery3Days": {
+    "message": "Every 3 days",
+    "description": "Export interval option: every 3 days"
+  },
+  "intervalEvery7Days": {
+    "message": "Every 7 days",
+    "description": "Export interval option: every 7 days"
+  },
+  "preferredExportTime": {
+    "message": "Preferred Export Time",
+    "description": "Preferred export time section title"
+  },
+  "selectPreferredTime": {
+    "message": "Select your preferred time for auto exports",
+    "description": "Preferred export time section description"
+  },
+  "timeSelectionUnavailable": {
+    "message": "Time selection is only available for intervals of 24 hours or more",
+    "description": "Note shown when 12h interval is selected"
+  },
+  "hoursLabel": {
+    "message": "Hours",
+    "description": "Hours input label in time picker"
+  },
+  "minutesLabel": {
+    "message": "Minutes",
+    "description": "Minutes input label in time picker"
+  },
+  "periodLabel": {
+    "message": "Period",
+    "description": "AM/PM selector label in time picker"
+  },
+  "periodAM": {
+    "message": "AM",
+    "description": "AM option in the 12-hour period selector"
+  },
+  "periodPM": {
+    "message": "PM",
+    "description": "PM option in the 12-hour period selector"
+  },
+  "exportPath": {
+    "message": "Export Path",
+    "description": "Export path section title"
+  },
+  "exportPathDescription": {
+    "message": "Enter the path to export the bookmarks",
+    "description": "Export path section description"
+  },
+  "autoExportFormats": {
+    "message": "Export Formats",
+    "description": "Export formats section title"
+  },
+  "autoExportFormatsDescription": {
+    "message": "Select the formats to export the bookmarks",
+    "description": "Export formats section description"
+  },
+  "saveSettings": {
+    "message": "Save Settings",
+    "description": "Save settings button label"
+  },
+  "formatRequired": {
+    "message": "Select at least one format",
+    "description": "Validation error when no format is selected"
+  },
+  "changelog_1_6_0_date": {
+    "message": "April 29, 2026",
+    "description": "Changelog 1.6.0 date"
+  },
+  "changelog_1_6_0_1": {
+    "message": "Added Auto Export — automatically save your bookmarks at custom intervals (every 12 hours, daily, every 3 or 7 days) to your preferred download folder."
+  },
+  "changelog_1_6_0_1_link": {
+    "message": "Open Auto Export settings"
+  },
+  "twitterHandle": {
+    "message": "@AndryOre",
+    "description": "Developer's X (Twitter) handle, shown as a footer link"
+  },
+  "githubLink": {
+    "message": "GitHub",
+    "description": "Link label to the project's GitHub repository"
+  }
+}

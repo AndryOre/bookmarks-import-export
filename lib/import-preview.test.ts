@@ -1,0 +1,102 @@
+// @vitest-environment jsdom
+// (getImportPreview's HTML branch calls parseHTML(), which needs DOMParser)
+import { beforeEach, describe, expect, it } from 'vitest'
+
+import { resetFakeI18n } from '@/lib/testing/fake-i18n'
+
+import { getImportPreview } from './import-preview'
+
+beforeEach(() => {
+  resetFakeI18n()
+})
+
+const HTML_HEADER = [
+  '<!DOCTYPE NETSCAPE-Bookmark-file-1>',
+  '<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">',
+  '<TITLE>Bookmarks</TITLE>',
+  '<H1>Bookmarks</H1>',
+].join('\n')
+
+describe('getImportPreview', () => {
+  it('previews an HTML export with bookmarks bar and other bookmarks', () => {
+    const html = `${HTML_HEADER}
+<DL><p>
+    <DT><H3 PERSONAL_TOOLBAR_FOLDER="true">Bookmarks bar</H3>
+    <DL><p>
+        <DT><A HREF="https://a.example">A</A>
+    </DL><p>
+    <DT><A HREF="https://b.example">B</A>
+</DL><p>`
+
+    const preview = getImportPreview(html, 'text/html')
+
+    expect(preview.format).toBe('html')
+    expect(preview.bookmarksBarCount).toBe(1)
+    expect(preview.otherBookmarksCount).toBe(1)
+    expect(preview.totalCount).toBe(2)
+    expect(preview.hasLocationData).toBe(true)
+  })
+
+  it('previews a JSON export produced by exportToJSON', () => {
+    const json = JSON.stringify({
+      id: '0',
+      title: '',
+      children: [
+        {
+          id: '1',
+          title: 'Bookmarks bar',
+          isBookmarksBar: true,
+          children: [{ title: 'A', url: 'https://a.example' }],
+        },
+        {
+          id: '2',
+          title: 'Other bookmarks',
+          isOtherBookmarks: true,
+          children: [{ title: 'B', url: 'https://b.example' }],
+        },
+      ],
+    })
+
+    const preview = getImportPreview(json, 'application/json')
+
+    expect(preview.format).toBe('json')
+    expect(preview.bookmarksBarCount).toBe(1)
+    expect(preview.otherBookmarksCount).toBe(1)
+    expect(preview.totalCount).toBe(2)
+    expect(preview.hasLocationData).toBe(true)
+  })
+
+  it('previews a CSV export, counting only rows with a valid URL', () => {
+    const csv = [
+      'title,url,folder',
+      'A,https://a.example,',
+      'Invalid,not-a-url,',
+      ',https://missing-title.example,',
+    ].join('\n')
+
+    const preview = getImportPreview(csv, 'text/csv')
+
+    expect(preview.format).toBe('csv')
+    expect(preview.totalCount).toBe(1)
+    expect(preview.hasLocationData).toBe(false)
+  })
+
+  it('returns a zeroed preview for an empty tree', () => {
+    const preview = getImportPreview('{}', 'application/json')
+
+    expect(preview.totalCount).toBe(0)
+    expect(preview.bookmarksBarCount).toBe(0)
+    expect(preview.otherBookmarksCount).toBe(0)
+  })
+
+  it('returns a zeroed preview for unrecognized content', () => {
+    const preview = getImportPreview(
+      'not json, not html, not csv',
+      'text/plain',
+    )
+
+    expect(preview.format).toBe('unknown')
+    expect(preview.totalCount).toBe(0)
+    expect(preview.hasLocationData).toBe(false)
+  })
+})

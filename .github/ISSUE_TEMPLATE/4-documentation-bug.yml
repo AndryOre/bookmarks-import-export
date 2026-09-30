@@ -1,0 +1,52 @@
+name: Documentation Bug
+description: Report incorrect, missing, or outdated documentation
+title: 'docs: '
+labels: ['Type: Docs', 'Status: Needs Info']
+
+body:
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Pre-flight checklist
+      options:
+        - label:
+            I have searched the existing issues and confirmed this hasn't been
+            reported.
+          required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping keep the documentation accurate! Please describe the issue clearly.
+
+  - type: input
+    id: location
+    attributes:
+      label: Location
+      description: URL, file path, or section where the issue is located.
+      placeholder: e.g. README.md / PRIVACY_POLICY.md / https://...
+    validations:
+      required: true
+
+  - type: textarea
+    id: current
+    attributes:
+      label: Current documentation
+      description:
+        What does the documentation currently say (paste the relevant excerpt)?
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What it should say
+      description: What should the documentation say instead?
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Any other details that would help (screenshots, links, etc.).
