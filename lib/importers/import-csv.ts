@@ -4,6 +4,13 @@ import Papa from 'papaparse'
 
 import type { ParsedBookmark } from '@/lib/types'
 
+/**
+ * Imports bookmarks from a CSV string with `title`, `url`, and `folder`
+ * columns (header names are case-insensitive). Unlike the HTML and JSON
+ * importers, this importer has no `ImportMode` parameter and always
+ * imports into a reused, localized "Imported bookmarks" folder — it never
+ * writes into the browser's bookmarks bar or "Other bookmarks" roots.
+ */
 export async function importFromCSV(csv: string): Promise<void> {
   const parsed = Papa.parse<Record<string, string>>(csv.trim(), {
     header: true,
@@ -19,8 +26,14 @@ export async function importFromCSV(csv: string): Promise<void> {
   await createBookmarks(tree)
 }
 
-// ── Fase 1: Construir árbol desde filas planas ────────────────────────────────
-
+/**
+ * Builds a folder tree from the flat CSV rows. Rows missing a `title` or
+ * `url`, or whose `url` fails `new URL()` validation, are skipped without
+ * throwing or rejecting the import — an invalid URL only logs a
+ * `console.warn`. Folder path segments (split on `/`) are memoized by
+ * their full path so that rows sharing a folder path reuse the same
+ * folder node instead of creating duplicates within this batch.
+ */
 function processCSVData(rows: Record<string, string>[]): ParsedBookmark[] {
   const root: ParsedBookmark[] = []
   const folderMemo: Record<string, ParsedBookmark> = {}
@@ -68,8 +81,12 @@ function processCSVData(rows: Record<string, string>[]): ParsedBookmark[] {
   return root
 }
 
-// ── Fase 2: Crear en Chrome con deduplicación ─────────────────────────────────
-
+/**
+ * Creates the tree under a reused "Imported bookmarks" folder. The folder
+ * is looked up by its localized title via `browser.bookmarks.search()` so
+ * that a folder created under one locale is still found (and reused
+ * rather than duplicated) after the browser's locale changes.
+ */
 async function createBookmarks(tree: ParsedBookmark[]): Promise<void> {
   const tree_chrome = await browser.bookmarks.getTree()
   const root = tree_chrome[0]
@@ -78,8 +95,6 @@ async function createBookmarks(tree: ParsedBookmark[]): Promise<void> {
     throw new Error(i18n.t('importFromCSVImportError'))
   }
 
-  // BUG FIX #1: usar i18n en lugar de string hardcodeado en inglés
-  // para que la deduplicación funcione en cualquier locale
   const importedFolderTitle = i18n.t('importedBookmarks')
   const existing = await browser.bookmarks.search({
     title: importedFolderTitle,
@@ -98,16 +113,21 @@ async function createBookmarks(tree: ParsedBookmark[]): Promise<void> {
   await createBookmarksRecursive(tree, importedFolderId)
 }
 
+/**
+ * Recursively creates the tree under `parentId`. Individual bookmarks are
+ * always created as new nodes, even if a bookmark with the same title and
+ * URL already exists. Folders, however, are deduplicated by matching an
+ * existing folder with the same title under the same parent and reusing
+ * it instead of creating a duplicate.
+ */
 async function createBookmarksRecursive(
   nodes: ParsedBookmark[],
   parentId: string,
 ): Promise<void> {
   for (const node of nodes) {
     if (node.url) {
-      // Bookmarks individuales: siempre se crean nuevos (sin deduplicación)
       await createItem({ parentId, title: node.title, url: node.url })
     } else if (node.children) {
-      // Carpetas: deduplicar por título + parentId
       const existing = await browser.bookmarks.search({ title: node.title })
       const match = existing.find((r) => r.parentId === parentId && !r.url)
 

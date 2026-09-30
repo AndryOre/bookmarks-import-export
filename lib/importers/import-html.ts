@@ -3,6 +3,27 @@ import type { Browser } from '@wxt-dev/browser'
 
 import type { ImportMode, ParsedBookmark } from '@/lib/types'
 
+/**
+ * Imports bookmarks from a Netscape-format bookmarks HTML export.
+ *
+ * `mode` controls where the parsed tree is written:
+ * - `'folder'`: creates a new "Imported bookmarks" folder (with its own
+ *   "Bookmarks bar" sub-folder) and writes everything under it, leaving
+ *   the existing bookmarks bar and "Other bookmarks" untouched.
+ * - `'restore-merge'`: writes directly into the existing bookmarks bar and
+ *   "Other bookmarks" roots, merging with what's already there.
+ * - `'restore-replace'`: destructive — first removes every existing child
+ *   of the bookmarks bar and "Other bookmarks" roots, then writes the
+ *   parsed tree into them. Existing bookmarks not present in `html` are
+ *   permanently lost.
+ *
+ * Errors thrown by the parse step are re-wrapped as a load error. Errors
+ * from the create step are re-wrapped as a create error, unless they
+ * already carry the `PROCESS_ERROR` prefix (see `processBookmarks`), in
+ * which case they're rethrown as-is so the caller can distinguish a
+ * structural failure (e.g. the browser's roots not being present) from an
+ * arbitrary `browser.bookmarks.create()` failure.
+ */
 export async function importFromHTML(
   html: string,
   mode: ImportMode = 'folder',
@@ -29,6 +50,22 @@ export async function importFromHTML(
   }
 }
 
+/**
+ * Parses a Netscape-format bookmarks HTML document into a `ParsedBookmark`
+ * tree, using the standard `<DL>`/`<DT>`/`<H3>`/`<A>` structure.
+ *
+ * Uses `DOMParser`, which is not available in a service worker (e.g. an
+ * MV3 background script) — this function must be called from a context
+ * that has a `DOMParser` implementation, such as a page or offscreen
+ * document.
+ *
+ * The `<H3 personal_toolbar_folder="true">` attribute is how Netscape-format
+ * exports mark the bookmarks bar folder; that folder is mapped to
+ * `isBookmarksBar: true` and always placed first in the returned array via
+ * `unshift`, regardless of its position in the source document. Every
+ * other top-level bookmark or folder is nested under a synthetic "Other
+ * bookmarks" node.
+ */
 export function parseHTML(html: string): ParsedBookmark[] {
   const document = new DOMParser().parseFromString(html, 'text/html')
   const result: ParsedBookmark[] = []
@@ -78,6 +115,13 @@ export function parseHTML(html: string): ParsedBookmark[] {
   return result
 }
 
+/**
+ * Parses a single `<A>` element into a bookmark. The `add_date` attribute
+ * is a Unix timestamp in seconds (the Netscape export format), so it's
+ * multiplied by 1000 to match the millisecond timestamps `Date.now()` and
+ * the rest of this codebase use. Falls back to the current time when
+ * `add_date` is absent.
+ */
 function parseBookmarkElement(a: HTMLAnchorElement): ParsedBookmark {
   const dateAddedAttribute = a.getAttribute('add_date')
   return {
@@ -89,6 +133,12 @@ function parseBookmarkElement(a: HTMLAnchorElement): ParsedBookmark {
   }
 }
 
+/**
+ * Parses an `<H3>` folder heading and its sibling/nested `<DL>` into a
+ * folder node, recursing into nested bookmarks and folders. Like
+ * `parseBookmarkElement`, `add_date` and `last_modified` are Unix
+ * timestamps in seconds and are converted to milliseconds.
+ */
 function parseFolderElement(h3: HTMLElement, dt: Element): ParsedBookmark {
   const dateAddedAttribute = h3.getAttribute('add_date')
   const lastModifiedAttribute = h3.getAttribute('last_modified')
@@ -129,6 +179,16 @@ function parseFolderElement(h3: HTMLElement, dt: Element): ParsedBookmark {
   return folder
 }
 
+/**
+ * Writes the parsed tree into the browser according to `mode` (see
+ * `importFromHTML` for what each mode does).
+ *
+ * Errors thrown here are prefixed with `'PROCESS_ERROR:'` to signal to
+ * `importFromHTML` that they represent a structural failure (missing
+ * bookmarks bar / "Other bookmarks" roots) rather than an arbitrary
+ * `browser.bookmarks` API failure, so the caller can rethrow them as-is
+ * instead of wrapping them in a generic create-error message.
+ */
 async function processBookmarks(
   parsed: ParsedBookmark[],
   mode: ImportMode,

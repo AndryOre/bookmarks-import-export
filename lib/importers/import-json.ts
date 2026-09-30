@@ -3,6 +3,18 @@ import type { Browser } from '@wxt-dev/browser'
 
 import type { ImportMode, ParsedBookmark } from '@/lib/types'
 
+/**
+ * Imports bookmarks from a previously exported `ParsedBookmark[]` JSON
+ * tree. `mode` behaves the same as in `importFromHTML` (`'folder'` writes
+ * into a fresh "Imported bookmarks" folder; `'restore-merge'` writes into
+ * the existing roots; `'restore-replace'` clears the existing roots
+ * first).
+ *
+ * Note: `preprocessBookmarks` mutates nodes of the `bookmarks` argument
+ * in place (it sets `isBookmarksBar`/`isOtherBookmarks` on nodes it
+ * finds), so the array passed in should not be reused elsewhere as if it
+ * were untouched.
+ */
 export async function importFromJSON(
   bookmarks: ParsedBookmark[],
   mode: ImportMode = 'folder',
@@ -20,11 +32,11 @@ export async function importFromJSON(
   }
 }
 
-// ── Fase 1: Preprocesamiento ──────────────────────────────────────────────────
-
 /**
- * Normaliza el array de nivel superior del JSON exportado a [ bookmarksBar?, otherBookmarks? ].
- * Maneja: nodo raíz id="0", ids explícitos "1"/"2", y nodos huérfanos con parentId="2".
+ * Result of scanning one level of the raw JSON tree in
+ * `preprocessBookmarks`: the recognized bookmarks-bar/other-bookmarks
+ * nodes, any orphaned nodes found at this level, and the children of a
+ * virtual root node, if one was found (see `preprocessBookmarks`).
  */
 interface PreprocessLevelResult {
   result: ParsedBookmark[]
@@ -32,6 +44,18 @@ interface PreprocessLevelResult {
   virtualRootChildren: ParsedBookmark[] | undefined
 }
 
+/**
+ * Scans a single array of sibling nodes and classifies each one:
+ * - `id === '1'` is the bookmarks bar (Chrome's fixed id for it); marked
+ *   `isBookmarksBar` and moved to the front of `result`.
+ * - `id === '2'` is "Other bookmarks" (Chrome's fixed id for it); marked
+ *   `isOtherBookmarks` and appended to `result`.
+ * - `parentId === '2'` is an orphaned node (exported with a reference to
+ *   "Other bookmarks" but not nested under it); collected into `orphans`.
+ * - a node with `children` and none of the above is treated as a virtual
+ *   root (see `preprocessBookmarks`) and its children are returned via
+ *   `virtualRootChildren`; scanning of this level stops there.
+ */
 function preprocessLevel(level: ParsedBookmark[]): PreprocessLevelResult {
   const result: ParsedBookmark[] = []
   const orphans: ParsedBookmark[] = []
@@ -55,11 +79,20 @@ function preprocessLevel(level: ParsedBookmark[]): PreprocessLevelResult {
   return { result, orphans, virtualRootChildren }
 }
 
+/**
+ * Normalizes the top-level array of an exported JSON tree down to
+ * `[ bookmarksBar?, otherBookmarks? ]`. Handles three shapes a JSON export
+ * can arrive in: a virtual root node with `id === '0'` wrapping everything
+ * (its children are unwrapped by looping with `currentLevel` reassigned
+ * to them, rather than recursing, until a non-wrapping level is found);
+ * explicit `id === '1'`/`'2'` nodes for the bookmarks bar and "Other
+ * bookmarks"; and orphaned nodes (`parentId === '2'` but not nested under
+ * an `id === '2'` node), which are collected into a synthetic "Other
+ * bookmarks" node if one wasn't already present in the result.
+ */
 export function preprocessBookmarks(
   bookmarks: ParsedBookmark[],
 ): ParsedBookmark[] {
-  // Nodo raíz virtual id="0": en vez de recursar en sus children, esta
-  // iteración avanza `currentLevel` y vuelve a recorrer.
   let currentLevel = bookmarks
 
   for (;;) {
@@ -85,8 +118,15 @@ export function preprocessBookmarks(
   }
 }
 
-// ── Fase 2: Creación en Chrome ────────────────────────────────────────────────
-
+/**
+ * Writes the preprocessed tree into the browser according to `mode` (see
+ * `importFromJSON`). Errors thrown here are prefixed with
+ * `'PROCESS_ERROR:'` so `importFromJSON` can tell a structural failure
+ * (missing bookmarks bar / "Other bookmarks" roots) apart from an
+ * arbitrary `browser.bookmarks` API failure — see `importFromJSON`'s
+ * catch block, which replaces a `PROCESS_ERROR` message with a generic
+ * localized one rather than surfacing the raw error.
+ */
 async function processBookmarks(
   parsed: ParsedBookmark[],
   mode: ImportMode,
@@ -161,6 +201,11 @@ async function processBookmarks(
   }
 }
 
+/**
+ * Recursively creates the tree under `parentId`. A folder node with no
+ * children (or an empty `children` array) is silently skipped — it is
+ * never created in the browser.
+ */
 async function createBookmarks(
   nodes: ParsedBookmark[],
   parentId: string,
@@ -172,7 +217,6 @@ async function createBookmarks(
       const folder = await createItem({ parentId, title: node.title })
       await createBookmarks(node.children, folder.id)
     }
-    // Carpetas vacías se ignoran
   }
 }
 
