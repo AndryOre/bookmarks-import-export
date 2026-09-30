@@ -5,10 +5,22 @@ import { useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 
 interface FileDropZoneProperties {
+  /**
+   * The currently selected file, or `null` when none has been chosen yet.
+   */
   file: File | null
+  /**
+   * Called with the file the user dropped or picked via the file input.
+   */
   onFile: (file: File) => void
 }
 
+/**
+ * Lets the user provide a bookmarks file either by dragging it onto the
+ * drop zone or by clicking to open the native file picker. Once a file is
+ * selected, the drop zone is replaced with a compact summary row that
+ * offers a "change file" action instead of the drag target.
+ */
 export function FileDropZone({ file, onFile }: FileDropZoneProperties) {
   const fileInputReference = useRef<HTMLInputElement>(null)
   const [isDragging, setIsDragging] = useState(false)
@@ -60,10 +72,12 @@ export function FileDropZone({ file, onFile }: FileDropZoneProperties) {
   }
 
   return (
-    // A native <label> targeting the hidden file input makes the whole
-    // zone clickable/keyboard-activatable without a manual click handler
-    // or extra role/tabIndex/keyboard wiring — drag-and-drop is layered on
-    // top via the drag event handlers.
+    /**
+     * A native `<label>` targeting the hidden file input makes the whole
+     * zone clickable and keyboard-activatable without a manual click
+     * handler or extra role/tabIndex/keyboard wiring — drag-and-drop is
+     * layered on top via the drag event handlers.
+     */
     <label
       htmlFor="file-drop-zone-input"
       onDragOver={handleDragOver}

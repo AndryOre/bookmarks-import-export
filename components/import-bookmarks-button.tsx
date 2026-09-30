@@ -8,6 +8,12 @@ import { importFromCSV } from '@/lib/importers/import-csv'
 import { importFromHTML } from '@/lib/importers/import-html'
 import { importFromJSON } from '@/lib/importers/import-json'
 
+/**
+ * Quick-import entry point: picks a bookmarks file and imports it
+ * immediately in `folder` mode (added under a new folder), without
+ * exposing the restore modes that {@link ImportModeSelector} offers in the
+ * Advanced Import flow.
+ */
 export function ImportBookmarksButton() {
   const fileInputReference = useRef<HTMLInputElement>(null)
 
