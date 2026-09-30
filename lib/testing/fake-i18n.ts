@@ -39,8 +39,8 @@ function resolveMessage(entry: MessageEntry, substitutions?: string[]): string {
 }
 
 /**
-Installs a `locales/en.json`-backed `browser.i18n.getMessage` fake.
-*/
+ * Installs a `locales/en.json`-backed `browser.i18n.getMessage` fake.
+ */
 export function resetFakeI18n(): void {
   fakeBrowser.i18n.getMessage = ((
     messageName: string,
