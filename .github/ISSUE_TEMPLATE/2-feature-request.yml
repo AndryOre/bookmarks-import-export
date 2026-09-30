@@ -1,0 +1,51 @@
+name: Feature Request
+description: Propose a brand-new feature or capability
+title: 'feat: '
+labels: ['Type: Feature', 'Status: Needs Info']
+body:
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Pre-flight checklist
+      options:
+        - label:
+            I have searched the existing issues and discussions and confirmed
+            this hasn't been proposed.
+          required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a new feature! Please describe it clearly so it can be properly evaluated.
+
+        > Before submitting, please search [existing issues](https://github.com/AndryOre/bookmarks-import-export/issues) and [discussions](https://github.com/AndryOre/bookmarks-import-export/discussions) to avoid duplicates.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem / motivation
+      description:
+        What problem does this feature solve? What use case drives it?
+      placeholder: I'm always frustrated when... / Users need to be able to...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: Describe the feature you'd like. Be as specific as possible.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Any alternative solutions or workarounds you've considered?
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Mockups, references, related issues, or any other context.

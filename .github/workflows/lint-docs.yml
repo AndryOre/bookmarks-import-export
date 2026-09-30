@@ -1,0 +1,31 @@
+name: Lint Docs
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check-links:
+    name: Check markdown links
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      # --offline blocks all network requests, so external http(s)/mailto links
+      # are never dialed — avoids flaky CI failures from third-party sites being
+      # briefly down. --include-fragments=anchor-only also validates that every
+      # `#heading` anchor actually resolves, not just that the target file exists.
+      # Globs are scoped to this repo's own shipped documentation.
+      - uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
+        with:
+          args: >-
+            --offline --include-fragments=anchor-only --no-progress README.md
+            PRIVACY_POLICY.md CODE_OF_CONDUCT.md CONTRIBUTING.md 'docs/**/*.md'
+            '.github/*.md'
+          fail: true
