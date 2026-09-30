@@ -49,10 +49,12 @@ your browser's own bookmarks tree, locally. See the
 - [`.github/SECURITY.md`](.github/SECURITY.md) — how to report a security
   vulnerability privately.
 
-Built with [WXT](https://wxt.dev/), [React](https://react.dev/),
-[Tailwind CSS](https://tailwindcss.com/), [shadcn/ui](https://ui.shadcn.com/),
-[Lucide](https://lucide.dev/), and
-[TypeScript](https://www.typescriptlang.org/).
+**Built with**
+
+[![WXT][WXT]][WXT-url] [![React][React]][React-url]
+[![TailwindCSS][TailwindCSS]][TailwindCSS-url]
+[![Shadcn/UI][Shadcn/UI]][Shadcn/UI-url] [![Lucide][Lucide]][Lucide-url]
+[![TypeScript][TypeScript]][TypeScript-url]
 
 ## Local Development 🛠️
 
@@ -98,3 +100,21 @@ for details.
   https://scorecard.dev/viewer/?uri=github.com/AndryOre/bookmarks-import-export
 [OpenSSF Best Practices]: https://www.bestpractices.dev/projects/15093/badge
 [OpenSSF Best Practices-url]: https://www.bestpractices.dev/projects/15093
+[WXT]:
+  https://img.shields.io/badge/WXT-67D55E.svg?style=for-the-badge&logo=WXT&logoColor=white
+[WXT-url]: https://wxt.dev/
+[React]:
+  https://img.shields.io/badge/React-61DAFB.svg?style=for-the-badge&logo=React&logoColor=black
+[React-url]: https://react.dev/
+[TailwindCSS]:
+  https://img.shields.io/badge/Tailwind%20CSS-06B6D4.svg?style=for-the-badge&logo=Tailwind-CSS&logoColor=white
+[TailwindCSS-url]: https://tailwindcss.com/
+[Shadcn/UI]:
+  https://img.shields.io/badge/shadcn%2Fui-000000.svg?style=for-the-badge&logo=shadcn%2Fui&logoColor=white
+[Shadcn/UI-url]: https://ui.shadcn.com/
+[Lucide]:
+  https://img.shields.io/badge/Lucide-F56565.svg?style=for-the-badge&logo=Lucide&logoColor=white
+[Lucide-url]: https://lucide.dev/
+[TypeScript]:
+  https://img.shields.io/badge/TypeScript-3178C6.svg?style=for-the-badge&logo=TypeScript&logoColor=white
+[TypeScript-url]: https://www.typescriptlang.org/
