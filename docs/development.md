@@ -22,6 +22,7 @@
 | `bun run test`          | Runs the Vitest suite once.                                                              |
 | `bun run test:coverage` | Runs the Vitest suite with coverage (`lib/**`, v8 provider, 50% thresholds).             |
 | `bun run test:watch`    | Runs Vitest in watch mode.                                                               |
+| `bun run test:e2e`      | Builds the extension (`wxt build`), then runs the Playwright E2E suite (`e2e/**`).       |
 
 ## Git hooks
 
@@ -42,10 +43,10 @@ Hooks are installed via Husky and live in `.husky/`:
 ## CI
 
 Every PR — including docs-only changes — runs the full `ci.yml` pipeline:
-`quality`, `build`, and `commitlint`. The `CI passed` job aggregates their
-results and is the single status check required to merge; it passes once every
-needed job is `success` or `skipped` (e.g. `commitlint` is skipped on `push`
-runs), and fails if any needed job is `failure` or `cancelled`.
+`quality`, `build`, `e2e`, and `commitlint`. The `CI passed` job aggregates
+their results and is the single status check required to merge; it passes once
+every needed job is `success` or `skipped` (e.g. `commitlint` is skipped on
+`push` runs), and fails if any needed job is `failure` or `cancelled`.
 
 ## Commit format
 
@@ -110,6 +111,32 @@ if used) alongside it in `beforeEach`.
 
 Coverage is scoped to `lib/**` only (see `vitest.config.ts`), with a 50%
 threshold on lines/statements/branches/functions.
+
+## E2E testing
+
+`e2e/**` runs Playwright against the extension's real build output
+(`.output/chrome-mv3`, produced by `wxt build`), loaded into Playwright's
+bundled headless Chromium via `chromium.launchPersistentContext` +
+`--load-extension`. See
+[`docs/adr/0003-e2e-against-built-extension.md`](adr/0003-e2e-against-built-extension.md)
+for why this runs against the built extension instead of a component-test layer.
+
+- `e2e/fixtures.ts` is the shared harness every spec extends: the persistent
+  `context`, `extensionId`, the extension's `serviceWorker`, an
+  `openExtensionPage(name)` helper (e.g. `openExtensionPage('popup.html')`), and
+  `seedBookmarks`/`readBookmarkTree` helpers that drive `chrome.bookmarks.*`
+  through `serviceWorker.evaluate` — not `fakeBrowser` — so bookmarks state goes
+  through the same implementation a real user's browser would use.
+- Every test gets a fresh temporary Chromium profile, removed on teardown, so no
+  test can see another test's browser state.
+- Run locally with `bun run test:e2e`. It needs Playwright's Chromium binary
+  installed once via `bunx playwright install chromium` — never `--with-deps` or
+  `sudo` outside CI, which installs OS packages this repo's local dev machines
+  shouldn't need.
+- `bun run test:e2e` isn't part of `bun run check`; CI runs it as its own `e2e`
+  job (`.github/workflows/ci.yml`), which installs browsers with
+  `bunx playwright install --with-deps chromium` and uploads the Playwright HTML
+  report as an artifact on failure.
 
 ## Repository settings
 

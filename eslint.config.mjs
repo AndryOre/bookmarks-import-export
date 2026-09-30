@@ -238,6 +238,18 @@ const eslintConfig = defineConfig([
   },
   {
     /**
+     * Playwright fixtures (`e2e/fixtures.ts`) take a `use` callback per the
+     * `@playwright/test` fixture API — an unrelated naming collision with
+     * React's `use` hook that `react-hooks/rules-of-hooks` otherwise flags
+     * as a misplaced hook call.
+     */
+    files: ['e2e/**'],
+    rules: {
+      'react-hooks/rules-of-hooks': 'off',
+    },
+  },
+  {
+    /**
      * The comment-policy rule groups (local `no-non-doc-comments`,
      * `eslint-plugin-jsdoc`'s TypeScript-flavored recommended rules plus
      * `jsdoc/informative-docs`, and `@eslint-community/eslint-comments`'s
