@@ -68,6 +68,7 @@ test.describe('HTML import', () => {
 
     const page = await openAdvancedImport(openExtensionPage)
     await uploadFixture(page, 'bookmarks.html')
+    await selectImportMode(page, 'Create folder')
     await runImport(page)
 
     const [root] = await readBookmarkTree()
@@ -195,6 +196,7 @@ test.describe('JSON import', () => {
 
     const page = await openAdvancedImport(openExtensionPage)
     await uploadFixture(page, 'bookmarks.json')
+    await selectImportMode(page, 'Create folder')
     await runImport(page)
 
     const [root] = await readBookmarkTree()
