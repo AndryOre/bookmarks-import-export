@@ -15,6 +15,34 @@
    - Customize export settings (include dates, hide specific folders, etc.).
    - Choose the export format and click the export button.
 
+## Naming exported files
+
+By default, exported files are named "Bookmarks". To customize this:
+
+1. Open "Advanced Export" and click the settings (gear) icon.
+2. Go to the "Export" tab and edit "Filename template". A live preview shows the
+   resulting filename as you type.
+3. Use these placeholders (case-insensitive) to include the current date and
+   time:
+
+   | Placeholder | Value    |
+   | ----------- | -------- |
+   | `%yyyy`     | Year (4) |
+   | `%yy`       | Year (2) |
+   | `%mm`       | Month    |
+   | `%dd`       | Day      |
+   | `%hh`       | Hour     |
+   | `%min`      | Minute   |
+   | `%sec`      | Second   |
+
+   For example, `%yyyy%mm%dd myPc` produces `20260930 myPc.html` (and `.json` /
+   `.csv` for those formats).
+
+The template applies everywhere a filename is generated: basic export from the
+popup, Advanced Export, and automatic backups. Characters not allowed in
+filenames (`/ \ : * ? " < > |`) are replaced with `_`, and a template that ends
+up empty falls back to "Bookmarks".
+
 ## Importing bookmarks
 
 1. Choose the "Import" tab.
