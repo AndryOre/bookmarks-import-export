@@ -40,8 +40,18 @@ issues early.
 New functionality and bug fixes in `lib/**` must add or update Vitest tests in
 the same PR. See
 [`docs/development.md`](docs/development.md#fakebrowser-testing) for how
-`fakeBrowser`-based tests work. `lib/**` is held to the 50% coverage threshold
+`fakeBrowser`-based tests work. `lib/**` is held to the coverage thresholds
 documented in [`docs/development.md`](docs/development.md).
+
+## Sign-off (DCO)
+
+Every commit must be signed off under the
+[Developer Certificate of Origin (DCO) 1.1](https://developercertificate.org/):
+by signing off, you certify you have the right to submit the change under this
+project's license. Add the sign-off with `git commit -s`, which appends a
+`Signed-off-by: Your Name <your.email@example.com>` trailer to the commit
+message. There is no CI check enforcing this — it's a contributor obligation,
+not an automated gate.
 
 ## Reporting security issues
 
