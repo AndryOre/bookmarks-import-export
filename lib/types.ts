@@ -2,10 +2,6 @@ import { i18n } from '#i18n'
 import type { GeneratedI18nStructure } from '#i18n'
 import type { Browser } from '@wxt-dev/browser'
 
-// ──────────────────────────────────────────
-// i18n
-// ──────────────────────────────────────────
-
 /**
 A valid `i18n.t()` message key.
 */
@@ -27,10 +23,12 @@ export function t<K extends MessageKey>(key: K): string {
   return getMessage(key)
 }
 
-// ──────────────────────────────────────────
-// Bookmark Node types
-// ──────────────────────────────────────────
-
+/**
+ * Minimal bookmark node shape, independent of the `browser.bookmarks` API.
+ * Used where a plain, serializable tree is needed (e.g. as an intermediate
+ * or exported representation) without depending on the extension-runtime
+ * fields that {@link ExtendedBookmarkTreeNode} carries.
+ */
 export interface BookmarkNode {
   id: string
   title: string
@@ -39,6 +37,14 @@ export interface BookmarkNode {
   parentId?: string
 }
 
+/**
+ * `browser.bookmarks.BookmarkTreeNode` as actually returned at runtime,
+ * widened with the extra fields browsers attach that aren't part of the
+ * WebExtension type declarations (`dateGroupModified`, `dateLastUsed`,
+ * `iconData`) plus an index signature for any other vendor-specific field.
+ * Kept distinct from {@link BookmarkNode}: this type is the live API
+ * object, while `BookmarkNode` is this codebase's own normalized shape.
+ */
 export interface ExtendedBookmarkTreeNode
   extends Browser.bookmarks.BookmarkTreeNode {
   dateGroupModified?: number
@@ -48,8 +54,10 @@ export interface ExtendedBookmarkTreeNode
 }
 
 /**
- * Estructura intermedia que todos los importadores producen internamente.
- * No corresponde 1:1 a nodos de Chrome — es la forma normalizada post-parseo.
+ * Intermediate structure every importer produces internally. It does not
+ * map 1:1 to `browser.bookmarks` nodes — it's the normalized shape each
+ * format-specific parser (HTML, JSON, CSV) converts its input into, before
+ * the app turns it into real bookmarks.
  */
 export interface ParsedBookmark {
   title: string
@@ -73,7 +81,10 @@ export type AutoExportFormat = 'html' | 'json' | 'csv'
 export interface AutoExportConfig {
   enabled: boolean
   interval: AutoExportInterval
-  preferredTime: string // HH:mm in 24h format — only used for intervals >= 1d
+  /**
+  `HH:mm` in 24h format — only used for intervals >= 1d.
+  */
+  preferredTime: string
   path: string
   formats: AutoExportFormat[]
 }
@@ -86,42 +97,29 @@ export interface ImportPreview {
   hasLocationData: boolean
 }
 
-// ──────────────────────────────────────────
-// UI — Checkbox state
-// ──────────────────────────────────────────
-
 /**
- * Estado de un checkbox en el árbol de selección.
- * - true: todos los bookmarks descendientes están seleccionados
- * - false: ninguno seleccionado
- * - "indeterminate": algunos descendientes seleccionados
+ * The checked state of a node in the selection tree.
+ * - `true`: every descendant bookmark is selected.
+ * - `false`: no descendant is selected.
+ * - `"indeterminate"`: some, but not all, descendants are selected.
  *
- * IMPORTANTE: las carpetas nunca guardan este estado — se DERIVA en render
- * vía determineCheckedState(). Solo los bookmarks (nodos con url) tienen
- * estado guardado en el Map<id, boolean>.
+ * Folders never store this state — it's derived at render time via
+ * `determineCheckedState()`. Only bookmarks (nodes with a `url`) have a
+ * stored state, kept in a `Map<id, boolean>`.
  */
 export type CheckedState = boolean | 'indeterminate'
-
-// ──────────────────────────────────────────
-// BookmarkTree handle (imperative API)
-// ──────────────────────────────────────────
 
 export interface BookmarkTreeHandle {
   selectAll: () => void
   deselectAll: () => void
   refresh: () => Promise<void>
   /**
-   * Retorna un array de ExtendedBookmarkTreeNode[] que representa
-   * solo los bookmarks seleccionados, con la jerarquía de carpetas
-   * mínima para contenerlos (poda del árbol).
-   * Carpetas vacías tras la poda no se incluyen.
+   * Returns the selected bookmarks as an `ExtendedBookmarkTreeNode[]`, with
+   * the minimal folder hierarchy needed to contain them (the tree is
+   * pruned). Folders left empty by the pruning are not included.
    */
   getSelectedBookmarks: () => Promise<ExtendedBookmarkTreeNode[]>
 }
-
-// ──────────────────────────────────────────
-// Component Props
-// ──────────────────────────────────────────
 
 export interface SearchBarProperties {
   value: string
@@ -129,8 +127,10 @@ export interface SearchBarProperties {
 }
 
 export interface SettingsDialogProperties {
-  // Matches Radix/shadcn Dialog's controlled `open`/`onOpenChange` prop
-  // convention — renaming it would fight that API at every call site.
+  /**
+   * Matches Radix/shadcn Dialog's controlled `open`/`onOpenChange` prop
+   * convention — renaming it would fight that API at every call site.
+   */
   open: boolean
   onOpenChange: (isOpen: boolean) => void
 }
