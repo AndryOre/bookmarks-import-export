@@ -8,6 +8,11 @@ const CHROME_WEB_STORE_URL =
 const GITHUB_URL = 'https://github.com/AndryOre/bookmarks-import-export'
 const TWITTER_URL = 'https://x.com/andryore'
 
+/**
+ * Post-update landing page. Shows the feedback link before the changelog
+ * so a freshly updated user is prompted to rate the extension before
+ * reading what changed.
+ */
 export default function App() {
   const version = browser.runtime.getManifest().version
   const changelog = getChangelog()
@@ -27,7 +32,6 @@ export default function App() {
         </p>
       </div>
 
-      {/* Feedback — ANTES del changelog */}
       <section className="w-full max-w-2xl text-center">
         <h2 className="text-lg font-semibold">{i18n.t('updateFeedback')}</h2>
         <p className="mb-3 text-sm text-muted-foreground">
@@ -44,7 +48,6 @@ export default function App() {
         </a>
       </section>
 
-      {/* Changelog */}
       <section className="w-full max-w-2xl">
         <h2 className="mb-4 text-lg font-semibold">
           {i18n.t('changelogTitle')}

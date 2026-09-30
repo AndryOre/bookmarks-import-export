@@ -24,6 +24,13 @@ import type { ImportMode, ImportPreview } from '@/lib/types'
 
 type ImportStatus = 'idle' | 'importing' | 'success' | 'error'
 
+/**
+ * Advanced Import page: lets the user pick a bookmarks file, choose an
+ * import mode, preview what will be imported, and run the import.
+ * Choosing `restore-replace` — which clears the existing bookmark roots
+ * before importing — first opens a confirmation dialog, since that mode is
+ * destructive and cannot be undone.
+ */
 export default function App() {
   const [file, setFile] = useState<File | null>(null)
   const [fileText, setFileText] = useState('')

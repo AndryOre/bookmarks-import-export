@@ -6,6 +6,12 @@ import type { ImportMode } from '@/lib/types'
 interface ImportModeSelectorProperties {
   value: ImportMode
   onChange: (mode: ImportMode) => void
+  /**
+   * Whether the parsed file carries folder/location data. The `html` and
+   * `json` formats do; `csv` does not. When `false`, the restore modes
+   * are disabled since there is nothing to merge or replace bookmark
+   * locations against.
+   */
   hasLocationData: boolean
 }
 
@@ -15,6 +21,14 @@ interface ModeOption {
   description: string
 }
 
+/**
+ * Lets the user pick how a parsed bookmarks file is imported: added under a
+ * new folder (`folder`), merged into the existing tree by location
+ * (`restore-merge`), or used to fully replace the existing tree
+ * (`restore-replace`). The two restore modes are disabled whenever
+ * `hasLocationData` is `false`, since they depend on location data the
+ * source file doesn't provide.
+ */
 export function ImportModeSelector({
   value,
   onChange,
