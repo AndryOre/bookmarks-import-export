@@ -246,7 +246,10 @@ async function processBookmarks(
     }
   } else {
     const hasMobileContent = parsed.some(
-      (bookmark) => bookmark.isMobileBookmarks,
+      (bookmark) =>
+        bookmark.isMobileBookmarks &&
+        bookmark.children &&
+        bookmark.children.length > 0,
     )
 
     if (mode === 'restore-replace') {
@@ -296,9 +299,11 @@ async function removeAllChildren(
 
 /**
  * Writes Mobile bookmarks content into the Mobile root when one was
- * resolved and creation there succeeds; otherwise falls back to writing it
- * into "Other bookmarks" (e.g. the current browser has no Mobile root, or
- * the resolved id turned out stale).
+ * resolved, otherwise into "Other bookmarks" (e.g. the current browser has
+ * no Mobile root). Does not retry into "Other bookmarks" on a failed Mobile
+ * write — `createBookmarks` creates nodes one at a time, so a partial
+ * failure there would otherwise leave a duplicated subset of the content in
+ * both roots.
  * @param nodes The Mobile bookmarks content to write.
  * @param mobileId The resolved Mobile root id, if any.
  * @param otherBookmarksId The "Other bookmarks" root id to fall back to.
@@ -309,13 +314,7 @@ async function writeMobileBookmarks(
   mobileId: string | undefined,
   otherBookmarksId: string,
 ): Promise<void> {
-  if (mobileId) {
-    try {
-      await createBookmarks(nodes, mobileId)
-      return
-    } catch {}
-  }
-  await createBookmarks(nodes, otherBookmarksId)
+  await createBookmarks(nodes, mobileId ?? otherBookmarksId)
 }
 
 async function createBookmarks(

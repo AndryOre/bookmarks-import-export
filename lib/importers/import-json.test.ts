@@ -353,6 +353,55 @@ describe('importFromJSON', () => {
     expect(mobile?.children?.[0]?.url).toBe('https://existing.example')
   })
 
+  it('leaves an existing Mobile root untouched on restore-replace when the imported file carries an empty Mobile node', async () => {
+    resetFakeBookmarks({ withMobileRoot: true })
+
+    await importFromJSON(
+      [
+        {
+          id: '3',
+          title: 'Mobile bookmarks',
+          isMobileBookmarks: true,
+          dateAdded: 0,
+          children: [
+            {
+              title: 'Existing',
+              url: 'https://existing.example',
+              dateAdded: 0,
+            },
+          ],
+        },
+      ],
+      'restore-merge',
+    )
+
+    await importFromJSON(
+      [
+        {
+          id: '1',
+          title: 'Bookmarks bar',
+          isBookmarksBar: true,
+          dateAdded: 0,
+          children: [
+            { title: 'New bar', url: 'https://new-bar.example', dateAdded: 0 },
+          ],
+        },
+        {
+          id: '3',
+          title: 'Mobile bookmarks',
+          isMobileBookmarks: true,
+          dateAdded: 0,
+          children: [],
+        },
+      ],
+      'restore-replace',
+    )
+
+    const root = getFakeBookmarksRoot()
+    const mobile = root.children?.find((n) => n.id === '3')
+    expect(mobile?.children?.[0]?.url).toBe('https://existing.example')
+  })
+
   it('nests a "Mobile bookmarks" subfolder in folder mode when Mobile content is present', async () => {
     const bookmarks: ParsedBookmark[] = [
       {
