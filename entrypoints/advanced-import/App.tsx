@@ -125,7 +125,9 @@ export default function App() {
             <div className="grid grid-cols-2 gap-4">
               <ImportModeSelector
                 value={effectiveMode}
-                onChange={(newMode) => void setMode(newMode)}
+                onChange={(newMode) => {
+                  if (preview.hasLocationData) void setMode(newMode)
+                }}
                 hasLocationData={preview.hasLocationData}
               />
               <ImportPreviewPanel preview={preview} />
