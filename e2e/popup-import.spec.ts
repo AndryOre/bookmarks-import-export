@@ -28,8 +28,41 @@ async function selectDefaultMode(page: Page, label: string): Promise<void> {
   await page.getByRole('option', { name: label }).click()
 }
 
-async function clickImport(page: Page): Promise<void> {
-  await page.getByRole('button', { name: 'Import', exact: true }).click()
+/**
+ * The visible "Import" button only opens the native file picker
+ * (`fileInputReference.current?.click()`); there is no separate submit
+ * step. Picking a file — which `uploadFixture` does directly via
+ * `setInputFiles`, bypassing the picker — fires the hidden input's
+ * `onChange` and runs the whole import (or opens the replace-confirm
+ * dialog) immediately. Quick import's success/error UX is the browser's
+ * native `alert()` (by design — see AO-889), not DOM text, so Playwright
+ * only observes it as a `dialog` event. Registers the listener before
+ * triggering `action` so it can't miss a dialog that fires immediately,
+ * and asserts the expected message.
+ *
+ * Chrome closes an extension popup as soon as it calls a native dialog
+ * (alert/confirm/prompt) — popups don't support them. Calling
+ * `dialog.accept()` in that case doesn't reject quickly either: it hangs
+ * for this action's full timeout before failing with "Target page ... has
+ * been closed", which is long enough to blow the test's own timeout. Fire
+ * it without awaiting instead — there's nothing left to unblock once the
+ * popup that owned the dialog is already gone, and the message was already
+ * read off the `dialog` event before this call. Bookmark-state assertions
+ * after this helper read through a separate fixture, not the (possibly
+ * now-closed) popup page.
+ * @param page The popup page the `dialog` event is expected on.
+ * @param action Triggers the import; the dialog listener is registered
+ *   before this runs.
+ */
+async function expectSuccessAlert(
+  page: Page,
+  action: () => Promise<void>,
+): Promise<void> {
+  const dialogPromise = page.waitForEvent('dialog')
+  await action()
+  const dialog = await dialogPromise
+  expect(dialog.message()).toBe('Bookmarks imported successfully!')
+  void dialog.accept().catch(() => {})
 }
 
 test('quick import merges into the real bookmarks bar with the default mode (fixes #24)', async ({
@@ -46,12 +79,7 @@ test('quick import merges into the real bookmarks bar with the default mode (fix
 
   const popup = await openImportTab(openExtensionPage)
 
-  await uploadFixture(popup, 'bookmarks.html')
-  await clickImport(popup)
-
-  await expect(
-    popup.getByText('Bookmarks imported successfully!'),
-  ).toBeVisible()
+  await expectSuccessAlert(popup, () => uploadFixture(popup, 'bookmarks.html'))
 
   const [root] = await readBookmarkTree()
   const bookmarksBar = root?.children?.find((n) => n.id === '1')
@@ -90,15 +118,11 @@ test('restore-replace requires confirmation, and canceling imports nothing', asy
   ).toBeVisible()
 
   await uploadFixture(popup, 'bookmarks.html')
-  await clickImport(popup)
 
   await expect(popup.getByText('Replace existing bookmarks?')).toBeVisible()
   await popup.getByRole('button', { name: 'Cancel' }).click()
 
   await expect(popup.getByText('Replace existing bookmarks?')).not.toBeVisible()
-  await expect(
-    popup.getByText('Bookmarks imported successfully!'),
-  ).not.toBeVisible()
 
   const [root] = await readBookmarkTree()
   const otherBookmarks = root?.children?.find((n) => n.id === '2')
@@ -124,13 +148,10 @@ test('confirming restore-replace clears the existing roots before restoring', as
   await selectDefaultMode(popup, 'Restore — replace')
 
   await uploadFixture(popup, 'bookmarks.html')
-  await clickImport(popup)
 
-  await popup.getByRole('button', { name: 'Yes, replace' }).click()
-
-  await expect(
-    popup.getByText('Bookmarks imported successfully!'),
-  ).toBeVisible()
+  await expectSuccessAlert(popup, () =>
+    popup.getByRole('button', { name: 'Yes, replace' }).click(),
+  )
 
   const [root] = await readBookmarkTree()
   const bookmarksBar = root?.children?.find((n) => n.id === '1')
@@ -165,12 +186,7 @@ test('a CSV file imports into "Imported bookmarks" even when the stored default 
   const popup = await openImportTab(openExtensionPage)
   await selectDefaultMode(popup, 'Restore — replace')
 
-  await uploadFixture(popup, 'bookmarks.csv')
-  await clickImport(popup)
-
-  await expect(
-    popup.getByText('Bookmarks imported successfully!'),
-  ).toBeVisible()
+  await expectSuccessAlert(popup, () => uploadFixture(popup, 'bookmarks.csv'))
 
   const [root] = await readBookmarkTree()
   const otherBookmarks = root?.children?.find((n) => n.id === '2')
