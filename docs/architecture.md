@@ -22,10 +22,16 @@ tree with the others.
 ### Entrypoints (`entrypoints/`)
 
 - **`background.ts`** — the MV3 service worker. Registers
-  `browser.runtime.onInstalled` (opens the welcome or update page),
-  `browser.runtime.onStartup` and a storage watcher on the auto-export config
-  (both resync the alarm), and `browser.alarms.onAlarm` (runs the scheduled
-  export). Has no DOM and renders nothing.
+  `browser.runtime.onInstalled` (opens the welcome or update page, and calls
+  `syncAlarm` for every reason so a catch-up run can be armed after an
+  install/update), `browser.runtime.onStartup` (also calls `syncAlarm`) and a
+  storage watcher on the auto-export config that calls `syncAlarm` only when the
+  change affects scheduling (`enabled`/`interval`/`preferredTime`, or `formats`
+  crossing the empty/non-empty boundary — a `path`-only or still-non-empty
+  `formats` change is ignored), and `browser.alarms.onAlarm` (runs the export,
+  telling `runAutoExport` whether this is a `scheduled` or `catch-up` run by
+  comparing the alarm's fire time to the stored next-run time). Has no DOM and
+  renders nothing.
 - **`popup/`** — the toolbar popup. Two tabs (export / import) for the
   common-case flows: pick a format and export the whole tree, or pick a file and
   import it with default settings.
@@ -65,10 +71,13 @@ tree with the others.
   so all three name files the same way.
 - **`favicon.ts`** — fetches a page's favicon and returns it as base64, for the
   optional `iconData` export column/field.
-- **`auto-export.ts`** — owns the alarm lifecycle (`syncAlarm`, computing the
-  next run time from an `AutoExportInterval`) and the scheduled run itself
-  (`runAutoExport`, which calls the three exporters and hands each result to
-  `browser.downloads.download`).
+- **`auto-export.ts`** — owns the alarm lifecycle (`syncAlarm`, which keeps a
+  single one-shot `browser.alarms` alarm — not `periodInMinutes`, which drifts
+  across DST — armed at the next due time; `computeNextRun`, the pure function
+  behind that due time) and the run itself (`runAutoExport`, which calls the
+  three exporters, hands each result to `browser.downloads.download`, records
+  the outcome, and reschedules). See Data flows for the full next-run-store/
+  catch-up/badge model.
 - **`storage.ts`** — every persisted setting and its default, as
   `storage.defineItem` calls from `wxt`'s storage wrapper.
 - **`use-storage-item.ts`** — a React hook that subscribes an exported store to
@@ -107,20 +116,28 @@ API surface available differs between them:
   but has no DOM.
 - **Extension pages** (popup, advanced-export, advanced-import, update, welcome)
   are ordinary web pages with a full DOM, rendered as React trees.
+- **The offscreen document** (`entrypoints/offscreen`) is an unlisted, hidden
+  page the service worker creates on demand via `chrome.offscreen`. It exists
+  purely to provide a document context for `URL.createObjectURL`.
 
 Two APIs used by the importers/exporters are page-only and unavailable to the
 service worker, which is why `auto-export.ts` cannot reuse the same download
-mechanism the pages use:
+mechanism the pages use directly:
 
 - **`DOMParser`** (used by `parseHTML` in `import-html.ts`) needs a document
   context to parse HTML strings into a traversable tree. It does not exist in a
   service worker.
 - **`URL.createObjectURL`** (used by the popup and advanced-export pages to turn
   an in-memory `Blob` into a downloadable `<a href>`) requires a `Blob`/URL
-  registry tied to a document; a service worker has neither. This is why
-  `runAutoExport` in `auto-export.ts` instead base64-encodes the export content
-  into a `data:` URL and hands that directly to `browser.downloads.download` — a
-  mechanism that works with no document at all.
+  registry tied to a document; a service worker has neither. `runAutoExport` in
+  `auto-export.ts` works around this via `downloadViaOffscreenDocument`
+  (`lib/offscreen-download.ts`): it opens the offscreen document (reusing one
+  already open from another format in the same run), messages it the export
+  content and MIME type, and gets back a `Blob` object URL created inside that
+  document. `browser.downloads.download` then downloads that URL directly. Once
+  the download reaches `'complete'` or `'interrupted'`, the object URL is
+  revoked and — once no other download from the run is still pending — the
+  offscreen document is closed.
 
 ## Data flows
 
@@ -139,13 +156,33 @@ passing `selectedBookmarks: null`); the chosen exporter turns that into a
 format's text content; the page wraps it in a `Blob`, turns that into an object
 URL, and triggers a browser download via a synthetic `<a>` click.
 
-**Auto-export** (background service worker): a `chrome.alarms` alarm
-(`ALARM_NAME`, scheduled by `syncAlarm` from the stored `AutoExportConfig`)
-fires `runAutoExport`, which reads the persisted export settings, runs whichever
-exporters are enabled in the config, base64-encodes each result into a `data:`
-URL, and calls `browser.downloads.download` directly — skipping the
-`Blob`/object-URL step the page-based exports use, since neither is available in
-the service worker.
+**Auto-export** (background service worker): the authoritative next due time
+lives in `autoExportNextRunStore` (epoch milliseconds, or `null` when disabled),
+not derived from a periodic alarm — `syncAlarm` computes it with
+`computeNextRun` (a pure function using `Date`'s local-time setters, so it lands
+on the right wall-clock time across a DST transition instead of drifting) and
+arms a single **one-shot** `chrome.alarms` alarm (`ALARM_NAME`, scheduled with
+`when`, never `periodInMinutes`) at it. `syncAlarm` runs on four distinct
+triggers: a scheduling-relevant config change (recompute from now and
+store/arm), and startup/install/update (read the stored next run instead of
+recomputing — computing one only if it's missing — and, if it's already in the
+past, arm a **catch-up** alarm about a minute out rather than firing
+immediately, without touching the stored due time). When the alarm fires, the
+listener tells `runAutoExport` whether it's a `scheduled` or `catch-up` run (by
+comparing the alarm's fire time to the stored next run) or a `manual` one (a
+later ticket's "Export now" button calls it directly). `runAutoExport` reads the
+persisted export settings, runs whichever exporters are enabled in the config,
+and downloads each result via `downloadViaOffscreenDocument` — delegating the
+`Blob`/object-URL step the page-based exports do inline to the offscreen
+document, since the service worker has neither `Blob` nor a `URL` registry of
+its own. It then records the outcome in `autoExportLastRunStore` as
+`{ at, ok, error?, trigger }` (a legacy plain-number value from before this
+shape existed is migrated on read to a successful `scheduled` run), and — for
+`scheduled`/`catch-up` triggers only — recomputes the next due time anchored to
+this run's completion and re-arms the alarm, so a run always reschedules even if
+it failed. On a failed `scheduled`/`catch-up` run it also sets a toolbar failure
+badge (`chrome.action.setBadgeText('!')` plus a destructive-colored background);
+the next run that succeeds, on any trigger, clears it.
 
 ## Invariants
 

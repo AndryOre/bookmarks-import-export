@@ -1,6 +1,10 @@
 import { storage } from '#imports'
 
-import type { AutoExportConfig, ImportMode } from '@/lib/types'
+import type {
+  AutoExportConfig,
+  AutoExportLastRun,
+  ImportMode,
+} from '@/lib/types'
 
 /**
  * All persisted extension settings, defined with `storage.defineItem` so
@@ -72,8 +76,18 @@ export const autoExportConfigStore = storage.defineItem<AutoExportConfig>(
   { fallback: DEFAULT_AUTO_EXPORT_CONFIG },
 )
 
-export const autoExportLastRunStore = storage.defineItem<number | null>(
-  'local:autoExportLastRun',
+export const autoExportLastRunStore = storage.defineItem<
+  AutoExportLastRun | number | null
+>('local:autoExportLastRun', { fallback: null })
+
+/**
+ * The authoritative next due time for auto-export, in epoch milliseconds.
+ * `null` means auto-export is disabled (or has zero formats selected) — see
+ * `syncAlarm` in `lib/auto-export.ts`, which is the only writer besides
+ * `runAutoExport` re-arming after a scheduled/catch-up run.
+ */
+export const autoExportNextRunStore = storage.defineItem<number | null>(
+  'local:autoExportNextRun',
   { fallback: null },
 )
 
