@@ -1,5 +1,4 @@
 // @vitest-environment jsdom
-// (getImportPreview's HTML branch calls parseHTML(), which needs DOMParser)
 import { beforeEach, describe, expect, it } from 'vitest'
 
 import { resetFakeI18n } from '@/lib/testing/fake-i18n'

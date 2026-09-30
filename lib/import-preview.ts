@@ -17,6 +17,14 @@ function countBookmarks(nodes: ParsedBookmark[]): number {
   return count
 }
 
+/**
+Builds a summary of what importing `text` would do, without importing
+anything. Never throws: a detection or parse failure falls through to a
+zeroed preview with `format` set to whatever {@link detectFormat} returned
+(typically `'unknown'`). CSV previews never carry location data — folder
+paths aren't tied to the bookmarks bar or other bookmarks, so
+`hasLocationData` is always `false` for the `'csv'` format.
+*/
 export function getImportPreview(
   text: string,
   mimeType: string,
@@ -70,9 +78,7 @@ export function getImportPreview(
         try {
           new URL(url)
           count++
-        } catch {
-          // invalid URL, skip
-        }
+        } catch {}
       }
       return {
         format,
@@ -82,9 +88,7 @@ export function getImportPreview(
         hasLocationData: false,
       }
     }
-  } catch {
-    // parse error — return minimal preview
-  }
+  } catch {}
 
   return {
     format,

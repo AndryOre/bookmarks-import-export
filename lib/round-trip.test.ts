@@ -1,5 +1,4 @@
 // @vitest-environment jsdom
-// (the HTML round trip goes through parseHTML(), which needs DOMParser.)
 import { beforeEach, describe, expect, it } from 'vitest'
 
 import { exportToCSV } from '@/lib/exporters/export-csv'
@@ -64,7 +63,8 @@ function seedSourceTree(): void {
 }
 
 /**
-URLs of every bookmark (nodes with a `url`) found under `node`, in order.
+Collects the URLs of every bookmark (nodes with a `url`) found under `node`,
+sorted for order-independent comparison.
 */
 function collectUrls(node: ExtendedBookmarkTreeNode | undefined): string[] {
   if (!node) return []
@@ -88,11 +88,13 @@ describe('round trip: JSON', () => {
     const originalUrls = collectUrls(getFakeBookmarksRoot())
 
     const exported = await exportToJSON(exportOptions)
-    // A real export -> import cycle round-trips through JSON text (file ->
-    // JSON.parse()); exportToJSON's return type isn't ParsedBookmark[] (that's
-    // only the importer's *input* shape), but the runtime shape matches once
-    // serialized, so this cast documents that boundary rather than papering
-    // over an actual mismatch.
+    /**
+    A real export -> import cycle round-trips through JSON text (file ->
+    JSON.parse()); exportToJSON's return type isn't ParsedBookmark[] (that's
+    only the importer's *input* shape), but the runtime shape matches once
+    serialized, so this cast documents that boundary rather than papering
+    over an actual mismatch.
+    */
     const reparsed = structuredClone(exported) as unknown as ParsedBookmark[]
 
     resetFakeBookmarks()

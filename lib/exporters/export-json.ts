@@ -15,6 +15,12 @@ type NodeOptions = Omit<ExportJSONOptions, 'selectedBookmarks'>
 
 const toSeconds = (ms: number): number => Math.floor(ms / 1000)
 
+/**
+Exports bookmarks as a single-element array wrapping an `id="0"` root node,
+so the output round-trips through `importFromJSON` (which expects that same
+root-wrapped shape) without losing the root. Timestamps are converted from
+the milliseconds Chrome stores to whole seconds.
+*/
 export async function exportToJSON(
   options: ExportJSONOptions,
 ): Promise<ExtendedBookmarkTreeNode[]> {
@@ -46,7 +52,6 @@ export async function exportToJSON(
     options_,
   )
 
-  // Wrap en nodo raíz id="0" para compatibilidad bidireccional con el importador
   const root: ExtendedBookmarkTreeNode = {
     ...rootNode,
     children: processedChildren,
@@ -65,8 +70,10 @@ export async function exportToJSON(
   return [root]
 }
 
-// ── Procesamiento recursivo ───────────────────────────────────────────────────
-
+/**
+Processes each of `nodes` via {@link processNode} and flattens the results
+into a single array.
+*/
 async function processNodes(
   nodes: ExtendedBookmarkTreeNode[],
   options: NodeOptions,
@@ -79,6 +86,14 @@ async function processNodes(
   return result
 }
 
+/**
+Processes a single node into zero or one output nodes: a bookmark is
+returned as-is (with timestamps converted and optional fields applied); a
+folder is returned with its children processed recursively, unless it is
+"other bookmarks" (id `"2"`) with `hideOtherBookmarks` set, or a regular
+folder with `hideParentFolder` set — in which case the folder itself is
+dropped and its children are spliced directly into the parent's output.
+*/
 async function processNode(
   node: ExtendedBookmarkTreeNode,
   options: NodeOptions,
@@ -101,12 +116,10 @@ async function processNode(
     return [processed]
   }
   if (node.children !== undefined) {
-    // Aplanar "Other Bookmarks" (id="2") cuando hideOtherBookmarks está activo
     if (node.id === '2' && options.hideOtherBookmarks) {
       return processNodes(node.children as ExtendedBookmarkTreeNode[], options)
     }
 
-    // Aplanar carpetas normales (no id 0/1/2) cuando hideParentFolder está activo
     if (
       options.hideParentFolder &&
       node.id !== '0' &&
