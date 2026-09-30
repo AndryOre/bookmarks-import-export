@@ -31,6 +31,7 @@ Refs: AO-<!-- Linear ticket number, delete this line if not applicable -->
 
 ## Checklist
 
+- [ ] Added/updated tests for new behavior (see CONTRIBUTING.md#tests)
 - [ ] Built and tested locally (`bun dev`)
 - [ ] Tested on Chromium (this extension is Chromium-only)
 - [ ] Keyboard navigation + ARIA attributes verified (if UI change)
