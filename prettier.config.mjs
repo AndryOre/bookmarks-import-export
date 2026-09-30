@@ -1,5 +1,7 @@
 /**
- * @type {import("prettier").Config}
+ * This repository's Prettier configuration: single quotes, no semicolons,
+ * always-wrapped prose, plus import sorting and Tailwind class sorting via
+ * plugins.
  */
 const config = {
   trailingComma: 'all',
