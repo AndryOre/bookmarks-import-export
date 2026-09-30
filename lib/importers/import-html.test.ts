@@ -45,6 +45,96 @@ describe('parseHTML', () => {
     const other = parsed.find((n) => n.isOtherBookmarks)
     expect(other?.children?.[0]?.url).toBe('https://b.example')
   })
+
+  it('recognizes a top-level H3 with unfiled_bookmarks_folder="true" as Other, merging its children', () => {
+    const html = `${HTML_HEADER}
+<DL><p>
+    <DT><H3 UNFILED_BOOKMARKS_FOLDER="true">Other Bookmarks</H3>
+    <DL><p>
+        <DT><A HREF="https://a.example">A</A>
+    </DL><p>
+</DL><p>`
+
+    const parsed = parseHTML(html)
+
+    expect(parsed.find((n) => n.isBookmarksBar)).toBeUndefined()
+    const other = parsed.find((n) => n.isOtherBookmarks)
+    expect(other?.children).toHaveLength(1)
+    expect(other?.children?.[0]?.url).toBe('https://a.example')
+  })
+
+  it('recognizes a top-level "Other bookmarks" H3 by title, case-insensitively', () => {
+    const html = `${HTML_HEADER}
+<DL><p>
+    <DT><H3>oThEr BoOkMaRkS</H3>
+    <DL><p>
+        <DT><A HREF="https://a.example">A</A>
+    </DL><p>
+</DL><p>`
+
+    const parsed = parseHTML(html)
+
+    const other = parsed.find((n) => n.isOtherBookmarks)
+    expect(other?.children).toHaveLength(1)
+    expect(other?.children?.[0]?.url).toBe('https://a.example')
+  })
+
+  it('recognizes a top-level "Mobile bookmarks" H3 by title, merging into a Mobile node', () => {
+    const html = `${HTML_HEADER}
+<DL><p>
+    <DT><H3>Mobile bookmarks</H3>
+    <DL><p>
+        <DT><A HREF="https://a.example">A</A>
+    </DL><p>
+</DL><p>`
+
+    const parsed = parseHTML(html)
+
+    expect(parsed.find((n) => n.isOtherBookmarks)).toBeUndefined()
+    const mobile = parsed.find((n) => n.isMobileBookmarks)
+    expect(mobile?.children).toHaveLength(1)
+    expect(mobile?.children?.[0]?.url).toBe('https://a.example')
+  })
+
+  it('recognizes a top-level H3 matching the live Other root title', () => {
+    const html = `${HTML_HEADER}
+<DL><p>
+    <DT><H3>Otros marcadores</H3>
+    <DL><p>
+        <DT><A HREF="https://a.example">A</A>
+    </DL><p>
+</DL><p>`
+
+    const parsed = parseHTML(html, {
+      bookmarksBarTitle: 'Bookmarks bar',
+      otherBookmarksTitle: 'Otros marcadores',
+      mobileTitle: undefined,
+    })
+
+    const other = parsed.find((n) => n.isOtherBookmarks)
+    expect(other?.children).toHaveLength(1)
+    expect(other?.children?.[0]?.url).toBe('https://a.example')
+  })
+
+  it('keeps an unmatched top-level H3 as a normal nested folder', () => {
+    const html = `${HTML_HEADER}
+<DL><p>
+    <DT><H3>Work</H3>
+    <DL><p>
+        <DT><A HREF="https://a.example">A</A>
+    </DL><p>
+</DL><p>`
+
+    const parsed = parseHTML(html)
+
+    const other = parsed.find((n) => n.isOtherBookmarks)
+    expect(other?.children).toHaveLength(1)
+    const folder = other?.children?.[0]
+    expect(folder?.title).toBe('Work')
+    expect(folder?.isOtherBookmarks).toBeUndefined()
+    expect(folder?.isMobileBookmarks).toBeUndefined()
+    expect(folder?.children?.[0]?.url).toBe('https://a.example')
+  })
 })
 
 describe('importFromHTML', () => {

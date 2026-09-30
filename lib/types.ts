@@ -96,6 +96,7 @@ export interface ImportPreview {
   format: BookmarkFormat
   bookmarksBarCount: number
   otherBookmarksCount: number
+  mobileBookmarksCount: number
   totalCount: number
   hasLocationData: boolean
 }
