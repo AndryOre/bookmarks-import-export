@@ -19,14 +19,18 @@
   branchConcurrentLimit: 5,
 
   rangeStrategy: 'bump',
-  rebaseWhen: 'conflicted',
+  // Main requires the PR branch to be up to date before merging
+  // (strict_required_status_checks_policy in scripts/repo-settings/main-ruleset.json),
+  // so automerge branches must be kept current, not just conflict-free
+  rebaseWhen: 'behind-base-branch',
 
   // Wait 3 days before opening a PR — guards against supply-chain attacks on freshly published versions
   minimumReleaseAge: '3 days',
 
   labels: ['dependencies'],
 
-  // Renovate opens an immediate PR when a vulnerability is found — no Dependabot needed
+  // Vulnerability source is osvVulnerabilityAlerts only — Dependabot alerts are
+  // deliberately disabled (docs/adr/0001-public-repo-security-posture.md)
   osvVulnerabilityAlerts: true,
   vulnerabilityAlerts: {
     enabled: true,
@@ -108,20 +112,22 @@
       enabled: false,
     },
 
-    // OPT-IN AUTOMERGE — uncomment once branch protection + required status checks are active
+    // OPT-IN AUTOMERGE — active: branch protection + required "CI passed" status check
+    // are now enforced on main (AO-827, docs/adr/0001-public-repo-security-posture.md)
     // Uses 7-day release age (stricter than global 3-day) as extra supply-chain buffer
-    // {
-    //   matchDepTypes: ['devDependencies'],
-    //   matchUpdateTypes: ['patch', 'minor'],
-    //   automerge: true,
-    //   automergeType: 'pr',
-    //   minimumReleaseAge: '7 days',
-    // },
-    // {
-    //   matchManagers: ['github-actions'],
-    //   automerge: true,
-    //   automergeType: 'pr',
-    //   minimumReleaseAge: '7 days',
-    // },
+    {
+      matchDepTypes: ['devDependencies'],
+      matchUpdateTypes: ['patch', 'minor'],
+      automerge: true,
+      automergeType: 'pr',
+      minimumReleaseAge: '7 days',
+    },
+    {
+      matchManagers: ['github-actions'],
+      matchUpdateTypes: ['patch', 'minor', 'digest', 'pinDigest'],
+      automerge: true,
+      automergeType: 'pr',
+      minimumReleaseAge: '7 days',
+    },
   ],
 }
