@@ -91,6 +91,7 @@ export const BookmarkTree = forwardRef<
      * state, which may be stale relative to the browser — and prunes it
      * down to just the checked ids, so exports always reflect the
      * browser's current bookmarks.
+     * @returns The selected bookmarks, pruned to the minimal containing folders.
      */
     getSelectedBookmarks: async () => {
       const tree = await fetchFullTree()
@@ -294,6 +295,9 @@ function NodeRow({
  * Derives a folder's checkbox state from its descendant bookmarks: `false`
  * when none are checked, `true` when all are, `'indeterminate'` otherwise.
  * Folders never store their own checked state (see {@link CheckedState}).
+ * @param children The folder's direct children.
+ * @param checkedState The current per-bookmark checked-id map.
+ * @returns The derived checked state for the folder.
  */
 function determineCheckedState(
   children: BookmarkNode[],
@@ -382,6 +386,9 @@ function findAncestorsOfMatches(nodes: BookmarkNode[], term: string): string[] {
  * {@link BookmarkNode} shape, filling in each node's `parentId`
  * explicitly (the root's children are treated as top-level, i.e. their own
  * `parentId` is kept) so descendants don't depend on the live API object.
+ * @param nodes The raw `browser.bookmarks` nodes to convert.
+ * @param parentId The parent id to assign to top-level `nodes`.
+ * @returns The converted nodes, with `parentId` filled in throughout.
  */
 function addParentIds(
   nodes: Browser.bookmarks.BookmarkTreeNode[],
@@ -411,6 +418,9 @@ async function fetchFullTree(): Promise<Browser.bookmarks.BookmarkTreeNode[]> {
  * Filters a raw bookmark tree down to checked bookmarks, keeping only the
  * folders needed to contain them — a folder with no checked descendants is
  * dropped entirely rather than kept empty.
+ * @param tree The raw bookmark tree to prune.
+ * @param checkedState The current per-bookmark checked-id map.
+ * @returns The pruned tree, containing only checked bookmarks and their ancestors.
  */
 function pruneTree(
   tree: Browser.bookmarks.BookmarkTreeNode[],

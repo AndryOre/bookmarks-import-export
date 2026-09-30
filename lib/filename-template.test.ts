@@ -5,7 +5,7 @@ import { formatFilenameTemplate } from './filename-template'
 describe('formatFilenameTemplate', () => {
   /**
   2024-03-05 09:07:03
-  */
+   */
   const date = new Date(2024, 2, 5, 9, 7, 3)
 
   it('substitutes all supported placeholders', () => {

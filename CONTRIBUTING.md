@@ -12,37 +12,13 @@ See [`docs/development.md`](docs/development.md) for the full local development
 guide: available scripts, git hooks, `fakeBrowser` testing, and how to add a
 `@shadcn/lint` contract.
 
-## Branch naming
+## Branch naming and commit format
 
-Branches are validated by the repository's `pre-push` hook (see
-[`docs/development.md`](docs/development.md#git-hooks)) and must match:
-
-```
-^(main|renovate/.+|(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)/[a-z0-9._-]+)$
-```
-
-For example: `feat/csv-export`, `fix/popup-crash`, `chore/bump-deps`.
-
-## Commit and PR title format
-
-Commits and pull request titles use gitmoji + Conventional Commits:
-
-```
-<type>: <emoji> <lowercase subject>
-```
-
-For example: `feat: ✨ add dark mode`.
-
-`<type>` must be one of the types allowed by
-[`docs/development.md`](docs/development.md#commit-format), which mirrors the
-`Validate PR title` CI check:
-
-```
-feat fix docs style refactor perf test build ci chore revert
-```
-
-The subject must start with a lowercase letter. The `commit-msg` git hook
-enforces this locally for commits, and CI enforces it for the PR title.
+Branch names and commit/PR titles follow fixed conventions — see
+[`docs/development.md`](docs/development.md#branch-naming) and
+[`docs/development.md`](docs/development.md#commit-format) for the exact
+patterns, what's actually lint-enforced versus convention-only, and how each is
+checked locally (git hooks) and in CI.
 
 ## Merging
 
@@ -54,8 +30,10 @@ commit message.
 ## CI
 
 The `CI passed` check must be green before a pull request can be merged. This
-includes formatting, linting, type-checking, and tests — run `bun run check`
-(and `bun run test`) locally before opening a PR to catch issues early.
+includes formatting, linting, type-checking, unused-code detection, and tests.
+`bun run check` runs the first four; it does **not** run the test suite. Run
+both `bun run check` and `bun run test` locally before opening a PR to catch
+issues early.
 
 ## Reporting security issues
 

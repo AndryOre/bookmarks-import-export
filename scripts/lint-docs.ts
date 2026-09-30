@@ -77,6 +77,8 @@ export const LYCHEE_ARGS = [
   'PRIVACY_POLICY.md',
   'CODE_OF_CONDUCT.md',
   'CONTRIBUTING.md',
+  'AGENTS.md',
+  'CONTEXT.md',
   'docs/**/*.md',
   '.github/*.md',
 ] as const
@@ -85,6 +87,9 @@ export const LYCHEE_ARGS = [
  * Lychee only publishes Linux release assets for these two architectures.
  * Defaults to `process.platform`/`process.arch` but takes them as parameters
  * so it's a pure, directly testable function.
+ * @param arch The Node.js architecture to map.
+ * @param platform The Node.js platform to validate.
+ * @returns The matching lychee release architecture string.
  */
 export function resolveLycheeArch(
   arch: NodeJS.Architecture = process.arch,
@@ -114,6 +119,8 @@ export function buildLycheeDownloadUrl(version: string, arch: string): string {
  * The `resolveLockDirectory`-relative path a cached binary lives at, split
  * out as its own pure function so `scripts/lint-docs.test.ts` can assert on
  * it without a real git invocation.
+ * @param version The pinned lychee version.
+ * @returns The relative cache path for that version's binary.
  */
 export function buildLycheeCacheRelativePath(version: string): string {
   return path.join('lychee', version, 'lychee')
@@ -126,6 +133,9 @@ export function buildLycheeCacheRelativePath(version: string): string {
  * verified against the real `v0.24.2` asset — and the upstream action's own
  * install script has to do the same kind of search since that nesting isn't
  * guaranteed to stay put across releases.
+ * @param rootDirectory The directory to search from.
+ * @param maxDepth How many nested directory levels to descend into.
+ * @returns The found binary's path, or `undefined` if none was found.
  */
 function findBinaryRecursively(
   rootDirectory: string,
@@ -154,6 +164,9 @@ function findBinaryRecursively(
  * with the download URL and a manual-install hint on any network or
  * archive-layout failure — a silent skip here would make `lint:docs` quietly
  * pass without ever having linted anything.
+ * @param version The lychee release version to download.
+ * @param destinationPath Where the extracted binary is moved to.
+ * @returns Resolves once the binary is in place at `destinationPath`.
  */
 async function downloadLycheeBinary(
   version: string,
@@ -224,6 +237,8 @@ async function downloadLycheeBinary(
  * same destination concurrently — the second one to reach the lock
  * re-checks `existsSync` first and finds the first one already finished,
  * rather than downloading a second time.
+ * @param version The pinned lychee version to ensure is cached.
+ * @returns The cached binary's absolute path.
  */
 export async function ensureLycheeBinary(version: string): Promise<string> {
   const binaryPath = await resolveLockDirectory(

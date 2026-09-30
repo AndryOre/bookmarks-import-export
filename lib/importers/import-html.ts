@@ -23,6 +23,9 @@ import type { ImportMode, ParsedBookmark } from '@/lib/types'
  * which case they're rethrown as-is so the caller can distinguish a
  * structural failure (e.g. the browser's roots not being present) from an
  * arbitrary `browser.bookmarks.create()` failure.
+ * @param html The Netscape-format bookmarks HTML to import.
+ * @param mode Where the parsed tree is written.
+ * @returns Resolves once the import has finished.
  */
 export async function importFromHTML(
   html: string,
@@ -65,6 +68,8 @@ export async function importFromHTML(
  * `unshift`, regardless of its position in the source document. Every
  * other top-level bookmark or folder is nested under a synthetic "Other
  * bookmarks" node.
+ * @param html The Netscape-format bookmarks HTML document to parse.
+ * @returns The parsed bookmark tree.
  */
 export function parseHTML(html: string): ParsedBookmark[] {
   const document = new DOMParser().parseFromString(html, 'text/html')
@@ -121,6 +126,8 @@ export function parseHTML(html: string): ParsedBookmark[] {
  * multiplied by 1000 to match the millisecond timestamps `Date.now()` and
  * the rest of this codebase use. Falls back to the current time when
  * `add_date` is absent.
+ * @param a The anchor element to parse.
+ * @returns The parsed bookmark.
  */
 function parseBookmarkElement(a: HTMLAnchorElement): ParsedBookmark {
   const dateAddedAttribute = a.getAttribute('add_date')
@@ -138,6 +145,9 @@ function parseBookmarkElement(a: HTMLAnchorElement): ParsedBookmark {
  * folder node, recursing into nested bookmarks and folders. Like
  * `parseBookmarkElement`, `add_date` and `last_modified` are Unix
  * timestamps in seconds and are converted to milliseconds.
+ * @param h3 The folder heading element.
+ * @param dt The `<DT>` element wrapping `h3` and its sibling/nested `<DL>`.
+ * @returns The parsed folder node.
  */
 function parseFolderElement(h3: HTMLElement, dt: Element): ParsedBookmark {
   const dateAddedAttribute = h3.getAttribute('add_date')
@@ -188,6 +198,9 @@ function parseFolderElement(h3: HTMLElement, dt: Element): ParsedBookmark {
  * bookmarks bar / "Other bookmarks" roots) rather than an arbitrary
  * `browser.bookmarks` API failure, so the caller can rethrow them as-is
  * instead of wrapping them in a generic create-error message.
+ * @param parsed The parsed bookmark tree to write.
+ * @param mode Where and how the tree is written.
+ * @returns Resolves once the tree has been written.
  */
 async function processBookmarks(
   parsed: ParsedBookmark[],

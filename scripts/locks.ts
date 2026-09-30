@@ -56,6 +56,8 @@ export interface LockHolder {
  * path — one scoped to a single worktree's own `.git` would let two
  * worktrees each "hold" an independent lock while stepping on the same
  * underlying resource anyway.
+ * @param lockName The lock directory's name, relative to `--git-common-dir`.
+ * @returns The lock directory's absolute path.
  */
 export async function resolveLockDirectory(lockName: string): Promise<string> {
   const output = await Bun.$`git rev-parse --git-common-dir`.text()
@@ -100,6 +102,9 @@ export function readLockHolder<THolder extends LockHolder = LockHolder>(
  * never observe about itself (it's the directory it's executing in) — so
  * that combination can only mean the original process died and its pid was
  * later recycled by an unrelated one.
+ * @param lockDirectory The lock directory to check.
+ * @param maxAgeMs The pid-reuse fallback age, in ms.
+ * @returns Whether the lock should be treated as abandoned.
  */
 export function isLockStale(lockDirectory: string, maxAgeMs: number): boolean {
   const holder = readLockHolder(lockDirectory)
@@ -126,6 +131,9 @@ export function isLockStale(lockDirectory: string, maxAgeMs: number): boolean {
  * bounded wait on top of this for callers that need one; a short-lived
  * writer (a `bun` script that exits right after this call, with no
  * long-lived process left around to poll) can call this directly instead.
+ * @param lockDirectory The lock directory to create.
+ * @param holder The holder payload to write into it.
+ * @returns Whether this call acquired the lock.
  */
 export function didAcquireLock<THolder extends LockHolder>(
   lockDirectory: string,
@@ -182,6 +190,10 @@ export interface AcquireLockOptions {
  * acquire always records the real acquisition time rather than the time the
  * wait started. Throws once `options.timeoutMs` elapses with the lock still
  * held by a live holder.
+ * @param lockDirectory The lock directory to acquire.
+ * @param buildHolder Builds the holder payload to write on a successful attempt.
+ * @param options Timeout, poll interval, staleness, and logging config.
+ * @returns Resolves once the lock is acquired.
  */
 export async function acquireLock<THolder extends LockHolder>(
   lockDirectory: string,

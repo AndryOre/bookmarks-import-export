@@ -22,13 +22,15 @@ interface CSVRow {
 }
 
 /**
-Exports bookmarks as CSV text: CRLF line endings, every field quoted, and
-one column per requested field (`title`, `url`, `folder`, plus `dateAdded`,
-`dateLastUsed`, `iconData` when their options are enabled). Timestamps are
-converted from the milliseconds Chrome stores to whole seconds. Nested
-folders are flattened into a single `folder` column, with path segments
-joined by `/`.
-*/
+ * Exports bookmarks as CSV text: CRLF line endings, every field quoted, and
+ * one column per requested field (`title`, `url`, `folder`, plus `dateAdded`,
+ * `dateLastUsed`, `iconData` when their options are enabled). Timestamps are
+ * converted from the milliseconds Chrome stores to whole seconds. Nested
+ * folders are flattened into a single `folder` column, with path segments
+ * joined by `/`.
+ * @param options Which bookmarks to export and which optional columns to include.
+ * @returns The CSV text.
+ */
 export async function exportToCSV(options: ExportCSVOptions): Promise<string> {
   const {
     selectedBookmarks,
@@ -66,10 +68,15 @@ export async function exportToCSV(options: ExportCSVOptions): Promise<string> {
 }
 
 /**
-Recursively walks `nodes`, pushing one row per bookmark onto `rows`. Folders
-contribute no row of their own; their label is appended to `parentPath`
-(joined with `/`) and passed down to their children.
-*/
+ * Recursively walks `nodes`, pushing one row per bookmark onto `rows`. Folders
+ * contribute no row of their own; their label is appended to `parentPath`
+ * (joined with `/`) and passed down to their children.
+ * @param nodes The nodes to walk.
+ * @param rows The accumulator rows are pushed onto.
+ * @param parentPath The folder path accumulated so far, joined by `/`.
+ * @param options Which optional columns to include.
+ * @returns Resolves once every node has been visited.
+ */
 async function flattenToRows(
   nodes: ExtendedBookmarkTreeNode[],
   rows: CSVRow[],
@@ -120,12 +127,15 @@ async function flattenToRows(
 }
 
 /**
-Computes the label to use for a folder in the CSV `folder` column. The root
-(id `"0"`) always contributes an empty label; the bookmarks bar (`"1"`) and
-other bookmarks (`"2"`) use their localized names. Regular folders return an
-empty label when `shouldHideParentFolder` is set, which flattens every level
-of nesting under them.
-*/
+ * Computes the label to use for a folder in the CSV `folder` column. The root
+ * (id `"0"`) always contributes an empty label; the bookmarks bar (`"1"`) and
+ * other bookmarks (`"2"`) use their localized names. Regular folders return an
+ * empty label when `shouldHideParentFolder` is set, which flattens every level
+ * of nesting under them.
+ * @param node The folder node to label.
+ * @param shouldHideParentFolder Whether regular folders should contribute an empty label.
+ * @returns The folder's CSV path segment label.
+ */
 function getFolderLabel(
   node: ExtendedBookmarkTreeNode,
   shouldHideParentFolder: boolean,

@@ -14,6 +14,9 @@ import type { ImportMode, ParsedBookmark } from '@/lib/types'
  * in place (it sets `isBookmarksBar`/`isOtherBookmarks` on nodes it
  * finds), so the array passed in should not be reused elsewhere as if it
  * were untouched.
+ * @param bookmarks The previously exported bookmark tree to import.
+ * @param mode Where and how the tree is written.
+ * @returns Resolves once the import has finished.
  */
 export async function importFromJSON(
   bookmarks: ParsedBookmark[],
@@ -55,6 +58,8 @@ interface PreprocessLevelResult {
  * - a node with `children` and none of the above is treated as a virtual
  *   root (see `preprocessBookmarks`) and its children are returned via
  *   `virtualRootChildren`; scanning of this level stops there.
+ * @param level The sibling nodes to scan.
+ * @returns The classified nodes, orphans, and any virtual root's children.
  */
 function preprocessLevel(level: ParsedBookmark[]): PreprocessLevelResult {
   const result: ParsedBookmark[] = []
@@ -89,6 +94,8 @@ function preprocessLevel(level: ParsedBookmark[]): PreprocessLevelResult {
  * bookmarks"; and orphaned nodes (`parentId === '2'` but not nested under
  * an `id === '2'` node), which are collected into a synthetic "Other
  * bookmarks" node if one wasn't already present in the result.
+ * @param bookmarks The raw top-level array from an exported JSON tree.
+ * @returns The normalized `[ bookmarksBar?, otherBookmarks? ]` array.
  */
 export function preprocessBookmarks(
   bookmarks: ParsedBookmark[],
@@ -126,6 +133,9 @@ export function preprocessBookmarks(
  * arbitrary `browser.bookmarks` API failure — see `importFromJSON`'s
  * catch block, which replaces a `PROCESS_ERROR` message with a generic
  * localized one rather than surfacing the raw error.
+ * @param parsed The preprocessed bookmark tree to write.
+ * @param mode Where and how the tree is written.
+ * @returns Resolves once the tree has been written.
  */
 async function processBookmarks(
   parsed: ParsedBookmark[],
@@ -205,6 +215,9 @@ async function processBookmarks(
  * Recursively creates the tree under `parentId`. A folder node with no
  * children (or an empty `children` array) is silently skipped — it is
  * never created in the browser.
+ * @param nodes The nodes to create.
+ * @param parentId The id of the folder to create them under.
+ * @returns Resolves once every node has been created.
  */
 async function createBookmarks(
   nodes: ParsedBookmark[],

@@ -23,6 +23,9 @@ interface ThemeProviderProperties {
  * Applies the persisted theme preference to the document root and keeps it
  * in sync with the operating system's color scheme when the preference is
  * `"system"`.
+ * @param root0 This component's properties.
+ * @param root0.children The subtree to provide the theme context to.
+ * @returns The theme context provider wrapping `children`.
  */
 export function ThemeProvider({ children }: ThemeProviderProperties) {
   const [theme, setThemeInStorage] = useStorageItem(themeStore)
@@ -44,6 +47,7 @@ export function ThemeProvider({ children }: ThemeProviderProperties) {
        * Reacts to OS-level color scheme changes while the preference is
        * `"system"`, so the applied theme stays live instead of only being
        * resolved once when the effect first runs.
+       * @param event The OS color-scheme change event.
        */
       const handleChange = (event: MediaQueryListEvent) => {
         applyTheme(event.matches ? 'dark' : 'light')

@@ -2,25 +2,26 @@
 
 ## Scripts
 
-| Script                  | What it does                                                                     |
-| ----------------------- | -------------------------------------------------------------------------------- |
-| `bun run dev`           | Starts the WXT dev server (Chrome MV3).                                          |
-| `bun run build`         | Produces a production build (Chrome MV3).                                        |
-| `bun run zip`           | Builds and packages the extension into a distributable `.zip`.                   |
-| `bun run check`         | Aggregate gate: `format:check` → `lint` → `typecheck`. Run before opening a PR.  |
-| `bun run fix`           | Aggregate autofix: `format:write` → `lint:fix` → `typecheck`.                    |
-| `bun run ci:local`      | Reproduces CI locally: frozen-lockfile install → `check` → `lint:docs` → `test`. |
-| `bun run clean`         | Removes build output and `node_modules`.                                         |
-| `bun run cache:clear`   | Clears ESLint and `node_modules/.cache` caches.                                  |
-| `bun run format:check`  | Checks formatting with Prettier (no writes).                                     |
-| `bun run format:write`  | Formats the repo with Prettier.                                                  |
-| `bun run lint`          | Runs ESLint (`--max-warnings=0`, cached).                                        |
-| `bun run lint:docs`     | Local `lychee` link check, matching `lint-docs.yml`'s markdown link gate.        |
-| `bun run lint:fix`      | Runs ESLint with `--fix` (`--max-warnings=0`, cached).                           |
-| `bun run typecheck`     | Runs `tsc --noEmit`.                                                             |
-| `bun run test`          | Runs the Vitest suite once.                                                      |
-| `bun run test:coverage` | Runs the Vitest suite with coverage (`lib/**`, v8 provider, 50% thresholds).     |
-| `bun run test:watch`    | Runs Vitest in watch mode.                                                       |
+| Script                  | What it does                                                                             |
+| ----------------------- | ---------------------------------------------------------------------------------------- |
+| `bun run dev`           | Starts the WXT dev server (Chrome MV3).                                                  |
+| `bun run build`         | Produces a production build (Chrome MV3).                                                |
+| `bun run zip`           | Builds and packages the extension into a distributable `.zip`.                           |
+| `bun run check`         | Aggregate gate: `format:check` → `lint` → `typecheck` → `knip`. Run before opening a PR. |
+| `bun run fix`           | Aggregate autofix: `format:write` → `lint:fix` → `typecheck`.                            |
+| `bun run knip`          | Finds unused files, exports, and dependencies (`bunx knip`).                             |
+| `bun run ci:local`      | Reproduces CI locally: frozen-lockfile install → `check` → `lint:docs` → `test`.         |
+| `bun run clean`         | Removes build output and `node_modules`.                                                 |
+| `bun run cache:clear`   | Clears ESLint and `node_modules/.cache` caches.                                          |
+| `bun run format:check`  | Checks formatting with Prettier (no writes).                                             |
+| `bun run format:write`  | Formats the repo with Prettier.                                                          |
+| `bun run lint`          | Runs ESLint (`--max-warnings=0`, cached).                                                |
+| `bun run lint:docs`     | Local `lychee` link check, matching `lint-docs.yml`'s markdown link gate.                |
+| `bun run lint:fix`      | Runs ESLint with `--fix` (`--max-warnings=0`, cached).                                   |
+| `bun run typecheck`     | Runs `tsc --noEmit`.                                                                     |
+| `bun run test`          | Runs the Vitest suite once.                                                              |
+| `bun run test:coverage` | Runs the Vitest suite with coverage (`lib/**`, v8 provider, 50% thresholds).             |
+| `bun run test:watch`    | Runs Vitest in watch mode.                                                               |
 
 ## Git hooks
 
@@ -30,8 +31,11 @@ Hooks are installed via Husky and live in `.husky/`:
   staged `*.{js,jsx,ts,tsx,mjs}` files and Prettier alone to staged
   `*.{json,md,mdx,css,scss,yml,yaml}` files (see `lint-staged.config.mjs`).
 - **`commit-msg`** — runs `bunx commitlint --edit $1` against
-  `commitlint.config.mjs` (`@commitlint/config-conventional`), enforcing the
-  commit format below.
+  `commitlint.config.mjs`, which only extends `@commitlint/config-conventional`.
+  It enforces the Conventional Commits `<type>: <subject>` shape and the type
+  list below, but it does **not** enforce the gitmoji — a commit without an
+  emoji still passes this hook. The gitmoji is a repository convention, not a
+  lint-enforced rule.
 - **`pre-push`** — rejects a push if the current branch name doesn't match
   `^(main|renovate/.+|(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)/[a-z0-9._-]+)$`.
 
@@ -111,24 +115,29 @@ threshold on lines/statements/branches/functions.
 
 This repo's GitHub settings (rulesets on `main` and `v*` tags, merge strategy,
 private vulnerability reporting, SHA-pinned Actions, immutable releases,
-workflow execution protections, and feature/metadata flags) are codified and
-applied via `gh api` rather than clicked through the Settings UI. See
-`docs/adr/0001-public-repo-security-posture.md` for the full target state and
-the reasoning behind each choice.
+workflow execution protections, and feature/metadata flags) are no longer
+applied via a script — `scripts/repo-settings/apply.sh` was temporary
+settings-as-code tooling and has since been deleted. See
+[`docs/adr/0001-public-repo-security-posture.md`](adr/0001-public-repo-security-posture.md)
+for the target state this repository's settings were brought to, the reasoning
+behind each choice, and why the script was removed rather than kept around
+permanently.
 
-To (re-)apply them:
+## Code documentation
 
-```sh
-scripts/repo-settings/apply.sh <owner/repo>
-```
+Every code comment in this repository (outside `components/ui/**`, the
+shadcn/ui-generated layer) is a `/**` TSDoc block, added only where it earns its
+place on a non-obvious export — never restating what a signature already says.
+Plain `//` line comments and non-JSDoc `/* */` block comments are disallowed;
+the only exceptions are directive comments a tool reads rather than a human:
+`eslint*` (`eslint-disable`, `eslint-enable`, ...), `global`, `@ts-*`
+(`@ts-expect-error`, ...), `prettier-ignore`, `@vitest-environment`, and
+TypeScript triple-slash reference directives.
 
-The script is idempotent — running it again against the same repo leaves the
-same end state — and logs a warning (without aborting) for any setting the
-GitHub API refuses, e.g. `secret_scanning_non_provider_patterns`, which this
-repo's plan does not currently support.
-
-**This script and the `scripts/repo-settings/` folder are temporary.** This
-repository is planned to migrate to `AndryOre/bookmarks-import-export`. Once
-that migration happens and `apply.sh` has been re-run against the new repo,
-delete `scripts/repo-settings/` entirely — it is not meant to be permanent
-settings-as-code infrastructure.
+This is enforced by ESLint: the local `local/no-non-doc-comments` rule bans
+non-doc comments, `jsdoc/informative-docs` rejects a TSDoc block that only
+repeats its symbol's name back, and
+`@eslint-community/eslint-comments/require-description` requires every
+`eslint-disable*` comment to say why. See
+[`docs/adr/0002-tsdoc-only-code-comments.md`](adr/0002-tsdoc-only-code-comments.md)
+for the full rationale.
