@@ -8,7 +8,7 @@ built-in Private Vulnerability Reporting or by email:
 **→
 [Open a security advisory](https://github.com/AndryOre/bookmarks-import-export/security/advisories/new)**
 
-**→ Or email [me@andryore.dev](mailto:me@andryore.dev)**
+**→ Or email [hello@andryore.dev](mailto:hello@andryore.dev)**
 
 Do **not** open a public issue for security reports — that exposes the
 vulnerability before a fix is available.

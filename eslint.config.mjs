@@ -1,6 +1,8 @@
+import eslintComments from '@eslint-community/eslint-plugin-eslint-comments'
 import { plugin as shadcn } from '@shadcn/lint'
 import vitest from '@vitest/eslint-plugin'
 import prettierConfig from 'eslint-config-prettier'
+import jsdoc from 'eslint-plugin-jsdoc'
 import jsxA11y from 'eslint-plugin-jsx-a11y'
 import react from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
@@ -9,39 +11,54 @@ import { defineConfig, globalIgnores } from 'eslint/config'
 import tseslint from 'typescript-eslint'
 
 import wxtAutoImports from './.wxt/eslint-auto-imports.mjs'
+import localPlugin from './eslint-rules/index.mjs'
 
-// Punctuation/symbol-only JSX text that `react/jsx-no-literals` would
-// otherwise flag as copy — none of these carry translatable meaning.
+/**
+ * Punctuation/symbol-only JSX text that `react/jsx-no-literals` would
+ * otherwise flag as copy — none of these carry translatable meaning.
+ */
 const JSX_NO_LITERALS_ALLOWED_STRINGS = [
   '/',
-  // The exported HTML file's fixed extension — a technical suffix, not
-  // translatable copy.
+  /**
+   * The exported HTML file's fixed extension — a technical suffix, not
+   * translatable copy.
+   */
   '.html',
   '—',
 ]
 
-// Per-component exceptions to `shadcn/no-restyle`, each encoding one real,
-// bounded design decision rather than disabling the rule outright.
+/**
+ * Per-component exceptions to `shadcn/no-restyle`, each encoding one real,
+ * bounded design decision rather than disabling the rule outright.
+ *
+ * - `Input`: the popup/dialog UI has no responsive breakpoints, so every
+ *   `Input` locks in the `md:` text-sm size instead of also carrying the
+ *   mobile-only text-base. A few inputs also overlay a leading icon and
+ *   need matching start padding to keep typed text clear of it.
+ * - `Label`: the time-picker's Hours/Minutes/Period captions intentionally
+ *   use a smaller, muted treatment instead of Label's default typography —
+ *   there is no dedicated caption variant for this yet.
+ * - `CardTitle`/`CardDescription`: `FeatureCard` renders a deliberately
+ *   compact title/description scale (bolder + smaller than Card's own
+ *   defaults) to fit four cards in the welcome page grid.
+ * - `Tabs`/`TabsList`/`TabsTrigger`/`TabsContent`
+ *   (`components/ui/tabs.tsx`): need consumer-provided layout/spacing
+ *   classes (flex sizing, width, the `data-[state=inactive]:hidden`
+ *   visibility hook used to keep every tab mounted, the settings-dialog's
+ *   own vertical rhythm) to fill the popup's fixed viewport — there is no
+ *   parent element to push them onto, since these primitives themselves
+ *   define the flex/grid context their own layout classes participate in.
+ */
 const shadcnNoRestyleContracts = [
   {
-    // The popup/dialog UI has no responsive breakpoints, so every Input
-    // locks in the `md:` text-sm size instead of also carrying the
-    // mobile-only text-base. A few inputs also overlay a leading icon and
-    // need matching start padding to keep typed text clear of it.
     pattern: '^Input$',
     allow: ['layout', 'text-sm', 'pl-8'],
   },
   {
-    // The time-picker's Hours/Minutes/Period captions intentionally use a
-    // smaller, muted treatment instead of Label's default typography —
-    // there is no dedicated caption variant for this yet.
     pattern: '^Label$',
     allow: ['layout', 'text-xs', 'text-muted-foreground'],
   },
   {
-    // FeatureCard renders a deliberately compact title/description scale
-    // (bolder + smaller than Card's own defaults) to fit four cards in the
-    // welcome page grid.
     pattern: '^CardTitle$',
     allow: ['layout', 'text-sm', 'font-semibold'],
   },
@@ -50,17 +67,63 @@ const shadcnNoRestyleContracts = [
     allow: ['layout', 'text-xs'],
   },
   {
-    // `Tabs`/`TabsList`/`TabsTrigger`/`TabsContent` (components/ui/tabs.tsx)
-    // need consumer-provided layout/spacing classes (flex sizing, width,
-    // the `data-[state=inactive]:hidden` visibility hook used to keep every
-    // tab mounted, the settings-dialog's own vertical rhythm) to fill the
-    // popup's fixed viewport — there is no parent element to push them onto,
-    // since these primitives themselves define the flex/grid context their
-    // own layout classes participate in.
     pattern: '^Tabs(List|Trigger|Content)?$',
     allow: ['layout', 'spacing', 'space-y-4', 'pt-2'],
   },
 ]
+
+/**
+ * `eslint-plugin-jsdoc`'s TypeScript-flavored recommended rules, with
+ * `require-jsdoc` turned off (this repo documents only non-obvious
+ * exports, not everything — see later wave-2/wave-3 tickets) and
+ * `informative-docs` turned on (rejects JSDoc that just restates the
+ * declaration's name).
+ */
+const jsdocRules = {
+  ...jsdoc.configs['flat/recommended-typescript-error'].rules,
+  'jsdoc/require-jsdoc': 'off',
+  'jsdoc/informative-docs': 'error',
+}
+
+/**
+ * `@eslint-community/eslint-plugin-eslint-comments`'s recommended rules,
+ * with `require-description` turned on so every `eslint-disable*` comment
+ * must say why.
+ */
+const eslintCommentsRules = {
+  ...eslintComments.configs.recommended.rules,
+  '@eslint-community/eslint-comments/require-description': 'error',
+}
+
+/**
+ * This repo's local `no-non-doc-comments` rule (see `eslint-rules/`),
+ * which bans `//` line comments and non-JSDoc `/* *\/` block comments.
+ */
+const localCommentRules = {
+  'local/no-non-doc-comments': 'error',
+}
+
+/**
+ * The three comment-policy rule groups this wave introduces, combined.
+ * Kept as one named object so the temporary wave-2 exemption block below
+ * can turn exactly these rules back off without re-listing them.
+ */
+const commentPolicyRules = {
+  ...jsdocRules,
+  ...eslintCommentsRules,
+  ...localCommentRules,
+}
+
+/**
+ * Builds a rules object that turns every rule in `rules` off — used to
+ * disable the comment-policy rule groups for directories wave-2 hasn't
+ * migrated yet.
+ * @param rules A rules object whose keys are ESLint rule ids.
+ * @returns The same rule ids, each mapped to `'off'`.
+ */
+function turnOffAll(rules) {
+  return Object.fromEntries(Object.keys(rules).map((ruleId) => [ruleId, 'off']))
+}
 
 const eslintConfig = defineConfig([
   wxtAutoImports,
@@ -87,14 +150,16 @@ const eslintConfig = defineConfig([
   react.configs.flat.recommended,
   react.configs.flat['jsx-runtime'],
   {
-    // Explicit plugin registration + rules extraction instead of spreading
-    // `reactHooks.configs['recommended-latest']` directly: combining that
-    // object as-is with a typescript-eslint `extends` block elsewhere in
-    // this same config array corrupts its `plugins` field down to the
-    // legacy eslintrc array shape (`['react-hooks']`) by the time ESLint
-    // validates the full config, which then throws "plugins key defined as
-    // an array of strings". Unclear which package's flat-config resolution
-    // causes it; this sidesteps it entirely.
+    /**
+     * Explicit plugin registration + rules extraction instead of spreading
+     * `reactHooks.configs['recommended-latest']` directly: combining that
+     * object as-is with a typescript-eslint `extends` block elsewhere in
+     * this same config array corrupts its `plugins` field down to the
+     * legacy eslintrc array shape (`['react-hooks']`) by the time ESLint
+     * validates the full config, which then throws "plugins key defined as
+     * an array of strings". Unclear which package's flat-config resolution
+     * causes it; this sidesteps it entirely.
+     */
     plugins: { 'react-hooks': reactHooks },
     rules: reactHooks.configs['recommended-latest'].rules,
   },
@@ -111,14 +176,19 @@ const eslintConfig = defineConfig([
           ignore: [/^\[.+\]/, /^\(.+\)/],
         },
       ],
-      // `lib/utils.ts` is shadcn/ui's own generated convention
-      // (components.json `aliases.utils` -> `@/lib/utils`) — renaming it
-      // would fight every future `shadcn add`. `scripts/lint-docs.ts` mirrors
-      // `.github/workflows/lint-docs.yml`'s name (and andryore-dev's own
-      // `scripts/lint-docs.ts`) — renaming it would break that parity.
+      /**
+       * `lib/utils.ts` is shadcn/ui's own generated convention
+       * (`components.json` `aliases.utils` -> `@/lib/utils`) — renaming it
+       * would fight every future `shadcn add`. `scripts/lint-docs.ts`
+       * mirrors `.github/workflows/lint-docs.yml`'s name (and
+       * andryore-dev's own `scripts/lint-docs.ts`) — renaming it would
+       * break that parity. `eslint-rules/no-non-doc-comments.mjs` and its
+       * `local/no-non-doc-comments` rule id are named to match this
+       * ticket's (AO-837) spec verbatim.
+       */
       'unicorn/name-replacements': [
         'error',
-        { allowList: { utils: true, docs: true } },
+        { allowList: { utils: true, docs: true, doc: true } },
       ],
     },
   },
@@ -177,6 +247,45 @@ const eslintConfig = defineConfig([
     rules: {
       ...vitest.configs.recommended.rules,
     },
+  },
+  {
+    /**
+     * The comment-policy rule groups (local `no-non-doc-comments`,
+     * `eslint-plugin-jsdoc`'s TypeScript-flavored recommended rules plus
+     * `jsdoc/informative-docs`, and `@eslint-community/eslint-comments`'s
+     * recommended rules plus `require-description`) — banning non-doc
+     * comments and uninformative or undescribed directive comments.
+     * `components/ui/**` is permanently exempt (shadcn-generated,
+     * untouched).
+     */
+    files: ['**/*.{ts,tsx,mjs}'],
+    ignores: ['components/ui/**'],
+    plugins: {
+      jsdoc: jsdoc.configs['flat/recommended-typescript-error'].plugins.jsdoc,
+      local: localPlugin,
+      '@eslint-community/eslint-comments': eslintComments,
+    },
+    rules: commentPolicyRules,
+  },
+  {
+    /**
+     * Temporary wave-2 migration exemption (AO-837/AO-836) — turns the
+     * comment-policy rule groups back off for every directory wave-2
+     * tickets haven't migrated to TSDoc yet. Deleted by the final ticket
+     * once every file below has been migrated.
+     *
+     * Wave-2 tickets must NOT edit this block, to avoid merge conflicts —
+     * verify your own files instead with:
+     * `bunx eslint <files> --rule '{"local/no-non-doc-comments":"error","jsdoc/informative-docs":"error"}'`
+     */
+    files: [
+      'scripts/**/*.{ts,tsx,mjs}',
+      'lib/**/*.{ts,tsx,mjs}',
+      'entrypoints/**/*.{ts,tsx,mjs}',
+      'components/**/*.{ts,tsx,mjs}',
+    ],
+    ignores: ['components/ui/**'],
+    rules: turnOffAll(commentPolicyRules),
   },
   prettierConfig,
   globalIgnores(['.output/**', '.wxt/**', 'coverage/**']),

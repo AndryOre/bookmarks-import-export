@@ -17,19 +17,55 @@ and does not send any data to external servers.
 ### Bookmarks Data
 
 - The extension accesses your browser bookmarks solely for the purpose of
-  exporting them to JSON or HTML files, or importing bookmarks from these file
-  formats.
+  exporting them to HTML, JSON, or CSV files, or importing bookmarks from these
+  file formats.
 - This access occurs only when you explicitly initiate an import or export
-  operation.
+  operation, or when a scheduled automatic export you configured runs (see
+  "Automatic Export" below).
 - Your bookmark data is processed locally on your device and is not transmitted
   to us or any third parties.
+
+### Favicons
+
+- To display site icons next to your bookmarks, the extension reads favicons
+  through Chrome's built-in `_favicon` API. This looks up favicons already
+  cached by your browser and does not make any network request to us or to the
+  bookmarked sites.
+
+### Automatic Export
+
+- You can optionally enable scheduled automatic export of your bookmarks. When
+  enabled, the extension exports your bookmarks on the interval you configure
+  and writes the resulting files directly to your device's Downloads folder
+  using the browser's download functionality, without showing a save-location
+  prompt.
+- This only happens if you explicitly enable automatic export and configure a
+  schedule; it is disabled by default.
 
 ## Data Storage
 
 - Bookmark Import/Export does not store any user data, including bookmarks, on
   external servers.
-- Any files created during the export process are saved directly to your local
-  device through your browser's download functionality.
+- Any files created during export (manual or automatic) are saved directly to
+  your local device through your browser's download functionality.
+- The extension stores your local preferences and settings — such as theme,
+  display options, export options, the filename template, and your automatic
+  export configuration — using the browser's local storage (`storage.local`).
+  This data stays on your device and is never transmitted anywhere.
+
+## Permissions
+
+Bookmark Import/Export requests the following browser permissions, each used
+solely for the purpose described:
+
+| Permission  | Purpose                                                                     |
+| ----------- | --------------------------------------------------------------------------- |
+| `bookmarks` | Read and write your browser bookmarks to support import and export.         |
+| `favicon`   | Display site icons next to bookmarks via Chrome's built-in `_favicon` API.  |
+| `storage`   | Save your local preferences and settings on your device.                    |
+| `tabs`      | Open the extension's advanced export/import pages in a new tab.             |
+| `alarms`    | Schedule and trigger automatic bookmark exports at the configured interval. |
+| `downloads` | Save exported bookmark files (manual and automatic) to your device.         |
 
 ## Third-Party Services
 
