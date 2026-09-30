@@ -34,6 +34,26 @@ describe('getImportPreview', () => {
     expect(preview.otherBookmarksCount).toBe(1)
     expect(preview.totalCount).toBe(2)
     expect(preview.hasLocationData).toBe(true)
+    expect(preview.mobileBookmarksCount).toBe(0)
+  })
+
+  it('previews an HTML export with a Mobile bookmarks root', () => {
+    const html = `${HTML_HEADER}
+<DL><p>
+    <DT><H3 PERSONAL_TOOLBAR_FOLDER="true">Bookmarks bar</H3>
+    <DL><p>
+        <DT><A HREF="https://a.example">A</A>
+    </DL><p>
+    <DT><H3>Mobile bookmarks</H3>
+    <DL><p>
+        <DT><A HREF="https://c.example">C</A>
+    </DL><p>
+</DL><p>`
+
+    const preview = getImportPreview(html, 'text/html')
+
+    expect(preview.mobileBookmarksCount).toBe(1)
+    expect(preview.totalCount).toBe(2)
   })
 
   it('previews a JSON export produced by exportToJSON', () => {
@@ -63,6 +83,39 @@ describe('getImportPreview', () => {
     expect(preview.otherBookmarksCount).toBe(1)
     expect(preview.totalCount).toBe(2)
     expect(preview.hasLocationData).toBe(true)
+    expect(preview.mobileBookmarksCount).toBe(0)
+  })
+
+  it('previews a JSON export with a Mobile bookmarks root', () => {
+    const json = JSON.stringify({
+      id: '0',
+      title: '',
+      children: [
+        {
+          id: '1',
+          title: 'Bookmarks bar',
+          isBookmarksBar: true,
+          children: [{ title: 'A', url: 'https://a.example' }],
+        },
+        {
+          id: '2',
+          title: 'Other bookmarks',
+          isOtherBookmarks: true,
+          children: [{ title: 'B', url: 'https://b.example' }],
+        },
+        {
+          id: '3',
+          title: 'Mobile bookmarks',
+          isMobileBookmarks: true,
+          children: [{ title: 'C', url: 'https://c.example' }],
+        },
+      ],
+    })
+
+    const preview = getImportPreview(json, 'application/json')
+
+    expect(preview.mobileBookmarksCount).toBe(1)
+    expect(preview.totalCount).toBe(3)
   })
 
   it('previews a CSV export, counting only rows with a valid URL', () => {
@@ -86,6 +139,7 @@ describe('getImportPreview', () => {
     expect(preview.totalCount).toBe(0)
     expect(preview.bookmarksBarCount).toBe(0)
     expect(preview.otherBookmarksCount).toBe(0)
+    expect(preview.mobileBookmarksCount).toBe(0)
   })
 
   it('returns a zeroed preview for unrecognized content', () => {
