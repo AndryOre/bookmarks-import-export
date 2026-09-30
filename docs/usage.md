@@ -81,10 +81,29 @@ up empty falls back to "Bookmarks".
 Bookmark Import/Export can back up your bookmarks on a schedule, without any
 manual action:
 
-1. Open the extension's advanced export settings and enable automatic export.
-2. Choose one or more formats (HTML, JSON, CSV), an interval (every 12 hours, or
-   daily/every 3 days/every 7 days at a preferred time), and an optional folder
-   path for the exported files.
+1. Open the extension's advanced export settings and go to the "Auto-export"
+   tab.
+2. Enable automatic export, choose one or more formats (HTML, JSON, CSV), an
+   interval (every 12 hours, or daily/every 3 days/every 7 days at a preferred
+   time), and an optional folder path for the exported files.
 3. From then on, the extension exports your bookmarks on that schedule and saves
    the files straight to your Downloads folder — no save dialog, no extra
-   prompts.
+   prompts. If the browser was closed or the extension was unavailable when a
+   scheduled export was due, it catches up automatically shortly after the
+   browser next starts, instead of waiting for the next scheduled time.
+
+The "Auto-export" tab's status card, at the top, always shows the real schedule
+state, independently of any unsaved changes below it:
+
+- **Last auto-export** — when auto-export last ran, with a colored dot (green
+  for success, red for failure) and, on failure, the stored error message. Reads
+  "Never run yet" if it hasn't run since the extension was installed.
+- **Next auto-export** — when it's next due, or "Off" if automatic export is
+  currently disabled.
+
+**Export now**, next to "Save settings", runs an export immediately using
+whatever formats and path are currently on screen — even formats/path you
+haven't saved yet, and even if the Enable switch is off. It shows a spinner
+while running and a brief success or error message once it settles; the status
+card's "Last auto-export" row updates to match. Running it never changes your
+automatic schedule or its next due time.

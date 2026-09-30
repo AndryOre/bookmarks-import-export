@@ -1,5 +1,5 @@
 import { i18n } from '#i18n'
-import { Folder, Info, Save } from 'lucide-react'
+import { Download, Folder, Info, Loader2, Save } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 import { Button } from '@/components/ui/button'
@@ -29,10 +29,17 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import {
+  readAutoExportLastRun,
+  RUN_MANUAL_EXPORT_MESSAGE_TYPE,
+  type RunManualExportMessage,
+  type RunManualExportResponse,
+} from '@/lib/auto-export'
 import { formatFilenameTemplate } from '@/lib/filename-template'
 import {
   autoExpandFoldersStore,
   autoExportConfigStore,
+  autoExportNextRunStore,
   DEFAULT_AUTO_EXPORT_CONFIG,
   exportFilenameTemplateStore,
   hideOtherBookmarksStore,
@@ -47,6 +54,7 @@ import type {
   AutoExportConfig,
   AutoExportFormat,
   AutoExportInterval,
+  AutoExportLastRun,
   MessageKey,
   SettingsDialogProperties,
 } from '@/lib/types'
@@ -158,14 +166,53 @@ export function SettingsDialog({
   )
   const [formatError, setFormatError] = useState(false)
 
+  /**
+   * The Auto-export tab's status card data — the *persisted* last/next run
+   * plus the *persisted* `enabled` flag (unlike `localConfig`, this never
+   * reflects unsaved draft edits, since the status card always shows the
+   * real, currently-scheduled state).
+   */
+  const [status, setStatus] = useState<{
+    lastRun: AutoExportLastRun | null
+    nextRun: number | null
+    enabled: boolean
+  } | null>(null)
+
+  /**
+   * "Export now" button state. Independent of `handleSave`'s persistence —
+   * running an export never touches `autoExportConfigStore`.
+   */
+  const [exportNowState, setExportNowState] = useState<
+    'idle' | 'running' | 'success' | 'error'
+  >('idle')
+  const [exportNowError, setExportNowError] = useState<string | null>(null)
+
   useEffect(() => {
     if (!open) return
     const loadConfig = async () => {
-      setLocalConfig(await autoExportConfigStore.getValue())
+      const [config, lastRun, nextRun] = await Promise.all([
+        autoExportConfigStore.getValue(),
+        readAutoExportLastRun(),
+        autoExportNextRunStore.getValue(),
+      ])
+      setLocalConfig(config)
       setFormatError(false)
+      setStatus({ lastRun, nextRun, enabled: config.enabled })
+      setExportNowState('idle')
+      setExportNowError(null)
     }
     void loadConfig()
   }, [open])
+
+  /**
+   * Clears a just-shown "Export now" success/error message after a few
+   * seconds, so it doesn't linger indefinitely.
+   */
+  useEffect(() => {
+    if (exportNowState !== 'success' && exportNowState !== 'error') return
+    const timeout = setTimeout(() => setExportNowState('idle'), 4000)
+    return () => clearTimeout(timeout)
+  }, [exportNowState])
 
   const updateConfig = <K extends keyof AutoExportConfig>(
     key: K,
@@ -196,6 +243,49 @@ export function SettingsDialog({
     }
     await autoExportConfigStore.setValue(localConfig)
     onOpenChange(false)
+  }
+
+  /**
+   * Runs an on-demand export using the on-screen draft's `formats`/`path`
+   * (`localConfig`, not what's persisted), regardless of the Enable switch.
+   * Sends {@link RunManualExportMessage} to the background service worker,
+   * which runs the export with `trigger: 'manual'` and never touches the
+   * next-run store or the alarm. Refreshes the status card's last/next-run
+   * values from storage once the run settles, so a just-completed manual
+   * run shows up immediately without closing the dialog.
+   */
+  const handleExportNow = async () => {
+    if (localConfig.formats.length === 0) {
+      setFormatError(true)
+      return
+    }
+
+    setExportNowState('running')
+    setExportNowError(null)
+
+    const message: RunManualExportMessage = {
+      type: RUN_MANUAL_EXPORT_MESSAGE_TYPE,
+      formats: localConfig.formats,
+      path: localConfig.path,
+    }
+    const response = (await browser.runtime.sendMessage(
+      message,
+    )) as RunManualExportResponse
+
+    if (response.ok) {
+      setExportNowState('success')
+    } else {
+      setExportNowState('error')
+      setExportNowError(response.error ?? '')
+    }
+
+    const [lastRun, nextRun] = await Promise.all([
+      readAutoExportLastRun(),
+      autoExportNextRunStore.getValue(),
+    ])
+    setStatus((previous) =>
+      previous ? { ...previous, lastRun, nextRun } : previous,
+    )
   }
 
   const { hour: hour12, minute, period } = parseTo12h(localConfig.preferredTime)
@@ -238,8 +328,8 @@ export function SettingsDialog({
               <TabsTrigger value="export" className="flex-1">
                 {i18n.t('export')}
               </TabsTrigger>
-              <TabsTrigger value="auto-save" className="flex-1">
-                {i18n.t('autoSave')}
+              <TabsTrigger value="auto-export" className="flex-1">
+                {i18n.t('autoExport')}
               </TabsTrigger>
             </TabsList>
 
@@ -338,13 +428,51 @@ export function SettingsDialog({
               />
             </TabsContent>
 
-            <TabsContent value="auto-save" className="pt-2">
+            <TabsContent value="auto-export" className="pt-2">
               <div
                 className="max-h-(--settings-scroll-max) space-y-4 overflow-y-auto pr-0.5"
                 style={
                   { '--settings-scroll-max': '55vh' } as React.CSSProperties
                 }
               >
+                <div className="space-y-2 rounded-md border p-3">
+                  <AutoExportStatusRow
+                    labelKey="lastAutoExportLabel"
+                    dotClassName={
+                      status?.lastRun
+                        ? status.lastRun.ok
+                          ? 'bg-success'
+                          : 'bg-destructive'
+                        : 'bg-muted-foreground/40'
+                    }
+                    value={
+                      status?.lastRun
+                        ? new Date(status.lastRun.at).toLocaleString()
+                        : i18n.t('autoExportNeverRun')
+                    }
+                    errorText={
+                      status?.lastRun && !status.lastRun.ok
+                        ? status.lastRun.error
+                        : undefined
+                    }
+                  />
+                  <AutoExportStatusRow
+                    labelKey="nextAutoExportLabel"
+                    dotClassName={
+                      status?.enabled ? 'bg-success' : 'bg-muted-foreground/40'
+                    }
+                    value={
+                      status?.enabled
+                        ? status.nextRun
+                          ? new Date(status.nextRun).toLocaleString()
+                          : i18n.t('autoExportNeverRun')
+                        : i18n.t('autoExportOff')
+                    }
+                  />
+                </div>
+
+                <Separator />
+
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 space-y-0.5">
                     <Label>{i18n.t('enableAutoExport')}</Label>
@@ -551,10 +679,38 @@ export function SettingsDialog({
 
                 <Separator />
 
-                <Button onClick={handleSave} className="w-full">
-                  <Save className="size-4" />
-                  {i18n.t('saveSettings')}
-                </Button>
+                <div className="space-y-2">
+                  <div className="flex gap-2">
+                    <Button onClick={handleSave} className="flex-1">
+                      <Save className="size-4" />
+                      {i18n.t('saveSettings')}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={handleExportNow}
+                      disabled={exportNowState === 'running'}
+                      className="flex-1"
+                    >
+                      {exportNowState === 'running' ? (
+                        <Loader2 className="size-4 animate-spin" />
+                      ) : (
+                        <Download className="size-4" />
+                      )}
+                      {i18n.t('exportNow')}
+                    </Button>
+                  </div>
+                  {exportNowState === 'success' && (
+                    <p className="text-xs text-success">
+                      {i18n.t('exportNowSuccess')}
+                    </p>
+                  )}
+                  {exportNowState === 'error' && (
+                    <p className="truncate text-xs text-destructive">
+                      {i18n.t('exportNowFailed')}
+                      {exportNowError ? `: ${exportNowError}` : ''}
+                    </p>
+                  )}
+                </div>
               </div>
             </TabsContent>
           </Tabs>
@@ -598,6 +754,54 @@ function SettingRow({
         <p className="text-xs text-muted-foreground">{t(descKey)}</p>
       </div>
       <Switch checked={checked} onCheckedChange={onCheckedChange} />
+    </div>
+  )
+}
+
+interface AutoExportStatusRowProperties {
+  labelKey: MessageKey
+  dotClassName: string
+  value: string
+  errorText?: string
+}
+
+/**
+ * One row of the Auto-export tab's status card (last run / next run): a
+ * label, a small colored status dot, and the current value. `errorText`, if
+ * given, renders below as a single truncated line — used for the last-run
+ * row when the stored run failed.
+ * @param root0 This row's properties.
+ * @param root0.labelKey The row's label message key.
+ * @param root0.dotClassName A Tailwind background-color class for the status dot.
+ * @param root0.value The row's current value text.
+ * @param root0.errorText An optional error message, rendered as a truncated line below.
+ * @returns The status row element.
+ */
+function AutoExportStatusRow({
+  labelKey,
+  dotClassName,
+  value,
+  errorText,
+}: AutoExportStatusRowProperties) {
+  return (
+    <div className="flex items-start justify-between gap-4">
+      <span className="text-xs text-muted-foreground">{t(labelKey)}</span>
+      <div className="flex max-w-2/3 flex-col items-end gap-0.5">
+        <div className="flex items-center gap-1.5">
+          <span
+            className={cn('size-1.5 shrink-0 rounded-full', dotClassName)}
+          />
+          <span className="text-xs font-medium">{value}</span>
+        </div>
+        {errorText && (
+          <p
+            className="max-w-full truncate text-xs text-destructive"
+            title={errorText}
+          >
+            {errorText}
+          </p>
+        )}
+      </div>
     </div>
   )
 }

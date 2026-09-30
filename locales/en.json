@@ -534,9 +534,37 @@
     "message": "What's New",
     "description": "Changelog section heading"
   },
-  "autoSave": {
-    "message": "Auto-save",
-    "description": "Auto-save settings tab label"
+  "autoExport": {
+    "message": "Auto-export",
+    "description": "Auto-export settings tab label"
+  },
+  "lastAutoExportLabel": {
+    "message": "Last auto-export",
+    "description": "Status card row label for the most recent auto-export run"
+  },
+  "nextAutoExportLabel": {
+    "message": "Next auto-export",
+    "description": "Status card row label for the next scheduled auto-export run"
+  },
+  "autoExportNeverRun": {
+    "message": "Never run yet",
+    "description": "Status card value when auto-export has never run"
+  },
+  "autoExportOff": {
+    "message": "Off",
+    "description": "Status card value for the next-run row when auto-export is disabled"
+  },
+  "exportNow": {
+    "message": "Export now",
+    "description": "Button label to run an on-demand export immediately"
+  },
+  "exportNowSuccess": {
+    "message": "Export completed",
+    "description": "Inline message shown after Export now succeeds"
+  },
+  "exportNowFailed": {
+    "message": "Export failed",
+    "description": "Inline message shown after Export now fails"
   },
   "enableAutoExport": {
     "message": "Enable Auto Export",
