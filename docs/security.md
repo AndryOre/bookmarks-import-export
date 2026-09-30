@@ -80,9 +80,9 @@ split. Both run the extension's own code exclusively.
   "Weaknesses it counters" below for what a _non-structural_ malformed row or
   node does instead.
 - **Destructive actions are gated.** `restore-replace` import mode — the only
-  operation that deletes existing bookmarks — is only reachable through Advanced
-  Import's preview flow and a confirmation dialog; it's never the default mode
-  and never runs from Quick import.
+  operation that deletes existing bookmarks — is selectable from both Quick
+  import and Advanced Import, and can be saved as the default import mode, but
+  every replace always requires confirming a dialog before anything is deleted.
 - **On-device storage only.** Settings use `local:`-scoped storage exclusively
   (see the `storage` permission above); nothing syncs to a Google account or any
   remote store.
@@ -104,9 +104,10 @@ non-array or deeply nested payload is normalized rather than rejected —
 `preprocessBookmarks` walks unknown shapes (a wrapping virtual root, orphaned
 nodes, arbitrary extra fields) and classifies whatever it doesn't recognize into
 a synthetic "Other bookmarks" node instead of discarding it or throwing. Invalid
-JSON syntax itself throws at the `JSON.parse` step, before any of this runs, and
-`importFromJSON` re-wraps that as a load error rather than letting a raw parser
-exception surface.
+JSON syntax is rejected earlier: the caller (the popup's Quick import or
+Advanced Import) parses the raw text with `JSON.parse` and format-detects it
+before `importFromJSON` ever runs, so a malformed file never reaches the
+importer at all.
 
 **Malformed or hostile CSV input** (`lib/importers/import-csv.ts`): rows missing
 a `title` or `url`, or whose `url` fails `new URL()` validation, are skipped
@@ -147,7 +148,9 @@ matching the format they expected) or clearly didn't — and back out.
   maintainer is unavailable. This is a deliberate, accepted gap for this
   project's size — see `access_continuity` in the OpenSSF Best Practices
   self-assessment.
-- **No automated static analysis for injection sinks yet at the time of
-  writing.** (Tracked separately; check `.github/workflows/` for the current set
-  of security-relevant CI jobs, since this document intentionally doesn't
-  restate a list that can drift out of date.)
+- **Static analysis covers common sinks, not business logic.** CodeQL
+  (`.github/workflows/codeql.yml`, see
+  [ADR 0004](adr/0004-enable-codeql-sast.md)) scans for known vulnerability
+  patterns such as ReDoS, prototype pollution and incomplete sanitization. It
+  doesn't substitute for a manual review of import logic, which is why this
+  document exists.
