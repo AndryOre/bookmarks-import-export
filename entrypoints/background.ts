@@ -1,15 +1,63 @@
 import { i18n } from '#i18n'
 
-import { ALARM_NAME, runAutoExport, syncAlarm } from '@/lib/auto-export'
-import { autoExportConfigStore } from '@/lib/storage'
+import {
+  ALARM_NAME,
+  runAutoExport,
+  syncAlarm,
+  type SyncAlarmTrigger,
+} from '@/lib/auto-export'
+import { autoExportConfigStore, autoExportNextRunStore } from '@/lib/storage'
+import type { AutoExportConfig } from '@/lib/types'
+
+/**
+ * Runs `syncAlarm(trigger)`, logging (never throwing) on failure — every
+ * `syncAlarm` call site in this file is fire-and-forget from an event
+ * listener, so a rejected promise would otherwise be an unhandled
+ * rejection.
+ * @param trigger The trigger to pass through to `syncAlarm`.
+ * @returns Resolves once `syncAlarm` has settled.
+ */
+async function syncAlarmSafely(trigger: SyncAlarmTrigger): Promise<void> {
+  try {
+    await syncAlarm(trigger)
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+/**
+ * Whether two `AutoExportConfig`s differ in a way that should re-arm the
+ * alarm: `enabled`, `interval`, or `preferredTime` changed outright, or
+ * `formats` crossed the empty/non-empty boundary (which is functionally an
+ * enable/disable even though it's the `formats` field). A `path`-only
+ * change, or a `formats` change that stays non-empty (e.g. adding a second
+ * format), must not recompute or re-arm — see `syncAlarm` in
+ * `lib/auto-export.ts`.
+ * @param previous The config before the change.
+ * @param next The config after the change.
+ * @returns Whether `syncAlarm('config-change')` should run for this change.
+ */
+function isScheduleRelevantChange(
+  previous: AutoExportConfig,
+  next: AutoExportConfig,
+): boolean {
+  return (
+    previous.enabled !== next.enabled ||
+    previous.interval !== next.interval ||
+    previous.preferredTime !== next.preferredTime ||
+    (previous.formats.length === 0) !== (next.formats.length === 0)
+  )
+}
 
 /**
  * Extension service worker entrypoint. On first install it opens
  * `welcome.html`; on every subsequent update it opens `update.html` (which
  * reads the new version's changelog). It also keeps the `auto-export` alarm
- * in sync with {@link autoExportConfigStore}: once on browser startup, and
- * again every time the auto-export config changes, so a config edit takes
- * effect without waiting for the next browser restart.
+ * and {@link autoExportNextRunStore} in sync via `syncAlarm`: once on
+ * browser startup and on every `onInstalled` reason (both may need to arm a
+ * catch-up run for a due time that passed while the browser/extension was
+ * unavailable), and again whenever the auto-export config changes in a way
+ * that affects scheduling (see {@link isScheduleRelevantChange}).
  */
 export default defineBackground(() => {
   browser.runtime.onInstalled.addListener(({ reason }) => {
@@ -19,6 +67,7 @@ export default defineBackground(() => {
         void browser.tabs.create({
           url: browser.runtime.getURL('/welcome.html'),
         })
+        void syncAlarmSafely('install')
         break
       }
 
@@ -28,45 +77,39 @@ export default defineBackground(() => {
         void browser.tabs.create({
           url: browser.runtime.getURL('/update.html'),
         })
+        void syncAlarmSafely('update')
         break
       }
 
       case 'chrome_update':
       case 'shared_module_update': {
+        void syncAlarmSafely('update')
         break
       }
     }
   })
 
   browser.runtime.onStartup.addListener(() => {
-    void (async () => {
-      try {
-        await syncAlarm()
-      } catch (error) {
-        console.error(error)
-      }
-    })()
+    void syncAlarmSafely('startup')
   })
 
-  autoExportConfigStore.watch(() => {
-    void (async () => {
-      try {
-        await syncAlarm()
-      } catch (error) {
-        console.error(error)
-      }
-    })()
+  autoExportConfigStore.watch((next, previous) => {
+    if (!isScheduleRelevantChange(previous, next)) return
+    void syncAlarmSafely('config-change')
   })
 
   browser.alarms.onAlarm.addListener((alarm) => {
-    if (alarm.name === ALARM_NAME) {
-      void (async () => {
-        try {
-          await runAutoExport()
-        } catch (error) {
-          console.error(error)
-        }
-      })()
-    }
+    if (alarm.name !== ALARM_NAME) return
+
+    void (async () => {
+      try {
+        const storedNextRun = await autoExportNextRunStore.getValue()
+        const isCatchUp =
+          storedNextRun !== null && alarm.scheduledTime > storedNextRun + 2000
+        await runAutoExport(isCatchUp ? 'catch-up' : 'scheduled')
+      } catch (error) {
+        console.error(error)
+      }
+    })()
   })
 })

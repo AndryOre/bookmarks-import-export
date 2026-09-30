@@ -92,6 +92,29 @@ export interface AutoExportConfig {
   formats: AutoExportFormat[]
 }
 
+/**
+ * What caused a {@link AutoExportLastRun} to happen: `scheduled` for an
+ * on-time alarm fire, `catch-up` for a run fired shortly after startup
+ * because the stored next-run time had already passed, and `manual` for a
+ * user-triggered "Export now" (a later ticket's UI, but the type is defined
+ * here since `runAutoExport` already discriminates on it).
+ */
+export type AutoExportTrigger = 'scheduled' | 'catch-up' | 'manual'
+
+/**
+ * The outcome of the most recent {@link runAutoExport} call, persisted so
+ * settings/popup UI (a later ticket) can show status. A legacy plain
+ * `number` (this store's shape before next-run tracking was added) is
+ * migrated on read to `{ at: <value>, ok: true, trigger: 'scheduled' }` —
+ * see `readAutoExportLastRun` in `lib/auto-export.ts`.
+ */
+export interface AutoExportLastRun {
+  at: number
+  ok: boolean
+  error?: string
+  trigger: AutoExportTrigger
+}
+
 export interface ImportPreview {
   format: BookmarkFormat
   bookmarksBarCount: number
