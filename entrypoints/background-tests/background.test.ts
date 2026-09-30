@@ -7,7 +7,7 @@ import { autoExportConfigStore } from '@/lib/storage'
 import { resetFakeI18n } from '@/lib/testing/fake-i18n'
 import type { AutoExportConfig } from '@/lib/types'
 
-import background from './background'
+import background from '../background'
 
 vi.mock('@/lib/auto-export', async () => {
   const actual = await vi.importActual<typeof AutoExport>('@/lib/auto-export')
