@@ -310,6 +310,7 @@ describe('alarms.onAlarm', () => {
     await fakeBrowser.alarms.onAlarm.trigger({
       name: ALARM_NAME,
       scheduledTime: nextRun,
+      persistAcrossSessions: false,
     })
 
     await vi.waitFor(() => {
@@ -324,6 +325,7 @@ describe('alarms.onAlarm', () => {
     await fakeBrowser.alarms.onAlarm.trigger({
       name: ALARM_NAME,
       scheduledTime: storedNextRun + 60_000,
+      persistAcrossSessions: false,
     })
 
     await vi.waitFor(() => {
@@ -337,6 +339,7 @@ describe('alarms.onAlarm', () => {
     await fakeBrowser.alarms.onAlarm.trigger({
       name: ALARM_NAME,
       scheduledTime: Date.now(),
+      persistAcrossSessions: false,
     })
 
     await vi.waitFor(() => {
@@ -348,6 +351,7 @@ describe('alarms.onAlarm', () => {
     await fakeBrowser.alarms.onAlarm.trigger({
       name: 'some-other-alarm',
       scheduledTime: Date.now(),
+      persistAcrossSessions: false,
     })
 
     expect(runAutoExport).not.toHaveBeenCalled()
@@ -362,6 +366,7 @@ describe('alarms.onAlarm', () => {
       fakeBrowser.alarms.onAlarm.trigger({
         name: ALARM_NAME,
         scheduledTime: Date.now(),
+        persistAcrossSessions: false,
       }),
     ).resolves.not.toThrow()
 
