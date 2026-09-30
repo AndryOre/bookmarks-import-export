@@ -22,6 +22,10 @@ An index of every document in this repository.
 - [`docs/adr/0002-tsdoc-only-code-comments.md`](adr/0002-tsdoc-only-code-comments.md)
   — the ADR documenting the TSDoc-only code comment policy and why it's
   lint-enforced.
+- [`docs/adr/0003-e2e-against-built-extension.md`](adr/0003-e2e-against-built-extension.md)
+  — the ADR documenting why E2E runs Playwright against the built extension
+  (`wxt build` output) instead of a component-test layer, and why bookmarks are
+  seeded/read through the extension's service worker.
 
 ## How-to
 
