@@ -40,6 +40,9 @@ interface ChangelogItem {
  * `GeneratedI18nStructure` for the actual message strings). `linkUrl`
  * pairs with `linkKey` to make an item's link label point at an
  * extension-internal page.
+ *
+ * The root `CHANGELOG.md` mirrors these entries for human readers outside
+ * the extension and must be kept in sync by hand alongside this function.
  * @returns The changelog entries, newest release first.
  */
 export function getChangelog(): ChangelogEntry[] {

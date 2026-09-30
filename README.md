@@ -35,6 +35,7 @@ accessible, and transferable between browsers.
 - [![Lucide Icons][Lucide]][Lucide-url]
 - [![TypeScript][TypeScript]][TypeScript-url]
 - [![OpenSSF Scorecard][OpenSSF Scorecard]][OpenSSF Scorecard-url]
+- [![OpenSSF Best Practices][OpenSSF Best Practices]][OpenSSF Best Practices-url]
 
 ## Installation 🔧
 
@@ -201,5 +202,7 @@ for details.
   https://api.securityscorecards.dev/projects/github.com/AndryOre/bookmarks-import-export/badge
 [OpenSSF Scorecard-url]:
   https://scorecard.dev/viewer/?uri=github.com/AndryOre/bookmarks-import-export
+[OpenSSF Best Practices]: https://www.bestpractices.dev/projects/15093/badge
+[OpenSSF Best Practices-url]: https://www.bestpractices.dev/projects/15093
 [Chrome Web Store-url]:
   https://chromewebstore.google.com/detail/bookmark-importexport/gdhpeilfkeeajillmcncaelnppiakjhn

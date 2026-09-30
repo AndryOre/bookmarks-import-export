@@ -35,6 +35,14 @@ includes formatting, linting, type-checking, unused-code detection, and tests.
 both `bun run check` and `bun run test` locally before opening a PR to catch
 issues early.
 
+## Tests
+
+New functionality and bug fixes in `lib/**` must add or update Vitest tests in
+the same PR. See
+[`docs/development.md`](docs/development.md#fakebrowser-testing) for how
+`fakeBrowser`-based tests work. `lib/**` is held to the 50% coverage threshold
+documented in [`docs/development.md`](docs/development.md).
+
 ## Reporting security issues
 
 Do not open a public issue for a security vulnerability. Report it privately as
