@@ -6,6 +6,7 @@ import { fakeBrowser } from 'wxt/testing/fake-browser'
 import {
   autoExportConfigStore,
   autoExportLastRunStore,
+  autoExportNextRunStore,
   exportFilenameTemplateStore,
   hideOtherBookmarksStore,
   includeDateGroupModifiedStore,
@@ -14,9 +15,15 @@ import {
   resetFakeBookmarks,
   seedFakeBookmarksTree,
 } from '@/lib/testing/fake-bookmarks'
-import type { AutoExportConfig, AutoExportInterval } from '@/lib/types'
+import type { AutoExportConfig } from '@/lib/types'
 
-import { ALARM_NAME, runAutoExport, syncAlarm } from './auto-export'
+import {
+  ALARM_NAME,
+  computeNextRun,
+  readAutoExportLastRun,
+  runAutoExport,
+  syncAlarm,
+} from './auto-export'
 
 function decodeDataUrlContent(url: string): string {
   const base64 = url.slice(url.indexOf(',') + 1)
@@ -42,6 +49,21 @@ function mockDownload(
   return mock
 }
 
+/**
+ * Replaces `browser.action.setBadgeText`/`setBadgeBackgroundColor`
+ * (unimplemented in `fakeBrowser`) with `vi.fn`s.
+ * @returns The installed mocks.
+ */
+function mockActionBadge() {
+  const setBadgeText = vi.fn(async () => {})
+  const setBadgeBackgroundColor = vi.fn(async () => {})
+  browser.action.setBadgeText =
+    setBadgeText as typeof browser.action.setBadgeText
+  browser.action.setBadgeBackgroundColor =
+    setBadgeBackgroundColor as typeof browser.action.setBadgeBackgroundColor
+  return { setBadgeText, setBadgeBackgroundColor }
+}
+
 function baseConfig(
   overrides: Partial<AutoExportConfig> = {},
 ): AutoExportConfig {
@@ -64,163 +86,234 @@ afterEach(() => {
   vi.useRealTimers()
 })
 
-describe('syncAlarm', () => {
-  it('clears and recreates the alarm when enabled with at least one format', async () => {
-    await autoExportConfigStore.setValue(
-      baseConfig({ formats: ['html'], interval: '1d', preferredTime: '23:59' }),
+describe('computeNextRun', () => {
+  it('fires 12h from `from` regardless of preferredTime or anchoredToCompletedRun', () => {
+    const from = new Date(2024, 5, 1, 8, 0, 0, 0).getTime()
+
+    expect(computeNextRun('12h', '23:59', from, false)).toBe(
+      from + 12 * 60 * 60 * 1000,
     )
-    const clearSpy = vi.spyOn(browser.alarms, 'clear')
-    const createSpy = vi.spyOn(browser.alarms, 'create')
-
-    await syncAlarm()
-
-    expect(clearSpy).toHaveBeenCalledWith(ALARM_NAME)
-    expect(createSpy).toHaveBeenCalledWith(
-      ALARM_NAME,
-      expect.objectContaining({ periodInMinutes: 1440 }),
+    expect(computeNextRun('12h', '23:59', from, true)).toBe(
+      from + 12 * 60 * 60 * 1000,
     )
   })
 
-  it('only clears the alarm when auto-export is disabled', async () => {
-    await autoExportConfigStore.setValue(
-      baseConfig({ enabled: false, formats: ['html'] }),
-    )
-    const clearSpy = vi.spyOn(browser.alarms, 'clear')
-    const createSpy = vi.spyOn(browser.alarms, 'create')
-
-    await syncAlarm()
-
-    expect(clearSpy).toHaveBeenCalledWith(ALARM_NAME)
-    expect(createSpy).not.toHaveBeenCalled()
-  })
-
-  it('only clears the alarm when no format is selected', async () => {
-    await autoExportConfigStore.setValue(
-      baseConfig({ enabled: true, formats: [] }),
-    )
-    const clearSpy = vi.spyOn(browser.alarms, 'clear')
-    const createSpy = vi.spyOn(browser.alarms, 'create')
-
-    await syncAlarm()
-
-    expect(clearSpy).toHaveBeenCalledWith(ALARM_NAME)
-    expect(createSpy).not.toHaveBeenCalled()
-  })
-
-  it('floors the delay at 0.1 minutes when the next run is imminent', async () => {
-    vi.useFakeTimers()
-    vi.setSystemTime(new Date(2024, 5, 1, 10, 0, 59, 900))
-    await autoExportConfigStore.setValue(
-      baseConfig({ interval: '1d', preferredTime: '10:01' }),
-    )
-    const createSpy = vi.spyOn(browser.alarms, 'create')
-
-    await syncAlarm()
-
-    expect(createSpy).toHaveBeenCalledWith(
-      ALARM_NAME,
-      expect.objectContaining({ delayInMinutes: 0.1 }),
-    )
-  })
-
-  it.each<[AutoExportInterval, number]>([
-    ['12h', 720],
-    ['1d', 1440],
-    ['3d', 4320],
-    ['7d', 10_080],
+  it.each<['1d' | '3d' | '7d', number]>([
+    ['1d', 1],
+    ['3d', 3],
+    ['7d', 7],
   ])(
-    'sets periodInMinutes to %i minutes for the %s interval',
-    async (interval, expectedPeriod) => {
-      await autoExportConfigStore.setValue(baseConfig({ interval }))
-      const createSpy = vi.spyOn(browser.alarms, 'create')
+    'anchored to a completed run, schedules %s exactly %i day(s) after `from` at preferredTime',
+    (interval, days) => {
+      const from = new Date(2024, 5, 1, 14, 30, 0, 0).getTime()
 
-      await syncAlarm()
+      const next = computeNextRun(interval, '09:00', from, true)
+      const nextDate = new Date(next)
 
-      expect(createSpy).toHaveBeenCalledWith(
-        ALARM_NAME,
-        expect.objectContaining({ periodInMinutes: expectedPeriod }),
+      expect(nextDate.getDate()).toBe(1 + days)
+      expect(nextDate.getHours()).toBe(9)
+      expect(nextDate.getMinutes()).toBe(0)
+    },
+  )
+
+  it('reconfiguring, targets preferredTime later today when it is still ahead', () => {
+    const from = new Date(2024, 5, 1, 8, 0, 0, 0).getTime()
+
+    const next = computeNextRun('1d', '10:00', from, false)
+
+    expect(next).toBe(new Date(2024, 5, 1, 10, 0, 0, 0).getTime())
+  })
+
+  it.each<['1d' | '3d' | '7d', number]>([
+    ['1d', 1],
+    ['3d', 1],
+    ['7d', 1],
+  ])(
+    'reconfiguring %s, advances only 1 day (never the full interval) when preferredTime already passed today',
+    (interval, expectedDays) => {
+      const from = new Date(2024, 5, 1, 8, 0, 0, 0).getTime()
+
+      const next = computeNextRun(interval, '07:00', from, false)
+
+      expect(next).toBe(
+        new Date(2024, 5, 1 + expectedDays, 7, 0, 0, 0).getTime(),
       )
     },
   )
 
-  it('fires 12h from now regardless of preferredTime', async () => {
-    vi.useFakeTimers()
-    vi.setSystemTime(new Date(2024, 5, 1, 8, 0, 0, 0))
-    await autoExportConfigStore.setValue(
-      baseConfig({ interval: '12h', preferredTime: '23:59' }),
-    )
-    const createSpy = vi.spyOn(browser.alarms, 'create')
+  it('reconfiguring, never returns a due time at or before `from` (overdue -> next upcoming occurrence)', () => {
+    const from = new Date(2024, 5, 1, 8, 0, 0, 0).getTime()
 
-    await syncAlarm()
+    const next = computeNextRun('1d', '08:00', from, false)
 
-    expect(createSpy).toHaveBeenCalledWith(
-      ALARM_NAME,
-      expect.objectContaining({ delayInMinutes: 720 }),
-    )
+    expect(next).toBeGreaterThan(from)
   })
 
-  it('targets preferredTime today when it is still ahead', async () => {
-    vi.useFakeTimers()
-    vi.setSystemTime(new Date(2024, 5, 1, 8, 0, 0, 0))
-    await autoExportConfigStore.setValue(
-      baseConfig({ interval: '1d', preferredTime: '10:00' }),
-    )
-    const createSpy = vi.spyOn(browser.alarms, 'create')
+  it('anchored to a completed run, elapses fewer than 24h across a US spring-forward boundary (March 9 10:00 -> March 10 10:00)', () => {
+    process.env.TZ = 'America/New_York'
+    const from = new Date(2024, 2, 9, 10, 0, 0, 0).getTime()
 
-    await syncAlarm()
+    const next = computeNextRun('1d', '10:00', from, true)
+    const nextDate = new Date(next)
 
-    expect(createSpy).toHaveBeenCalledWith(
-      ALARM_NAME,
-      expect.objectContaining({ delayInMinutes: 120 }),
-    )
+    expect(nextDate.getDate()).toBe(10)
+    expect(nextDate.getHours()).toBe(10)
+    expect((next - from) / (60 * 60 * 1000)).toBe(23)
   })
 
-  it('advances by 1 day when preferredTime has already passed today (1d)', async () => {
-    vi.useFakeTimers()
-    vi.setSystemTime(new Date(2024, 5, 1, 8, 0, 0, 0))
-    await autoExportConfigStore.setValue(
-      baseConfig({ interval: '1d', preferredTime: '07:00' }),
-    )
-    const createSpy = vi.spyOn(browser.alarms, 'create')
+  it('anchored to a completed run, elapses more than 24h across a US fall-back boundary (November 2 10:00 -> November 3 10:00)', () => {
+    process.env.TZ = 'America/New_York'
+    const from = new Date(2024, 10, 2, 10, 0, 0, 0).getTime()
 
-    await syncAlarm()
+    const next = computeNextRun('1d', '10:00', from, true)
+    const nextDate = new Date(next)
 
-    expect(createSpy).toHaveBeenCalledWith(
-      ALARM_NAME,
-      expect.objectContaining({ delayInMinutes: 23 * 60 }),
-    )
+    expect(nextDate.getDate()).toBe(3)
+    expect(nextDate.getHours()).toBe(10)
+    expect((next - from) / (60 * 60 * 1000)).toBe(25)
+  })
+})
+
+describe('syncAlarm', () => {
+  it('clears the alarm and stores null when auto-export is disabled', async () => {
+    await autoExportConfigStore.setValue(baseConfig({ enabled: false }))
+    await autoExportNextRunStore.setValue(Date.now() + 1000)
+    const clearSpy = vi.spyOn(browser.alarms, 'clear')
+
+    await syncAlarm('config-change')
+
+    expect(clearSpy).toHaveBeenCalledWith(ALARM_NAME)
+    expect(await browser.alarms.get(ALARM_NAME)).toBeUndefined()
+    expect(await autoExportNextRunStore.getValue()).toBeNull()
   })
 
-  it('advances by 3 days when preferredTime has already passed today (3d)', async () => {
-    vi.useFakeTimers()
-    vi.setSystemTime(new Date(2024, 5, 1, 8, 0, 0, 0))
-    await autoExportConfigStore.setValue(
-      baseConfig({ interval: '3d', preferredTime: '07:00' }),
-    )
-    const createSpy = vi.spyOn(browser.alarms, 'create')
+  it('clears the alarm and stores null when no format is selected', async () => {
+    await autoExportConfigStore.setValue(baseConfig({ formats: [] }))
+    await autoExportNextRunStore.setValue(Date.now() + 1000)
 
-    await syncAlarm()
+    await syncAlarm('config-change')
 
-    expect(createSpy).toHaveBeenCalledWith(
-      ALARM_NAME,
-      expect.objectContaining({ delayInMinutes: 2 * 24 * 60 + 23 * 60 }),
-    )
+    expect(await browser.alarms.get(ALARM_NAME)).toBeUndefined()
+    expect(await autoExportNextRunStore.getValue()).toBeNull()
   })
 
-  it('advances by 7 days when preferredTime has already passed today (7d)', async () => {
-    vi.useFakeTimers()
-    vi.setSystemTime(new Date(2024, 5, 1, 8, 0, 0, 0))
-    await autoExportConfigStore.setValue(
-      baseConfig({ interval: '7d', preferredTime: '07:00' }),
-    )
-    const createSpy = vi.spyOn(browser.alarms, 'create')
+  describe('config-change', () => {
+    it('recomputes the next run from now and arms a one-shot alarm at it', async () => {
+      vi.useFakeTimers()
+      vi.setSystemTime(new Date(2024, 5, 1, 8, 0, 0, 0))
+      await autoExportConfigStore.setValue(
+        baseConfig({ interval: '1d', preferredTime: '10:00' }),
+      )
 
-    await syncAlarm()
+      await syncAlarm('config-change')
 
-    expect(createSpy).toHaveBeenCalledWith(
-      ALARM_NAME,
-      expect.objectContaining({ delayInMinutes: 6 * 24 * 60 + 23 * 60 }),
-    )
+      const expected = new Date(2024, 5, 1, 10, 0, 0, 0).getTime()
+      expect(await autoExportNextRunStore.getValue()).toBe(expected)
+      const alarm = await browser.alarms.get(ALARM_NAME)
+      expect(alarm?.scheduledTime).toBe(expected)
+      expect(alarm?.periodInMinutes).toBeUndefined()
+    })
+
+    it('overwrites a stale stored next run even if one already exists', async () => {
+      vi.useFakeTimers()
+      vi.setSystemTime(new Date(2024, 5, 1, 8, 0, 0, 0))
+      await autoExportConfigStore.setValue(
+        baseConfig({ interval: '1d', preferredTime: '10:00' }),
+      )
+      await autoExportNextRunStore.setValue(1)
+
+      await syncAlarm('config-change')
+
+      expect(await autoExportNextRunStore.getValue()).toBe(
+        new Date(2024, 5, 1, 10, 0, 0, 0).getTime(),
+      )
+    })
+  })
+
+  describe.each<['startup' | 'install' | 'update']>([
+    ['startup'],
+    ['install'],
+    ['update'],
+  ])('%s', (trigger) => {
+    it('computes and stores a next run when none is stored, then arms the alarm at it', async () => {
+      vi.useFakeTimers()
+      vi.setSystemTime(new Date(2024, 5, 1, 8, 0, 0, 0))
+      await autoExportConfigStore.setValue(
+        baseConfig({ interval: '1d', preferredTime: '10:00' }),
+      )
+
+      await syncAlarm(trigger)
+
+      const expected = new Date(2024, 5, 1, 10, 0, 0, 0).getTime()
+      expect(await autoExportNextRunStore.getValue()).toBe(expected)
+      const alarm = await browser.alarms.get(ALARM_NAME)
+      expect(alarm?.scheduledTime).toBe(expected)
+    })
+
+    it('arms the alarm at the stored next run without recomputing it', async () => {
+      vi.useFakeTimers()
+      vi.setSystemTime(new Date(2024, 5, 1, 8, 0, 0, 0))
+      await autoExportConfigStore.setValue(
+        baseConfig({ interval: '1d', preferredTime: '10:00' }),
+      )
+      const stored = new Date(2024, 5, 3, 10, 0, 0, 0).getTime()
+      await autoExportNextRunStore.setValue(stored)
+
+      await syncAlarm(trigger)
+
+      expect(await autoExportNextRunStore.getValue()).toBe(stored)
+      const alarm = await browser.alarms.get(ALARM_NAME)
+      expect(alarm?.scheduledTime).toBe(stored)
+    })
+
+    it('arms a catch-up alarm ~1 minute out when the stored next run is overdue, without changing the stored value', async () => {
+      vi.useFakeTimers()
+      const now = new Date(2024, 5, 1, 8, 0, 0, 0).getTime()
+      vi.setSystemTime(now)
+      await autoExportConfigStore.setValue(
+        baseConfig({ interval: '1d', preferredTime: '10:00' }),
+      )
+      const overdue = now - 60 * 60 * 1000
+      await autoExportNextRunStore.setValue(overdue)
+
+      await syncAlarm(trigger)
+
+      expect(await autoExportNextRunStore.getValue()).toBe(overdue)
+      const alarm = await browser.alarms.get(ALARM_NAME)
+      expect(alarm?.scheduledTime).toBe(now + 60_000)
+    })
+  })
+})
+
+describe('readAutoExportLastRun', () => {
+  it('returns null when nothing has run yet', async () => {
+    expect(await readAutoExportLastRun()).toBeNull()
+  })
+
+  it('migrates a legacy numeric value to a successful scheduled run', async () => {
+    await autoExportLastRunStore.setValue(1_700_000_000_000)
+
+    expect(await readAutoExportLastRun()).toEqual({
+      at: 1_700_000_000_000,
+      ok: true,
+      trigger: 'scheduled',
+    })
+  })
+
+  it('returns a structured value as-is', async () => {
+    await autoExportLastRunStore.setValue({
+      at: 1_700_000_000_000,
+      ok: false,
+      error: 'boom',
+      trigger: 'catch-up',
+    })
+
+    expect(await readAutoExportLastRun()).toEqual({
+      at: 1_700_000_000_000,
+      ok: false,
+      error: 'boom',
+      trigger: 'catch-up',
+    })
   })
 })
 
@@ -229,7 +322,7 @@ describe('runAutoExport', () => {
     await autoExportConfigStore.setValue(baseConfig({ enabled: false }))
     const downloadSpy = mockDownload()
 
-    await runAutoExport()
+    await runAutoExport('scheduled')
 
     expect(downloadSpy).not.toHaveBeenCalled()
     expect(await autoExportLastRunStore.getValue()).toBeNull()
@@ -239,7 +332,7 @@ describe('runAutoExport', () => {
     await autoExportConfigStore.setValue(baseConfig({ formats: [] }))
     const downloadSpy = mockDownload()
 
-    await runAutoExport()
+    await runAutoExport('scheduled')
 
     expect(downloadSpy).not.toHaveBeenCalled()
     expect(await autoExportLastRunStore.getValue()).toBeNull()
@@ -261,7 +354,7 @@ describe('runAutoExport', () => {
     await exportFilenameTemplateStore.setValue('AutoExport')
     const downloadSpy = mockDownload()
 
-    await runAutoExport()
+    await runAutoExport('scheduled')
 
     expect(downloadSpy).toHaveBeenCalledTimes(3)
 
@@ -308,52 +401,12 @@ describe('runAutoExport', () => {
     await includeDateGroupModifiedStore.setValue(true)
     const downloadSpy = mockDownload()
 
-    await runAutoExport()
+    await runAutoExport('scheduled')
 
     expect(downloadSpy).toHaveBeenCalledTimes(1)
     const [details] = downloadSpy.mock.calls[0] ?? []
     const csvContent = decodeDataUrlContent(details?.url ?? '')
     expect(csvContent).toContain('https://other-only.example')
-  })
-
-  it('sets autoExportLastRunStore only after every selected download resolves', async () => {
-    vi.useFakeTimers()
-    vi.setSystemTime(new Date(2024, 5, 1, 8, 0, 0, 0))
-    seedFakeBookmarksTree([
-      {
-        id: '10',
-        parentId: '1',
-        title: 'A',
-        url: 'https://a.example',
-        syncing: false,
-      },
-    ])
-    await autoExportConfigStore.setValue(
-      baseConfig({ path: 'backups/', formats: ['html', 'json'] }),
-    )
-    await exportFilenameTemplateStore.setValue('AutoExport')
-
-    const resolvers: (() => void)[] = []
-    mockDownload(
-      async () =>
-        new Promise<number>((resolve) => {
-          resolvers.push(() => resolve(1))
-        }),
-    )
-
-    const runPromise = runAutoExport()
-
-    await vi.waitFor(() => expect(resolvers).toHaveLength(2))
-    expect(await autoExportLastRunStore.getValue()).toBeNull()
-
-    resolvers[0]?.()
-    await Promise.resolve()
-    expect(await autoExportLastRunStore.getValue()).toBeNull()
-
-    resolvers[1]?.()
-    await runPromise
-
-    expect(await autoExportLastRunStore.getValue()).toBe(Date.now())
   })
 
   it.each<[string, string]>([
@@ -378,7 +431,7 @@ describe('runAutoExport', () => {
       await exportFilenameTemplateStore.setValue('AutoExport')
       const downloadSpy = mockDownload()
 
-      await runAutoExport()
+      await runAutoExport('scheduled')
 
       expect(downloadSpy).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -387,4 +440,171 @@ describe('runAutoExport', () => {
       )
     },
   )
+
+  it('records a successful run with its trigger and clears the badge', async () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date(2024, 5, 1, 8, 0, 0, 0))
+    seedFakeBookmarksTree([
+      {
+        id: '10',
+        parentId: '1',
+        title: 'A',
+        url: 'https://a.example',
+        syncing: false,
+      },
+    ])
+    await autoExportConfigStore.setValue(baseConfig({ formats: ['html'] }))
+    mockDownload()
+    const { setBadgeText } = mockActionBadge()
+
+    await runAutoExport('catch-up')
+
+    expect(await autoExportLastRunStore.getValue()).toEqual({
+      at: Date.now(),
+      ok: true,
+      trigger: 'catch-up',
+    })
+    expect(setBadgeText).toHaveBeenCalledWith({ text: '' })
+  })
+
+  it('records a failed run with its error and sets the failure badge for a scheduled run', async () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date(2024, 5, 1, 8, 0, 0, 0))
+    await autoExportConfigStore.setValue(baseConfig({ formats: ['html'] }))
+    mockDownload(async () => {
+      throw new Error('disk full')
+    })
+    const { setBadgeText, setBadgeBackgroundColor } = mockActionBadge()
+
+    await expect(runAutoExport('scheduled')).rejects.toThrow('disk full')
+
+    expect(await autoExportLastRunStore.getValue()).toEqual({
+      at: Date.now(),
+      ok: false,
+      error: 'disk full',
+      trigger: 'scheduled',
+    })
+    expect(setBadgeText).toHaveBeenCalledWith({ text: '!' })
+    expect(setBadgeBackgroundColor).toHaveBeenCalledWith(
+      expect.objectContaining({ color: expect.any(String) }),
+    )
+  })
+
+  it('sets the failure badge for a catch-up run', async () => {
+    await autoExportConfigStore.setValue(baseConfig({ formats: ['html'] }))
+    mockDownload(async () => {
+      throw new Error('disk full')
+    })
+    const { setBadgeText } = mockActionBadge()
+
+    await expect(runAutoExport('catch-up')).rejects.toThrow('disk full')
+
+    expect(setBadgeText).toHaveBeenCalledWith({ text: '!' })
+  })
+
+  it('does not set the failure badge for a failed manual run', async () => {
+    await autoExportConfigStore.setValue(baseConfig({ formats: ['html'] }))
+    mockDownload(async () => {
+      throw new Error('disk full')
+    })
+    const { setBadgeText } = mockActionBadge()
+
+    await expect(runAutoExport('manual')).rejects.toThrow('disk full')
+
+    expect(setBadgeText).not.toHaveBeenCalled()
+  })
+
+  it('reschedules the next run and re-arms the alarm after a scheduled run', async () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date(2024, 5, 1, 8, 0, 0, 0))
+    await autoExportConfigStore.setValue(
+      baseConfig({ formats: ['html'], interval: '1d', preferredTime: '10:00' }),
+    )
+    mockDownload()
+    mockActionBadge()
+
+    await runAutoExport('scheduled')
+
+    const expected = new Date(2024, 5, 2, 10, 0, 0, 0).getTime()
+    expect(await autoExportNextRunStore.getValue()).toBe(expected)
+    const alarm = await browser.alarms.get(ALARM_NAME)
+    expect(alarm?.scheduledTime).toBe(expected)
+  })
+
+  it('reschedules the next run even after a failed scheduled run', async () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date(2024, 5, 1, 8, 0, 0, 0))
+    await autoExportConfigStore.setValue(
+      baseConfig({ formats: ['html'], interval: '1d', preferredTime: '10:00' }),
+    )
+    mockDownload(async () => {
+      throw new Error('disk full')
+    })
+    mockActionBadge()
+
+    await expect(runAutoExport('scheduled')).rejects.toThrow('disk full')
+
+    const expected = new Date(2024, 5, 2, 10, 0, 0, 0).getTime()
+    expect(await autoExportNextRunStore.getValue()).toBe(expected)
+  })
+
+  it('does not reschedule the next run after a manual run', async () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date(2024, 5, 1, 8, 0, 0, 0))
+    await autoExportConfigStore.setValue(
+      baseConfig({ formats: ['html'], interval: '1d', preferredTime: '10:00' }),
+    )
+    await autoExportNextRunStore.setValue(null)
+    mockDownload()
+    mockActionBadge()
+
+    await runAutoExport('manual')
+
+    expect(await autoExportNextRunStore.getValue()).toBeNull()
+  })
+
+  it('sets autoExportLastRunStore only after every selected download resolves', async () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date(2024, 5, 1, 8, 0, 0, 0))
+    seedFakeBookmarksTree([
+      {
+        id: '10',
+        parentId: '1',
+        title: 'A',
+        url: 'https://a.example',
+        syncing: false,
+      },
+    ])
+    await autoExportConfigStore.setValue(
+      baseConfig({ path: 'backups/', formats: ['html', 'json'] }),
+    )
+    await exportFilenameTemplateStore.setValue('AutoExport')
+    mockActionBadge()
+
+    const resolvers: (() => void)[] = []
+    mockDownload(
+      async () =>
+        new Promise<number>((resolve) => {
+          resolvers.push(() => resolve(1))
+        }),
+    )
+
+    const runPromise = runAutoExport('scheduled')
+
+    await vi.waitFor(() => expect(resolvers).toHaveLength(2))
+    expect(await autoExportLastRunStore.getValue()).toBeNull()
+
+    resolvers[0]?.()
+    await Promise.resolve()
+    expect(await autoExportLastRunStore.getValue()).toBeNull()
+
+    resolvers[1]?.()
+    await runPromise
+
+    expect(await autoExportLastRunStore.getValue()).toEqual({
+      at: Date.now(),
+      ok: true,
+      trigger: 'scheduled',
+    })
+  })
 })
