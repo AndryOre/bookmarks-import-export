@@ -235,14 +235,6 @@ async function setFailureBadge(): Promise<void> {
 
 /**
  * Runs an auto-export: reads the current export settings, generates each
- * selected format, and downloads it to the configured folder. Skips
- * entirely if auto-export is disabled or no format is selected — this can
- * happen if the alarm fires from stale state just before {@link syncAlarm}
- * clears it. Each download uses `saveAs: false` (no save-dialog prompt) and
- * `conflictAction: 'uniquify'` so a repeat run never silently overwrites a
- * previous export. The CSV branch passes a narrower options object than
-=======
- * Runs an auto-export: reads the current export settings, generates each
  * selected format, and downloads it to the configured folder via
  * {@link downloadViaOffscreenDocument} (an offscreen-document blob URL,
  * rather than a base64 data URL, so exports aren't capped by the

@@ -255,4 +255,40 @@ describe('downloadViaOffscreenDocument', () => {
       }),
     )
   })
+
+  it('does not close the offscreen document out from under a slower concurrent download', async () => {
+    const offscreen = mockOffscreenApi()
+    const downloads = mockDownloadsApi()
+
+    const { promise: bGate, resolve: releaseB } = Promise.withResolvers<void>()
+    const sendMessage = vi.fn(
+      async (message: { type: string; content?: string }) => {
+        if (message.type !== CREATE_BLOB_URL_MESSAGE_TYPE) return
+        if (message.content === 'b') {
+          await bGate
+          return { url: 'blob:mock-b' }
+        }
+        return { url: 'blob:mock-a' }
+      },
+    )
+    browser.runtime.sendMessage =
+      sendMessage as unknown as typeof browser.runtime.sendMessage
+
+    const a = downloadViaOffscreenDocument('a', 'text/plain', 'a.txt')
+    const b = downloadViaOffscreenDocument('b', 'text/plain', 'b.txt')
+
+    await flushMicrotasks()
+    downloads.fire(1, 'complete')
+    await a
+
+    expect(offscreen.closeDocument).not.toHaveBeenCalled()
+
+    releaseB()
+    await flushMicrotasks()
+    downloads.fire(2, 'complete')
+    await b
+
+    expect(offscreen.createDocument).toHaveBeenCalledTimes(1)
+    expect(offscreen.closeDocument).toHaveBeenCalledTimes(1)
+  })
 })
