@@ -15,7 +15,9 @@ operation reads and writes the browser's own bookmarks tree through
 UI is React, split across several small standalone pages (a popup and four
 full-tab pages) rather than one single-page app, because each of those surfaces
 is opened as its own browser tab or the toolbar popup and has no shared React
-tree with the others.
+tree with the others. See [`docs/security.md`](security.md) for the assurance
+case behind the no-network/local-only claim above, the manifest permissions, and
+the threat model.
 
 ## Code map
 
