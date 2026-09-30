@@ -1,6 +1,6 @@
 import { storage } from '#imports'
 
-import type { AutoExportConfig } from '@/lib/types'
+import type { AutoExportConfig, ImportMode } from '@/lib/types'
 
 /**
  * All persisted extension settings, defined with `storage.defineItem` so
@@ -75,4 +75,9 @@ export const autoExportConfigStore = storage.defineItem<AutoExportConfig>(
 export const autoExportLastRunStore = storage.defineItem<number | null>(
   'local:autoExportLastRun',
   { fallback: null },
+)
+
+export const defaultImportModeStore = storage.defineItem<ImportMode>(
+  'local:defaultImportMode',
+  { fallback: 'restore-merge' },
 )

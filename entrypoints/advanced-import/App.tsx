@@ -20,7 +20,9 @@ import { getImportPreview } from '@/lib/import-preview'
 import { importFromCSV } from '@/lib/importers/import-csv'
 import { importFromHTML } from '@/lib/importers/import-html'
 import { importFromJSON } from '@/lib/importers/import-json'
+import { defaultImportModeStore } from '@/lib/storage'
 import type { ImportMode, ImportPreview } from '@/lib/types'
+import { useStorageItem } from '@/lib/use-storage-item'
 
 type ImportStatus = 'idle' | 'importing' | 'success' | 'error'
 
@@ -29,17 +31,25 @@ type ImportStatus = 'idle' | 'importing' | 'success' | 'error'
  * import mode, preview what will be imported, and run the import.
  * Choosing `restore-replace` — which clears the existing bookmark roots
  * before importing — first opens a confirmation dialog, since that mode is
- * destructive and cannot be undone.
+ * destructive and cannot be undone. The mode selector initializes from
+ * {@link defaultImportModeStore} and writes user changes back to it, so the
+ * choice persists across sessions and is shared with the popup's quick
+ * import. When the parsed file has no location data (CSV, or a file with no
+ * Bookmarks Bar/Other Bookmarks data), the import is forced to `folder` for
+ * that one file only — the stored default is left untouched.
  * @returns The Advanced Import page.
  */
 export default function App() {
   const [file, setFile] = useState<File | null>(null)
   const [fileText, setFileText] = useState('')
   const [preview, setPreview] = useState<ImportPreview | null>(null)
-  const [mode, setMode] = useState<ImportMode>('folder')
+  const [mode, setMode] = useStorageItem(defaultImportModeStore)
   const [status, setStatus] = useState<ImportStatus>('idle')
   const [errorMessage, setErrorMessage] = useState('')
   const [showConfirm, setShowConfirm] = useState(false)
+
+  const effectiveMode: ImportMode =
+    preview && !preview.hasLocationData ? 'folder' : mode
 
   const handleFile = async (selected: File) => {
     const text = await selected.text()
@@ -50,14 +60,10 @@ export default function App() {
     setPreview(parsed)
     setStatus('idle')
     setErrorMessage('')
-
-    if (!parsed.hasLocationData) {
-      setMode('folder')
-    }
   }
 
   const handleImportClick = () => {
-    if (mode === 'restore-replace') {
+    if (effectiveMode === 'restore-replace') {
       setShowConfirm(true)
     } else {
       void executeImport()
@@ -75,11 +81,11 @@ export default function App() {
 
       switch (format) {
         case 'html': {
-          await importFromHTML(fileText, mode)
+          await importFromHTML(fileText, effectiveMode)
           break
         }
         case 'json': {
-          await importFromJSON(JSON.parse(fileText), mode)
+          await importFromJSON(JSON.parse(fileText), effectiveMode)
           break
         }
         case 'csv': {
@@ -118,8 +124,8 @@ export default function App() {
           {preview && (
             <div className="grid grid-cols-2 gap-4">
               <ImportModeSelector
-                value={mode}
-                onChange={setMode}
+                value={effectiveMode}
+                onChange={(newMode) => void setMode(newMode)}
                 hasLocationData={preview.hasLocationData}
               />
               <ImportPreviewPanel preview={preview} />
