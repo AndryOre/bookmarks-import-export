@@ -671,5 +671,22 @@
   "githubLink": {
     "message": "GitHub",
     "description": "Link label to the project's GitHub repository"
+  },
+  "autoExportStatusNextRun": {
+    "message": "Auto-export: next $DATE$",
+    "description": "Popup footer status line when auto-export is enabled, showing the next scheduled run",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      }
+    }
+  },
+  "autoExportStatusDisabled": {
+    "message": "Auto-export disabled · Configure",
+    "description": "Popup footer status line when auto-export is disabled"
+  },
+  "autoExportStatusFailed": {
+    "message": "Last auto-export failed",
+    "description": "Popup footer status line when the last auto-export run failed"
   }
 }

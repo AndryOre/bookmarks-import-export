@@ -670,5 +670,22 @@
   "githubLink": {
     "message": "GitHub",
     "description": "Texto del enlace al repositorio de GitHub del proyecto"
+  },
+  "autoExportStatusNextRun": {
+    "message": "Auto-export: próximo $DATE$",
+    "description": "Línea de estado en el pie del popup cuando la exportación automática está activada, mostrando la próxima ejecución programada",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      }
+    }
+  },
+  "autoExportStatusDisabled": {
+    "message": "Auto-export desactivado · Configurar",
+    "description": "Línea de estado en el pie del popup cuando la exportación automática está desactivada"
+  },
+  "autoExportStatusFailed": {
+    "message": "Falló el último auto-export",
+    "description": "Línea de estado en el pie del popup cuando la última ejecución de la exportación automática falló"
   }
 }
