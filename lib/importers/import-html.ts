@@ -218,15 +218,28 @@ function buildKnownTitleSet(
  * is a Unix timestamp in seconds (the Netscape export format), so it's
  * multiplied by 1000 to match the millisecond timestamps `Date.now()` and
  * the rest of this codebase use. Falls back to the current time when
- * `add_date` is absent.
+ * `add_date` is absent. The `href` is validated with `new URL()`; a missing
+ * or invalid `href` both result in an `undefined` `url`.
  * @param a The anchor element to parse.
  * @returns The parsed bookmark.
  */
 function parseBookmarkElement(a: HTMLAnchorElement): ParsedBookmark {
   const dateAddedAttribute = a.getAttribute('add_date')
+  const href = a.getAttribute('href')
+
+  let url: string | undefined
+  if (href) {
+    try {
+      new URL(href)
+      url = href
+    } catch {
+      console.warn('[importFromHTML] Invalid URL, skipping bookmark:', href)
+    }
+  }
+
   return {
     title: a.textContent?.trim() ?? '',
-    url: a.getAttribute('href') ?? undefined,
+    url,
     dateAdded: dateAddedAttribute
       ? parseInt(dateAddedAttribute) * 1000
       : Date.now(),

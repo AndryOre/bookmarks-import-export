@@ -46,6 +46,24 @@ describe('parseHTML', () => {
     expect(other?.children?.[0]?.url).toBe('https://b.example')
   })
 
+  it('leaves url undefined for a malformed href, same as a missing href', () => {
+    const html = `${HTML_HEADER}
+<DL><p>
+    <DT><A HREF="not-a-url">Bare string</A>
+    <DT><A HREF="">Empty</A>
+    <DT><A HREF="https://valid.example">Valid</A>
+</DL><p>`
+
+    const parsed = parseHTML(html)
+    const other = parsed.find((n) => n.isOtherBookmarks)
+
+    expect(other?.children?.map((n) => n.url)).toEqual([
+      undefined,
+      undefined,
+      'https://valid.example',
+    ])
+  })
+
   it('recognizes a top-level H3 with unfiled_bookmarks_folder="true" as Other, merging its children', () => {
     const html = `${HTML_HEADER}
 <DL><p>
