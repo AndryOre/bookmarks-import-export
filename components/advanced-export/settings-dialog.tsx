@@ -57,6 +57,7 @@ import type {
   AutoExportLastRun,
   MessageKey,
   SettingsDialogProperties,
+  SettingsTab,
 } from '@/lib/types'
 import { t } from '@/lib/types'
 import { useStorageItem } from '@/lib/use-storage-item'
@@ -111,12 +112,29 @@ const INTERVALS: {
  * @param root0 This component's properties.
  * @param root0.open Whether the dialog is open.
  * @param root0.onOpenChange Called when the dialog's open state should change.
+ * @param root0.defaultTab Which tab is active; defaults to `'display'`.
  * @returns The dialog element, tabbed across Display, Export, and Auto-export.
  */
 export function SettingsDialog({
   open,
   onOpenChange,
+  defaultTab,
 }: SettingsDialogProperties) {
+  const [activeTab, setActiveTab] = useState<SettingsTab>(
+    defaultTab ?? 'display',
+  )
+  const [syncedDefaultTab, setSyncedDefaultTab] = useState(defaultTab)
+
+  /**
+   * Resets the active tab whenever `defaultTab` changes underneath us —
+   * computed during render instead of an effect, per
+   * {@link https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes},
+   * matching `syncedFilenameTemplate` below.
+   */
+  if (defaultTab !== syncedDefaultTab) {
+    setSyncedDefaultTab(defaultTab)
+    setActiveTab(defaultTab ?? 'display')
+  }
   const [showBookmarkIcon, setShowBookmarkIcon] = useStorageItem(
     showBookmarkIconStore,
   )
@@ -325,7 +343,10 @@ export function SettingsDialog({
         </DialogHeader>
 
         <TooltipProvider>
-          <Tabs defaultValue="display">
+          <Tabs
+            value={activeTab}
+            onValueChange={(value) => setActiveTab(value as SettingsTab)}
+          >
             <TabsList className="w-full">
               <TabsTrigger value="display" className="flex-1">
                 {i18n.t('display')}

@@ -58,7 +58,7 @@ export function getChangelog(): ChangelogEntry[] {
         {
           textKey: 'changelog_1_6_0_1',
           linkKey: 'changelog_1_6_0_1_link',
-          linkUrl: advancedExportUrl,
+          linkUrl: `${advancedExportUrl}?settings=auto-export`,
         },
       ],
     },

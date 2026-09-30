@@ -162,3 +162,24 @@ test('exports exactly a selection made from the search-filtered tree', async ({
 
   expect(leafTitles(exported)).toEqual(['Old Report'])
 })
+
+test('the ?settings=auto-export deep link opens settings on the Auto-export tab', async ({
+  openExtensionPage,
+}) => {
+  const page = await openExtensionPage(
+    'advanced-export.html?settings=auto-export',
+  )
+
+  await expect(page.getByRole('dialog', { name: 'Settings' })).toBeVisible()
+  await expect(
+    page.getByRole('tab', { name: 'Auto-export', selected: true }),
+  ).toBeVisible()
+})
+
+test('opening the page with no settings param leaves the dialog closed', async ({
+  openExtensionPage,
+}) => {
+  const page = await openExtensionPage('advanced-export.html')
+
+  await expect(page.getByRole('dialog', { name: 'Settings' })).toBeHidden()
+})
