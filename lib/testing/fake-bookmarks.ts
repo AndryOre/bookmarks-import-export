@@ -17,7 +17,18 @@ import type { ExtendedBookmarkTreeNode } from '@/lib/types'
  * `beforeEach`.
  */
 
-function makeDefaultRoot(): ExtendedBookmarkTreeNode {
+/**
+ * Builds the default in-memory tree: "Bookmarks bar" ("1") and "Other
+ * bookmarks" ("2"), plus a "Mobile bookmarks" root ("3") when
+ * `shouldIncludeMobileRoot` is set — see {@link resetFakeBookmarks}'s
+ * `options.withMobileRoot`, which defaults to `false` so existing tests keep
+ * seeing the two-root tree most browsers actually have.
+ * @param shouldIncludeMobileRoot Whether to also seed the Mobile root.
+ * @returns The freshly built root node.
+ */
+function makeDefaultRoot(
+  shouldIncludeMobileRoot: boolean,
+): ExtendedBookmarkTreeNode {
   return {
     id: '0',
     title: '',
@@ -28,6 +39,7 @@ function makeDefaultRoot(): ExtendedBookmarkTreeNode {
         parentId: '0',
         index: 0,
         title: 'Bookmarks bar',
+        folderType: 'bookmarks-bar',
         syncing: false,
         dateAdded: Date.now(),
         children: [],
@@ -37,17 +49,32 @@ function makeDefaultRoot(): ExtendedBookmarkTreeNode {
         parentId: '0',
         index: 1,
         title: 'Other bookmarks',
+        folderType: 'other',
         syncing: false,
         dateAdded: Date.now(),
         children: [],
       },
+      ...(shouldIncludeMobileRoot
+        ? [
+            {
+              id: '3',
+              parentId: '0',
+              index: 2,
+              title: 'Mobile bookmarks',
+              folderType: 'mobile' as const,
+              syncing: false,
+              dateAdded: Date.now(),
+              children: [],
+            },
+          ]
+        : []),
     ],
   }
 }
 
 const store: { nextId: number; root: ExtendedBookmarkTreeNode } = {
-  nextId: 3,
-  root: makeDefaultRoot(),
+  nextId: 4,
+  root: makeDefaultRoot(false),
 }
 
 function findNode(
@@ -84,14 +111,29 @@ function clone<T>(value: T): T {
 }
 
 /**
+ * Options for {@link resetFakeBookmarks}.
+ */
+export interface ResetFakeBookmarksOptions {
+  /**
+   * Also seed a Mobile bookmarks root (id `"3"`, `folderType: "mobile"`),
+   * for tests exercising Mobile-aware root resolution. Defaults to `false`.
+   */
+  withMobileRoot?: boolean
+}
+
+/**
  * Installs an in-memory bookmarks implementation onto `fakeBrowser.bookmarks`
  * and resets it to a fresh tree (root "0" -> "Bookmarks bar" "1" + "Other
- * bookmarks" "2", both empty). Safe to call repeatedly (e.g. per test).
+ * bookmarks" "2", both empty, plus "Mobile bookmarks" "3" when
+ * `options.withMobileRoot` is set). Safe to call repeatedly (e.g. per test).
+ * @param options See {@link ResetFakeBookmarksOptions}.
  */
-export function resetFakeBookmarks(): void {
+export function resetFakeBookmarks(
+  options: ResetFakeBookmarksOptions = {},
+): void {
   resetFakeI18n()
-  store.nextId = 3
-  store.root = makeDefaultRoot()
+  store.nextId = options.withMobileRoot ? 4 : 3
+  store.root = makeDefaultRoot(options.withMobileRoot ?? false)
 
   fakeBrowser.bookmarks.getTree = async () => [clone(store.root)]
 

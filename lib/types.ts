@@ -69,6 +69,7 @@ export interface ParsedBookmark {
   children?: ParsedBookmark[]
   isBookmarksBar?: boolean
   isOtherBookmarks?: boolean
+  isMobileBookmarks?: boolean
   id?: string
   parentId?: string
 }

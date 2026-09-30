@@ -1,6 +1,7 @@
 import { i18n } from '#i18n'
 import type { Browser } from '@wxt-dev/browser'
 
+import { resolveImportRoots } from '@/lib/importers/resolve-roots'
 import type { ImportMode, ParsedBookmark } from '@/lib/types'
 
 /**
@@ -208,8 +209,11 @@ async function processBookmarks(
 ): Promise<void> {
   const tree = await browser.bookmarks.getTree()
   const root = tree[0]
+  const { bookmarksBarId, otherBookmarksId, mobileId } = resolveImportRoots(
+    root?.children ?? [],
+  )
 
-  if (!root?.children?.[0] || !root.children?.[1]) {
+  if (!bookmarksBarId || !otherBookmarksId) {
     throw new Error('PROCESS_ERROR:' + i18n.t('importFromHTMLProcessError'))
   }
 
@@ -228,26 +232,28 @@ async function processBookmarks(
         await createBookmarks(bookmark.children ?? [], importedBookmarksBar.id)
       } else if (bookmark.isOtherBookmarks) {
         await createBookmarks(bookmark.children ?? [], importedFolder.id)
+      } else if (
+        bookmark.isMobileBookmarks &&
+        bookmark.children &&
+        bookmark.children.length > 0
+      ) {
+        const importedMobile = await createItem({
+          parentId: importedFolder.id,
+          title: i18n.t('mobileBookmarks'),
+        })
+        await createBookmarks(bookmark.children, importedMobile.id)
       }
     }
   } else {
-    const bookmarksBarNode = root.children.at(0)
-    const otherBookmarksNode = root.children.at(1)
-    const bookmarksBarId = bookmarksBarNode?.id
-    const otherBookmarksId = otherBookmarksNode?.id
-
-    if (!bookmarksBarId || !otherBookmarksId) {
-      throw new Error('PROCESS_ERROR:' + i18n.t('importFromHTMLProcessError'))
-    }
+    const hasMobileContent = parsed.some(
+      (bookmark) => bookmark.isMobileBookmarks,
+    )
 
     if (mode === 'restore-replace') {
-      const bookmarksBarChildren = bookmarksBarNode?.children ?? []
-      for (const child of bookmarksBarChildren) {
-        await browser.bookmarks.removeTree(child.id)
-      }
-      const otherBookmarksChildren = otherBookmarksNode?.children ?? []
-      for (const child of otherBookmarksChildren) {
-        await browser.bookmarks.removeTree(child.id)
+      await removeAllChildren(bookmarksBarId, root)
+      await removeAllChildren(otherBookmarksId, root)
+      if (hasMobileContent && mobileId) {
+        await removeAllChildren(mobileId, root)
       }
     }
 
@@ -256,9 +262,60 @@ async function processBookmarks(
         await createBookmarks(bookmark.children ?? [], bookmarksBarId)
       } else if (bookmark.isOtherBookmarks) {
         await createBookmarks(bookmark.children ?? [], otherBookmarksId)
+      } else if (bookmark.isMobileBookmarks) {
+        await writeMobileBookmarks(
+          bookmark.children ?? [],
+          mobileId,
+          otherBookmarksId,
+        )
       }
     }
   }
+}
+
+/**
+ * Removes every existing child of the root node identified by `rootId`, as
+ * found in `treeRoot` (the tree snapshot `processBookmarks` already fetched
+ * — this never re-fetches). Used by `restore-replace` mode to clear a root
+ * before writing the imported tree into it.
+ * @param rootId The id of the root whose children should be removed.
+ * @param treeRoot The tree root node (`browser.bookmarks.getTree()`'s
+ *   `tree[0]`) to look up `rootId`'s current children in.
+ * @returns Resolves once every child has been removed.
+ */
+async function removeAllChildren(
+  rootId: string,
+  treeRoot: Browser.bookmarks.BookmarkTreeNode | undefined,
+): Promise<void> {
+  const rootNode = treeRoot?.children?.find((node) => node.id === rootId)
+  const children = rootNode?.children ?? []
+  for (const child of children) {
+    await browser.bookmarks.removeTree(child.id)
+  }
+}
+
+/**
+ * Writes Mobile bookmarks content into the Mobile root when one was
+ * resolved and creation there succeeds; otherwise falls back to writing it
+ * into "Other bookmarks" (e.g. the current browser has no Mobile root, or
+ * the resolved id turned out stale).
+ * @param nodes The Mobile bookmarks content to write.
+ * @param mobileId The resolved Mobile root id, if any.
+ * @param otherBookmarksId The "Other bookmarks" root id to fall back to.
+ * @returns Resolves once the content has been written.
+ */
+async function writeMobileBookmarks(
+  nodes: ParsedBookmark[],
+  mobileId: string | undefined,
+  otherBookmarksId: string,
+): Promise<void> {
+  if (mobileId) {
+    try {
+      await createBookmarks(nodes, mobileId)
+      return
+    } catch {}
+  }
+  await createBookmarks(nodes, otherBookmarksId)
 }
 
 async function createBookmarks(
