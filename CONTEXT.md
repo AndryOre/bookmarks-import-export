@@ -54,3 +54,11 @@ export action. _Avoid_: scheduled export, automatic backup, background export.
 made of placeholders that get replaced with parts of the current date and time
 when a file is generated. _Avoid_: naming pattern, filename format, export
 filename.
+
+**Auto-export run** One execution of auto-export, whether scheduled, a catch-up
+run, or triggered with Export now; its time and outcome form the last run
+status. _Avoid_: backup, job.
+
+**Catch-up run** An auto-export run performed shortly after the browser starts
+because its scheduled time passed while the browser was closed. _Avoid_: missed
+run, retry.

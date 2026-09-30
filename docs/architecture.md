@@ -116,20 +116,28 @@ API surface available differs between them:
   but has no DOM.
 - **Extension pages** (popup, advanced-export, advanced-import, update, welcome)
   are ordinary web pages with a full DOM, rendered as React trees.
+- **The offscreen document** (`entrypoints/offscreen`) is an unlisted, hidden
+  page the service worker creates on demand via `chrome.offscreen`. It exists
+  purely to provide a document context for `URL.createObjectURL`.
 
 Two APIs used by the importers/exporters are page-only and unavailable to the
 service worker, which is why `auto-export.ts` cannot reuse the same download
-mechanism the pages use:
+mechanism the pages use directly:
 
 - **`DOMParser`** (used by `parseHTML` in `import-html.ts`) needs a document
   context to parse HTML strings into a traversable tree. It does not exist in a
   service worker.
 - **`URL.createObjectURL`** (used by the popup and advanced-export pages to turn
   an in-memory `Blob` into a downloadable `<a href>`) requires a `Blob`/URL
-  registry tied to a document; a service worker has neither. This is why
-  `runAutoExport` in `auto-export.ts` instead base64-encodes the export content
-  into a `data:` URL and hands that directly to `browser.downloads.download` — a
-  mechanism that works with no document at all.
+  registry tied to a document; a service worker has neither. `runAutoExport` in
+  `auto-export.ts` works around this via `downloadViaOffscreenDocument`
+  (`lib/offscreen-download.ts`): it opens the offscreen document (reusing one
+  already open from another format in the same run), messages it the export
+  content and MIME type, and gets back a `Blob` object URL created inside that
+  document. `browser.downloads.download` then downloads that URL directly. Once
+  the download reaches `'complete'` or `'interrupted'`, the object URL is
+  revoked and — once no other download from the run is still pending — the
+  offscreen document is closed.
 
 ## Data flows
 
@@ -164,10 +172,10 @@ listener tells `runAutoExport` whether it's a `scheduled` or `catch-up` run (by
 comparing the alarm's fire time to the stored next run) or a `manual` one (a
 later ticket's "Export now" button calls it directly). `runAutoExport` reads the
 persisted export settings, runs whichever exporters are enabled in the config,
-base64-encodes each result into a `data:` URL, and calls
-`browser.downloads.download` directly — skipping the `Blob`/object-URL step the
-page-based exports use, since neither is available in the service worker. It
-then records the outcome in `autoExportLastRunStore` as
+and downloads each result via `downloadViaOffscreenDocument` — delegating the
+`Blob`/object-URL step the page-based exports do inline to the offscreen
+document, since the service worker has neither `Blob` nor a `URL` registry of
+its own. It then records the outcome in `autoExportLastRunStore` as
 `{ at, ok, error?, trigger }` (a legacy plain-number value from before this
 shape existed is migrated on read to a successful `scheduled` run), and — for
 `scheduled`/`catch-up` triggers only — recomputes the next due time anchored to

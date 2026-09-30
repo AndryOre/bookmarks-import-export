@@ -2,6 +2,7 @@ import { exportToCSV } from '@/lib/exporters/export-csv'
 import { exportToHTML } from '@/lib/exporters/export-html'
 import { exportToJSON } from '@/lib/exporters/export-json'
 import { formatFilenameTemplate } from '@/lib/filename-template'
+import { downloadViaOffscreenDocument } from '@/lib/offscreen-download'
 import {
   autoExportConfigStore,
   autoExportLastRunStore,
@@ -181,8 +182,10 @@ export async function syncAlarm(trigger: SyncAlarmTrigger): Promise<void> {
  * Sanitises the user-configured auto-export output path before it's used as
  * a `browser.downloads.download` filename prefix: strips a leading `/` (the
  * path is relative to the browser's downloads folder, not absolute), removes
- * `..` segments to prevent escaping that folder, and collapses repeated
- * slashes.
+ * `..` segments to prevent escaping that folder, collapses repeated slashes,
+ * and strips characters Windows forbids in filenames/paths (`< > : " | ? *`
+ * and control characters) so the download doesn't silently fail on that
+ * platform.
  * @param path The user-configured output path.
  * @returns The sanitized, downloads-relative path.
  */
@@ -190,26 +193,9 @@ function sanitizePath(path: string): string {
   return path
     .replace(/^\/+/, '')
     .replaceAll('..', '')
+    .replaceAll(/[<>:"|?*\u{0}-\u{1F}]/gu, '')
     .replaceAll(/\/+/g, '/')
     .trim()
-}
-
-/**
- * Encodes export content as a base64 data URL. `browser.downloads.download`
- * needs a URL, and a service worker (unlike a page context) has no `URL`
- * object with `createObjectURL`, so a data URL is the only way to hand it
- * in-memory content directly.
- * @param content The export content to encode.
- * @param mimeType The content's MIME type.
- * @returns A base64 data URL encoding `content`.
- */
-function toDataUrl(content: string, mimeType: string): string {
-  const bytes = new TextEncoder().encode(content)
-  let binary = ''
-  for (const byte of bytes) {
-    binary += String.fromCodePoint(byte)
-  }
-  return `data:${mimeType};base64,${btoa(binary)}`
 }
 
 /**
@@ -255,6 +241,17 @@ async function setFailureBadge(): Promise<void> {
  * clears it. Each download uses `saveAs: false` (no save-dialog prompt) and
  * `conflictAction: 'uniquify'` so a repeat run never silently overwrites a
  * previous export. The CSV branch passes a narrower options object than
+=======
+ * Runs an auto-export: reads the current export settings, generates each
+ * selected format, and downloads it to the configured folder via
+ * {@link downloadViaOffscreenDocument} (an offscreen-document blob URL,
+ * rather than a base64 data URL, so exports aren't capped by the
+ * data-URL/IPC size limit). Skips entirely if auto-export is disabled or no
+ * format is selected — this can happen if the alarm fires from stale state
+ * just before {@link syncAlarm} clears it. Each download uses `saveAs: false`
+ * (no save-dialog prompt) and `conflictAction: 'uniquify'` so a repeat run
+ * never silently overwrites a previous export. The CSV branch passes a
+ * narrower options object than
  * HTML/JSON because `exportToCSV` has no `hideOtherBookmarks` or
  * `includeDateGroupModified` support — the user's "hide Other Bookmarks" and
  * "group by modified date" preferences are silently ignored for CSV output.
@@ -315,12 +312,11 @@ export async function runAutoExport(trigger: AutoExportTrigger): Promise<void> {
       downloads.push(
         (async () => {
           const content = await exportToHTML(baseOptions)
-          await browser.downloads.download({
-            url: toDataUrl(content, 'text/html'),
-            filename: `${prefix}${baseName}.html`,
-            saveAs: false,
-            conflictAction: 'uniquify',
-          })
+          await downloadViaOffscreenDocument(
+            content,
+            'text/html',
+            `${prefix}${baseName}.html`,
+          )
         })(),
       )
     }
@@ -329,12 +325,11 @@ export async function runAutoExport(trigger: AutoExportTrigger): Promise<void> {
       downloads.push(
         (async () => {
           const data = await exportToJSON(baseOptions)
-          await browser.downloads.download({
-            url: toDataUrl(JSON.stringify(data, null, 2), 'application/json'),
-            filename: `${prefix}${baseName}.json`,
-            saveAs: false,
-            conflictAction: 'uniquify',
-          })
+          await downloadViaOffscreenDocument(
+            JSON.stringify(data, null, 2),
+            'application/json',
+            `${prefix}${baseName}.json`,
+          )
         })(),
       )
     }
@@ -349,12 +344,11 @@ export async function runAutoExport(trigger: AutoExportTrigger): Promise<void> {
             includeDateLastUsed,
             hideParentFolder,
           })
-          await browser.downloads.download({
-            url: toDataUrl(content, 'text/csv'),
-            filename: `${prefix}${baseName}.csv`,
-            saveAs: false,
-            conflictAction: 'uniquify',
-          })
+          await downloadViaOffscreenDocument(
+            content,
+            'text/csv',
+            `${prefix}${baseName}.csv`,
+          )
         })(),
       )
     }
