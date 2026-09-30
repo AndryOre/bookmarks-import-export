@@ -21,6 +21,14 @@ interface CSVRow {
   iconData?: string
 }
 
+/**
+Exports bookmarks as CSV text: CRLF line endings, every field quoted, and
+one column per requested field (`title`, `url`, `folder`, plus `dateAdded`,
+`dateLastUsed`, `iconData` when their options are enabled). Timestamps are
+converted from the milliseconds Chrome stores to whole seconds. Nested
+folders are flattened into a single `folder` column, with path segments
+joined by `/`.
+*/
 export async function exportToCSV(options: ExportCSVOptions): Promise<string> {
   const {
     selectedBookmarks,
@@ -57,8 +65,11 @@ export async function exportToCSV(options: ExportCSVOptions): Promise<string> {
   })
 }
 
-// ── Aplanado recursivo ────────────────────────────────────────────────────────
-
+/**
+Recursively walks `nodes`, pushing one row per bookmark onto `rows`. Folders
+contribute no row of their own; their label is appended to `parentPath`
+(joined with `/`) and passed down to their children.
+*/
 async function flattenToRows(
   nodes: ExtendedBookmarkTreeNode[],
   rows: CSVRow[],
@@ -109,10 +120,12 @@ async function flattenToRows(
 }
 
 /**
- * Calcula el label de una carpeta para el campo `folder` del CSV.
- * id="0" siempre vacío; id="1"/"2" usan claves i18n.
- * Carpetas normales retornan "" si hideParentFolder=true (aplana todos los niveles).
- */
+Computes the label to use for a folder in the CSV `folder` column. The root
+(id `"0"`) always contributes an empty label; the bookmarks bar (`"1"`) and
+other bookmarks (`"2"`) use their localized names. Regular folders return an
+empty label when `shouldHideParentFolder` is set, which flattens every level
+of nesting under them.
+*/
 function getFolderLabel(
   node: ExtendedBookmarkTreeNode,
   shouldHideParentFolder: boolean,

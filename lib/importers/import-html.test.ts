@@ -1,6 +1,4 @@
 // @vitest-environment jsdom
-// (parseHTML() needs a spec-compliant DOMParser — see
-// .forge/handoff-AO-806.md for why happy-dom doesn't work here.)
 import { beforeEach, describe, expect, it } from 'vitest'
 
 import {
@@ -89,8 +87,6 @@ describe('importFromHTML', () => {
     const importedFolder = otherBookmarks?.children?.find(
       (n) => n.title === 'Imported bookmarks',
     )
-    // The "Bookmarks bar" sub-folder is always created in folder mode, even
-    // when nothing ends up in it.
     expect(importedFolder?.children).toHaveLength(1)
     expect(importedFolder?.children?.[0]?.children).toEqual([])
   })

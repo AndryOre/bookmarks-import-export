@@ -98,7 +98,6 @@ describe('importFromCSV', () => {
   })
 
   it('throws when the CSV cannot be parsed', async () => {
-    // An unterminated quoted field is a genuine Papaparse parse error.
     await expect(
       importFromCSV('title,url,folder\n"A,https://a.example,'),
     ).rejects.toThrow()

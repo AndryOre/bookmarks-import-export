@@ -3,6 +3,14 @@ import { i18n } from '#i18n'
 import { ALARM_NAME, runAutoExport, syncAlarm } from '@/lib/auto-export'
 import { autoExportConfigStore } from '@/lib/storage'
 
+/**
+ * Extension service worker entrypoint. On first install it opens
+ * `welcome.html`; on every subsequent update it opens `update.html` (which
+ * reads the new version's changelog). It also keeps the `auto-export` alarm
+ * in sync with {@link autoExportConfigStore}: once on browser startup, and
+ * again every time the auto-export config changes, so a config edit takes
+ * effect without waiting for the next browser restart.
+ */
 export default defineBackground(() => {
   browser.runtime.onInstalled.addListener(({ reason }) => {
     switch (reason) {

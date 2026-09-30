@@ -86,8 +86,6 @@ describe('importFromJSON', () => {
     await importFromJSON(bookmarks, 'folder')
 
     const root = getFakeBookmarksRoot()
-    // browser.bookmarks.create() with no parentId defaults to the "Other
-    // bookmarks" folder (id "2") — that's where "Imported bookmarks" lands.
     const otherBookmarks = root.children?.find((n) => n.id === '2')
     const importedFolder = otherBookmarks?.children?.find(
       (n) => n.title === 'Imported bookmarks',
