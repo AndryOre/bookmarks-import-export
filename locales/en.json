@@ -251,6 +251,10 @@
     "message": "Import mode",
     "description": "Import mode section label"
   },
+  "defaultImportMode": {
+    "message": "Default import mode",
+    "description": "Label for the quick-import default mode select"
+  },
   "importModeFolder": {
     "message": "Create folder",
     "description": "Import mode: create folder"

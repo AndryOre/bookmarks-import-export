@@ -251,6 +251,10 @@
     "message": "Modo de importación",
     "description": "Etiqueta de la sección de modo de importación"
   },
+  "defaultImportMode": {
+    "message": "Modo de importación predeterminado",
+    "description": "Etiqueta del selector de modo predeterminado en la importación rápida"
+  },
   "importModeFolder": {
     "message": "Crear carpeta",
     "description": "Modo de importación: crear carpeta"
