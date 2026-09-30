@@ -104,9 +104,12 @@ export function readLockHolder<THolder extends LockHolder = LockHolder>(
 export function isLockStale(lockDirectory: string, maxAgeMs: number): boolean {
   const holder = readLockHolder(lockDirectory)
   if (!holder) {
-    // No readable holder yet: could be a genuinely abandoned directory (the
-    // owner died between mkdirSync and writeFileSync), or a live acquirer
-    // that hasn't finished writing holder.json. Only the first is stale.
+    /**
+     * No readable holder yet: could be a genuinely abandoned directory (the
+     * owner died between `mkdirSync` and `writeFileSync`), or a live
+     * acquirer that hasn't finished writing `holder.json`. Only the first is
+     * stale.
+     */
     const { birthtimeMs } = statSync(lockDirectory)
     return Date.now() - birthtimeMs > HOLDERLESS_GRACE_MS
   }
@@ -134,11 +137,13 @@ export function didAcquireLock<THolder extends LockHolder>(
     if ((error as NodeJS.ErrnoException).code === 'EEXIST') return false
     throw error
   }
-  // Write to a sibling temp file, then rename into place — renameSync is
-  // atomic, so a concurrent reader never observes a partially written
-  // holder.json. This narrows, but doesn't remove, the window a holder-less
-  // directory can be observed in; HOLDERLESS_GRACE_MS in isLockStale covers
-  // what's left of it.
+  /**
+   * Writes to a sibling temp file, then renames into place — `renameSync`
+   * is atomic, so a concurrent reader never observes a partially written
+   * `holder.json`. This narrows, but doesn't remove, the window a
+   * holder-less directory can be observed in; {@link HOLDERLESS_GRACE_MS} in
+   * {@link isLockStale} covers what's left of it.
+   */
   const holderPath = path.join(lockDirectory, 'holder.json')
   const temporaryPath = path.join(lockDirectory, `.holder.${process.pid}.tmp`)
   writeFileSync(temporaryPath, JSON.stringify(holder))
@@ -152,20 +157,20 @@ export function releaseLock(lockDirectory: string): void {
 
 export interface AcquireLockOptions {
   /**
-  Bounded wait, in ms, before {@link acquireLock} gives up and throws.
-  */
+   * Bounded wait, in ms, before {@link acquireLock} gives up and throws.
+   */
   readonly timeoutMs: number
   /**
-  Delay, in ms, between poll attempts.
-  */
+   * Delay, in ms, between poll attempts.
+   */
   readonly pollIntervalMs: number
   /**
-  Passed through to {@link isLockStale} as its pid-reuse fallback.
-  */
+   * Passed through to {@link isLockStale} as its pid-reuse fallback.
+   */
   readonly maxAgeMs: number
   /**
-  Prefixes every message {@link acquireLock} logs or throws (e.g. `"e2e-queue"`).
-  */
+   * Prefixes every message {@link acquireLock} logs or throws (e.g. `"e2e-queue"`).
+   */
   readonly logLabel: string
 }
 

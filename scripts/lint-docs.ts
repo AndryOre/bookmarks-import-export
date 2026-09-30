@@ -20,10 +20,6 @@
  * asserts it matches {@link LYCHEE_ARGS} byte-for-byte, so the two can't
  * silently drift apart — see that file for why the args stay duplicated
  * instead of moving to a shared `lychee.toml`.
- *
- * Usage:
- *   bun run lint:docs               # run lychee with LYCHEE_ARGS
- *   bun run lint:docs -- --dump     # extra argv is forwarded to lychee as-is
  */
 import {
   chmodSync,
@@ -57,8 +53,8 @@ export const LYCHEE_VERSION = 'v0.24.2'
 export const EXPECTED_LYCHEE_ACTION_VERSION = 'v2.9.0'
 
 /**
-Bounded wait for a sibling `/forge` worktree already downloading lychee.
-*/
+ * Bounded wait for a sibling `/forge` worktree already downloading lychee.
+ */
 const LYCHEE_LOCK_TIMEOUT_MS = 60_000
 const LYCHEE_LOCK_POLL_INTERVAL_MS = 500
 

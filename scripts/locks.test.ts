@@ -80,10 +80,12 @@ describe('acquireLock / releaseLock', () => {
       worktree: `${workingDirectory}-other`,
     })
 
-    // timeoutMs: 0 fails on the first deadline check, right after the
-    // blocked didAcquireLock/isLockStale checks — this repo's vitest
-    // workers don't expose the `Bun` global that acquireLock's poll delay
-    // (`Bun.sleep`) needs, so the test must never reach that branch.
+    /**
+     * `timeoutMs: 0` fails on the first deadline check, right after the
+     * blocked `didAcquireLock`/`isLockStale` checks — this repo's vitest
+     * workers don't expose the `Bun` global that {@link acquireLock}'s poll
+     * delay (`Bun.sleep`) needs, so the test must never reach that branch.
+     */
     await expect(
       acquireLock(lockDirectory, () => secondHolder, {
         timeoutMs: 0,
@@ -95,12 +97,15 @@ describe('acquireLock / releaseLock', () => {
   })
 
   it('reclaims a stale lock left by a dead pid', async () => {
+    /**
+     * Simulates a pre-existing lock directory left behind by a killed
+     * process.
+     */
     const staleHolder = buildHolder({
       pid: deadPid(),
       worktree: path.join(workingDirectory, 'nonexistent-worktree'),
       acquiredAt: Date.now(),
     })
-    // Simulate a pre-existing lock directory left behind by a killed process.
     mkdirSync(lockDirectory)
     writeFileSync(
       path.join(lockDirectory, 'holder.json'),

@@ -21,6 +21,12 @@ import type {
 } from '@/lib/types'
 import { useStorageItem } from '@/lib/use-storage-item'
 
+/**
+ * Renders the checkbox tree of bookmarks used by the advanced export flow.
+ * Exposes an imperative handle (see {@link BookmarkTreeHandle}) so the
+ * parent can drive selection and refreshes without lifting the
+ * checked-state map into props.
+ */
 export const BookmarkTree = forwardRef<
   BookmarkTreeHandle,
   BookmarkTreeProperties
@@ -29,10 +35,20 @@ export const BookmarkTree = forwardRef<
   reference,
 ) {
   const [nodes, setNodes] = useState<BookmarkNode[]>([])
+  /**
+   * Checked state for leaf (bookmark) nodes only, keyed by bookmark id.
+   * Folder checked/indeterminate state is never stored here — it's derived
+   * from descendant bookmarks at render time by `determineCheckedState`.
+   */
   const [checkedState, setCheckedState] = useState<Map<string, boolean>>(
     new Map(),
   )
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set())
+  /**
+   * Snapshot of `expandedFolders` from just before a search started, so it
+   * can be restored once the search term is cleared. `null` means no
+   * search-driven expansion is currently in effect.
+   */
   const preSearchExpandedReference = useRef<Set<string> | null>(null)
 
   const [showBookmarkIcon] = useStorageItem(showBookmarkIconStore)
@@ -50,6 +66,12 @@ export const BookmarkTree = forwardRef<
     setExpandedFolders(new Set(allFolderIds))
   }, [autoExpandFolders])
 
+  /**
+   * The imperative API exposed to the parent via `ref` (see
+   * {@link BookmarkTreeHandle}). Selection lives in this component's own
+   * state, so the parent needs a way to trigger selection changes and
+   * refreshes without owning the checked-state map itself.
+   */
   useImperativeHandle(reference, () => ({
     selectAll: () => {
       const allBookmarkIds = collectBookmarkIds(nodes)
@@ -64,6 +86,12 @@ export const BookmarkTree = forwardRef<
       await loadBookmarks()
       setCheckedState(new Map())
     },
+    /**
+     * Re-fetches the live bookmark tree — rather than reusing the `nodes`
+     * state, which may be stale relative to the browser — and prunes it
+     * down to just the checked ids, so exports always reflect the
+     * browser's current bookmarks.
+     */
     getSelectedBookmarks: async () => {
       const tree = await fetchFullTree()
       return pruneTree(tree, checkedState)
@@ -77,6 +105,13 @@ export const BookmarkTree = forwardRef<
     void load()
   }, [loadBookmarks])
 
+  /**
+   * Drives the search UX: while a search term is active, expands every
+   * folder that contains a match, after first snapshotting the
+   * then-current expanded set into `preSearchExpandedReference`. Once the
+   * term is cleared, restores that snapshot instead of leaving the
+   * search-driven expansion in place.
+   */
   useEffect(() => {
     if (!searchTerm.trim()) {
       if (preSearchExpandedReference.current !== null) {
@@ -146,8 +181,6 @@ export const BookmarkTree = forwardRef<
     </div>
   )
 })
-
-// ── Componentes de render ─────────────────────────────────────────────────────
 
 interface NodeListProperties {
   nodes: BookmarkNode[]
@@ -257,8 +290,11 @@ function NodeRow({
   )
 }
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
-
+/**
+ * Derives a folder's checkbox state from its descendant bookmarks: `false`
+ * when none are checked, `true` when all are, `'indeterminate'` otherwise.
+ * Folders never store their own checked state (see {@link CheckedState}).
+ */
 function determineCheckedState(
   children: BookmarkNode[],
   checkedState: Map<string, boolean>,
@@ -341,6 +377,12 @@ function findAncestorsOfMatches(nodes: BookmarkNode[], term: string): string[] {
   return ancestors
 }
 
+/**
+ * Converts raw `browser.bookmarks` nodes into this component's
+ * {@link BookmarkNode} shape, filling in each node's `parentId`
+ * explicitly (the root's children are treated as top-level, i.e. their own
+ * `parentId` is kept) so descendants don't depend on the live API object.
+ */
 function addParentIds(
   nodes: Browser.bookmarks.BookmarkTreeNode[],
   parentId?: string,
@@ -365,6 +407,11 @@ async function fetchFullTree(): Promise<Browser.bookmarks.BookmarkTreeNode[]> {
   return browser.bookmarks.getTree()
 }
 
+/**
+ * Filters a raw bookmark tree down to checked bookmarks, keeping only the
+ * folders needed to contain them — a folder with no checked descendants is
+ * dropped entirely rather than kept empty.
+ */
 function pruneTree(
   tree: Browser.bookmarks.BookmarkTreeNode[],
   checkedState: Map<string, boolean>,
