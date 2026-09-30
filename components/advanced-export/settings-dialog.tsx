@@ -111,11 +111,13 @@ const INTERVALS: {
  * @param root0 This component's properties.
  * @param root0.open Whether the dialog is open.
  * @param root0.onOpenChange Called when the dialog's open state should change.
+ * @param root0.defaultTab Which tab is active; defaults to `'display'`.
  * @returns The dialog element, tabbed across Display, Export, and Auto-export.
  */
 export function SettingsDialog({
   open,
   onOpenChange,
+  defaultTab,
 }: SettingsDialogProperties) {
   const [showBookmarkIcon, setShowBookmarkIcon] = useStorageItem(
     showBookmarkIconStore,
@@ -325,7 +327,7 @@ export function SettingsDialog({
         </DialogHeader>
 
         <TooltipProvider>
-          <Tabs defaultValue="display">
+          <Tabs defaultValue={defaultTab ?? 'display'}>
             <TabsList className="w-full">
               <TabsTrigger value="display" className="flex-1">
                 {i18n.t('display')}

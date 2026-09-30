@@ -4,10 +4,24 @@ import { useState } from 'react'
 
 import { ExportFormatSelector } from '@/components/export-format-selector'
 import { Button } from '@/components/ui/button'
-import type { HeaderProperties } from '@/lib/types'
+import type { HeaderProperties, SettingsTab } from '@/lib/types'
 
 import { SearchBar } from './search-bar'
 import { SettingsDialog } from './settings-dialog'
+
+/**
+ * Whether the page was opened via the
+ * `advanced-export.html?settings=auto-export` deep link (the popup footer
+ * and the 1.6.0 changelog link both point at it). Read once per page load —
+ * the query string doesn't change while the page stays open.
+ * @returns `true` when `settings=auto-export` is present in the URL.
+ */
+function isAutoExportDeepLink(): boolean {
+  return (
+    new URLSearchParams(globalThis.location.search).get('settings') ===
+    'auto-export'
+  )
+}
 
 export function Header({
   selectedCount,
@@ -19,8 +33,16 @@ export function Header({
   onDeselectAll,
   onExport,
 }: HeaderProperties) {
-  const [settingsOpen, setSettingsOpen] = useState(false)
+  const [settingsOpen, setSettingsOpen] = useState(isAutoExportDeepLink)
+  const [settingsDefaultTab, setSettingsDefaultTab] = useState<SettingsTab>(
+    () => (isAutoExportDeepLink() ? 'auto-export' : 'display'),
+  )
   const [isRefreshing, setIsRefreshing] = useState(false)
+
+  const handleSettingsOpenChange = (isOpen: boolean) => {
+    setSettingsOpen(isOpen)
+    if (!isOpen) setSettingsDefaultTab('display')
+  }
 
   const handleRefresh = () => {
     setIsRefreshing(true)
@@ -83,7 +105,11 @@ export function Header({
         </span>
       </div>
 
-      <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
+      <SettingsDialog
+        open={settingsOpen}
+        onOpenChange={handleSettingsOpenChange}
+        defaultTab={settingsDefaultTab}
+      />
     </header>
   )
 }

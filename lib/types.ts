@@ -153,6 +153,11 @@ export interface SearchBarProperties {
   onChange: (value: string) => void
 }
 
+/**
+ * The three tabs {@link SettingsDialog} renders.
+ */
+export type SettingsTab = 'display' | 'export' | 'auto-export'
+
 export interface SettingsDialogProperties {
   /**
    * Matches Radix/shadcn Dialog's controlled `open`/`onOpenChange` prop
@@ -160,6 +165,13 @@ export interface SettingsDialogProperties {
    */
   open: boolean
   onOpenChange: (isOpen: boolean) => void
+  /**
+   * Which tab is active when the dialog renders. Defaults to `'display'`
+   * when omitted — callers only pass this to force a specific tab, such as
+   * the `advanced-export.html?settings=auto-export` deep link opening
+   * straight onto the Auto-export tab.
+   */
+  defaultTab?: SettingsTab
 }
 
 export interface HeaderProperties {

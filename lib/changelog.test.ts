@@ -26,7 +26,7 @@ describe('getChangelog', () => {
       (entry) => entry.version === '1.6.0',
     )
     expect(advancedExportEntry?.items[0]?.linkUrl).toBe(
-      fakeBrowser.runtime.getURL('/advanced-export.html'),
+      `${fakeBrowser.runtime.getURL('/advanced-export.html')}?settings=auto-export`,
     )
 
     const advancedImportEntry = entries.find(
