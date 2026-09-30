@@ -1,7 +1,11 @@
 import { i18n } from '#i18n'
 import type { Browser } from '@wxt-dev/browser'
 
-import { resolveImportRoots } from '@/lib/importers/resolve-roots'
+import {
+  resolveImportRoots,
+  resolveImportRootTitles,
+} from '@/lib/importers/resolve-roots'
+import type { ResolvedImportRootTitles } from '@/lib/importers/resolve-roots'
 import type { ImportMode, ParsedBookmark } from '@/lib/types'
 
 /**
@@ -32,10 +36,13 @@ export async function importFromHTML(
   html: string,
   mode: ImportMode = 'folder',
 ): Promise<void> {
+  const tree = await browser.bookmarks.getTree()
+  const liveRootTitles = resolveImportRootTitles(tree[0]?.children ?? [])
+
   let parsed: ParsedBookmark[]
 
   try {
-    parsed = parseHTML(html)
+    parsed = parseHTML(html, liveRootTitles)
   } catch (error) {
     throw new Error(
       i18n.t('importFromHTMLLoadError', [(error as Error).message]),
@@ -43,7 +50,7 @@ export async function importFromHTML(
   }
 
   try {
-    await processBookmarks(parsed, mode)
+    await processBookmarks(parsed, mode, tree)
   } catch (error) {
     if (error instanceof Error && error.message.startsWith('PROCESS_ERROR')) {
       throw error
@@ -66,16 +73,29 @@ export async function importFromHTML(
  * The `<H3 personal_toolbar_folder="true">` attribute is how Netscape-format
  * exports mark the bookmarks bar folder; that folder is mapped to
  * `isBookmarksBar: true` and always placed first in the returned array via
- * `unshift`, regardless of its position in the source document. Every
- * other top-level bookmark or folder is nested under a synthetic "Other
- * bookmarks" node.
+ * `unshift`, regardless of its position in the source document. A top-level
+ * `<H3 unfiled_bookmarks_folder="true">` (how Firefox marks its own "Other
+ * bookmarks" equivalent) is recognized the same way for Other, and any other
+ * top-level `<H3>` is recognized as the Other/Mobile root by a
+ * case-insensitive title match — see {@link isKnownOtherTitle} and
+ * {@link isKnownMobileTitle} — merging its children into that root instead of
+ * nesting a folder for it. Every unmatched top-level bookmark or folder is
+ * nested under a synthetic "Other bookmarks" node, unchanged from before.
  * @param html The Netscape-format bookmarks HTML document to parse.
+ * @param liveRootTitles The current browser's own root titles (see
+ *   `resolveImportRootTitles`), included in the known-title match alongside
+ *   the i18n/English-default titles. Omitted when no live browser context is
+ *   available (e.g. building an import preview).
  * @returns The parsed bookmark tree.
  */
-export function parseHTML(html: string): ParsedBookmark[] {
+export function parseHTML(
+  html: string,
+  liveRootTitles?: ResolvedImportRootTitles,
+): ParsedBookmark[] {
   const document = new DOMParser().parseFromString(html, 'text/html')
   const result: ParsedBookmark[] = []
   const otherBookmarks: ParsedBookmark[] = []
+  const mobileBookmarks: ParsedBookmark[] = []
 
   const toolbarH3 = document.querySelector('h3[personal_toolbar_folder="true"]')
   const outerDl =
@@ -97,12 +117,19 @@ export function parseHTML(html: string): ParsedBookmark[] {
       const isBookmarksBar =
         h3.hasAttribute('personal_toolbar_folder') &&
         h3.getAttribute('personal_toolbar_folder') === 'true'
+      const isUnfiled =
+        h3.hasAttribute('unfiled_bookmarks_folder') &&
+        h3.getAttribute('unfiled_bookmarks_folder') === 'true'
 
       const folder = parseFolderElement(h3, dt)
 
       if (isBookmarksBar) {
         folder.isBookmarksBar = true
         result.unshift(folder)
+      } else if (isUnfiled || isKnownOtherTitle(folder.title, liveRootTitles)) {
+        otherBookmarks.push(...(folder.children ?? []))
+      } else if (isKnownMobileTitle(folder.title, liveRootTitles)) {
+        mobileBookmarks.push(...(folder.children ?? []))
       } else {
         otherBookmarks.push(folder)
       }
@@ -118,7 +145,72 @@ export function parseHTML(html: string): ParsedBookmark[] {
     })
   }
 
+  if (mobileBookmarks.length > 0) {
+    result.push({
+      isMobileBookmarks: true,
+      title: i18n.t('mobileBookmarks'),
+      dateAdded: Date.now(),
+      children: mobileBookmarks,
+    })
+  }
+
   return result
+}
+
+/**
+ * Whether `title` case-insensitively matches a known "Other bookmarks" root
+ * title: the current browser's own Other root title (from `liveRootTitles`,
+ * when available), the localized `otherBookmarks` i18n string, or the
+ * English default "Other bookmarks".
+ * @param title The top-level `<H3>` folder title to check.
+ * @param liveRootTitles The current browser's own root titles, if available.
+ * @returns Whether `title` identifies the Other bookmarks root.
+ */
+function isKnownOtherTitle(
+  title: string,
+  liveRootTitles?: ResolvedImportRootTitles,
+): boolean {
+  return buildKnownTitleSet(
+    liveRootTitles?.otherBookmarksTitle,
+    i18n.t('otherBookmarks'),
+    'Other bookmarks',
+  ).has(title.toLowerCase())
+}
+
+/**
+ * Whether `title` case-insensitively matches a known Mobile bookmarks root
+ * title: the current browser's own Mobile root title (from `liveRootTitles`,
+ * when available), the localized `mobileBookmarks` i18n string, or the
+ * English default "Mobile bookmarks".
+ * @param title The top-level `<H3>` folder title to check.
+ * @param liveRootTitles The current browser's own root titles, if available.
+ * @returns Whether `title` identifies the Mobile bookmarks root.
+ */
+function isKnownMobileTitle(
+  title: string,
+  liveRootTitles?: ResolvedImportRootTitles,
+): boolean {
+  return buildKnownTitleSet(
+    liveRootTitles?.mobileTitle,
+    i18n.t('mobileBookmarks'),
+    'Mobile bookmarks',
+  ).has(title.toLowerCase())
+}
+
+/**
+ * Builds a lowercased set of the non-empty candidate titles, for a
+ * case-insensitive `Set.has` lookup.
+ * @param candidates The candidate titles, some possibly `undefined`.
+ * @returns The lowercased, non-empty candidate titles.
+ */
+function buildKnownTitleSet(
+  ...candidates: (string | undefined)[]
+): Set<string> {
+  return new Set(
+    candidates
+      .filter((title): title is string => !!title)
+      .map((title) => title.toLowerCase()),
+  )
 }
 
 /**
@@ -201,13 +293,16 @@ function parseFolderElement(h3: HTMLElement, dt: Element): ParsedBookmark {
  * instead of wrapping them in a generic create-error message.
  * @param parsed The parsed bookmark tree to write.
  * @param mode Where and how the tree is written.
+ * @param tree The tree snapshot `importFromHTML` already fetched (to resolve
+ *   the live root titles for `parseHTML`) — reused here instead of
+ *   re-fetching.
  * @returns Resolves once the tree has been written.
  */
 async function processBookmarks(
   parsed: ParsedBookmark[],
   mode: ImportMode,
+  tree: Browser.bookmarks.BookmarkTreeNode[],
 ): Promise<void> {
-  const tree = await browser.bookmarks.getTree()
   const root = tree[0]
   const { bookmarksBarId, otherBookmarksId, mobileId } = resolveImportRoots(
     root?.children ?? [],

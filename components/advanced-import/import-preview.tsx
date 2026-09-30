@@ -25,6 +25,13 @@ export function ImportPreviewPanel({ preview }: ImportPreviewProperties) {
               label={i18n.t('otherBookmarks')}
               count={preview.otherBookmarksCount}
             />
+            {preview.mobileBookmarksCount > 0 && (
+              <PreviewRow
+                icon={<Folder className="size-4 text-muted-foreground" />}
+                label={i18n.t('mobileBookmarks')}
+                count={preview.mobileBookmarksCount}
+              />
+            )}
           </div>
         ) : (
           <PreviewRow

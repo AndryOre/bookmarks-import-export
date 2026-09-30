@@ -39,14 +39,18 @@ export function getImportPreview(
       const parsed = parseHTML(text)
       const barNode = parsed.find((n) => n.isBookmarksBar)
       const otherNode = parsed.find((n) => n.isOtherBookmarks)
+      const mobileNode = parsed.find((n) => n.isMobileBookmarks)
       const bookmarksBarCount = countBookmarks(barNode?.children ?? [])
       const otherBookmarksCount = countBookmarks(otherNode?.children ?? [])
+      const mobileBookmarksCount = countBookmarks(mobileNode?.children ?? [])
       return {
         format,
         bookmarksBarCount,
         otherBookmarksCount,
-        totalCount: bookmarksBarCount + otherBookmarksCount,
-        hasLocationData: !!(barNode || otherNode),
+        mobileBookmarksCount,
+        totalCount:
+          bookmarksBarCount + otherBookmarksCount + mobileBookmarksCount,
+        hasLocationData: !!(barNode || otherNode || mobileNode),
       }
     }
 
@@ -56,14 +60,18 @@ export function getImportPreview(
       const preprocessed = preprocessBookmarks(data)
       const barNode = preprocessed.find((n) => n.isBookmarksBar)
       const otherNode = preprocessed.find((n) => n.isOtherBookmarks)
+      const mobileNode = preprocessed.find((n) => n.isMobileBookmarks)
       const bookmarksBarCount = countBookmarks(barNode?.children ?? [])
       const otherBookmarksCount = countBookmarks(otherNode?.children ?? [])
+      const mobileBookmarksCount = countBookmarks(mobileNode?.children ?? [])
       return {
         format,
         bookmarksBarCount,
         otherBookmarksCount,
-        totalCount: bookmarksBarCount + otherBookmarksCount,
-        hasLocationData: !!(barNode || otherNode),
+        mobileBookmarksCount,
+        totalCount:
+          bookmarksBarCount + otherBookmarksCount + mobileBookmarksCount,
+        hasLocationData: !!(barNode || otherNode || mobileNode),
       }
     }
 
@@ -87,6 +95,7 @@ export function getImportPreview(
         format,
         bookmarksBarCount: 0,
         otherBookmarksCount: 0,
+        mobileBookmarksCount: 0,
         totalCount: count,
         hasLocationData: false,
       }
@@ -97,6 +106,7 @@ export function getImportPreview(
     format,
     bookmarksBarCount: 0,
     otherBookmarksCount: 0,
+    mobileBookmarksCount: 0,
     totalCount: 0,
     hasLocationData: false,
   }
