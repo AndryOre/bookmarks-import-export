@@ -12,7 +12,7 @@ describe('getChangelog', () => {
     const entries = getChangelog()
 
     const versions = entries.map((entry) => entry.version)
-    expect(versions[0]).toBe('1.6.0')
+    expect(versions[0]).toBe('1.7.0')
     expect(versions.at(-1)).toBe('0.1.0')
     expect(versions).toEqual(
       versions.toSorted((a, b) => a.localeCompare(b)).toReversed(),

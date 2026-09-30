@@ -4,6 +4,13 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.7.0] - 2026-10-01
+
+- Added a status card and an Export now button to Auto-export settings, plus a
+  popup status line showing whether auto-export is on, off, or failed.
+- Hardened bookmark imports to reject disallowed URL schemes (e.g.
+  `javascript:`) in CSV, HTML, and JSON files.
+
 ## [1.6.0] - 2026-04-29
 
 - Added Auto Export — automatically save your bookmarks at custom intervals

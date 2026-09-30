@@ -653,6 +653,19 @@
     "message": "Selecciona al menos un formato",
     "description": "Error de validación cuando no hay formato seleccionado"
   },
+  "changelog_1_7_0_date": {
+    "message": "1 de octubre de 2026",
+    "description": "Fecha del changelog 1.7.0"
+  },
+  "changelog_1_7_0_1": {
+    "message": "Añadida una tarjeta de estado y un botón Exportar ahora en los ajustes de exportación automática, además de una línea de estado en el popup que muestra si la exportación automática está activada, desactivada o falló."
+  },
+  "changelog_1_7_0_1_link": {
+    "message": "Abrir ajustes de exportación automática"
+  },
+  "changelog_1_7_0_2": {
+    "message": "Reforzada la importación de marcadores para rechazar esquemas de URL no permitidos (p. ej. javascript:) en archivos CSV, HTML y JSON."
+  },
   "changelog_1_6_0_date": {
     "message": "29 de abril de 2026",
     "description": "Fecha del changelog 1.6.0"
