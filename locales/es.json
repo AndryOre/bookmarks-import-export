@@ -533,9 +533,37 @@
     "message": "Novedades",
     "description": "Encabezado de la sección de changelog"
   },
-  "autoSave": {
-    "message": "Guardado automático",
-    "description": "Etiqueta de la pestaña de guardado automático"
+  "autoExport": {
+    "message": "Exportación automática",
+    "description": "Etiqueta de la pestaña de exportación automática"
+  },
+  "lastAutoExportLabel": {
+    "message": "Último auto-export",
+    "description": "Etiqueta de la fila de la última ejecución de exportación automática"
+  },
+  "nextAutoExportLabel": {
+    "message": "Próximo auto-export",
+    "description": "Etiqueta de la fila de la próxima ejecución de exportación automática"
+  },
+  "autoExportNeverRun": {
+    "message": "Aún no se ha ejecutado",
+    "description": "Valor mostrado cuando la exportación automática nunca se ha ejecutado"
+  },
+  "autoExportOff": {
+    "message": "Desactivado",
+    "description": "Valor de la fila de próxima ejecución cuando la exportación automática está desactivada"
+  },
+  "exportNow": {
+    "message": "Exportar ahora",
+    "description": "Etiqueta del botón para ejecutar una exportación inmediata"
+  },
+  "exportNowSuccess": {
+    "message": "Exportación completada",
+    "description": "Mensaje mostrado tras completar con éxito una exportación con Exportar ahora"
+  },
+  "exportNowFailed": {
+    "message": "Error al exportar",
+    "description": "Mensaje mostrado cuando falla una exportación con Exportar ahora"
   },
   "enableAutoExport": {
     "message": "Activar exportación automática",
@@ -642,5 +670,22 @@
   "githubLink": {
     "message": "GitHub",
     "description": "Texto del enlace al repositorio de GitHub del proyecto"
+  },
+  "autoExportStatusNextRun": {
+    "message": "Auto-export: próximo $DATE$",
+    "description": "Línea de estado en el pie del popup cuando la exportación automática está activada, mostrando la próxima ejecución programada",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      }
+    }
+  },
+  "autoExportStatusDisabled": {
+    "message": "Auto-export desactivado · Configurar",
+    "description": "Línea de estado en el pie del popup cuando la exportación automática está desactivada"
+  },
+  "autoExportStatusFailed": {
+    "message": "Falló el último auto-export",
+    "description": "Línea de estado en el pie del popup cuando la última ejecución de la exportación automática falló"
   }
 }

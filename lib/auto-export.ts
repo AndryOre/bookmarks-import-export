@@ -16,6 +16,7 @@ import {
   includeIconDataStore,
 } from '@/lib/storage'
 import type {
+  AutoExportFormat,
   AutoExportInterval,
   AutoExportLastRun,
   AutoExportTrigger,
@@ -25,6 +26,33 @@ import type {
  * Name of the `browser.alarms` alarm that triggers {@link runAutoExport}.
  */
 export const ALARM_NAME = 'auto-export'
+
+/**
+ * `browser.runtime.sendMessage` type asking the background service worker to
+ * run an "Export now" — a `manual`-triggered {@link runAutoExport} using the
+ * on-screen draft formats/path from the settings dialog, regardless of
+ * whether auto-export is enabled or what's currently persisted.
+ */
+export const RUN_MANUAL_EXPORT_MESSAGE_TYPE = 'auto-export-run-manual'
+
+/**
+ * Sent by the settings dialog's "Export now" button to the background
+ * service worker.
+ */
+export interface RunManualExportMessage {
+  type: typeof RUN_MANUAL_EXPORT_MESSAGE_TYPE
+  formats: AutoExportFormat[]
+  path: string
+}
+
+/**
+ * Reply to a {@link RunManualExportMessage}: `ok: true` on a successful
+ * export, or `ok: false` with the error message on failure.
+ */
+export interface RunManualExportResponse {
+  ok: boolean
+  error?: string
+}
 
 /**
  * How long after `syncAlarm` finds an overdue next-run to fire the catch-up
@@ -257,11 +285,26 @@ async function setFailureBadge(): Promise<void> {
  * this run's completion, so it reschedules exactly one interval out
  * regardless of what time this run actually finished — and the alarm is
  * re-armed for it.
+ *
+ * `overrides` lets a `manual` run (the settings dialog's "Export now") use
+ * the on-screen draft `formats`/`path` instead of what's persisted in
+ * {@link autoExportConfigStore}, and bypasses the `enabled`/empty-`formats`
+ * skip above — "Export now" works regardless of the Enable switch or of
+ * unsaved changes.
  * @param trigger What caused this run.
+ * @param overrides `formats`/`path` to use instead of the stored config.
+ * @param overrides.formats The formats to export, overriding the stored config.
+ * @param overrides.path The output path, overriding the stored config.
  */
-export async function runAutoExport(trigger: AutoExportTrigger): Promise<void> {
+export async function runAutoExport(
+  trigger: AutoExportTrigger,
+  overrides?: { formats: AutoExportFormat[]; path: string },
+): Promise<void> {
   const config = await autoExportConfigStore.getValue()
-  if (!config.enabled || config.formats.length === 0) return
+  if (!overrides && (!config.enabled || config.formats.length === 0)) return
+
+  const formats = overrides?.formats ?? config.formats
+  const path = overrides?.path ?? config.path
 
   try {
     const [
@@ -293,14 +336,14 @@ export async function runAutoExport(trigger: AutoExportTrigger): Promise<void> {
     }
 
     const baseName = formatFilenameTemplate(filenameTemplate)
-    const sanitized = sanitizePath(config.path)
+    const sanitized = sanitizePath(path)
     const prefix = sanitized
       ? `${sanitized}${sanitized.endsWith('/') ? '' : '/'}`
       : ''
 
     const downloads: Promise<void>[] = []
 
-    if (config.formats.includes('html')) {
+    if (formats.includes('html')) {
       downloads.push(
         (async () => {
           const content = await exportToHTML(baseOptions)
@@ -313,7 +356,7 @@ export async function runAutoExport(trigger: AutoExportTrigger): Promise<void> {
       )
     }
 
-    if (config.formats.includes('json')) {
+    if (formats.includes('json')) {
       downloads.push(
         (async () => {
           const data = await exportToJSON(baseOptions)
@@ -326,7 +369,7 @@ export async function runAutoExport(trigger: AutoExportTrigger): Promise<void> {
       )
     }
 
-    if (config.formats.includes('csv')) {
+    if (formats.includes('csv')) {
       downloads.push(
         (async () => {
           const content = await exportToCSV({

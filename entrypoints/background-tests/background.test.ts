@@ -1,8 +1,9 @@
+import type { Browser } from '@wxt-dev/browser'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { fakeBrowser } from 'wxt/testing/fake-browser'
 
 import type * as AutoExport from '@/lib/auto-export'
-import { ALARM_NAME } from '@/lib/auto-export'
+import { ALARM_NAME, RUN_MANUAL_EXPORT_MESSAGE_TYPE } from '@/lib/auto-export'
 import { autoExportConfigStore, autoExportNextRunStore } from '@/lib/storage'
 import { resetFakeI18n } from '@/lib/testing/fake-i18n'
 import type { AutoExportConfig } from '@/lib/types'
@@ -19,6 +20,43 @@ vi.mock('@/lib/auto-export', async () => {
 })
 
 const { syncAlarm, runAutoExport } = await import('@/lib/auto-export')
+
+type OnMessageListener = (
+  message: unknown,
+  sender: Browser.runtime.MessageSender,
+  sendResponse: (response?: unknown) => void,
+) => boolean | undefined
+
+/**
+ * `fakeBrowser`'s `runtime.onMessage` throws "not implemented" on
+ * `addListener` (unlike `alarms.onAlarm`, which it does implement), so this
+ * stubs it with a minimal single-listener registry: `addListener` records
+ * the listener `background.ts` registers, and `trigger` calls it the way the
+ * real `browser.runtime.sendMessage` would — synchronously, resolving with
+ * whatever the listener passes to `sendResponse` (or `undefined` if the
+ * listener returns `undefined`/`false`, meaning "not for me").
+ * @returns A `trigger` helper that mimics the sender side of `sendMessage`.
+ */
+function mockRuntimeOnMessage(): {
+  trigger: (message: unknown) => Promise<unknown>
+} {
+  let listener: OnMessageListener | undefined
+  browser.runtime.onMessage.addListener = vi.fn((l: unknown) => {
+    listener = l as OnMessageListener
+  }) as unknown as typeof browser.runtime.onMessage.addListener
+
+  return {
+    trigger: (message: unknown) =>
+      new Promise((resolve) => {
+        const handled = listener?.(
+          message,
+          {} as Browser.runtime.MessageSender,
+          resolve,
+        )
+        if (!handled) resolve(undefined)
+      }),
+  }
+}
 
 /**
  * `@webext-core/fake-browser` types `onInstalled.trigger()` against
@@ -52,10 +90,28 @@ function baseConfig(
   }
 }
 
+const onMessageReference: {
+  current?: ReturnType<typeof mockRuntimeOnMessage>
+} = {}
+
+/**
+ * Dispatches `message` through the listener `background.ts` registered in
+ * the current test, via {@link onMessageReference} (set fresh in `beforeEach`).
+ * @param message The message to dispatch.
+ * @returns Whatever the listener passed to `sendResponse`.
+ */
+function triggerMessage(message: unknown): Promise<unknown> {
+  if (!onMessageReference.current) {
+    throw new Error('onMessage mock not installed')
+  }
+  return onMessageReference.current.trigger(message)
+}
+
 beforeEach(() => {
   fakeBrowser.reset()
   resetFakeI18n()
   vi.clearAllMocks()
+  onMessageReference.current = mockRuntimeOnMessage()
   background.main?.()
 })
 
@@ -312,5 +368,57 @@ describe('alarms.onAlarm', () => {
     await vi.waitFor(() => {
       expect(consoleError).toHaveBeenCalledWith(error)
     })
+  })
+})
+
+describe('runtime.onMessage — "Export now"', () => {
+  it("runs a manual export with the message's on-screen formats/path and replies { ok: true }", async () => {
+    vi.mocked(runAutoExport).mockResolvedValueOnce(undefined)
+
+    const response = await triggerMessage({
+      type: RUN_MANUAL_EXPORT_MESSAGE_TYPE,
+      formats: ['html', 'json'],
+      path: 'on-screen/',
+    })
+
+    expect(runAutoExport).toHaveBeenCalledWith('manual', {
+      formats: ['html', 'json'],
+      path: 'on-screen/',
+    })
+    expect(response).toEqual({ ok: true })
+  })
+
+  it('replies { ok: false, error } when the manual export fails', async () => {
+    vi.mocked(runAutoExport).mockRejectedValueOnce(new Error('disk full'))
+
+    const response = await triggerMessage({
+      type: RUN_MANUAL_EXPORT_MESSAGE_TYPE,
+      formats: ['html'],
+      path: '',
+    })
+
+    expect(response).toEqual({ ok: false, error: 'disk full' })
+  })
+
+  it('does not touch autoExportNextRunStore or the alarm for a manual export', async () => {
+    await autoExportNextRunStore.setValue(null)
+    vi.mocked(runAutoExport).mockResolvedValueOnce(undefined)
+
+    await triggerMessage({
+      type: RUN_MANUAL_EXPORT_MESSAGE_TYPE,
+      formats: ['html'],
+      path: '',
+    })
+
+    expect(await autoExportNextRunStore.getValue()).toBeNull()
+    expect(await browser.alarms.get(ALARM_NAME)).toBeUndefined()
+    expect(syncAlarm).not.toHaveBeenCalled()
+  })
+
+  it('ignores a message with a different type', async () => {
+    const response = await triggerMessage({ type: 'some-other-message' })
+
+    expect(runAutoExport).not.toHaveBeenCalled()
+    expect(response).toBeUndefined()
   })
 })

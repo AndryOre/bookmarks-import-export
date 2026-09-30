@@ -2,7 +2,10 @@ import { i18n } from '#i18n'
 
 import {
   ALARM_NAME,
+  RUN_MANUAL_EXPORT_MESSAGE_TYPE,
   runAutoExport,
+  type RunManualExportMessage,
+  type RunManualExportResponse,
   syncAlarm,
   type SyncAlarmTrigger,
 } from '@/lib/auto-export'
@@ -47,6 +50,31 @@ function isScheduleRelevantChange(
     previous.preferredTime !== next.preferredTime ||
     (previous.formats.length === 0) !== (next.formats.length === 0)
   )
+}
+
+/**
+ * Runs a `manual`-triggered {@link runAutoExport} using `message`'s
+ * on-screen `formats`/`path`, for the settings dialog's "Export now" button.
+ * Never touches {@link autoExportNextRunStore} or the `auto-export` alarm —
+ * `runAutoExport` already skips both for a `manual` trigger — and never
+ * throws: failure is reported back to the caller as `{ ok: false, error }`
+ * instead of an unhandled rejection or a dropped `sendMessage` response.
+ * @param message The "Export now" request.
+ * @returns The run's outcome, to reply to the sender with.
+ */
+async function runManualExport(
+  message: RunManualExportMessage,
+): Promise<RunManualExportResponse> {
+  try {
+    await runAutoExport('manual', {
+      formats: message.formats,
+      path: message.path,
+    })
+    return { ok: true }
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error)
+    return { ok: false, error: errorMessage }
+  }
 }
 
 /**
@@ -111,5 +139,18 @@ export default defineBackground(() => {
         console.error(error)
       }
     })()
+  })
+
+  browser.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+    if (
+      typeof message !== 'object' ||
+      message === null ||
+      (message as { type?: unknown }).type !== RUN_MANUAL_EXPORT_MESSAGE_TYPE
+    ) {
+      return
+    }
+
+    void runManualExport(message as RunManualExportMessage).then(sendResponse)
+    return true
   })
 })
