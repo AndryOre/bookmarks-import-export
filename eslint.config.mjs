@@ -268,7 +268,7 @@ const eslintConfig = defineConfig([
     rules: commentPolicyRules,
   },
   prettierConfig,
-  globalIgnores(['.output/**', '.wxt/**', 'coverage/**']),
+  globalIgnores(['.output/**', '.wxt/**', 'coverage/**', '.claude/skills/**']),
 ])
 
 export default eslintConfig
