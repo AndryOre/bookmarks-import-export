@@ -10,8 +10,11 @@ to `gh`/`glab` for Linear in this setup.
   cycle/project is only exempt from that auto-close while it belongs to one. A
   `Spec:` can sit untouched for months while its tickets get worked, so without
   `project` set it risks auto-closing out from under its own ticket cascade.
-  Sub-issues inherit the parent's project automatically — no need to pass it on
-  ticket creation.
+  **Sub-issues do NOT reliably inherit the parent's project** — verified twice
+  in this workspace (AO-879..884 under AO-878, AO-1012..1018 under AO-1011):
+  every sub-issue came back with no `project` field and was invisible to a
+  project-filtered `list_issues`, despite the parent having one set. Always pass
+  `project` explicitly on every ticket, not just the spec.
 
 ## Conventions
 
@@ -20,11 +23,13 @@ to `gh`/`glab` for Linear in this setup.
   Lives in `Backlog`, not `Todo` — cascade auto-close moves it to `Done` once
   its last sub-issue closes. Never apply `ready-for-agent` to it.
 - **Create a ticket**:
-  `save_issue({ team: "AndryOre", title: "...", parentId: <Spec: issue id>, state: "Todo", description: <issue template>, labels: ["ready-for-agent", ...] })`.
+  `save_issue({ team: "AndryOre", project: "Bookmarks Import/Export", title: "...", parentId: <Spec: issue id>, state: "Todo", description: <issue template>, labels: ["ready-for-agent", ...] })`.
   `state: "Todo"` must be passed explicitly — an issue created without an
-  explicit `stateId` defaults to the team's first Backlog-category state. No
-  need to pass `project` here — a sub-issue inherits its parent's project
-  automatically.
+  explicit `stateId` defaults to the team's first Backlog-category state.
+  **Always pass `project` explicitly here too** — despite being a sub-issue, it
+  does not reliably inherit the parent's project (see above); verify with
+  `get_issue({ id })` after creation if in doubt, since `list_issues` omits the
+  `project` field from its results.
 - **Read a ticket**: `get_issue({ id, includeRelations: true })` — always pass
   `includeRelations: true`; it defaults to `false` and is the only way to see
   `relations.blockedBy`. `list_issues` never surfaces relations at all.
