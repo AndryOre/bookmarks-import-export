@@ -1,12 +1,8 @@
 import { i18n } from '#i18n'
 import { Star } from 'lucide-react'
 
+import { CHROME_WEB_STORE_URL, GITHUB_URL, TWITTER_URL } from '@/lib/brand'
 import { getChangelog } from '@/lib/changelog'
-
-const CHROME_WEB_STORE_URL =
-  'https://chromewebstore.google.com/detail/bookmark-importexport/gdhpeilfkeeajillmcncaelnppiakjhn'
-const GITHUB_URL = 'https://github.com/AndryOre/bookmarks-import-export'
-const TWITTER_URL = 'https://x.com/andryore'
 
 /**
  * Post-update landing page. Shows the feedback link before the changelog

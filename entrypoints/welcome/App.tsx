@@ -11,6 +11,7 @@ import {
 } from 'lucide-react'
 
 import { FeatureCard } from '@/components/feature-card'
+import { CHROME_WEB_STORE_URL, GITHUB_URL, TWITTER_URL } from '@/lib/brand'
 
 const FEATURE_CARDS = [
   {
@@ -44,11 +45,6 @@ const FEATURE_CARDS = [
     descKey: 'i18nFeatureDescription',
   },
 ] as const
-
-const CHROME_WEB_STORE_URL =
-  'https://chromewebstore.google.com/detail/bookmark-importexport/gdhpeilfkeeajillmcncaelnppiakjhn'
-const GITHUB_URL = 'https://github.com/AndryOre/bookmarks-import-export'
-const TWITTER_URL = 'https://x.com/andryore'
 
 export default function App() {
   return (

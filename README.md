@@ -89,7 +89,7 @@ for details.
 [Chrome Web Store]:
   https://img.shields.io/badge/Chrome%20Web%20Store-4285F4.svg?style=flat&logo=Chrome-Web-Store&logoColor=white
 [Chrome Web Store-url]:
-  https://chromewebstore.google.com/detail/bookmark-importexport/gdhpeilfkeeajillmcncaelnppiakjhn
+  https://chromewebstore.google.com/detail/gdhpeilfkeeajillmcncaelnppiakjhn
 [CI]:
   https://img.shields.io/github/actions/workflow/status/AndryOre/bookmarks-import-export/ci.yml?branch=main&style=flat
 [CI-url]:
