@@ -757,5 +757,58 @@
   "shell_toggleSidebar": {
     "message": "Alternar barra lateral",
     "description": "Etiqueta accesible del botón de la barra lateral en el encabezado"
+  },
+  "import_stepFile": {
+    "message": "Archivo",
+    "description": "Heading of step 1 of the import flow"
+  },
+  "import_stepDone": {
+    "message": "Completado",
+    "description": "Screen reader text for a completed step"
+  },
+  "import_fileInputLabel": {
+    "message": "Archivo de marcadores",
+    "description": "Accessible label of the file input"
+  },
+  "import_changeFile": {
+    "message": "Cambiar archivo",
+    "description": "Button to pick a different file"
+  },
+  "import_restoreUnavailable": {
+    "message": "Este archivo no tiene datos de ubicación, por lo que no se puede restaurar en sus carpetas originales.",
+    "description": "Reason shown on disabled restore mode cards"
+  },
+  "import_submit": {
+    "message": "Importar $COUNT$ marcadores",
+    "description": "Primary import button",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "import_importing": {
+    "message": "Importando…",
+    "description": "Primary button label while importing"
+  },
+  "import_replaceTitle": {
+    "message": "¿Reemplazar tus marcadores existentes?",
+    "description": "Title of the replace confirmation dialog"
+  },
+  "import_replaceConfirm": {
+    "message": "Reemplazar e importar",
+    "description": "Destructive confirm button in the replace dialog"
+  },
+  "import_errorTitle": {
+    "message": "Error al importar",
+    "description": "Title of the import error alert"
+  },
+  "import_another": {
+    "message": "Importar otro archivo",
+    "description": "Button shown after a successful import"
+  },
+  "import_openManager": {
+    "message": "Abrir administrador de marcadores",
+    "description": "Button that opens chrome://bookmarks"
   }
 }
