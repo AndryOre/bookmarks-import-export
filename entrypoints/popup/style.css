@@ -35,6 +35,9 @@
   --color-secondary: var(--secondary);
   --color-primary-foreground: var(--primary-foreground);
   --color-primary: var(--primary);
+  --color-primary-text: var(--primary-text);
+  --background-image-brand-gradient: var(--brand-gradient);
+  --background-image-brand-text-gradient: var(--brand-text-gradient);
   --color-popover-foreground: var(--popover-foreground);
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
@@ -61,6 +64,9 @@
   --popover-foreground: oklch(0.141 0.005 285.823);
   --primary: oklch(0.21 0.006 285.885);
   --primary-foreground: oklch(0.985 0 0);
+  --primary-text: var(--primary);
+  --brand-gradient: linear-gradient(var(--primary), var(--primary));
+  --brand-text-gradient: linear-gradient(var(--primary), var(--primary));
   --secondary: oklch(0.967 0.001 286.375);
   --secondary-foreground: oklch(0.21 0.006 285.885);
   --muted: oklch(0.967 0.001 286.375);
@@ -103,6 +109,9 @@
   --popover-foreground: oklch(0.985 0 0);
   --primary: oklch(0.92 0.004 286.32);
   --primary-foreground: oklch(0.21 0.006 285.885);
+  --primary-text: var(--primary);
+  --brand-gradient: linear-gradient(var(--primary), var(--primary));
+  --brand-text-gradient: linear-gradient(var(--primary), var(--primary));
   --secondary: oklch(0.274 0.006 286.033);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.274 0.006 286.033);
