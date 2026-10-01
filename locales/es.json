@@ -700,5 +700,62 @@
   "autoExportStatusFailed": {
     "message": "Falló el último auto-export",
     "description": "Línea de estado en el pie del popup cuando la última ejecución de la exportación automática falló"
+  },
+  "shell_navLabel": {
+    "message": "Navegación principal",
+    "description": "Etiqueta accesible de la navegación de la barra lateral de la App"
+  },
+  "shell_navExport": {
+    "message": "Exportar",
+    "description": "Elemento de navegación y título de página"
+  },
+  "shell_navImport": {
+    "message": "Importar",
+    "description": "Elemento de navegación y título de página"
+  },
+  "shell_navAutoExport": {
+    "message": "Auto-export",
+    "description": "Elemento de navegación y título de página"
+  },
+  "shell_navSettings": {
+    "message": "Ajustes",
+    "description": "Elemento de navegación y título de página"
+  },
+  "shell_navWhatsNew": {
+    "message": "Novedades",
+    "description": "Elemento de navegación y título de página"
+  },
+  "shell_titleWelcome": {
+    "message": "Bienvenida",
+    "description": "Título de página de la pantalla de primer uso"
+  },
+  "shell_version": {
+    "message": "Versión $VERSION$",
+    "description": "Versión instalada bajo el nombre del producto en la barra lateral",
+    "placeholders": {
+      "version": {
+        "content": "$1"
+      }
+    }
+  },
+  "shell_autoExportOn": {
+    "message": "Activado",
+    "description": "Estado accesible del elemento Auto-export cuando las copias programadas están activas"
+  },
+  "shell_autoExportFailed": {
+    "message": "Falló la última ejecución",
+    "description": "Estado accesible del elemento Auto-export cuando la última ejecución falló"
+  },
+  "shell_whatsNewUnseen": {
+    "message": "Nuevo",
+    "description": "Etiqueta accesible del punto de novedades sin ver"
+  },
+  "shell_placeholder": {
+    "message": "Esta pantalla estará disponible pronto.",
+    "description": "Texto de marcador en pantallas de la App que aún no están construidas"
+  },
+  "shell_toggleSidebar": {
+    "message": "Alternar barra lateral",
+    "description": "Etiqueta accesible del botón de la barra lateral en el encabezado"
   }
 }

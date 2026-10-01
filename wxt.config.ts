@@ -16,6 +16,7 @@ export default defineConfig({
     name: '__MSG_extensionName__',
     description: '__MSG_extensionDescription__',
     default_locale: 'en',
+    options_ui: { page: 'app.html', open_in_tab: true },
     permissions: [
       'bookmarks',
       'favicon',
