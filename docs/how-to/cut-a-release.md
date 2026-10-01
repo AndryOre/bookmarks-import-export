@@ -31,3 +31,27 @@
    extracts that version's `CHANGELOG.md` section as release notes, attests
    build provenance, and publishes the GitHub Release — no manual
    `gh release create` needed.
+
+7. Once the GitHub Release job finishes, a second job,
+   `publish-chrome-web-store`, submits the same zip to the Chrome Web Store via
+   `wxt submit` (the `publish-browser-extension` package), using Chrome Web
+   Store API v2 and a service account. This job runs in the `chrome-web-store`
+   GitHub Environment, which must hold these secrets:
+
+   - `CHROME_SERVICE_ACCOUNT_CLIENT_EMAIL` — the service account's
+     `client_email`.
+   - `CHROME_SERVICE_ACCOUNT_PRIVATE_KEY` — the service account's `private_key`.
+   - `CHROME_PUBLISHER_ID` — the Chrome Web Store publisher ID that owns the
+     extension.
+   - `CHROME_EXTENSION_ID` — the extension's ID in the Chrome Web Store.
+
+   `CHROME_API_VERSION` is set to `v2` directly in the workflow, not as a secret
+   — `publish-browser-extension` falls back to the sunsetting v1.1 API if it's
+   left unset. A guard step runs before `wxt submit` and fails the job with an
+   explicit message naming any missing secret, instead of letting the CLI fail
+   further in with a less legible error. See
+   [ADR 0005](../adr/0005-store-publishing-via-cws-api-v2.md) for the rationale.
+
+   Listing text, screenshots, promo graphics, and privacy-practice fields are
+   out of scope for this step — those stay dashboard-managed in the Chrome Web
+   Store Developer Dashboard.
