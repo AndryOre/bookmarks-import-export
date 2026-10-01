@@ -97,6 +97,35 @@ To add a new contract:
 3. Run `bun run lint` to confirm the rule now accepts the component's actual
    usage and nothing broader.
 
+## Brand tokens
+
+`entrypoints/popup/style.css` defines three brand-surface tokens in `:root` and
+`.dark`, exposed as Tailwind utilities via the `@theme inline` block. Today they
+all resolve to the flat `--primary` color — no brand kit exists yet — but they
+give a future rebrand a seam to land gradient/accent treatment without touching
+component code:
+
+- **`--primary-text`** (Tailwind `text-primary-text`): text color for brand
+  surfaces. Currently equals `--primary`.
+- **`--brand-gradient`** (Tailwind `bg-brand-gradient`): background for the
+  logo, hero, and brand accents only — never for buttons or other controls.
+  Currently a flat two-stop gradient of `--primary` (so it renders identically
+  to a solid fill) rather than `--primary` itself, since it feeds a
+  `background-image` utility.
+- **`--brand-text-gradient`** (Tailwind `bg-brand-text-gradient`, paired with
+  the built-in `bg-clip-text text-transparent` utilities for gradient-clipped
+  text): same flat-gradient seam as `--brand-gradient`, for brand text/accents
+  that need the gradient clipped to glyph shapes.
+
+Rules carried over from the StreamBoss brand kit, to apply once real brand
+colors land:
+
+- The gradient tokens are for the logo, hero, and accent surfaces only. Buttons
+  and other interactive controls always use the flat `--primary` color, never a
+  gradient.
+- `--destructive` (the error color) must stay visually distinct from `--primary`
+  — never tune them to the same hue/lightness, even as brand colors change.
+
 ## `fakeBrowser` testing
 
 `lib/**` unit tests run against `wxt/testing/fake-browser`'s `fakeBrowser` — an
