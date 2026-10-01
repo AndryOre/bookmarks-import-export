@@ -757,5 +757,73 @@
   "shell_toggleSidebar": {
     "message": "Alternar barra lateral",
     "description": "Etiqueta accesible del botón de la barra lateral en el encabezado"
+  },
+  "autoExportPage_saved": {
+    "message": "Guardado",
+    "description": "Aviso mostrado tras guardar un ajuste de Auto-export"
+  },
+  "autoExportPage_succeeded": {
+    "message": "Correcta",
+    "description": "Insignia de la última ejecución cuando tuvo éxito"
+  },
+  "autoExportPage_failed": {
+    "message": "Fallida",
+    "description": "Insignia de la última ejecución cuando falló"
+  },
+  "autoExportPage_statusTitle": {
+    "message": "Estado",
+    "description": "Título de la tarjeta de estado de Auto-export"
+  },
+  "autoExportPage_lastRun": {
+    "message": "Última ejecución",
+    "description": "Etiqueta de la última ejecución en la tarjeta de estado"
+  },
+  "autoExportPage_nextRun": {
+    "message": "Próxima ejecución",
+    "description": "Etiqueta de la próxima ejecución en la tarjeta de estado"
+  },
+  "autoExportPage_off": {
+    "message": "La exportación automática está desactivada",
+    "description": "Valor de próxima ejecución cuando Auto-export está desactivado"
+  },
+  "autoExportPage_failureTitle": {
+    "message": "Falló la última exportación automática",
+    "description": "Título de la alerta mostrada cuando falló la última ejecución"
+  },
+  "autoExportPage_settingsTitle": {
+    "message": "Ajustes",
+    "description": "Título de la tarjeta de ajustes de Auto-export"
+  },
+  "autoExportPage_settingsDescription": {
+    "message": "Los cambios se guardan automáticamente.",
+    "description": "Descripción de la tarjeta de ajustes de Auto-export"
+  },
+  "autoExportPage_frequency": {
+    "message": "Frecuencia",
+    "description": "Etiqueta del grupo de frecuencia"
+  },
+  "autoExportPage_interval12h": {
+    "message": "Cada 12 horas",
+    "description": "Opción de frecuencia: cada 12 horas"
+  },
+  "autoExportPage_interval1d": {
+    "message": "Diaria",
+    "description": "Opción de frecuencia: diaria"
+  },
+  "autoExportPage_interval3d": {
+    "message": "Cada 3 días",
+    "description": "Opción de frecuencia: cada 3 días"
+  },
+  "autoExportPage_interval7d": {
+    "message": "Semanal",
+    "description": "Opción de frecuencia: semanal"
+  },
+  "autoExportPage_folderDescription": {
+    "message": "Carpeta dentro de Descargas donde se guardan las copias.",
+    "description": "Texto de ayuda bajo el campo de carpeta"
+  },
+  "autoExportPage_formatsDescription": {
+    "message": "Debe quedar al menos un formato seleccionado.",
+    "description": "Texto de ayuda bajo el grupo de formatos"
   }
 }
