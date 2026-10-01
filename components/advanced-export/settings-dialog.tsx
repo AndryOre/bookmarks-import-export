@@ -587,7 +587,12 @@ export function SettingsDialog({
                         <Label className="text-xs text-muted-foreground">
                           {i18n.t('periodLabel')}
                         </Label>
-                        <Select value={period} onValueChange={updatePeriod}>
+                        <Select
+                          value={period}
+                          onValueChange={(value) => {
+                            if (value) updatePeriod(value)
+                          }}
+                        >
                           <SelectTrigger className="h-8 w-20">
                             <SelectValue />
                           </SelectTrigger>
