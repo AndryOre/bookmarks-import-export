@@ -27,16 +27,17 @@ root). Verdict: clean swap, no consumer changes needed.
 
 ## Behavior changes
 
-None observed for Button itself. Flagging forward:
-`TooltipTrigger render={<Button .../>}` (used in `settings-dialog.tsx`, migrated
-later) needs manual verification that focus/ref composition still works, since
-Base UI's `render` prop composition requires the rendered element to accept and
-forward a `ref` — `Button` here is a function component that spreads
-`...properties` onto `<ButtonPrimitive>` without destructuring `ref` explicitly.
-The upstream base-nova registry source does the same (no explicit `ref` prop),
-so this matches the official pattern as shipped; verify empirically when Tooltip
-is migrated rather than preemptively "fixing" something the registry itself
-doesn't flag as broken.
+None observed for Button itself.
+
+**Update (resolved during the Dialog/Tooltip migration):** the ref-forwarding
+question flagged above is a non-issue on React 19 (confirmed via Base UI's own
+`useRender` docs, context7 `/mui/base-ui`). Since React 19, function components
+receive `ref` as a normal prop — no `React.forwardRef()` needed — so `Button`'s
+`...properties` rest already contains any `ref` passed by a caller, and
+spreading it onto `<ButtonPrimitive {...properties}>` forwards it through
+`ButtonPrimitive`'s own internal `useRender` DOM attachment.
+`TooltipTrigger render={<Button variant="outline" />}` composition works as-is;
+no code change was needed.
 
 ## Verify by hand
 

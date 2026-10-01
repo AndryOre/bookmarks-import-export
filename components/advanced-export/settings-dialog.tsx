@@ -361,9 +361,11 @@ export function SettingsDialog({
                 <div className="flex items-center gap-1">
                   <Label>{i18n.t('exportFilenameTemplate')}</Label>
                   <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Info className="size-3.5 cursor-help text-muted-foreground" />
-                    </TooltipTrigger>
+                    <TooltipTrigger
+                      render={
+                        <Info className="size-3.5 cursor-help text-muted-foreground" />
+                      }
+                    />
                     <TooltipContent>
                       <p className="max-w-xs text-xs">
                         {i18n.t('exportFilenameTemplateTooltip')}
@@ -749,9 +751,11 @@ function SettingRow({
           <Label>{t(labelKey)}</Label>
           {tooltipKey && (
             <Tooltip>
-              <TooltipTrigger asChild>
-                <Info className="size-3.5 cursor-help text-muted-foreground" />
-              </TooltipTrigger>
+              <TooltipTrigger
+                render={
+                  <Info className="size-3.5 cursor-help text-muted-foreground" />
+                }
+              />
               <TooltipContent>
                 <p className="max-w-xs text-xs">{t(tooltipKey)}</p>
               </TooltipContent>
