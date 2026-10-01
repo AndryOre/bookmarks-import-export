@@ -701,5 +701,62 @@
   "autoExportStatusFailed": {
     "message": "Last auto-export failed",
     "description": "Popup footer status line when the last auto-export run failed"
+  },
+  "shell_navLabel": {
+    "message": "Main navigation",
+    "description": "Accessible label of the App sidebar navigation"
+  },
+  "shell_navExport": {
+    "message": "Export",
+    "description": "App sidebar nav item and page title"
+  },
+  "shell_navImport": {
+    "message": "Import",
+    "description": "App sidebar nav item and page title"
+  },
+  "shell_navAutoExport": {
+    "message": "Auto-export",
+    "description": "App sidebar nav item and page title"
+  },
+  "shell_navSettings": {
+    "message": "Settings",
+    "description": "App sidebar nav item and page title"
+  },
+  "shell_navWhatsNew": {
+    "message": "What's new",
+    "description": "App sidebar nav item and page title"
+  },
+  "shell_titleWelcome": {
+    "message": "Welcome",
+    "description": "App page title for the first-run welcome screen"
+  },
+  "shell_version": {
+    "message": "Version $VERSION$",
+    "description": "Installed version shown under the product name in the App sidebar",
+    "placeholders": {
+      "version": {
+        "content": "$1"
+      }
+    }
+  },
+  "shell_autoExportOn": {
+    "message": "On",
+    "description": "Accessible status of the Auto-export nav item when scheduled backups are enabled"
+  },
+  "shell_autoExportFailed": {
+    "message": "Last run failed",
+    "description": "Accessible status of the Auto-export nav item when the last run failed"
+  },
+  "shell_whatsNewUnseen": {
+    "message": "New",
+    "description": "Accessible label of the unseen-update dot on the What's new nav item"
+  },
+  "shell_placeholder": {
+    "message": "This screen is coming soon.",
+    "description": "Placeholder text shown on App screens that are not built yet"
+  },
+  "shell_toggleSidebar": {
+    "message": "Toggle sidebar",
+    "description": "Accessible label of the sidebar trigger in the App header"
   }
 }
