@@ -1,9 +1,10 @@
-import { RoutePlaceholder } from './route-placeholder'
+import { ExportOptionsPanel } from '@/components/export-options-panel'
 
 /**
- * The Export screen. Placeholder until its screen ticket replaces this file.
- * @returns The placeholder view.
+ * The Export screen. The Export page ticket composes the final layout; until
+ * then this only mounts the options panel in a stub area.
+ * @returns The Export view.
  */
 export function ExportRoute() {
-  return <RoutePlaceholder />
+  return <ExportOptionsPanel />
 }

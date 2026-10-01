@@ -757,5 +757,33 @@
   "shell_toggleSidebar": {
     "message": "Alternar barra lateral",
     "description": "Etiqueta accesible del botón de la barra lateral en el encabezado"
+  },
+  "exportOptions_title": {
+    "message": "Opciones de exportación",
+    "description": "Panel de opciones de exportación: Opciones de exportación"
+  },
+  "exportOptions_includeIcons": {
+    "message": "Incluir favicons",
+    "description": "Panel de opciones de exportación: Incluir favicons"
+  },
+  "exportOptions_dateAdded": {
+    "message": "Fecha de creación",
+    "description": "Panel de opciones de exportación: Fecha de creación"
+  },
+  "exportOptions_dateLastUsed": {
+    "message": "Fecha de último uso",
+    "description": "Panel de opciones de exportación: Fecha de último uso"
+  },
+  "exportOptions_folderDates": {
+    "message": "Fechas de modificación de carpetas",
+    "description": "Panel de opciones de exportación: Fechas de modificación de carpetas"
+  },
+  "exportOptions_hideOther": {
+    "message": "Ocultar otros marcadores",
+    "description": "Panel de opciones de exportación: Ocultar otros marcadores"
+  },
+  "exportOptions_hideParent": {
+    "message": "Ocultar carpeta superior",
+    "description": "Panel de opciones de exportación: Ocultar carpeta superior"
   }
 }
