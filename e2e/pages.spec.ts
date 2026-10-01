@@ -27,5 +27,5 @@ test('toolbar action title is localized', async ({ serviceWorker }) => {
     chrome.runtime.getManifest(),
   )
 
-  expect(manifest.action?.default_title).toBe('__MSG_extensionName__')
+  expect(manifest.action?.default_title).toBe(en.extensionName.message)
 })
