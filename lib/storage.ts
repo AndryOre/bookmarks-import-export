@@ -91,6 +91,16 @@ export const autoExportNextRunStore = storage.defineItem<number | null>(
   { fallback: null },
 )
 
+/**
+ * The last extension version whose changelog the user has seen in the App.
+ * `null` until the What's new screen is first visited; the sidebar shows an
+ * unseen dot while this differs from the installed version.
+ */
+export const lastSeenVersionStore = storage.defineItem<string | null>(
+  'local:lastSeenVersion',
+  { fallback: null },
+)
+
 export const defaultImportModeStore = storage.defineItem<ImportMode>(
   'local:defaultImportMode',
   { fallback: 'restore-merge' },
