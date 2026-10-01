@@ -63,6 +63,14 @@ export const exportFilenameTemplateStore = storage.defineItem<string>(
   { fallback: 'Bookmarks_%yyyy-%mm-%dd_%hh-%min-%sec' },
 )
 
+/**
+ * The format last chosen in the popup's Export section, so a one-click
+ * "Export all" repeats it next time.
+ */
+export const lastExportFormatStore = storage.defineItem<
+  'csv' | 'html' | 'json'
+>('local:lastExportFormat', { fallback: 'html' })
+
 export const DEFAULT_AUTO_EXPORT_CONFIG: AutoExportConfig = {
   enabled: false,
   interval: '1d',
