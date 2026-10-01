@@ -3,7 +3,6 @@ import { expect, test } from './fixtures'
 
 const ROUTES = [
   { hash: 'export', title: en.shell_navExport.message },
-  { hash: 'import', title: en.shell_navImport.message },
   { hash: 'settings', title: en.shell_navSettings.message },
   { hash: 'whats-new', title: en.shell_navWhatsNew.message },
   { hash: 'welcome', title: en.shell_titleWelcome.message },

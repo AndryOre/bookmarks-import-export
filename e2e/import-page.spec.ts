@@ -199,8 +199,10 @@ test.describe('Import page', () => {
     const page = await openImportPage(openExtensionPage)
     await chooseFile(page, 'bookmarks.csv')
 
-    await expect(page.getByText('Imported bookmarks')).toBeVisible()
-    await expect(page.getByText('3 bookmarks')).toBeVisible()
+    await expect(
+      page.getByText('Imported bookmarks', { exact: true }),
+    ).toBeVisible()
+    await expect(page.getByText('3 bookmarks', { exact: true })).toBeVisible()
     await expect(
       page.getByRole('radio', { name: /^Restore — merge/ }),
     ).toBeDisabled()
