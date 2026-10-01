@@ -143,7 +143,7 @@ test.describe('Import page', () => {
     const page = await openImportPage(openExtensionPage)
     await chooseFile(page, 'bookmarks.json')
     await selectMode(page, 'Restore — replace')
-    await submitImport(page, 4)
+    await submitImport(page, 3)
 
     await expect(
       page.getByRole('alertdialog', { name: en.import_replaceTitle.message }),
@@ -177,7 +177,7 @@ test.describe('Import page', () => {
     const page = await openImportPage(openExtensionPage)
     await chooseFile(page, 'bookmarks.json')
     await selectMode(page, 'Restore — replace')
-    await submitImport(page, 4)
+    await submitImport(page, 3)
     await page.getByRole('button', { name: en.cancel.message }).click()
 
     await expect(page.getByRole('alertdialog')).toHaveCount(0)
