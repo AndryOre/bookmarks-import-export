@@ -8,6 +8,9 @@
     // ship the full upstream export surface even when this app only uses
     // part of it today, so exports here are never "dead" in the usual sense.
     "components/ui/**",
+    // shadcn-managed hook pulled in by `sidebar`; only components/ui/**
+    // (ignored above) imports it until the app shell lands.
+    "hooks/use-mobile.ts",
     // vendored agent skills (installed by `bunx skills`): their template
     // files are reference material, not part of this app's module graph.
     ".claude/skills/**",
