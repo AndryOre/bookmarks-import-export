@@ -119,8 +119,8 @@ export default function App() {
 
         <TabsContent
           value="export"
-          className="mt-2 flex flex-1 flex-col gap-2 data-[state=inactive]:hidden"
-          forceMount
+          className="mt-2 flex flex-1 flex-col gap-2 data-hidden:hidden"
+          keepMounted
         >
           <ExportFormatSelector onExport={handleExport} />
           <AdvancedExportButton />
@@ -128,8 +128,8 @@ export default function App() {
 
         <TabsContent
           value="import"
-          className="mt-2 flex flex-1 flex-col gap-2 data-[state=inactive]:hidden"
-          forceMount
+          className="mt-2 flex flex-1 flex-col gap-2 data-hidden:hidden"
+          keepMounted
         >
           <ImportBookmarksButton />
           <AdvancedImportButton />
