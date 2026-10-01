@@ -16,29 +16,28 @@ const seed: SeedBookmark[] = [
 ]
 
 const cases = [
-  { format: 'HTML' },
-  { format: 'JSON' },
-  { format: 'CSV' },
+  { format: 'HTML', extension: '.html' },
+  { format: 'JSON', extension: '.json' },
+  { format: 'CSV', extension: '.csv' },
 ] as const
 
-for (const { format } of cases) {
-  test(`exports the seeded bookmarks as ${format} from the popup`, async ({
+for (const { format, extension } of cases) {
+  test(`exports the seeded bookmarks as ${format} from the popup and shows a toast`, async ({
     openExtensionPage,
     seedBookmarks,
   }) => {
     await seedBookmarks(seed)
 
     const popup = await openExtensionPage('popup.html')
-
-    if (format !== 'HTML') {
-      await popup.getByRole('combobox').click()
-      await popup.getByRole('option', { name: format }).click()
-    }
+    await popup.getByRole('button', { name: format }).click()
 
     const downloadPromise = popup.waitForEvent('download')
-    await popup.getByRole('button', { name: 'Export format' }).click()
+    await popup.getByRole('button', { name: 'Export all' }).click()
     const download = await downloadPromise
 
+    expect(download.suggestedFilename()).toMatch(
+      new RegExp(`${extension.replace('.', String.raw`\.`)}$`),
+    )
     const downloadPath = await download.path()
     if (!downloadPath) {
       throw new Error('Expected the export download to save to a file path')
@@ -47,5 +46,32 @@ for (const { format } of cases) {
 
     expect(content).toContain('Popup Export Bookmark')
     expect(content).toContain('https://popup-export.example.com/')
+
+    await expect(popup.getByText(/Exported \d+ bookmarks/)).toBeVisible()
+    await expect(popup.getByText(extension, { exact: false })).toBeVisible()
   })
 }
+
+test('remembers the last chosen export format across popup opens', async ({
+  openExtensionPage,
+  seedBookmarks,
+}) => {
+  await seedBookmarks(seed)
+
+  const firstPopup = await openExtensionPage('popup.html')
+  await firstPopup.getByRole('button', { name: 'JSON' }).click()
+  await expect(
+    firstPopup.getByRole('button', { name: 'JSON', pressed: true }),
+  ).toBeVisible()
+  await firstPopup.close()
+
+  const secondPopup = await openExtensionPage('popup.html')
+  await expect(
+    secondPopup.getByRole('button', { name: 'JSON', pressed: true }),
+  ).toBeVisible()
+
+  const downloadPromise = secondPopup.waitForEvent('download')
+  await secondPopup.getByRole('button', { name: 'Export all' }).click()
+  const download = await downloadPromise
+  expect(download.suggestedFilename()).toMatch(/\.json$/)
+})

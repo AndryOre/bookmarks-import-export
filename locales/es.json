@@ -906,5 +906,74 @@
   "autoExportPage_formatsDescription": {
     "message": "Debe quedar al menos un formato seleccionado.",
     "description": "Texto de ayuda bajo el grupo de formatos"
+  },
+  "popup_exportAll": {
+    "message": "Exportar todo",
+    "description": "Popup button that exports every bookmark in the remembered format"
+  },
+  "popup_exportFormatLabel": {
+    "message": "Formato de exportación",
+    "description": "Accessible label of the popup format toggle group"
+  },
+  "popup_exportSuccessTitle": {
+    "message": "Se exportaron $COUNT$ marcadores",
+    "description": "Popup toast title after a successful export",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "popup_exportFailedTitle": {
+    "message": "Falló la exportación",
+    "description": "Popup toast title when an export fails"
+  },
+  "popup_chooseFile": {
+    "message": "Elegir archivo…",
+    "description": "Popup button that opens the file picker to import bookmarks"
+  },
+  "popup_importing": {
+    "message": "Importando…",
+    "description": "Popup import button label while an import is running"
+  },
+  "popup_importSuccessTitle": {
+    "message": "Marcadores importados",
+    "description": "Popup toast title after a successful import"
+  },
+  "popup_importFailedTitle": {
+    "message": "Falló la importación",
+    "description": "Popup toast title when an import fails"
+  },
+  "popup_replaceAlertTitle": {
+    "message": "Se reemplazarán los marcadores existentes",
+    "description": "Title of the popup alert shown when the default mode is Restore - replace"
+  },
+  "popup_statusNextRunTitle": {
+    "message": "Próximo auto-export",
+    "description": "Popup status item title when auto-export is scheduled"
+  },
+  "popup_statusOffTitle": {
+    "message": "Configura copias de seguridad programadas",
+    "description": "Popup status item title when auto-export is off"
+  },
+  "popup_statusOffDescription": {
+    "message": "El auto-export está desactivado",
+    "description": "Popup status item description when auto-export is off"
+  },
+  "popup_statusFailedTitle": {
+    "message": "Falló el último auto-export",
+    "description": "Popup status item title when the last auto-export failed"
+  },
+  "popup_statusFailedDescription": {
+    "message": "Abre auto-export para revisar",
+    "description": "Popup status item description when the last auto-export failed"
+  },
+  "popup_openApp": {
+    "message": "Abrir la app",
+    "description": "Popup footer button that opens the full-page app"
+  },
+  "popup_settings": {
+    "message": "Ajustes",
+    "description": "Accessible label of the popup footer settings icon button"
   }
 }
