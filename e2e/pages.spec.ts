@@ -1,4 +1,4 @@
-import en from '../locales/en.json'
+import en from '../locales/en.json' with { type: 'json' }
 import { expect, test } from './fixtures'
 
 test('opens the welcome page on install', async ({ context }) => {
