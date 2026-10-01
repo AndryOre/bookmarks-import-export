@@ -758,5 +758,223 @@
   "shell_toggleSidebar": {
     "message": "Toggle sidebar",
     "description": "Accessible label of the sidebar trigger in the App header"
+  },
+  "exportOptions_title": {
+    "message": "Export options",
+    "description": "Export options panel: Export options"
+  },
+  "exportOptions_includeIcons": {
+    "message": "Include favicons",
+    "description": "Export options panel: Include favicons"
+  },
+  "exportOptions_dateAdded": {
+    "message": "Date added",
+    "description": "Export options panel: Date added"
+  },
+  "exportOptions_dateLastUsed": {
+    "message": "Date last used",
+    "description": "Export options panel: Date last used"
+  },
+  "exportOptions_folderDates": {
+    "message": "Folder modified dates",
+    "description": "Export options panel: Folder modified dates"
+  },
+  "exportOptions_hideOther": {
+    "message": "Hide other bookmarks",
+    "description": "Export options panel: Hide other bookmarks"
+  },
+  "exportOptions_hideParent": {
+    "message": "Hide parent folder",
+    "description": "Export options panel: Hide parent folder"
+  },
+  "import_stepFile": {
+    "message": "File",
+    "description": "Heading of step 1 of the import flow"
+  },
+  "import_stepDone": {
+    "message": "Completed",
+    "description": "Screen reader text for a completed step"
+  },
+  "import_fileInputLabel": {
+    "message": "Bookmarks file",
+    "description": "Accessible label of the file input"
+  },
+  "import_changeFile": {
+    "message": "Change file",
+    "description": "Button to pick a different file"
+  },
+  "import_restoreUnavailable": {
+    "message": "This file has no location data, so it can't be restored to its original folders.",
+    "description": "Reason shown on disabled restore mode cards"
+  },
+  "import_submit": {
+    "message": "Import $COUNT$ bookmarks",
+    "description": "Primary import button",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "import_importing": {
+    "message": "Importing…",
+    "description": "Primary button label while importing"
+  },
+  "import_replaceTitle": {
+    "message": "Replace your existing bookmarks?",
+    "description": "Title of the replace confirmation dialog"
+  },
+  "import_replaceConfirm": {
+    "message": "Replace and import",
+    "description": "Destructive confirm button in the replace dialog"
+  },
+  "import_errorTitle": {
+    "message": "Import failed",
+    "description": "Title of the import error alert"
+  },
+  "import_another": {
+    "message": "Import another file",
+    "description": "Button shown after a successful import"
+  },
+  "import_openManager": {
+    "message": "Open bookmark manager",
+    "description": "Button that opens chrome://bookmarks"
+  },
+  "autoExportPage_saved": {
+    "message": "Saved",
+    "description": "Toast shown after an Auto-export setting is saved"
+  },
+  "autoExportPage_succeeded": {
+    "message": "Succeeded",
+    "description": "Last-run badge when the last auto-export succeeded"
+  },
+  "autoExportPage_failed": {
+    "message": "Failed",
+    "description": "Last-run badge when the last auto-export failed"
+  },
+  "autoExportPage_statusTitle": {
+    "message": "Status",
+    "description": "Title of the Auto-export status card"
+  },
+  "autoExportPage_lastRun": {
+    "message": "Last run",
+    "description": "Status card label for the last run"
+  },
+  "autoExportPage_nextRun": {
+    "message": "Next run",
+    "description": "Status card label for the next run"
+  },
+  "autoExportPage_off": {
+    "message": "Auto-export is off",
+    "description": "Status card next-run value when auto-export is off"
+  },
+  "autoExportPage_failureTitle": {
+    "message": "The last auto-export failed",
+    "description": "Title of the alert shown when the last run failed"
+  },
+  "autoExportPage_settingsTitle": {
+    "message": "Settings",
+    "description": "Title of the Auto-export settings card"
+  },
+  "autoExportPage_settingsDescription": {
+    "message": "Changes are saved automatically.",
+    "description": "Description of the Auto-export settings card"
+  },
+  "autoExportPage_frequency": {
+    "message": "Frequency",
+    "description": "Label of the frequency toggle group"
+  },
+  "autoExportPage_interval12h": {
+    "message": "Every 12 hours",
+    "description": "Frequency option: every 12 hours"
+  },
+  "autoExportPage_interval1d": {
+    "message": "Daily",
+    "description": "Frequency option: daily"
+  },
+  "autoExportPage_interval3d": {
+    "message": "Every 3 days",
+    "description": "Frequency option: every 3 days"
+  },
+  "autoExportPage_interval7d": {
+    "message": "Weekly",
+    "description": "Frequency option: weekly"
+  },
+  "autoExportPage_folderDescription": {
+    "message": "Folder inside your Downloads folder where backups are saved.",
+    "description": "Help text under the folder field"
+  },
+  "autoExportPage_formatsDescription": {
+    "message": "At least one format must stay selected.",
+    "description": "Help text under the formats toggle group"
+  },
+  "popup_exportAll": {
+    "message": "Export all",
+    "description": "Popup button that exports every bookmark in the remembered format"
+  },
+  "popup_exportFormatLabel": {
+    "message": "Export format",
+    "description": "Accessible label of the popup format toggle group"
+  },
+  "popup_exportSuccessTitle": {
+    "message": "Exported $COUNT$ bookmarks",
+    "description": "Popup toast title after a successful export",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "popup_exportFailedTitle": {
+    "message": "Export failed",
+    "description": "Popup toast title when an export fails"
+  },
+  "popup_chooseFile": {
+    "message": "Choose file…",
+    "description": "Popup button that opens the file picker to import bookmarks"
+  },
+  "popup_importing": {
+    "message": "Importing…",
+    "description": "Popup import button label while an import is running"
+  },
+  "popup_importSuccessTitle": {
+    "message": "Bookmarks imported",
+    "description": "Popup toast title after a successful import"
+  },
+  "popup_importFailedTitle": {
+    "message": "Import failed",
+    "description": "Popup toast title when an import fails"
+  },
+  "popup_replaceAlertTitle": {
+    "message": "Existing bookmarks will be replaced",
+    "description": "Title of the popup alert shown when the default mode is Restore - replace"
+  },
+  "popup_statusNextRunTitle": {
+    "message": "Next auto-export",
+    "description": "Popup status item title when auto-export is scheduled"
+  },
+  "popup_statusOffTitle": {
+    "message": "Set up scheduled backups",
+    "description": "Popup status item title when auto-export is off"
+  },
+  "popup_statusOffDescription": {
+    "message": "Auto-export is off",
+    "description": "Popup status item description when auto-export is off"
+  },
+  "popup_statusFailedTitle": {
+    "message": "Last auto-export failed",
+    "description": "Popup status item title when the last auto-export failed"
+  },
+  "popup_statusFailedDescription": {
+    "message": "Open auto-export to review",
+    "description": "Popup status item description when the last auto-export failed"
+  },
+  "popup_openApp": {
+    "message": "Open app",
+    "description": "Popup footer button that opens the full-page app"
+  },
+  "popup_settings": {
+    "message": "Settings",
+    "description": "Accessible label of the popup footer settings icon button"
   }
 }

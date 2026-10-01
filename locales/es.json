@@ -757,5 +757,223 @@
   "shell_toggleSidebar": {
     "message": "Alternar barra lateral",
     "description": "Etiqueta accesible del botón de la barra lateral en el encabezado"
+  },
+  "exportOptions_title": {
+    "message": "Opciones de exportación",
+    "description": "Panel de opciones de exportación: Opciones de exportación"
+  },
+  "exportOptions_includeIcons": {
+    "message": "Incluir favicons",
+    "description": "Panel de opciones de exportación: Incluir favicons"
+  },
+  "exportOptions_dateAdded": {
+    "message": "Fecha de creación",
+    "description": "Panel de opciones de exportación: Fecha de creación"
+  },
+  "exportOptions_dateLastUsed": {
+    "message": "Fecha de último uso",
+    "description": "Panel de opciones de exportación: Fecha de último uso"
+  },
+  "exportOptions_folderDates": {
+    "message": "Fechas de modificación de carpetas",
+    "description": "Panel de opciones de exportación: Fechas de modificación de carpetas"
+  },
+  "exportOptions_hideOther": {
+    "message": "Ocultar otros marcadores",
+    "description": "Panel de opciones de exportación: Ocultar otros marcadores"
+  },
+  "exportOptions_hideParent": {
+    "message": "Ocultar carpeta superior",
+    "description": "Panel de opciones de exportación: Ocultar carpeta superior"
+  },
+  "import_stepFile": {
+    "message": "Archivo",
+    "description": "Heading of step 1 of the import flow"
+  },
+  "import_stepDone": {
+    "message": "Completado",
+    "description": "Screen reader text for a completed step"
+  },
+  "import_fileInputLabel": {
+    "message": "Archivo de marcadores",
+    "description": "Accessible label of the file input"
+  },
+  "import_changeFile": {
+    "message": "Cambiar archivo",
+    "description": "Button to pick a different file"
+  },
+  "import_restoreUnavailable": {
+    "message": "Este archivo no tiene datos de ubicación, por lo que no se puede restaurar en sus carpetas originales.",
+    "description": "Reason shown on disabled restore mode cards"
+  },
+  "import_submit": {
+    "message": "Importar $COUNT$ marcadores",
+    "description": "Primary import button",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "import_importing": {
+    "message": "Importando…",
+    "description": "Primary button label while importing"
+  },
+  "import_replaceTitle": {
+    "message": "¿Reemplazar tus marcadores existentes?",
+    "description": "Title of the replace confirmation dialog"
+  },
+  "import_replaceConfirm": {
+    "message": "Reemplazar e importar",
+    "description": "Destructive confirm button in the replace dialog"
+  },
+  "import_errorTitle": {
+    "message": "Error al importar",
+    "description": "Title of the import error alert"
+  },
+  "import_another": {
+    "message": "Importar otro archivo",
+    "description": "Button shown after a successful import"
+  },
+  "import_openManager": {
+    "message": "Abrir administrador de marcadores",
+    "description": "Button that opens chrome://bookmarks"
+  },
+  "autoExportPage_saved": {
+    "message": "Guardado",
+    "description": "Aviso mostrado tras guardar un ajuste de Auto-export"
+  },
+  "autoExportPage_succeeded": {
+    "message": "Correcta",
+    "description": "Insignia de la última ejecución cuando tuvo éxito"
+  },
+  "autoExportPage_failed": {
+    "message": "Fallida",
+    "description": "Insignia de la última ejecución cuando falló"
+  },
+  "autoExportPage_statusTitle": {
+    "message": "Estado",
+    "description": "Título de la tarjeta de estado de Auto-export"
+  },
+  "autoExportPage_lastRun": {
+    "message": "Última ejecución",
+    "description": "Etiqueta de la última ejecución en la tarjeta de estado"
+  },
+  "autoExportPage_nextRun": {
+    "message": "Próxima ejecución",
+    "description": "Etiqueta de la próxima ejecución en la tarjeta de estado"
+  },
+  "autoExportPage_off": {
+    "message": "La exportación automática está desactivada",
+    "description": "Valor de próxima ejecución cuando Auto-export está desactivado"
+  },
+  "autoExportPage_failureTitle": {
+    "message": "Falló la última exportación automática",
+    "description": "Título de la alerta mostrada cuando falló la última ejecución"
+  },
+  "autoExportPage_settingsTitle": {
+    "message": "Ajustes",
+    "description": "Título de la tarjeta de ajustes de Auto-export"
+  },
+  "autoExportPage_settingsDescription": {
+    "message": "Los cambios se guardan automáticamente.",
+    "description": "Descripción de la tarjeta de ajustes de Auto-export"
+  },
+  "autoExportPage_frequency": {
+    "message": "Frecuencia",
+    "description": "Etiqueta del grupo de frecuencia"
+  },
+  "autoExportPage_interval12h": {
+    "message": "Cada 12 horas",
+    "description": "Opción de frecuencia: cada 12 horas"
+  },
+  "autoExportPage_interval1d": {
+    "message": "Diaria",
+    "description": "Opción de frecuencia: diaria"
+  },
+  "autoExportPage_interval3d": {
+    "message": "Cada 3 días",
+    "description": "Opción de frecuencia: cada 3 días"
+  },
+  "autoExportPage_interval7d": {
+    "message": "Semanal",
+    "description": "Opción de frecuencia: semanal"
+  },
+  "autoExportPage_folderDescription": {
+    "message": "Carpeta dentro de Descargas donde se guardan las copias.",
+    "description": "Texto de ayuda bajo el campo de carpeta"
+  },
+  "autoExportPage_formatsDescription": {
+    "message": "Debe quedar al menos un formato seleccionado.",
+    "description": "Texto de ayuda bajo el grupo de formatos"
+  },
+  "popup_exportAll": {
+    "message": "Exportar todo",
+    "description": "Popup button that exports every bookmark in the remembered format"
+  },
+  "popup_exportFormatLabel": {
+    "message": "Formato de exportación",
+    "description": "Accessible label of the popup format toggle group"
+  },
+  "popup_exportSuccessTitle": {
+    "message": "Se exportaron $COUNT$ marcadores",
+    "description": "Popup toast title after a successful export",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "popup_exportFailedTitle": {
+    "message": "Falló la exportación",
+    "description": "Popup toast title when an export fails"
+  },
+  "popup_chooseFile": {
+    "message": "Elegir archivo…",
+    "description": "Popup button that opens the file picker to import bookmarks"
+  },
+  "popup_importing": {
+    "message": "Importando…",
+    "description": "Popup import button label while an import is running"
+  },
+  "popup_importSuccessTitle": {
+    "message": "Marcadores importados",
+    "description": "Popup toast title after a successful import"
+  },
+  "popup_importFailedTitle": {
+    "message": "Falló la importación",
+    "description": "Popup toast title when an import fails"
+  },
+  "popup_replaceAlertTitle": {
+    "message": "Se reemplazarán los marcadores existentes",
+    "description": "Title of the popup alert shown when the default mode is Restore - replace"
+  },
+  "popup_statusNextRunTitle": {
+    "message": "Próximo auto-export",
+    "description": "Popup status item title when auto-export is scheduled"
+  },
+  "popup_statusOffTitle": {
+    "message": "Configura copias de seguridad programadas",
+    "description": "Popup status item title when auto-export is off"
+  },
+  "popup_statusOffDescription": {
+    "message": "El auto-export está desactivado",
+    "description": "Popup status item description when auto-export is off"
+  },
+  "popup_statusFailedTitle": {
+    "message": "Falló el último auto-export",
+    "description": "Popup status item title when the last auto-export failed"
+  },
+  "popup_statusFailedDescription": {
+    "message": "Abre auto-export para revisar",
+    "description": "Popup status item description when the last auto-export failed"
+  },
+  "popup_openApp": {
+    "message": "Abrir la app",
+    "description": "Popup footer button that opens the full-page app"
+  },
+  "popup_settings": {
+    "message": "Ajustes",
+    "description": "Accessible label of the popup footer settings icon button"
   }
 }

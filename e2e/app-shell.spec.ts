@@ -3,8 +3,6 @@ import { expect, test } from './fixtures'
 
 const ROUTES = [
   { hash: 'export', title: en.shell_navExport.message },
-  { hash: 'import', title: en.shell_navImport.message },
-  { hash: 'auto-export', title: en.shell_navAutoExport.message },
   { hash: 'settings', title: en.shell_navSettings.message },
   { hash: 'whats-new', title: en.shell_navWhatsNew.message },
   { hash: 'welcome', title: en.shell_titleWelcome.message },
@@ -28,7 +26,11 @@ for (const route of ROUTES) {
     await expect(
       page.getByRole('heading', { level: 1, name: route.title }),
     ).toBeVisible()
-    await expect(page.getByText(en.shell_placeholder.message)).toBeVisible()
+    const stubText =
+      route.hash === 'export'
+        ? en.exportOptions_title.message
+        : en.shell_placeholder.message
+    await expect(page.getByText(stubText)).toBeVisible()
   })
 }
 
