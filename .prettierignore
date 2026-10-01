@@ -4,3 +4,6 @@ node_modules
 bun.lock
 public/
 coverage
+.claude/skills/*
+!.claude/skills/migrate-radix-to-base/
+!.claude/skills/shadcn/
