@@ -535,6 +535,10 @@
     "message": "Häufigkeit",
     "description": "Label of the frequency toggle group"
   },
+  "autoExportPage_interval1h": {
+    "message": "Stündlich",
+    "description": "Frequency option: hourly"
+  },
   "autoExportPage_interval12h": {
     "message": "Alle 12 Stunden",
     "description": "Frequency option: every 12 hours"
@@ -550,6 +554,38 @@
   "autoExportPage_interval7d": {
     "message": "Wöchentlich",
     "description": "Frequency option: weekly"
+  },
+  "autoExportPage_dayOfWeek": {
+    "message": "Tag",
+    "description": "Label of the weekday select shown for the weekly frequency"
+  },
+  "autoExportPage_day0": {
+    "message": "Sonntag",
+    "description": "Weekday name (day 0, 0 is Sunday)"
+  },
+  "autoExportPage_day1": {
+    "message": "Montag",
+    "description": "Weekday name (day 1, 0 is Sunday)"
+  },
+  "autoExportPage_day2": {
+    "message": "Dienstag",
+    "description": "Weekday name (day 2, 0 is Sunday)"
+  },
+  "autoExportPage_day3": {
+    "message": "Mittwoch",
+    "description": "Weekday name (day 3, 0 is Sunday)"
+  },
+  "autoExportPage_day4": {
+    "message": "Donnerstag",
+    "description": "Weekday name (day 4, 0 is Sunday)"
+  },
+  "autoExportPage_day5": {
+    "message": "Freitag",
+    "description": "Weekday name (day 5, 0 is Sunday)"
+  },
+  "autoExportPage_day6": {
+    "message": "Samstag",
+    "description": "Weekday name (day 6, 0 is Sunday)"
   },
   "autoExportPage_folderDescription": {
     "message": "Ordner innerhalb deines Download-Ordners, in dem die Sicherungen gespeichert werden.",

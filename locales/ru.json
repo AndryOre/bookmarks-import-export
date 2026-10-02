@@ -535,6 +535,10 @@
     "message": "Периодичность",
     "description": "Label of the frequency toggle group"
   },
+  "autoExportPage_interval1h": {
+    "message": "Каждый час",
+    "description": "Frequency option: hourly"
+  },
   "autoExportPage_interval12h": {
     "message": "Каждые 12 часов",
     "description": "Frequency option: every 12 hours"
@@ -550,6 +554,38 @@
   "autoExportPage_interval7d": {
     "message": "Еженедельно",
     "description": "Frequency option: weekly"
+  },
+  "autoExportPage_dayOfWeek": {
+    "message": "День",
+    "description": "Label of the weekday select shown for the weekly frequency"
+  },
+  "autoExportPage_day0": {
+    "message": "Воскресенье",
+    "description": "Weekday name (day 0, 0 is Sunday)"
+  },
+  "autoExportPage_day1": {
+    "message": "Понедельник",
+    "description": "Weekday name (day 1, 0 is Sunday)"
+  },
+  "autoExportPage_day2": {
+    "message": "Вторник",
+    "description": "Weekday name (day 2, 0 is Sunday)"
+  },
+  "autoExportPage_day3": {
+    "message": "Среда",
+    "description": "Weekday name (day 3, 0 is Sunday)"
+  },
+  "autoExportPage_day4": {
+    "message": "Четверг",
+    "description": "Weekday name (day 4, 0 is Sunday)"
+  },
+  "autoExportPage_day5": {
+    "message": "Пятница",
+    "description": "Weekday name (day 5, 0 is Sunday)"
+  },
+  "autoExportPage_day6": {
+    "message": "Суббота",
+    "description": "Weekday name (day 6, 0 is Sunday)"
   },
   "autoExportPage_folderDescription": {
     "message": "Папка внутри «Скачанных файлов», куда сохраняются копии.",

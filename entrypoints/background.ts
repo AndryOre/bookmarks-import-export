@@ -35,7 +35,7 @@ async function syncAlarmSafely(trigger: SyncAlarmTrigger): Promise<void> {
 
 /**
  * Whether two `AutoExportConfig`s differ in a way that should re-arm the
- * alarm: `enabled`, `interval`, or `preferredTime` changed outright, or
+ * alarm: `enabled`, `interval`, `preferredTime`, or `dayOfWeek` changed outright, or
  * `formats` crossed the empty/non-empty boundary (which is functionally an
  * enable/disable even though it's the `formats` field). A `path`-only
  * change, or a `formats` change that stays non-empty (e.g. adding a second
@@ -53,6 +53,7 @@ function isScheduleRelevantChange(
     previous.enabled !== next.enabled ||
     previous.interval !== next.interval ||
     previous.preferredTime !== next.preferredTime ||
+    previous.dayOfWeek !== next.dayOfWeek ||
     (previous.formats.length === 0) !== (next.formats.length === 0)
   )
 }

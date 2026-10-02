@@ -169,6 +169,7 @@ function baseConfig(
     enabled: true,
     interval: '1d',
     preferredTime: '00:00',
+    dayOfWeek: 1,
     path: 'bookmarks-backup/',
     formats: ['html'],
     ...overrides,
@@ -198,10 +199,9 @@ describe('computeNextRun', () => {
     )
   })
 
-  it.each<['1d' | '3d' | '7d', number]>([
+  it.each<['1d' | '3d', number]>([
     ['1d', 1],
     ['3d', 3],
-    ['7d', 7],
   ])(
     'anchored to a completed run, schedules %s exactly %i day(s) after `from` at preferredTime',
     (interval, days) => {
@@ -216,6 +216,62 @@ describe('computeNextRun', () => {
     },
   )
 
+  it('fires 1h from `from` regardless of preferredTime or anchoredToCompletedRun', () => {
+    const from = new Date(2024, 5, 1, 8, 15, 0, 0).getTime()
+
+    expect(computeNextRun('1h', '23:59', from, false)).toBe(from + 3_600_000)
+    expect(computeNextRun('1h', '23:59', from, true)).toBe(from + 3_600_000)
+  })
+
+  describe('weekly (7d)', () => {
+    const saturday = new Date(2024, 5, 1, 8, 0, 0, 0).getTime()
+
+    it('reconfiguring, targets a weekday earlier in the week than today in the following week', () => {
+      const next = computeNextRun('7d', '09:30', saturday, false, 1)
+
+      expect(next).toBe(new Date(2024, 5, 3, 9, 30, 0, 0).getTime())
+    })
+
+    it('reconfiguring, targets a later weekday this week', () => {
+      const next = computeNextRun('7d', '09:30', saturday, false, 0)
+
+      expect(next).toBe(new Date(2024, 5, 2, 9, 30, 0, 0).getTime())
+    })
+
+    it('reconfiguring on the chosen day, runs today if the time is ahead and next week if it passed', () => {
+      expect(computeNextRun('7d', '10:00', saturday, false, 6)).toBe(
+        new Date(2024, 5, 1, 10, 0, 0, 0).getTime(),
+      )
+      expect(computeNextRun('7d', '07:00', saturday, false, 6)).toBe(
+        new Date(2024, 5, 8, 7, 0, 0, 0).getTime(),
+      )
+    })
+
+    it('anchored to a completed run on the chosen day, reschedules exactly 7 days out', () => {
+      const next = computeNextRun('7d', '07:00', saturday, true, 6)
+
+      expect(next).toBe(new Date(2024, 5, 8, 7, 0, 0, 0).getTime())
+    })
+
+    it('anchored to a late catch-up run, reschedules to the next chosen day rather than +7 days', () => {
+      const wednesday = new Date(2024, 5, 5, 8, 0, 0, 0).getTime()
+
+      const next = computeNextRun('7d', '07:00', wednesday, true, 1)
+
+      expect(next).toBe(new Date(2024, 5, 10, 7, 0, 0, 0).getTime())
+    })
+
+    it('keeps the wall-clock time across a US spring-forward boundary', () => {
+      process.env.TZ = 'America/New_York'
+      const from = new Date(2024, 2, 5, 12, 0, 0, 0).getTime()
+
+      const next = computeNextRun('7d', '10:00', from, false, 0)
+
+      expect(next).toBe(new Date(2024, 2, 10, 10, 0, 0, 0).getTime())
+      expect(new Date(next).getHours()).toBe(10)
+    })
+  })
+
   it('reconfiguring, targets preferredTime later today when it is still ahead', () => {
     const from = new Date(2024, 5, 1, 8, 0, 0, 0).getTime()
 
@@ -224,10 +280,9 @@ describe('computeNextRun', () => {
     expect(next).toBe(new Date(2024, 5, 1, 10, 0, 0, 0).getTime())
   })
 
-  it.each<['1d' | '3d' | '7d', number]>([
+  it.each<['1d' | '3d', number]>([
     ['1d', 1],
     ['3d', 1],
-    ['7d', 1],
   ])(
     'reconfiguring %s, advances only 1 day (never the full interval) when preferredTime already passed today',
     (interval, expectedDays) => {
@@ -383,6 +438,54 @@ describe('syncAlarm', () => {
       expect(alarm?.scheduledTime).toBe(now + 60_000)
     })
   })
+})
+
+describe('syncAlarm for the new intervals', () => {
+  it('arms an hourly config-change alarm one hour out', async () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date(2024, 5, 1, 8, 0, 0, 0))
+    await autoExportConfigStore.setValue(baseConfig({ interval: '1h' }))
+
+    await syncAlarm('config-change')
+
+    const expected = new Date(2024, 5, 1, 9, 0, 0, 0).getTime()
+    expect(await autoExportNextRunStore.getValue()).toBe(expected)
+    const alarm = await fakeBrowser.alarms.get(ALARM_NAME)
+    expect(alarm?.scheduledTime).toBe(expected)
+  })
+
+  it('arms a weekly alarm on the chosen day', async () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date(2024, 5, 1, 8, 0, 0, 0))
+    await autoExportConfigStore.setValue(
+      baseConfig({ interval: '7d', preferredTime: '06:00', dayOfWeek: 3 }),
+    )
+
+    await syncAlarm('config-change')
+
+    const expected = new Date(2024, 5, 5, 6, 0, 0, 0).getTime()
+    expect(await autoExportNextRunStore.getValue()).toBe(expected)
+    const alarm = await fakeBrowser.alarms.get(ALARM_NAME)
+    expect(alarm?.scheduledTime).toBe(expected)
+  })
+
+  it.each<['1h' | '7d']>([['1h'], ['7d']])(
+    'catches up an overdue %s next run about a minute out without changing it',
+    async (interval) => {
+      vi.useFakeTimers()
+      const now = new Date(2024, 5, 1, 8, 0, 0, 0).getTime()
+      vi.setSystemTime(now)
+      await autoExportConfigStore.setValue(baseConfig({ interval }))
+      const overdue = now - 3_600_000
+      await autoExportNextRunStore.setValue(overdue)
+
+      await syncAlarm('startup')
+
+      expect(await autoExportNextRunStore.getValue()).toBe(overdue)
+      const alarm = await fakeBrowser.alarms.get(ALARM_NAME)
+      expect(alarm?.scheduledTime).toBe(now + 60_000)
+    },
+  )
 })
 
 describe('readAutoExportLastRun', () => {
@@ -632,6 +735,45 @@ describe('runAutoExport', () => {
     expect(await autoExportNextRunStore.getValue()).toBe(expected)
     const alarm = await browser.alarms.get(ALARM_NAME)
     expect(alarm?.scheduledTime).toBe(expected)
+  })
+
+  it('reschedules an hourly run one hour after it completes', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    vi.setSystemTime(new Date(2024, 5, 1, 8, 0, 0, 0))
+    await autoExportConfigStore.setValue(
+      baseConfig({ formats: ['html'], interval: '1h' }),
+    )
+    const { mock: downloadSpy, completeAll } = mockDownload()
+    mockActionBadge()
+
+    await runAutoExportAndSettle(downloadSpy, completeAll, 1, 'scheduled')
+
+    const nextRun = await autoExportNextRunStore.getValue()
+    expect(nextRun).toBeGreaterThanOrEqual(
+      new Date(2024, 5, 1, 9, 0, 0, 0).getTime(),
+    )
+    expect(nextRun).toBeLessThan(new Date(2024, 5, 1, 9, 0, 5, 0).getTime())
+  })
+
+  it('reschedules a weekly run to its chosen day after it completes', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    vi.setSystemTime(new Date(2024, 5, 1, 8, 0, 0, 0))
+    await autoExportConfigStore.setValue(
+      baseConfig({
+        formats: ['html'],
+        interval: '7d',
+        preferredTime: '10:00',
+        dayOfWeek: 3,
+      }),
+    )
+    const { mock: downloadSpy, completeAll } = mockDownload()
+    mockActionBadge()
+
+    await runAutoExportAndSettle(downloadSpy, completeAll, 1, 'scheduled')
+
+    expect(await autoExportNextRunStore.getValue()).toBe(
+      new Date(2024, 5, 5, 10, 0, 0, 0).getTime(),
+    )
   })
 
   it('reschedules the next run even after a failed scheduled run', async () => {

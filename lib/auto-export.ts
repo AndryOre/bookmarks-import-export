@@ -16,10 +16,12 @@ import {
   includeIconDataStore,
 } from '@/lib/storage'
 import type {
+  AutoExportConfig,
   AutoExportFormat,
   AutoExportInterval,
   AutoExportLastRun,
   AutoExportTrigger,
+  DayOfWeek,
 } from '@/lib/types'
 
 /**
@@ -69,10 +71,11 @@ const CATCH_UP_DELAY_MS = 60_000
  */
 const FAILURE_BADGE_COLOR = '#DC2626'
 
-const DAY_INTERVALS: Record<'1d' | '3d' | '7d', number> = {
+const HOUR_MS = 60 * 60 * 1000
+
+const DAY_INTERVALS: Record<'1d' | '3d', number> = {
   '1d': 1,
   '3d': 3,
-  '7d': 7,
 }
 
 /**
@@ -88,28 +91,31 @@ export type SyncAlarmTrigger =
   'config-change' | 'startup' | 'install' | 'update'
 
 /**
- * Pure computation of the next auto-export due time. `12h` always fires
- * `from` plus 12 hours, ignoring `preferredTime` — it's frequent enough that
- * a user-chosen time of day wouldn't be meaningful. The day-or-longer
- * intervals (`1d`/`3d`/`7d`) target `preferredTime` local time, computed one
- * of two ways depending on `isAnchoredToCompletedRun`:
- * - `true` (anchored to a just-completed run): the interval's day count
- *   after `from`'s calendar date, at `preferredTime`. Used by
- *   {@link runAutoExport} so a completed run always reschedules exactly N
- *   days out, regardless of what time it finished.
+ * Pure computation of the next auto-export due time. `1h` and `12h` always
+ * fire `from` plus 1 or 12 hours, ignoring `preferredTime` — they're
+ * frequent enough that a user-chosen time of day wouldn't be meaningful.
+ * `1d`/`3d` target `preferredTime` local time and `7d` (weekly) targets
+ * `preferredTime` on `dayOfWeek`, computed one of two ways depending on
+ * `isAnchoredToCompletedRun`:
+ * - `true` (anchored to a just-completed run): `1d`/`3d` land the interval's
+ *   day count after `from`'s calendar date; `7d` lands on the first
+ *   `dayOfWeek` strictly after `from`'s calendar date. Used by
+ *   {@link runAutoExport} so a completed run always reschedules a full
+ *   interval out, regardless of what time it finished.
  * - `false` ((re)configuring): the next upcoming occurrence of
- *   `preferredTime` — today if it hasn't passed yet relative to `from`,
- *   otherwise tomorrow. Used by `syncAlarm` when the config changes or when
- *   no next-run is stored yet.
+ *   `preferredTime` — for `7d`, on `dayOfWeek`; otherwise today if it hasn't
+ *   passed yet relative to `from`, else tomorrow. Used by `syncAlarm` when
+ *   the config changes or when no next-run is stored yet.
  *
  * Every date here is built with `Date`'s local-time setters (`setDate`/
- * `setHours`) rather than fixed-duration millisecond arithmetic, so a
- * result that spans a DST transition lands on the correct wall-clock time
- * instead of drifting by the transition's hour.
+ * `setHours`) rather than fixed-duration millisecond arithmetic for the
+ * time-of-day intervals, so a result that spans a DST transition lands on
+ * the correct wall-clock time instead of drifting by the transition's hour.
  * @param interval The configured auto-export interval.
  * @param preferredTime `HH:mm` local time of day, used for day-or-longer intervals.
  * @param from The reference instant (epoch milliseconds) to compute from.
  * @param isAnchoredToCompletedRun See above.
+ * @param dayOfWeek The weekday for the `7d` interval; Monday by default.
  * @returns The next due time, as epoch milliseconds.
  */
 export function computeNextRun(
@@ -117,19 +123,31 @@ export function computeNextRun(
   preferredTime: string,
   from: number,
   isAnchoredToCompletedRun: boolean,
+  dayOfWeek: DayOfWeek = 1,
 ): number {
-  if (interval === '12h') {
-    return from + 12 * 60 * 60 * 1000
-  }
+  if (interval === '1h') return from + HOUR_MS
+  if (interval === '12h') return from + 12 * HOUR_MS
 
   const [hoursRaw, minutesRaw] = preferredTime.split(':').map(Number)
   const hours = hoursRaw ?? 0
   const minutes = minutesRaw ?? 0
-  const days = DAY_INTERVALS[interval]
+
+  if (interval === '7d') {
+    const next = new Date(from)
+    next.setHours(hours, minutes, 0, 0)
+    if (isAnchoredToCompletedRun || next.getTime() <= from) {
+      next.setDate(next.getDate() + 1)
+    }
+    while (next.getDay() !== dayOfWeek) {
+      next.setDate(next.getDate() + 1)
+    }
+    next.setHours(hours, minutes, 0, 0)
+    return next.getTime()
+  }
 
   if (isAnchoredToCompletedRun) {
     const next = new Date(from)
-    next.setDate(next.getDate() + days)
+    next.setDate(next.getDate() + DAY_INTERVALS[interval])
     next.setHours(hours, minutes, 0, 0)
     return next.getTime()
   }
@@ -186,7 +204,13 @@ export async function syncAlarm(trigger: SyncAlarmTrigger): Promise<void> {
   let nextRun: number
 
   if (trigger === 'config-change') {
-    nextRun = computeNextRun(config.interval, config.preferredTime, now, false)
+    nextRun = computeNextRun(
+      config.interval,
+      config.preferredTime,
+      now,
+      false,
+      config.dayOfWeek,
+    )
     await autoExportNextRunStore.setValue(nextRun)
   } else {
     const stored = await autoExportNextRunStore.getValue()
@@ -196,6 +220,7 @@ export async function syncAlarm(trigger: SyncAlarmTrigger): Promise<void> {
         config.preferredTime,
         now,
         false,
+        config.dayOfWeek,
       )
       await autoExportNextRunStore.setValue(nextRun)
     } else {
@@ -401,13 +426,13 @@ export async function runAutoExport(
     })
     if (trigger !== 'manual') {
       await setFailureBadge()
-      await rescheduleAfterRun(config.interval, config.preferredTime)
+      await rescheduleAfterRun(config)
     }
     throw error
   }
 
   if (trigger !== 'manual') {
-    await rescheduleAfterRun(config.interval, config.preferredTime)
+    await rescheduleAfterRun(config)
   }
 }
 
@@ -417,15 +442,17 @@ export async function runAutoExport(
  * failure paths of {@link runAutoExport} for `scheduled`/`catch-up`
  * triggers, so a failing scheduled export still reschedules instead of
  * going silent.
- * @param interval The configured auto-export interval.
- * @param preferredTime The configured `HH:mm` preferred time.
+ * @param config The auto-export config the run used.
  * @returns Resolves once the next-run store and alarm are updated.
  */
-async function rescheduleAfterRun(
-  interval: AutoExportInterval,
-  preferredTime: string,
-): Promise<void> {
-  const nextRun = computeNextRun(interval, preferredTime, Date.now(), true)
+async function rescheduleAfterRun(config: AutoExportConfig): Promise<void> {
+  const nextRun = computeNextRun(
+    config.interval,
+    config.preferredTime,
+    Date.now(),
+    true,
+    config.dayOfWeek,
+  )
   await autoExportNextRunStore.setValue(nextRun)
   await armAlarm(nextRun)
 }
