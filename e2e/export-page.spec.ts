@@ -113,6 +113,9 @@ test('pressing / focuses the search field and the term survives a reload', async
   const page = await openExtensionPage('app.html#/export')
   const search = page.getByRole('searchbox', { name: searchboxName })
 
+  await page
+    .getByRole('button', { name: en.exportPage_expandAll.message })
+    .click()
   await expect(
     page.getByRole('checkbox', { name: 'Standalone Link' }),
   ).toBeVisible()
@@ -148,6 +151,9 @@ test('shows an empty state for a search with no matches and clears it', async ({
   await expect(
     page.getByRole('searchbox', { name: searchboxName }),
   ).toHaveValue('')
+  await page
+    .getByRole('button', { name: en.exportPage_expandAll.message })
+    .click()
   await expect(
     page.getByRole('checkbox', { name: 'Standalone Link' }),
   ).toBeVisible()

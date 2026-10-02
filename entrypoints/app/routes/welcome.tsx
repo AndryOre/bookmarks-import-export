@@ -7,7 +7,7 @@ import {
   TimerResetIcon,
 } from 'lucide-react'
 
-import { Button } from '@/components/ui/button'
+import { buttonVariants } from '@/components/ui/button'
 import {
   Item,
   ItemActions,
@@ -72,7 +72,7 @@ export function WelcomeRoute() {
           className="size-16"
         />
         <h2 className="font-heading text-2xl font-semibold">
-          {i18n.t('welcomeTitle')}
+          {i18n.t('welcome_heroTitle')}
         </h2>
         <p className="text-muted-foreground">{i18n.t('welcomeSubtitle')}</p>
       </div>
@@ -89,14 +89,12 @@ export function WelcomeRoute() {
                 <ItemDescription>{i18n.t(descriptionKey)}</ItemDescription>
               </ItemContent>
               <ItemActions>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  nativeButton={false}
-                  render={<Link to={route} />}
+                <Link
+                  to={route}
+                  className={buttonVariants({ variant: 'outline', size: 'sm' })}
                 >
                   {i18n.t(actionKey)}
-                </Button>
+                </Link>
               </ItemActions>
             </Item>
           ),

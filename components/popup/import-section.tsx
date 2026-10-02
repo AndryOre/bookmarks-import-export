@@ -26,6 +26,7 @@ import {
 import { Spinner } from '@/components/ui/spinner'
 import { toast } from '@/components/ui/toast'
 import { detectFormat } from '@/lib/detect-format'
+import { getImportModeItems } from '@/lib/import-mode-items'
 import { getImportPreview } from '@/lib/import-preview'
 import { importFromCSV } from '@/lib/importers/import-csv'
 import { importFromHTML } from '@/lib/importers/import-html'
@@ -157,6 +158,7 @@ export function ImportSection() {
           {i18n.t('defaultImportMode')}
         </FieldLabel>
         <Select
+          items={getImportModeItems()}
           value={mode}
           onValueChange={(value) => void setMode(value as ImportMode)}
         >

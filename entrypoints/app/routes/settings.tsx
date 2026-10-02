@@ -27,6 +27,7 @@ import {
 } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
+import { getImportModeItems } from '@/lib/import-mode-items'
 import {
   autoExpandFoldersStore,
   defaultImportModeStore,
@@ -145,6 +146,7 @@ export function SettingsRoute() {
               {i18n.t('defaultImportMode')}
             </FieldLabel>
             <Select
+              items={getImportModeItems()}
               value={mode}
               onValueChange={(value) => void setMode(value as ImportMode)}
             >

@@ -1,7 +1,7 @@
 import { i18n } from '#i18n'
 
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
+import { buttonVariants } from '@/components/ui/button'
 import {
   Item,
   ItemActions,
@@ -83,21 +83,14 @@ export function WhatsNewRoute() {
           </ItemDescription>
         </ItemContent>
         <ItemActions>
-          <Button
-            variant="ghost"
-            size="sm"
-            nativeButton={false}
-            render={
-              // eslint-disable-next-line jsx-a11y/anchor-has-content -- Button's render prop injects the children into this anchor
-              <a
-                href={CHROME_WEB_STORE_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-              />
-            }
+          <a
+            href={CHROME_WEB_STORE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={buttonVariants({ variant: 'ghost', size: 'sm' })}
           >
             {i18n.t('whatsNew_reviewAction')}
-          </Button>
+          </a>
         </ItemActions>
       </Item>
     </div>

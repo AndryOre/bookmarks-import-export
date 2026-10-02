@@ -1155,5 +1155,9 @@
   "exportPage_clearSearch": {
     "message": "Clear search",
     "description": "Export page empty state button that clears the search"
+  },
+  "welcome_heroTitle": {
+    "message": "Welcome",
+    "description": "Welcome page hero title"
   }
 }

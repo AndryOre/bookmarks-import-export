@@ -19,7 +19,7 @@ test('opens the Welcome route inside the app on install', async ({
   await expect(
     welcomePage.getByRole('heading', {
       level: 2,
-      name: en.welcomeTitle.message,
+      name: en.welcome_heroTitle.message,
     }),
   ).toBeVisible()
 })
@@ -35,7 +35,10 @@ test('Welcome quick-start actions open Export, Auto-export and Import', async ({
   ]
 
   for (const action of actions) {
-    await page.getByRole('link', { name: action.name }).click()
+    await page
+      .getByRole('main')
+      .getByRole('link', { name: action.name })
+      .click()
     await expect(page).toHaveURL(action.url)
     await page.goBack()
   }
