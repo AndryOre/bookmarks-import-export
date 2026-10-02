@@ -3,7 +3,7 @@ import { i18n } from '#i18n'
 import { detectFormat } from './detect-format'
 import { importFromCSV } from './importers/import-csv'
 import { importFromHTML } from './importers/import-html'
-import { importFromJSON } from './importers/import-json'
+import { importFromJSON, normalizeJsonRoot } from './importers/import-json'
 import type { ImportMode } from './types'
 
 /**
@@ -28,7 +28,7 @@ export async function runImport(
       break
     }
     case 'json': {
-      await importFromJSON(JSON.parse(text), mode)
+      await importFromJSON(normalizeJsonRoot(JSON.parse(text)), mode)
       break
     }
     case 'csv': {

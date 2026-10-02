@@ -559,6 +559,10 @@
       }
     }
   },
+  "import_noBookmarks": {
+    "message": "Nenhum favorito foi encontrado neste arquivo, então não há nada para importar.",
+    "description": "Shown when an import file contains no bookmarks; explains the disabled Import button and the popup error"
+  },
   "import_importing": {
     "message": "Importando…",
     "description": "Primary button label while importing"

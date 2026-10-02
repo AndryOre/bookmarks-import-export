@@ -50,7 +50,7 @@ export async function getFaviconBase64(
     const response = await fetch(faviconUrl)
     const blob = await response.blob()
 
-    return new Promise((resolve, reject) => {
+    return await new Promise((resolve, reject) => {
       const reader = new FileReader()
       reader.addEventListener('loadend', () => {
         const result = reader.result as string

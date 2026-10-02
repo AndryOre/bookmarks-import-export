@@ -1,0 +1,17 @@
+{
+  "id": "1",
+  "title": "Bookmarks bar",
+  "dateAdded": 0,
+  "children": [
+    {
+      "title": "Single Root A",
+      "url": "https://single-root-a.example/page",
+      "dateAdded": 0
+    },
+    {
+      "title": "Single Root B",
+      "url": "https://single-root-b.example/page",
+      "dateAdded": 0
+    }
+  ]
+}

@@ -58,16 +58,23 @@ export function ImportRoute() {
   const hasLocationData = preview?.hasLocationData ?? false
   const effectiveMode: ImportMode = hasLocationData ? storedMode : 'folder'
   const isImporting = status === 'importing'
+  const isEmpty = isSupported && preview.totalCount === 0
 
   const handleFile = async (file: File) => {
-    const text = await file.text()
-    const parsed = getImportPreview(text, file.type)
+    try {
+      const text = await file.text()
+      const parsed = getImportPreview(text, file.type)
 
-    setChosen({ file, text, preview: parsed })
-    setStatus(parsed.format === 'unknown' ? 'error' : 'idle')
-    setErrorMessage(
-      parsed.format === 'unknown' ? i18n.t('unsupportedFileFormat') : '',
-    )
+      setChosen({ file, text, preview: parsed })
+      setStatus(parsed.format === 'unknown' ? 'error' : 'idle')
+      setErrorMessage(
+        parsed.format === 'unknown' ? i18n.t('unsupportedFileFormat') : '',
+      )
+    } catch (error) {
+      setChosen(null)
+      setStatus('error')
+      setErrorMessage((error as Error).message)
+    }
   }
 
   const executeImport = async () => {
@@ -160,12 +167,17 @@ export function ImportRoute() {
             />
           </ImportStep>
 
-          <Button type="submit" size="lg" disabled={isImporting}>
+          <Button type="submit" size="lg" disabled={isImporting || isEmpty}>
             {isImporting && <Spinner data-icon="inline-start" />}
             {isImporting
               ? i18n.t('import_importing')
               : i18n.t('import_submit', [preview.totalCount.toString()])}
           </Button>
+          {isEmpty && (
+            <p className="text-sm text-muted-foreground">
+              {i18n.t('import_noBookmarks')}
+            </p>
+          )}
         </>
       )}
 

@@ -559,6 +559,10 @@
       }
     }
   },
+  "import_noBookmarks": {
+    "message": "이 파일에서 북마크를 찾을 수 없으므로 가져올 항목이 없습니다.",
+    "description": "Shown when an import file contains no bookmarks; explains the disabled Import button and the popup error"
+  },
   "import_importing": {
     "message": "가져오는 중…",
     "description": "Primary button label while importing"

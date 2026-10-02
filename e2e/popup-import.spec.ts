@@ -181,3 +181,36 @@ test('an unsupported file shows an error toast instead of an alert', async ({
   await expect(popup.getByText('Import failed')).toBeVisible()
   await expect(popup.getByText('Unsupported file format')).toBeVisible()
 })
+
+test('a JSON file whose root is a single object imports every bookmark its preview counts', async ({
+  openExtensionPage,
+  readBookmarkTree,
+}) => {
+  const popup = await openExtensionPage('popup.html')
+
+  await uploadFixture(popup, 'bookmarks-single-root.json')
+  await expectImportToast(popup)
+
+  const [root] = await readBookmarkTree()
+  const bookmarksBar = root?.children?.find((n) => n.id === '1')
+
+  expect(bookmarksBar?.children?.map((n) => n.url)).toEqual([
+    'https://single-root-a.example/page',
+    'https://single-root-b.example/page',
+  ])
+})
+
+test('a file with no bookmarks shows an error toast and imports nothing', async ({
+  openExtensionPage,
+}) => {
+  const popup = await openExtensionPage('popup.html')
+
+  await popup.locator('input[type="file"]').setInputFiles({
+    name: 'empty.json',
+    mimeType: 'application/json',
+    buffer: Buffer.from('[]'),
+  })
+
+  await expect(popup.getByText('Import failed')).toBeVisible()
+  await expect(popup.getByText('No bookmarks found in this file')).toBeVisible()
+})
