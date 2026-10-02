@@ -43,12 +43,11 @@ The extension has two categories of input:
 1. **Trusted, browser-mediated input** — the live bookmark tree via
    `chrome.bookmarks`, reached only through Chrome's own extension APIs. This is
    the baseline the extension assumes it can trust.
-2. **Untrusted input** — a file the user drops into Quick import or Advanced
-   Import. Its contents are attacker-controlled from the extension's
-   perspective: the file could come from an untrusted download, an email
-   attachment, or a bookmark export shared by someone else. Every importer
-   (HTML, JSON, CSV) and `lib/import-preview.ts` treat this file's contents as
-   hostile by default.
+2. **Untrusted input** — a file the user drops into Quick import or the Import
+   page. Its contents are attacker-controlled from the extension's perspective:
+   the file could come from an untrusted download, an email attachment, or a
+   bookmark export shared by someone else. Every importer (HTML, JSON, CSV) and
+   `lib/import-preview.ts` treat this file's contents as hostile by default.
 
 The trust boundary sits at the file-read step: text read from a dropped file
 crosses from "arbitrary bytes" into the extension's parsing logic, and nothing
@@ -81,7 +80,7 @@ split. Both run the extension's own code exclusively.
   node does instead.
 - **Destructive actions are gated.** `restore-replace` import mode — the only
   operation that deletes existing bookmarks — is selectable from both Quick
-  import and Advanced Import, and can be saved as the default import mode, but
+  import and the Import page, and can be saved as the default import mode, but
   every replace always requires confirming a dialog before anything is deleted.
 - **On-device storage only.** Settings use `local:`-scoped storage exclusively
   (see the `storage` permission above); nothing syncs to a Google account or any
@@ -107,12 +106,12 @@ non-array or deeply nested payload is normalized rather than rejected —
 `preprocessBookmarks` walks unknown shapes (a wrapping virtual root, orphaned
 nodes, arbitrary extra fields) and classifies whatever it doesn't recognize into
 a synthetic "Other bookmarks" node instead of discarding it or throwing. Invalid
-JSON syntax is rejected earlier: the caller (the popup's Quick import or
-Advanced Import) parses the raw text with `JSON.parse` and format-detects it
-before `importFromJSON` ever runs, so a malformed file never reaches the
-importer at all. A node whose `url` field fails `isAllowedBookmarkUrl`
-validation is treated the same as a node with no `url` at all (skipped, logged
-via `console.warn`) rather than being passed to `browser.bookmarks.create`.
+JSON syntax is rejected earlier: the caller (the popup's Quick import or the
+Import page) parses the raw text with `JSON.parse` and format-detects it before
+`importFromJSON` ever runs, so a malformed file never reaches the importer at
+all. A node whose `url` field fails `isAllowedBookmarkUrl` validation is treated
+the same as a node with no `url` at all (skipped, logged via `console.warn`)
+rather than being passed to `browser.bookmarks.create`.
 
 **Malformed or hostile CSV input** (`lib/importers/import-csv.ts`): rows missing
 a `title` or `url`, or whose `url` fails `isAllowedBookmarkUrl` validation, are
@@ -120,16 +119,16 @@ skipped individually (logged via `console.warn`) without aborting the rest of
 the import. Header matching is case-insensitive and trimmed, so inconsistent
 casing or whitespace in a hand-edited CSV doesn't cause a false rejection.
 
-**The Import preview gate** (`lib/import-preview.ts`, surfaced by the Advanced
-Import page): before anything is written to `chrome.bookmarks`, the dropped file
-is run through the same detection and parsing logic the real import would use,
-purely to produce counts and a location-data flag — no `chrome.bookmarks` call
-happens during preview. `getImportPreview` never throws: a detection or parse
-failure at this stage falls through to a zeroed-out preview (format detected,
-everything else `0`/`false`) instead of surfacing a raw parser error or silently
-proceeding as if the file were valid. This lets the user see, before committing
-anything, whether a file parsed as expected (a plausible bookmark count,
-matching the format they expected) or clearly didn't — and back out.
+**The Import preview gate** (`lib/import-preview.ts`, surfaced by the Import
+page): before anything is written to `chrome.bookmarks`, the dropped file is run
+through the same detection and parsing logic the real import would use, purely
+to produce counts and a location-data flag — no `chrome.bookmarks` call happens
+during preview. `getImportPreview` never throws: a detection or parse failure at
+this stage falls through to a zeroed-out preview (format detected, everything
+else `0`/`false`) instead of surfacing a raw parser error or silently proceeding
+as if the file were valid. This lets the user see, before committing anything,
+whether a file parsed as expected (a plausible bookmark count, matching the
+format they expected) or clearly didn't — and back out.
 
 ## Known limitations
 

@@ -14,8 +14,8 @@ selective export, restore and scheduled backups.
 ## Features 🌟
 
 - ⬇️⬆️ Export and import bookmarks as HTML, JSON or CSV.
-- 🔍 Advanced export: selectively export bookmarks and folders.
-- ♻️ Advanced import: preview, then restore (merge or replace) or create a new
+- 🔍 Export page: selectively export bookmarks and folders.
+- ♻️ Import page: preview, then restore (merge or replace) or create a new
   folder.
 - 🔁 Scheduled automatic backups straight to your Downloads folder.
 - 🌙 Automatic theme and 🌍 language matching.

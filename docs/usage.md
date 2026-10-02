@@ -1,26 +1,29 @@
 # Usage
 
+## Opening the app
+
+Click the extension icon to open the popup, then "Open app" for the full-page
+app (also reachable from the browser's extension options). A sidebar switches
+between **Export**, **Import**, **Auto-export**, **Settings**, **What's new**
+and **Welcome**.
+
 ## Exporting bookmarks
 
-1. Click on the extension icon in your browser toolbar to open the popup.
-2. Choose the "Export" tab.
-3. For basic exporting:
-   - Select either HTML, JSON or CSV format.
-   - Click the corresponding button to export your bookmarks.
-   - Choose a location on your device to save the exported file.
-4. For advanced exporting:
-   - Click the "Advanced Export" button.
-   - Use the search bar to find specific bookmarks.
-   - Select individual bookmarks or folders.
-   - Customize export settings (include dates, hide specific folders, etc.).
-   - Choose the export format and click the export button.
+1. Quick export: in the popup, pick HTML, JSON or CSV and click "Export all" to
+   export your whole bookmark tree.
+2. For control over what is exported, open the app's **Export** page:
+   - Use the search box to find specific bookmarks.
+   - Check individual bookmarks or whole folders (or use "Select all").
+   - Adjust the **Export options** panel (favicons, dates, hiding folders,
+     filename template).
+   - Choose the export format and click "Export N bookmarks".
 
 ## Naming exported files
 
 By default, exported files are named "Bookmarks". To customize this:
 
-1. Open "Advanced Export" and click the settings (gear) icon.
-2. Go to the "Export" tab and edit "Filename template". A live preview shows the
+1. Open the app's **Export** page (the same panel appears on **Auto-export**).
+2. In **Export options**, edit "Filename template". A live preview shows the
    resulting filename as you type.
 3. Use these placeholders (case-insensitive) to include the current date and
    time:
@@ -39,31 +42,28 @@ By default, exported files are named "Bookmarks". To customize this:
    `.csv` for those formats).
 
 The template applies everywhere a filename is generated: basic export from the
-popup, Advanced Export, and automatic backups. Characters not allowed in
+popup, the Export page, and automatic backups. Characters not allowed in
 filenames (`/ \ : * ? " < > |`) are replaced with `_`, and a template that ends
 up empty falls back to "Bookmarks".
 
 ## Importing bookmarks
 
-1. Choose the "Import" tab.
-2. For basic importing:
-   - Optionally change the "Default import mode" select above the Import button
-     — it starts on **Restore — merge** and is shared with Advanced Import's
-     mode choice below.
-   - Click the "Import" button.
-   - Select a CSV, JSON or HTML file containing bookmarks.
+1. Quick import, from the popup:
+   - Optionally change the default import mode (see **Settings** below) — it
+     starts on **Restore — merge**.
+   - Click "Choose file…" and select a CSV, JSON or HTML file containing
+     bookmarks.
    - The extension automatically detects the format and imports the bookmarks
-     using the default import mode. A CSV file — or an HTML/JSON file with no
-     Bookmarks Bar/Other Bookmarks data — always imports into a new "Imported
-     Bookmarks" folder instead, regardless of the default mode.
-   - If the default mode is **Restore — replace**, you're asked to confirm
-     before the import runs, since it permanently deletes your current
+     immediately using the default import mode. A CSV file — or an HTML/JSON
+     file with no Bookmarks Bar/Other Bookmarks data — always imports into a new
+     "Imported Bookmarks" folder instead, regardless of the default mode.
+   - If the default mode is **Restore — replace**, you're warned and asked to
+     confirm before the import runs, since it permanently deletes your current
      bookmarks; canceling imports nothing.
-3. For advanced importing:
-   - Click the "Advanced Import" button.
+2. Preview first, from the app's **Import** page:
    - Drop or select a CSV, JSON or HTML file — a preview shows the bookmark
      counts detected in the file before you import anything.
-   - Choose an import mode:
+   - Choose an import mode (pre-selected from your default):
      - **Create folder**: adds every bookmark to a new "Imported Bookmarks"
        folder. Available for any file, including CSV (which has no folder
        structure to restore).
@@ -76,13 +76,18 @@ up empty falls back to "Bookmarks".
    - Selecting "Restore — replace" requires confirming a warning dialog before
      the import runs, since it permanently deletes your current bookmarks.
 
+## Settings
+
+The app's **Settings** page holds the theme (System, Light, Dark), bookmark-tree
+display preferences, and the default import mode used by Quick import and
+pre-selected on the Import page.
+
 ## Automatic backups
 
 Bookmark Import/Export can back up your bookmarks on a schedule, without any
 manual action:
 
-1. Open the extension's advanced export settings and go to the "Auto-export"
-   tab.
+1. Open the app's **Auto-export** page.
 2. Enable automatic export, choose one or more formats (HTML, JSON, CSV), an
    interval (every 12 hours, or daily/every 3 days/every 7 days at a preferred
    time), and an optional folder path for the exported files.
@@ -92,18 +97,18 @@ manual action:
    scheduled export was due, it catches up automatically shortly after the
    browser next starts, instead of waiting for the next scheduled time.
 
-The "Auto-export" tab's status card, at the top, always shows the real schedule
-state, independently of any unsaved changes below it:
+Changes on the **Auto-export** page are saved automatically. Its status card
+always shows the real schedule state, independently of any unsaved changes below
+it:
 
-- **Last auto-export** — when auto-export last ran, with a colored dot (green
-  for success, red for failure) and, on failure, the stored error message. Reads
-  "Never run yet" if it hasn't run since the extension was installed.
-- **Next auto-export** — when it's next due, or "Off" if automatic export is
-  currently disabled.
+- **Last run** — when auto-export last ran, with its outcome and, on failure,
+  the stored error message. The popup also shows the next run, or a failure
+  notice, on its auto-export status row.
+- **Next run** — when it's next due, or "Auto-export is off" if automatic export
+  is currently disabled.
 
-**Export now**, next to "Save settings", runs an export immediately using
-whatever formats and path are currently on screen — even formats/path you
-haven't saved yet, and even if the Enable switch is off. It shows a spinner
-while running and a brief success or error message once it settles; the status
-card's "Last auto-export" row updates to match. Running it never changes your
-automatic schedule or its next due time.
+**Export now** runs an export immediately using whatever formats and path are
+currently on screen, even if the Enable switch is off. It shows a spinner while
+running and a brief success or error message once it settles; the status card's
+"Last run" row updates to match. Running it never changes your automatic
+schedule or its next due time.
