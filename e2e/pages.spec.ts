@@ -1,25 +1,66 @@
 import en from '../locales/en.json' with { type: 'json' }
 import { expect, test } from './fixtures'
 
-test('opens the welcome page on install', async ({ context }) => {
+test('opens the Welcome route inside the app on install', async ({
+  context,
+}) => {
   const welcomePage =
-    context.pages().find((page) => page.url().includes('welcome.html')) ??
+    context.pages().find((page) => page.url().includes('app.html#/welcome')) ??
     (await context.waitForEvent('page', {
-      predicate: (page) => page.url().includes('welcome.html'),
+      predicate: (page) => page.url().includes('app.html#/welcome'),
     }))
 
   await expect(
-    welcomePage.getByRole('heading', { name: en.welcomeTitle.message }),
+    welcomePage.getByRole('heading', {
+      level: 1,
+      name: en.shell_titleWelcome.message,
+    }),
+  ).toBeVisible()
+  await expect(
+    welcomePage.getByRole('heading', {
+      level: 2,
+      name: en.welcome_heroTitle.message,
+    }),
   ).toBeVisible()
 })
 
-test('renders the update page', async ({ openExtensionPage }) => {
-  const updatePage = await openExtensionPage('update.html')
+test('Welcome quick-start actions open Export, Auto-export and Import', async ({
+  openExtensionPage,
+}) => {
+  const page = await openExtensionPage('app.html#/welcome')
+  const actions = [
+    { name: en.welcome_exportAction.message, url: /#\/export$/ },
+    { name: en.welcome_autoExportAction.message, url: /#\/auto-export$/ },
+    { name: en.welcome_importAction.message, url: /#\/import$/ },
+  ]
+
+  for (const action of actions) {
+    await page
+      .getByRole('main')
+      .getByRole('link', { name: action.name, exact: true })
+      .click()
+    await expect(page).toHaveURL(action.url)
+    await page.goBack()
+  }
+})
+
+test("What's new marks the Current version and links into the app", async ({
+  openExtensionPage,
+}) => {
+  const page = await openExtensionPage('app.html#/whats-new')
 
   await expect(
-    updatePage.getByRole('heading', { name: en.extensionName.message }),
+    page.getByRole('heading', { level: 1, name: en.shell_navWhatsNew.message }),
   ).toBeVisible()
-  await expect(updatePage.getByText(/You're now using version/)).toBeVisible()
+  await expect(page.getByText(en.whatsNew_current.message)).toHaveCount(1)
+  await expect(
+    page.getByRole('link', { name: en.whatsNew_reviewAction.message }),
+  ).toBeVisible()
+
+  await page
+    .getByRole('link', { name: en.changelog_1_5_0_1_link.message })
+    .click()
+  await expect(page).toHaveURL(/app\.html#\/import$/)
 })
 
 test('toolbar action title is localized', async ({ serviceWorker }) => {

@@ -12,7 +12,7 @@ import {
   includeDateLastUsedStore,
   includeIconDataStore,
 } from '@/lib/storage'
-import type { AutoExportFormat } from '@/lib/types'
+import type { AutoExportFormat, ExtendedBookmarkTreeNode } from '@/lib/types'
 
 interface ExportAllResult {
   fileName: string
@@ -25,7 +25,10 @@ const MIME_TYPES: Record<AutoExportFormat, string> = {
   csv: 'text/csv',
 }
 
-async function buildContent(format: AutoExportFormat): Promise<string> {
+async function buildContent(
+  format: AutoExportFormat,
+  selectedBookmarks: ExtendedBookmarkTreeNode[] | null,
+): Promise<string> {
   const [
     includeIconData,
     includeDateAdded,
@@ -43,7 +46,7 @@ async function buildContent(format: AutoExportFormat): Promise<string> {
   ])
 
   const baseOptions = {
-    selectedBookmarks: null,
+    selectedBookmarks,
     includeIconData,
     includeDateAdded,
     includeDateLastUsed,
@@ -61,7 +64,7 @@ async function buildContent(format: AutoExportFormat): Promise<string> {
     }
     case 'csv': {
       return exportToCSV({
-        selectedBookmarks: null,
+        selectedBookmarks,
         includeIconData,
         includeDateAdded,
         includeDateLastUsed,
@@ -87,21 +90,36 @@ function triggerDownload(
 }
 
 /**
- * Exports every bookmark in the given format using the persisted export
- * options and filename template, and saves it through a browser download.
+ * Exports the given selection (or, with `null`, every bookmark) in the given
+ * format using the persisted export options and filename template, and saves
+ * it through a browser download.
  * @param format The format to export.
- * @returns The saved file name and the number of bookmarks in the browser.
+ * @param selectedBookmarks The pruned selection to export, or `null` for the whole tree.
+ * @returns The saved file name and the number of bookmarks exported.
  */
-export async function exportAllBookmarks(
+export async function exportBookmarks(
   format: AutoExportFormat,
+  selectedBookmarks: ExtendedBookmarkTreeNode[] | null,
 ): Promise<ExportAllResult> {
-  const content = await buildContent(format)
+  const content = await buildContent(format, selectedBookmarks)
   const baseName = formatFilenameTemplate(
     await exportFilenameTemplateStore.getValue(),
   )
   const fileName = `${baseName}.${format}`
   triggerDownload(content, MIME_TYPES[format], fileName)
 
-  const tree = await browser.bookmarks.getTree()
+  const tree = selectedBookmarks ?? (await browser.bookmarks.getTree())
   return { fileName, count: countBookmarks(tree) }
+}
+
+/**
+ * Exports every bookmark in the given format using the persisted export
+ * options and filename template, and saves it through a browser download.
+ * @param format The format to export.
+ * @returns The saved file name and the number of bookmarks in the browser.
+ */
+export function exportAllBookmarks(
+  format: AutoExportFormat,
+): Promise<ExportAllResult> {
+  return exportBookmarks(format, null)
 }

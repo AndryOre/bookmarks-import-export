@@ -2,9 +2,14 @@ import type { Browser } from '@wxt-dev/browser'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { fakeBrowser } from 'wxt/testing/fake-browser'
 
+import { APP_ROUTES, getAppUrl } from '@/lib/app-url'
 import type * as AutoExport from '@/lib/auto-export'
 import { ALARM_NAME, RUN_MANUAL_EXPORT_MESSAGE_TYPE } from '@/lib/auto-export'
-import { autoExportConfigStore, autoExportNextRunStore } from '@/lib/storage'
+import {
+  autoExportConfigStore,
+  autoExportNextRunStore,
+  lastSeenVersionStore,
+} from '@/lib/storage'
 import { resetFakeI18n } from '@/lib/testing/fake-i18n'
 import type { AutoExportConfig } from '@/lib/types'
 
@@ -116,13 +121,17 @@ beforeEach(() => {
 })
 
 describe('onInstalled', () => {
-  it('opens a tab to welcome.html and syncs the alarm on install', async () => {
+  it('opens the App on the welcome route and syncs the alarm on install', async () => {
+    fakeBrowser.runtime.getManifest = vi.fn().mockReturnValue({
+      version: '1.7.0',
+    }) as typeof fakeBrowser.runtime.getManifest
+
     await triggerOnInstalled('install')
 
     await vi.waitFor(async () => {
       const tabs = await fakeBrowser.tabs.query({})
       expect(tabs.map((tab) => tab.url)).toContain(
-        fakeBrowser.runtime.getURL('/welcome.html'),
+        getAppUrl(APP_ROUTES.welcome),
       )
     })
     await vi.waitFor(() => {
@@ -130,7 +139,33 @@ describe('onInstalled', () => {
     })
   })
 
-  it('opens a tab to update.html and syncs the alarm on update', async () => {
+  it('marks the installed version as seen on install so no unseen dot shows', async () => {
+    fakeBrowser.runtime.getManifest = vi.fn().mockReturnValue({
+      version: '1.7.0',
+    }) as typeof fakeBrowser.runtime.getManifest
+
+    await triggerOnInstalled('install')
+
+    await vi.waitFor(async () => {
+      expect(await lastSeenVersionStore.getValue()).toBe('1.7.0')
+    })
+  })
+
+  it('leaves the last seen version untouched on update so the dot shows', async () => {
+    fakeBrowser.runtime.getManifest = vi.fn().mockReturnValue({
+      version: '1.8.0',
+    }) as typeof fakeBrowser.runtime.getManifest
+    await lastSeenVersionStore.setValue('1.7.0')
+
+    await triggerOnInstalled('update')
+
+    await vi.waitFor(() => {
+      expect(syncAlarm).toHaveBeenCalledWith('update')
+    })
+    expect(await lastSeenVersionStore.getValue()).toBe('1.7.0')
+  })
+
+  it('opens the App on the whats-new route and syncs the alarm on update', async () => {
     fakeBrowser.runtime.getManifest = vi.fn().mockReturnValue({
       version: '1.6.0',
     }) as typeof fakeBrowser.runtime.getManifest
@@ -140,7 +175,7 @@ describe('onInstalled', () => {
     await vi.waitFor(async () => {
       const tabs = await fakeBrowser.tabs.query({})
       expect(tabs.map((tab) => tab.url)).toContain(
-        fakeBrowser.runtime.getURL('/update.html'),
+        getAppUrl(APP_ROUTES.whatsNew),
       )
     })
     await vi.waitFor(() => {

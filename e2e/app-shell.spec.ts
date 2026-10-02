@@ -4,8 +4,6 @@ import { expect, test } from './fixtures'
 const ROUTES = [
   { hash: 'export', title: en.shell_navExport.message },
   { hash: 'settings', title: en.shell_navSettings.message },
-  { hash: 'whats-new', title: en.shell_navWhatsNew.message },
-  { hash: 'welcome', title: en.shell_titleWelcome.message },
 ]
 
 test('app.html lands on Export', async ({ openExtensionPage }) => {
@@ -26,11 +24,13 @@ for (const route of ROUTES) {
     await expect(
       page.getByRole('heading', { level: 1, name: route.title }),
     ).toBeVisible()
-    const stubText =
-      route.hash === 'export'
-        ? en.exportOptions_title.message
-        : en.shell_placeholder.message
-    await expect(page.getByText(stubText)).toBeVisible()
+    const stubTexts: Record<string, string> = {
+      export: en.exportOptions_title.message,
+      settings: en.settingsPage_appearanceTitle.message,
+    }
+    await expect(
+      page.getByText(stubTexts[route.hash] ?? en.shell_placeholder.message),
+    ).toBeVisible()
   })
 }
 
@@ -96,6 +96,7 @@ test('shows status dots for auto-export and unseen version', async ({
   seedStorage,
 }) => {
   await seedStorage({
+    lastSeenVersion: '0.0.0',
     autoExportConfig: {
       enabled: true,
       interval: '1d',
