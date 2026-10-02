@@ -1,0 +1,906 @@
+{
+  "extensionName": {
+    "message": "Snug",
+    "description": "Name of the extension."
+  },
+  "extensionDescription": {
+    "message": "Exporte, importe e agende backups automáticos dos seus favoritos em HTML, JSON ou CSV — tudo no dispositivo, sem conta e sem nuvem.",
+    "description": "Description of the extension"
+  },
+  "welcomeSubtitle": {
+    "message": "Exporte, importe e faça backup dos seus favoritos — tudo no seu dispositivo.",
+    "description": "Welcome page subtitle"
+  },
+  "settings": {
+    "message": "Configurações",
+    "description": "Settings"
+  },
+  "exportFormat": {
+    "message": "Formato de exportação",
+    "description": "Placeholder text for the export format selector"
+  },
+  "exportBookmarks": {
+    "message": "Exportar",
+    "description": "Export Bookmarks tab label in the popup"
+  },
+  "refresh": {
+    "message": "Atualizar",
+    "description": "Refresh"
+  },
+  "selectAll": {
+    "message": "Selecionar tudo",
+    "description": "Select All"
+  },
+  "deselectAll": {
+    "message": "Desmarcar tudo",
+    "description": "Deselect All"
+  },
+  "selected": {
+    "message": "Selecionados",
+    "description": "Selected"
+  },
+  "searchBookmarks": {
+    "message": "Pesquisar favoritos",
+    "description": "Search bookmarks"
+  },
+  "display": {
+    "message": "Exibição",
+    "description": "Display"
+  },
+  "export": {
+    "message": "Exportar",
+    "description": "Export"
+  },
+  "showBookmarkIcon": {
+    "message": "Mostrar ícone dos favoritos",
+    "description": "Show bookmark icon"
+  },
+  "showBookmarkIconDescription": {
+    "message": "Exibe ícones ao lado dos favoritos",
+    "description": "Show bookmark icon description"
+  },
+  "autoExpandFolders": {
+    "message": "Expandir pastas automaticamente",
+    "description": "Auto expand folders"
+  },
+  "autoExpandFoldersDescription": {
+    "message": "Expande automaticamente as pastas na árvore de favoritos",
+    "description": "Auto expand folders description"
+  },
+  "includeIconData": {
+    "message": "Incluir dados dos ícones",
+    "description": "Include icon data"
+  },
+  "includeDateAdded": {
+    "message": "Incluir datas de criação",
+    "description": "Include creation dates"
+  },
+  "includeDateLastUsed": {
+    "message": "Incluir datas do último uso",
+    "description": "Include last used dates"
+  },
+  "includeDateGroupModified": {
+    "message": "Incluir datas de modificação das pastas",
+    "description": "Include folder modification dates"
+  },
+  "hideOtherBookmarks": {
+    "message": "Ocultar a pasta \"Outros favoritos\"",
+    "description": "Hide 'Other bookmarks' folder"
+  },
+  "hideParentFolder": {
+    "message": "Ocultar pasta principal",
+    "description": "Hide parent folder"
+  },
+  "dropFileHere": {
+    "message": "Solte aqui o seu arquivo de favoritos",
+    "description": "File drop zone prompt"
+  },
+  "orClickToSelect": {
+    "message": "ou clique para selecionar",
+    "description": "Secondary file drop zone prompt"
+  },
+  "supportedFormats": {
+    "message": "Compatível com HTML, JSON e CSV",
+    "description": "Supported import formats"
+  },
+  "changeFile": {
+    "message": "Alterar",
+    "description": "Button to change selected file"
+  },
+  "importMode": {
+    "message": "Modo de importação",
+    "description": "Import mode section label"
+  },
+  "defaultImportMode": {
+    "message": "Modo de importação padrão",
+    "description": "Label for the quick-import default mode select"
+  },
+  "importModeFolder": {
+    "message": "Criar pasta",
+    "description": "Import mode: create folder"
+  },
+  "importModeFolderDescription": {
+    "message": "Adiciona todos os favoritos a uma nova pasta \"Favoritos importados\"",
+    "description": "Import mode: create folder description"
+  },
+  "importModeRestoreMerge": {
+    "message": "Restaurar — mesclar",
+    "description": "Import mode: restore and merge"
+  },
+  "importModeRestoreMergeDescription": {
+    "message": "Coloca os favoritos nos locais originais, junto com os já existentes",
+    "description": "Import mode: restore and merge description"
+  },
+  "importModeRestoreReplace": {
+    "message": "Restaurar — substituir",
+    "description": "Import mode: restore and replace"
+  },
+  "importModeRestoreReplaceDescription": {
+    "message": "Apaga primeiro os favoritos existentes e restaura nos locais originais",
+    "description": "Import mode: restore and replace description"
+  },
+  "importModeRestoreReplaceWarning": {
+    "message": "Isso excluirá permanentemente todos os favoritos atuais da Barra de favoritos e de Outros favoritos",
+    "description": "Warning shown for restore-replace mode"
+  },
+  "importPreview": {
+    "message": "Pré-visualização",
+    "description": "Import preview section label"
+  },
+  "importPreviewCount": {
+    "message": "Favoritos: $COUNT$",
+    "description": "Bookmark count in preview",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "replaceConfirmTitle": {
+    "message": "Substituir os favoritos existentes?",
+    "description": "Title of the replace confirmation dialog"
+  },
+  "replaceConfirmDescription": {
+    "message": "Todos os favoritos que estão na Barra de favoritos e em Outros favoritos serão excluídos permanentemente antes da importação. Esta ação não pode ser desfeita.",
+    "description": "Body of the replace confirmation dialog"
+  },
+  "replaceConfirmButton": {
+    "message": "Sim, substituir",
+    "description": "Confirm button in the replace dialog"
+  },
+  "cancel": {
+    "message": "Cancelar",
+    "description": "Cancel button"
+  },
+  "unsupportedFileFormat": {
+    "message": "Formato de arquivo não compatível",
+    "description": "Unsupported file format"
+  },
+  "bookmarksImportedSuccessfully": {
+    "message": "Favoritos importados com sucesso!",
+    "description": "Bookmarks imported successfully"
+  },
+  "import": {
+    "message": "Importar",
+    "description": "Import"
+  },
+  "changelog_1_5_0_date": {
+    "message": "29 de abril de 2025",
+    "description": "Changelog 1.5.0 date"
+  },
+  "changelog_1_5_0_1": {
+    "message": "Adicionada a Importação avançada — restaure os favoritos nos locais originais (Barra de favoritos e Outros favoritos), com opções de mesclar ou substituir."
+  },
+  "changelog_1_5_0_1_link": {
+    "message": "Experimentar a Importação avançada"
+  },
+  "changelog_1_4_0_date": {
+    "message": "29 de abril de 2025",
+    "description": "Changelog 1.4.0 date"
+  },
+  "changelog_1_4_0_1": {
+    "message": "Adicionados modelos de nome de arquivo personalizáveis para exportações — use marcadores de data e hora como %yyyy, %mm, %dd para gerar automaticamente nomes de arquivo únicos com data e hora."
+  },
+  "changelog_1_3_0_date": {
+    "message": "16 de fevereiro de 2025",
+    "description": "Changelog 1.3.0 date"
+  },
+  "changelog_1_3_0_1": {
+    "message": "Adicionado o modo escuro, que acompanha automaticamente o tema do seu sistema."
+  },
+  "changelog_1_2_0_date": {
+    "message": "14 de fevereiro de 2025",
+    "description": "Changelog 1.2.0 date"
+  },
+  "changelog_1_2_0_1": {
+    "message": "Agora a extensão se adapta automaticamente ao idioma do seu navegador! Disponível em inglês e espanhol."
+  },
+  "changelog_1_1_0_date": {
+    "message": "13 de fevereiro de 2025",
+    "description": "Changelog 1.1.0 date"
+  },
+  "changelog_1_1_0_1": {
+    "message": "Os favoritos importados agora vão para uma pasta própria, para não se misturarem com os que você já tem"
+  },
+  "changelog_1_1_0_2": {
+    "message": "Controle mais preciso sobre quais datas incluir nas exportações"
+  },
+  "changelog_1_1_0_2_link": {
+    "message": "Experimentar as novas opções de exportação"
+  },
+  "changelog_1_0_0_date": {
+    "message": "5 de agosto de 2024",
+    "description": "Changelog 1.0.0 date"
+  },
+  "changelog_1_0_0_1": {
+    "message": "Adicionado o novo recurso de Exportação avançada, para ter mais controle sobre os seus favoritos."
+  },
+  "changelog_1_0_0_1_link": {
+    "message": "Experimentar a exportação avançada"
+  },
+  "changelog_1_0_0_2": {
+    "message": "Incluímos páginas de boas-vindas e de atualização para você ficar por dentro das novidades."
+  },
+  "changelog_1_0_0_3": {
+    "message": "Melhoramos o desempenho geral para uma experiência mais fluida."
+  },
+  "changelog_0_1_1_date": {
+    "message": "4 de agosto de 2024",
+    "description": "Changelog 0.1.1 date"
+  },
+  "changelog_0_1_1_1": {
+    "message": "Corrigido um erro crítico que afetava usuários com o navegador em outros idiomas além do inglês."
+  },
+  "changelog_0_1_1_2": {
+    "message": "Mais confiabilidade nas funções de importação e exportação."
+  },
+  "changelog_0_1_1_3": {
+    "message": "Corrigido um problema em que o ícone da extensão não aparecia na barra de ferramentas do navegador."
+  },
+  "changelog_0_1_1_4": {
+    "message": "Corrigido um problema em que a extensão não funcionava em alguns navegadores."
+  },
+  "changelog_0_1_0_date": {
+    "message": "3 de agosto de 2024",
+    "description": "Changelog 0.1.0 date"
+  },
+  "changelog_0_1_0_1": {
+    "message": "Lançamento inicial da extensão de importação e exportação de favoritos."
+  },
+  "changelog_0_1_0_2": {
+    "message": "Recurso simples de importação para arquivos HTML e JSON."
+  },
+  "changelog_0_1_0_3": {
+    "message": "Funcionalidade básica para exportar favoritos nos formatos HTML e JSON."
+  },
+  "extensionInstalled": {
+    "message": "Snug instalado",
+    "description": "Extension installed"
+  },
+  "extensionUpdated": {
+    "message": "Snug atualizado para a versão $VERSION$",
+    "description": "Extension updated",
+    "placeholders": {
+      "version": {
+        "content": "$1"
+      }
+    }
+  },
+  "exportFilenameTemplate": {
+    "message": "Modelo de nome de arquivo",
+    "description": "Label for the export filename template input"
+  },
+  "exportFilenameTemplatePreview": {
+    "message": "Pré-visualização:",
+    "description": "Label shown before the live filename preview"
+  },
+  "faviconError": {
+    "message": "Erro ao buscar o favicon",
+    "description": "Error fetching favicon"
+  },
+  "importFromHTMLLoadError": {
+    "message": "Falha ao analisar o HTML: $ERROR$",
+    "description": "Failed to parse HTML",
+    "placeholders": {
+      "error": {
+        "content": "$1"
+      }
+    }
+  },
+  "importFromHTMLCreateError": {
+    "message": "Falha ao criar os favoritos a partir do HTML: $ERROR$",
+    "description": "Failed to create bookmarks from HTML",
+    "placeholders": {
+      "error": {
+        "content": "$1"
+      }
+    }
+  },
+  "importFromHTMLProcessError": {
+    "message": "Não foi possível encontrar a Barra de favoritos nem a pasta Outros favoritos",
+    "description": "Could not find Bookmarks bar or Other bookmarks folder"
+  },
+  "bookmarksBar": {
+    "message": "Barra de favoritos",
+    "description": "Bookmarks bar"
+  },
+  "importedBookmarks": {
+    "message": "Favoritos importados",
+    "description": "Imported bookmarks"
+  },
+  "otherBookmarks": {
+    "message": "Outros favoritos",
+    "description": "Other bookmarks"
+  },
+  "mobileBookmarks": {
+    "message": "Favoritos para dispositivos móveis",
+    "description": "Mobile bookmarks"
+  },
+  "importFromJSONImportError": {
+    "message": "Falha na importação: $ERROR$",
+    "description": "Import failed",
+    "placeholders": {
+      "error": {
+        "content": "$1"
+      }
+    }
+  },
+  "importFromJSONProcessError": {
+    "message": "Não foi possível encontrar a Barra de favoritos nem a pasta Outros favoritos",
+    "description": "Error when JSON import cannot find required folders"
+  },
+  "importFromCSVImportError": {
+    "message": "Falha ao importar o arquivo CSV",
+    "description": "Error when CSV import fails"
+  },
+  "autoExport": {
+    "message": "Exportação automática",
+    "description": "Auto-export settings tab label"
+  },
+  "autoExportNeverRun": {
+    "message": "Nunca executada",
+    "description": "Status card value when auto-export has never run"
+  },
+  "exportNow": {
+    "message": "Exportar agora",
+    "description": "Button label to run an on-demand export immediately"
+  },
+  "exportNowSuccess": {
+    "message": "Exportação concluída",
+    "description": "Inline message shown after Export now succeeds"
+  },
+  "exportNowFailed": {
+    "message": "Falha na exportação",
+    "description": "Inline message shown after Export now fails"
+  },
+  "enableAutoExport": {
+    "message": "Ativar exportação automática",
+    "description": "Enable auto export toggle label"
+  },
+  "enableAutoExportDescription": {
+    "message": "Exporta automaticamente os seus favoritos nos formatos HTML, JSON e CSV.",
+    "description": "Enable auto export toggle description"
+  },
+  "preferredExportTime": {
+    "message": "Horário preferido da exportação",
+    "description": "Preferred export time section title"
+  },
+  "timeSelectionUnavailable": {
+    "message": "A seleção de horário só está disponível para intervalos de 24 horas ou mais",
+    "description": "Note shown when 12h interval is selected"
+  },
+  "hoursLabel": {
+    "message": "Horas",
+    "description": "Hours input label in time picker"
+  },
+  "minutesLabel": {
+    "message": "Minutos",
+    "description": "Minutes input label in time picker"
+  },
+  "periodLabel": {
+    "message": "Período",
+    "description": "AM/PM selector label in time picker"
+  },
+  "exportPath": {
+    "message": "Pasta de exportação",
+    "description": "Export path section title"
+  },
+  "autoExportFormats": {
+    "message": "Formatos de exportação",
+    "description": "Export formats section title"
+  },
+  "changelog_2_0_0_date": {
+    "message": "2 de outubro de 2026",
+    "description": "Changelog 2.0.0 date"
+  },
+  "changelog_2_0_0_1": {
+    "message": "Esta extensão tem um novo nome: Snug. É a mesma extensão, com a mesma promessa de funcionar só localmente — exportação, importação e backups agendados dos seus favoritos, sem que nada seja enviado a lugar nenhum. Nada muda nos seus dados nem nas suas configurações; só o nome e o ícone."
+  },
+  "changelog_2_0_0_2": {
+    "message": "O app agora é uma página única com barra lateral (Exportar, Importar, Exportação automática, Configurações, Novidades), além de um pop-up compacto e do novo ícone e da nova paleta do Snug."
+  },
+  "changelog_2_0_0_2_link": {
+    "message": "Abrir o app"
+  },
+  "changelog_1_7_0_date": {
+    "message": "1º de outubro de 2026",
+    "description": "Changelog 1.7.0 date"
+  },
+  "changelog_1_7_0_1": {
+    "message": "Adicionados um cartão de status e um botão Exportar agora às configurações de exportação automática, além de uma linha de status no pop-up que mostra se a exportação automática está ativada, desativada ou com falha."
+  },
+  "changelog_1_7_0_1_link": {
+    "message": "Abrir as configurações de exportação automática"
+  },
+  "changelog_1_7_0_2": {
+    "message": "Reforçamos a importação de favoritos para rejeitar esquemas de URL não permitidos (por exemplo, javascript:) em arquivos CSV, HTML e JSON."
+  },
+  "changelog_1_6_0_date": {
+    "message": "29 de abril de 2026",
+    "description": "Changelog 1.6.0 date"
+  },
+  "changelog_1_6_0_1": {
+    "message": "Adicionada a Exportação automática — salve os seus favoritos automaticamente em intervalos personalizados (a cada 12 horas, diariamente, a cada 3 ou 7 dias) na pasta de downloads que você preferir."
+  },
+  "changelog_1_6_0_1_link": {
+    "message": "Abrir as configurações de exportação automática"
+  },
+  "shell_navLabel": {
+    "message": "Navegação principal",
+    "description": "Accessible label of the App sidebar navigation"
+  },
+  "shell_navExport": {
+    "message": "Exportar",
+    "description": "App sidebar nav item and page title"
+  },
+  "shell_navImport": {
+    "message": "Importar",
+    "description": "App sidebar nav item and page title"
+  },
+  "shell_navAutoExport": {
+    "message": "Exportação automática",
+    "description": "App sidebar nav item and page title"
+  },
+  "shell_navSettings": {
+    "message": "Configurações",
+    "description": "App sidebar nav item and page title"
+  },
+  "shell_navWhatsNew": {
+    "message": "Novidades",
+    "description": "App sidebar nav item and page title"
+  },
+  "shell_titleWelcome": {
+    "message": "Boas-vindas",
+    "description": "App page title for the first-run welcome screen"
+  },
+  "shell_version": {
+    "message": "Versão $VERSION$",
+    "description": "Installed version shown under the product name in the App sidebar",
+    "placeholders": {
+      "version": {
+        "content": "$1"
+      }
+    }
+  },
+  "shell_autoExportOn": {
+    "message": "Ativada",
+    "description": "Accessible status of the Auto-export nav item when scheduled backups are enabled"
+  },
+  "shell_autoExportFailed": {
+    "message": "A última execução falhou",
+    "description": "Accessible status of the Auto-export nav item when the last run failed"
+  },
+  "shell_whatsNewUnseen": {
+    "message": "Novo",
+    "description": "Accessible label of the unseen-update dot on the What's new nav item"
+  },
+  "shell_placeholder": {
+    "message": "Esta tela estará disponível em breve.",
+    "description": "Placeholder text shown on App screens that are not built yet"
+  },
+  "shell_toggleSidebar": {
+    "message": "Alternar barra lateral",
+    "description": "Accessible label of the sidebar trigger in the App header"
+  },
+  "exportOptions_title": {
+    "message": "Opções de exportação",
+    "description": "Export options panel: Export options"
+  },
+  "exportOptions_includeIcons": {
+    "message": "Incluir favicons",
+    "description": "Export options panel: Include favicons"
+  },
+  "exportOptions_dateAdded": {
+    "message": "Data de criação",
+    "description": "Export options panel: Date added"
+  },
+  "exportOptions_dateLastUsed": {
+    "message": "Data do último uso",
+    "description": "Export options panel: Date last used"
+  },
+  "exportOptions_folderDates": {
+    "message": "Datas de modificação das pastas",
+    "description": "Export options panel: Folder modified dates"
+  },
+  "exportOptions_hideOther": {
+    "message": "Ocultar Outros favoritos",
+    "description": "Export options panel: Hide other bookmarks"
+  },
+  "exportOptions_hideParent": {
+    "message": "Ocultar pasta principal",
+    "description": "Export options panel: Hide parent folder"
+  },
+  "import_stepFile": {
+    "message": "Arquivo",
+    "description": "Heading of step 1 of the import flow"
+  },
+  "import_stepDone": {
+    "message": "Concluído",
+    "description": "Screen reader text for a completed step"
+  },
+  "import_fileInputLabel": {
+    "message": "Arquivo de favoritos",
+    "description": "Accessible label of the file input"
+  },
+  "import_changeFile": {
+    "message": "Alterar arquivo",
+    "description": "Button to pick a different file"
+  },
+  "import_restoreUnavailable": {
+    "message": "Este arquivo não tem dados de localização, por isso não pode ser restaurado nas pastas originais.",
+    "description": "Reason shown on disabled restore mode cards"
+  },
+  "import_submit": {
+    "message": "Importar favoritos ($COUNT$)",
+    "description": "Primary import button",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "import_importing": {
+    "message": "Importando…",
+    "description": "Primary button label while importing"
+  },
+  "import_replaceTitle": {
+    "message": "Substituir os favoritos existentes?",
+    "description": "Title of the replace confirmation dialog"
+  },
+  "import_replaceConfirm": {
+    "message": "Substituir e importar",
+    "description": "Destructive confirm button in the replace dialog"
+  },
+  "import_errorTitle": {
+    "message": "Falha na importação",
+    "description": "Title of the import error alert"
+  },
+  "import_another": {
+    "message": "Importar outro arquivo",
+    "description": "Button shown after a successful import"
+  },
+  "import_openManager": {
+    "message": "Abrir o gerenciador de favoritos",
+    "description": "Button that opens chrome://bookmarks"
+  },
+  "autoExportPage_saved": {
+    "message": "Salvo",
+    "description": "Toast shown after an Auto-export setting is saved"
+  },
+  "autoExportPage_succeeded": {
+    "message": "Concluída",
+    "description": "Last-run badge when the last auto-export succeeded"
+  },
+  "autoExportPage_failed": {
+    "message": "Falhou",
+    "description": "Last-run badge when the last auto-export failed"
+  },
+  "autoExportPage_statusTitle": {
+    "message": "Status",
+    "description": "Title of the Auto-export status card"
+  },
+  "autoExportPage_lastRun": {
+    "message": "Última execução",
+    "description": "Status card label for the last run"
+  },
+  "autoExportPage_nextRun": {
+    "message": "Próxima execução",
+    "description": "Status card label for the next run"
+  },
+  "autoExportPage_off": {
+    "message": "A exportação automática está desativada",
+    "description": "Status card next-run value when auto-export is off"
+  },
+  "autoExportPage_failureTitle": {
+    "message": "A última exportação automática falhou",
+    "description": "Title of the alert shown when the last run failed"
+  },
+  "autoExportPage_settingsTitle": {
+    "message": "Configurações",
+    "description": "Title of the Auto-export settings card"
+  },
+  "autoExportPage_settingsDescription": {
+    "message": "As alterações são salvas automaticamente.",
+    "description": "Description of the Auto-export settings card"
+  },
+  "autoExportPage_frequency": {
+    "message": "Frequência",
+    "description": "Label of the frequency toggle group"
+  },
+  "autoExportPage_interval12h": {
+    "message": "A cada 12 horas",
+    "description": "Frequency option: every 12 hours"
+  },
+  "autoExportPage_interval1d": {
+    "message": "Diariamente",
+    "description": "Frequency option: daily"
+  },
+  "autoExportPage_interval3d": {
+    "message": "A cada 3 dias",
+    "description": "Frequency option: every 3 days"
+  },
+  "autoExportPage_interval7d": {
+    "message": "Semanalmente",
+    "description": "Frequency option: weekly"
+  },
+  "autoExportPage_folderDescription": {
+    "message": "Pasta dentro da sua pasta Downloads onde os backups são salvos.",
+    "description": "Help text under the folder field"
+  },
+  "autoExportPage_formatsDescription": {
+    "message": "Pelo menos um formato deve continuar selecionado.",
+    "description": "Help text under the formats toggle group"
+  },
+  "popup_exportAll": {
+    "message": "Exportar tudo",
+    "description": "Popup button that exports every bookmark in the remembered format"
+  },
+  "popup_exportFormatLabel": {
+    "message": "Formato de exportação",
+    "description": "Accessible label of the popup format toggle group"
+  },
+  "popup_exportSuccessTitle": {
+    "message": "Favoritos exportados: $COUNT$",
+    "description": "Popup toast title after a successful export",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "popup_exportFailedTitle": {
+    "message": "Falha na exportação",
+    "description": "Popup toast title when an export fails"
+  },
+  "popup_chooseFile": {
+    "message": "Escolher arquivo…",
+    "description": "Popup button that opens the file picker to import bookmarks"
+  },
+  "popup_importing": {
+    "message": "Importando…",
+    "description": "Popup import button label while an import is running"
+  },
+  "popup_importSuccessTitle": {
+    "message": "Favoritos importados",
+    "description": "Popup toast title after a successful import"
+  },
+  "popup_importFailedTitle": {
+    "message": "Falha na importação",
+    "description": "Popup toast title when an import fails"
+  },
+  "popup_replaceAlertTitle": {
+    "message": "Os favoritos existentes serão substituídos",
+    "description": "Title of the popup alert shown when the default mode is Restore - replace"
+  },
+  "popup_statusNextRunTitle": {
+    "message": "Próxima exportação automática",
+    "description": "Popup status item title when auto-export is scheduled"
+  },
+  "popup_statusOffTitle": {
+    "message": "Configure backups agendados",
+    "description": "Popup status item title when auto-export is off"
+  },
+  "popup_statusOffDescription": {
+    "message": "A exportação automática está desativada",
+    "description": "Popup status item description when auto-export is off"
+  },
+  "popup_statusFailedTitle": {
+    "message": "A última exportação automática falhou",
+    "description": "Popup status item title when the last auto-export failed"
+  },
+  "popup_statusFailedDescription": {
+    "message": "Abra a exportação automática para revisar",
+    "description": "Popup status item description when the last auto-export failed"
+  },
+  "popup_openApp": {
+    "message": "Abrir o app",
+    "description": "Popup footer button that opens the full-page app"
+  },
+  "popup_settings": {
+    "message": "Configurações",
+    "description": "Accessible label of the popup footer settings icon button"
+  },
+  "settingsPage_appearanceTitle": {
+    "message": "Aparência",
+    "description": "Settings page: appearanceTitle"
+  },
+  "settingsPage_theme": {
+    "message": "Tema",
+    "description": "Settings page: theme"
+  },
+  "settingsPage_themeDescription": {
+    "message": "Escolha a aparência da extensão. \"Sistema\" acompanha o seu sistema operacional.",
+    "description": "Settings page: themeDescription"
+  },
+  "settingsPage_themeSystem": {
+    "message": "Sistema",
+    "description": "Settings page: themeSystem"
+  },
+  "settingsPage_themeLight": {
+    "message": "Claro",
+    "description": "Settings page: themeLight"
+  },
+  "settingsPage_themeDark": {
+    "message": "Escuro",
+    "description": "Settings page: themeDark"
+  },
+  "settingsPage_treeTitle": {
+    "message": "Árvore de favoritos",
+    "description": "Settings page: treeTitle"
+  },
+  "settingsPage_importTitle": {
+    "message": "Importação",
+    "description": "Settings page: importTitle"
+  },
+  "settingsPage_importDescription": {
+    "message": "Padrões para importar favoritos.",
+    "description": "Settings page: importDescription"
+  },
+  "settingsPage_importModeHelp": {
+    "message": "Usado pelo pop-up e pré-selecionado na página Importar.",
+    "description": "Settings page: importModeHelp"
+  },
+  "welcome_exportTitle": {
+    "message": "Faça o seu primeiro backup",
+    "description": "Welcome page quick-start item title"
+  },
+  "welcome_exportDescription": {
+    "message": "Dez segundos para ter uma cópia segura dos seus favoritos.",
+    "description": "Welcome page quick-start item description"
+  },
+  "welcome_exportAction": {
+    "message": "Exportar",
+    "description": "Welcome page quick-start item button"
+  },
+  "welcome_autoExportTitle": {
+    "message": "Configure a exportação automática",
+    "description": "Welcome page quick-start item title"
+  },
+  "welcome_autoExportDescription": {
+    "message": "Faça backup em um horário programado, sem precisar clicar.",
+    "description": "Welcome page quick-start item description"
+  },
+  "welcome_autoExportAction": {
+    "message": "Exportação automática",
+    "description": "Welcome page quick-start item button"
+  },
+  "welcome_importTitle": {
+    "message": "Importar favoritos",
+    "description": "Welcome page quick-start item title"
+  },
+  "welcome_importDescription": {
+    "message": "Traga favoritos de outro navegador ou de um backup.",
+    "description": "Welcome page quick-start item description"
+  },
+  "welcome_importAction": {
+    "message": "Importar",
+    "description": "Welcome page quick-start item button"
+  },
+  "whatsNew_current": {
+    "message": "Atual",
+    "description": "What's new screen string"
+  },
+  "whatsNew_reviewTitle": {
+    "message": "Está gostando da extensão?",
+    "description": "What's new screen string"
+  },
+  "whatsNew_reviewDescription": {
+    "message": "Uma avaliação rápida ajuda outras pessoas a encontrá-la.",
+    "description": "What's new screen string"
+  },
+  "whatsNew_reviewAction": {
+    "message": "Deixar uma avaliação",
+    "description": "What's new screen string"
+  },
+  "exportPage_title": {
+    "message": "Exportar favoritos",
+    "description": "Export page heading"
+  },
+  "exportPage_description": {
+    "message": "Escolha o que incluir e baixe no formato que preferir.",
+    "description": "Export page one-line description"
+  },
+  "exportPage_expandAll": {
+    "message": "Expandir tudo",
+    "description": "Export page toolbar button that expands every folder"
+  },
+  "exportPage_collapseAll": {
+    "message": "Recolher tudo",
+    "description": "Export page toolbar button that collapses every folder"
+  },
+  "exportPage_selectAllLabel": {
+    "message": "Selecionar todos os favoritos",
+    "description": "Accessible label of the master checkbox on the Export page"
+  },
+  "exportPage_loading": {
+    "message": "Carregando favoritos",
+    "description": "Accessible label of the loading placeholder on the Export page"
+  },
+  "exportPage_selectionCount": {
+    "message": "$SELECTED$ de $TOTAL$ selecionados",
+    "description": "Export page sticky bar selection count",
+    "placeholders": {
+      "selected": {
+        "content": "$1"
+      },
+      "total": {
+        "content": "$2"
+      }
+    }
+  },
+  "exportPage_nothingSelected": {
+    "message": "Nada selecionado",
+    "description": "Export page sticky bar text when no bookmark is selected"
+  },
+  "exportPage_formatLabel": {
+    "message": "Formato de exportação",
+    "description": "Accessible label of the Export page format toggle group"
+  },
+  "exportPage_exportButton": {
+    "message": "Exportar favoritos ($COUNT$)",
+    "description": "Export page primary button",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "exportPage_exporting": {
+    "message": "Exportando…",
+    "description": "Export page primary button label while exporting"
+  },
+  "exportPage_successTitle": {
+    "message": "Favoritos exportados: $COUNT$",
+    "description": "Export page toast title after a successful export",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "exportPage_failedTitle": {
+    "message": "Falha na exportação",
+    "description": "Export page toast title when an export fails"
+  },
+  "exportPage_noResultsTitle": {
+    "message": "Nenhum favorito corresponde a \"$TERM$\"",
+    "description": "Export page empty state title when a search matches nothing",
+    "placeholders": {
+      "term": {
+        "content": "$1"
+      }
+    }
+  },
+  "exportPage_noResultsDescription": {
+    "message": "Tente outra palavra ou limpe a pesquisa para ver todos os favoritos.",
+    "description": "Export page empty state description"
+  },
+  "exportPage_clearSearch": {
+    "message": "Limpar pesquisa",
+    "description": "Export page empty state button that clears the search"
+  },
+  "welcome_heroTitle": {
+    "message": "Boas-vindas ao",
+    "description": "Lead-in of the welcome page hero title; the Snug wordmark is rendered right after it"
+  }
+}
