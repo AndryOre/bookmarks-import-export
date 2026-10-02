@@ -1,6 +1,8 @@
 import tailwindcss from '@tailwindcss/vite'
 import { defineConfig } from 'wxt'
 
+import { GITHUB_URL } from './lib/brand'
+
 export default defineConfig({
   modules: [
     '@wxt-dev/module-react',
@@ -13,15 +15,16 @@ export default defineConfig({
     },
   },
   manifest: {
-    name: '__MSG_extensionName__',
+    name: '__MSG_extensionManifestName__',
     description: '__MSG_extensionDescription__',
     default_locale: 'en',
+    minimum_chrome_version: '119',
+    homepage_url: GITHUB_URL,
     options_ui: { page: 'app.html', open_in_tab: true },
     permissions: [
       'bookmarks',
       'favicon',
       'storage',
-      'tabs',
       'alarms',
       'downloads',
       'offscreen',

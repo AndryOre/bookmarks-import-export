@@ -902,5 +902,9 @@
   "welcome_heroTitle": {
     "message": "환영합니다",
     "description": "Lead-in of the welcome page hero title; the Snug wordmark is rendered right after it"
+  },
+  "extensionManifestName": {
+    "message": "Snug: 북마크 내보내기·가져오기·백업",
+    "description": "Manifest-only extension name with a descriptor, shown as the Chrome Web Store title. Never rendered inside the extension."
   }
 }

@@ -902,5 +902,9 @@
   "welcome_heroTitle": {
     "message": "欢迎使用",
     "description": "Lead-in of the welcome page hero title; the Snug wordmark is rendered right after it"
+  },
+  "extensionManifestName": {
+    "message": "Snug：书签导出、导入与备份",
+    "description": "Manifest-only extension name with a descriptor, shown as the Chrome Web Store title. Never rendered inside the extension."
   }
 }

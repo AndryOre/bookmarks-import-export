@@ -62,7 +62,6 @@ purpose described:
 | `bookmarks` | Read and write your browser bookmarks to support import and export.                                                                           |
 | `favicon`   | Display site icons next to bookmarks via Chrome's built-in `_favicon` API.                                                                    |
 | `storage`   | Save your local preferences and settings on your device.                                                                                      |
-| `tabs`      | Open the extension's app page (Export, Import, settings) in a new tab.                                                                        |
 | `alarms`    | Schedule and trigger automatic bookmark exports at the configured interval.                                                                   |
 | `downloads` | Save exported bookmark files (manual and automatic) to your device.                                                                           |
 | `offscreen` | Create a short-lived hidden document so an automatic export can be turned into a downloadable file. It has no UI and loads no remote content. |
