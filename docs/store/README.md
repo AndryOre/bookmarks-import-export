@@ -34,7 +34,10 @@ Related files:
 
 ## Store listing
 
-Locales: English (default) and Spanish. Fill each locale on its own tab.
+Locales: English (default), Spanish, Portuguese (Brazil), French, German,
+Japanese, Chinese (Simplified), Russian, Italian and Korean (`en`, `es`,
+`pt_BR`, `fr`, `de`, `ja`, `zh_CN`, `ru`, `it`, `ko`). Fill each locale on its
+own tab.
 
 ### Package-sourced fields
 
@@ -114,6 +117,12 @@ Configura un horario una sola vez y Snug respalda tus marcadores directo a tu ca
 Snug funciona completamente en tu dispositivo — sin cuenta, sin nube, sin servidor. Cada operación lee y escribe directamente en los marcadores de tu navegador, y esa es toda la historia de confianza. Funciona en Chrome y en cualquier navegador basado en Chromium (Edge, Opera, Brave) desde el mismo listado.
 ```
 
+### Other locales
+
+Listings for every locale other than English and Spanish live in
+[`listings/`](listings/), one file per locale named `<code>.md`. Start from
+[`listings/TEMPLATE.md`](listings/TEMPLATE.md).
+
 ### Fields shared by both locales
 
 Category:
@@ -122,7 +131,8 @@ Category:
 Tools
 ```
 
-Languages: English and Spanish (unchanged from v1.3.0).
+Languages: English, Spanish, Portuguese (Brazil), French, German, Japanese,
+Chinese (Simplified), Russian, Italian and Korean.
 
 Official URL: none (unchanged).
 
