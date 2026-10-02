@@ -52,12 +52,14 @@ type ExtensionFixtures = {
 export const test = base.extend<ExtensionFixtures>({
   browserLocale: [undefined, { option: true }],
 
-  context: async ({ browserLocale }, use) => {
+  context: async ({ browserLocale, deviceScaleFactor, viewport }, use) => {
     const userDataDirectory = await mkdtemp(path.join(tmpdir(), 'snug-e2e-'))
 
     const context = await chromium.launchPersistentContext(userDataDirectory, {
       channel: 'chromium',
       locale: browserLocale,
+      deviceScaleFactor,
+      viewport,
       headless: !process.env.PWDEBUG,
       args: [
         `--disable-extensions-except=${EXTENSION_DIR}`,

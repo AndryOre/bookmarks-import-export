@@ -1,87 +1,54 @@
+import { chromium } from '@playwright/test'
 import type { Page } from '@playwright/test'
 import { mkdir } from 'node:fs/promises'
 import path from 'node:path'
 
 import { expect, test } from '../e2e/fixtures'
 import type { SeedBookmark } from '../e2e/fixtures'
-import en from '../locales/en.json' with { type: 'json' }
-import es from '../locales/es.json' with { type: 'json' }
+import messages from '../locales/en.json' with { type: 'json' }
+import { composeLocalSlide, composeUiSlide } from './compose-slide'
 
-const VIEWPORT = { width: 1280, height: 800 }
 const SCREENSHOTS_DIRECTORY = path.resolve('docs/store/assets/screenshots')
+const RAW_DIRECTORY = path.resolve('test-results/store/raw')
+const DEVICE_SCALE_FACTOR = 2
+const APP_CAPTURE = { width: 1280, height: 716 }
+const CANVAS = { width: 1280, height: 800 }
+const CARD_WIDTH = 1040
+const CARD_TOP = 220
+const POPUP_CARD_TOP = 240
+const POPUP_HEIGHT = 520
 
-const messagesByLocale = { en, es } as const
-type StoreLocale = keyof typeof messagesByLocale
-
-const seedByLocale: Record<StoreLocale, SeedBookmark[]> = {
-  en: [
-    {
-      title: 'Development',
-      children: [
-        { title: 'GitHub', url: 'https://github.com/' },
-        { title: 'MDN Web Docs', url: 'https://developer.mozilla.org/' },
-        { title: 'Stack Overflow', url: 'https://stackoverflow.com/' },
-        {
-          title: 'Frameworks',
-          children: [
-            { title: 'React', url: 'https://react.dev/' },
-            { title: 'Tailwind CSS', url: 'https://tailwindcss.com/' },
-          ],
-        },
-      ],
-    },
-    {
-      title: 'Reading',
-      children: [
-        { title: 'Wikipedia', url: 'https://www.wikipedia.org/' },
-        { title: 'Hacker News', url: 'https://news.ycombinator.com/' },
-      ],
-    },
-    {
-      title: 'Travel',
-      children: [
-        { title: 'OpenStreetMap', url: 'https://www.openstreetmap.org/' },
-        { title: 'Wikivoyage', url: 'https://www.wikivoyage.org/' },
-      ],
-    },
-  ],
-  es: [
-    {
-      title: 'Desarrollo',
-      children: [
-        { title: 'GitHub', url: 'https://github.com/' },
-        { title: 'MDN Web Docs', url: 'https://developer.mozilla.org/es/' },
-        { title: 'Stack Overflow', url: 'https://stackoverflow.com/' },
-        {
-          title: 'Frameworks',
-          children: [
-            { title: 'React', url: 'https://react.dev/' },
-            { title: 'Tailwind CSS', url: 'https://tailwindcss.com/' },
-          ],
-        },
-      ],
-    },
-    {
-      title: 'Lecturas',
-      children: [
-        { title: 'Wikipedia', url: 'https://es.wikipedia.org/' },
-        { title: 'Hacker News', url: 'https://news.ycombinator.com/' },
-      ],
-    },
-    {
-      title: 'Viajes',
-      children: [
-        { title: 'OpenStreetMap', url: 'https://www.openstreetmap.org/' },
-        { title: 'Wikiviajes', url: 'https://es.wikivoyage.org/' },
-      ],
-    },
-  ],
-}
-
-const selectedFolderByLocale: Record<StoreLocale, string> = {
-  en: 'Development',
-  es: 'Desarrollo',
-}
+const SEED_BOOKMARKS: SeedBookmark[] = [
+  {
+    title: 'Development',
+    children: [
+      { title: 'GitHub', url: 'https://github.com/' },
+      { title: 'MDN Web Docs', url: 'https://developer.mozilla.org/' },
+      { title: 'Stack Overflow', url: 'https://stackoverflow.com/' },
+      {
+        title: 'Frameworks',
+        children: [
+          { title: 'React', url: 'https://react.dev/' },
+          { title: 'Tailwind CSS', url: 'https://tailwindcss.com/' },
+        ],
+      },
+    ],
+  },
+  {
+    title: 'Reading',
+    children: [
+      { title: 'Wikipedia', url: 'https://www.wikipedia.org/' },
+      { title: 'Hacker News', url: 'https://news.ycombinator.com/' },
+    ],
+  },
+  {
+    title: 'Travel',
+    children: [
+      { title: 'OpenStreetMap', url: 'https://www.openstreetmap.org/' },
+      { title: 'Wikivoyage', url: 'https://www.wikivoyage.org/' },
+    ],
+  },
+]
 
 const importFileHtml = `<!DOCTYPE NETSCAPE-Bookmark-file-1>
 <TITLE>Bookmarks</TITLE>
@@ -101,29 +68,42 @@ const importFileHtml = `<!DOCTYPE NETSCAPE-Bookmark-file-1>
 </DL><p>
 `
 
-async function capture(
+async function captureRaw(
   page: Page,
-  locale: StoreLocale,
+  selector: string,
   fileName: string,
-): Promise<void> {
-  await mkdir(path.join(SCREENSHOTS_DIRECTORY, locale), { recursive: true })
-  await page.screenshot({
+): Promise<Buffer> {
+  await mkdir(RAW_DIRECTORY, { recursive: true })
+  return page.locator(selector).screenshot({
     animations: 'disabled',
-    path: path.join(SCREENSHOTS_DIRECTORY, locale, fileName),
+    omitBackground: true,
+    path: path.join(RAW_DIRECTORY, fileName),
+    scale: 'device',
   })
 }
 
-test.use({ viewport: VIEWPORT, colorScheme: 'dark' })
+test.use({
+  colorScheme: 'dark',
+  deviceScaleFactor: DEVICE_SCALE_FACTOR,
+  viewport: APP_CAPTURE,
+})
 
-test('captures the five store screenshots', async ({
+test('composes the five store screenshots', async ({
   openExtensionPage,
   seedBookmarks,
   seedStorage,
-}, testInfo) => {
-  const locale = testInfo.project.name as StoreLocale
-  const messages = messagesByLocale[locale]
+}) => {
+  await mkdir(SCREENSHOTS_DIRECTORY, { recursive: true })
+  const composerBrowser = await chromium.launch({ channel: 'chromium' })
+  const composer = await composerBrowser.newPage({
+    viewport: CANVAS,
+    deviceScaleFactor: 1,
+  })
+  const outputPath = (fileName: string): string =>
+    path.join(SCREENSHOTS_DIRECTORY, fileName)
+
   await seedStorage({ theme: 'dark' })
-  await seedBookmarks(seedByLocale[locale])
+  await seedBookmarks(SEED_BOOKMARKS)
 
   const exportPage = await openExtensionPage('app.html#/export')
   await expect(
@@ -135,11 +115,20 @@ test('captures the five store screenshots', async ({
   await exportPage
     .getByRole('button', { name: messages.exportPage_expandAll.message })
     .click()
-  await exportPage
-    .getByRole('checkbox', { name: selectedFolderByLocale[locale] })
-    .check()
+  await exportPage.getByRole('checkbox', { name: 'Development' }).check()
   await expect(exportPage.locator('html.dark')).toHaveCount(1)
-  await capture(exportPage, locale, '01-export.png')
+  const exportShot = await captureRaw(exportPage, 'body', '01-export.png')
+  await composeUiSlide(
+    composer,
+    {
+      headline: 'Export exactly what you choose',
+      subtitle: 'One folder or everything — as HTML, JSON, or CSV.',
+      screenshot: exportShot,
+      cardWidth: CARD_WIDTH,
+      cardTop: CARD_TOP,
+    },
+    outputPath('01-export.png'),
+  )
 
   const importPage = await openExtensionPage('app.html#/import')
   await expect(
@@ -157,7 +146,18 @@ test('captures the five store screenshots', async ({
     })
   await expect(importPage.getByRole('radio')).toHaveCount(3)
   await importPage.getByRole('radio').nth(1).click()
-  await capture(importPage, locale, '02-import.png')
+  const importShot = await captureRaw(importPage, 'body', '02-import.png')
+  await composeUiSlide(
+    composer,
+    {
+      headline: 'Preview every import first',
+      subtitle: 'Then merge, replace, or drop it into a new folder.',
+      screenshot: importShot,
+      cardWidth: CARD_WIDTH,
+      cardTop: CARD_TOP,
+    },
+    outputPath('02-import.png'),
+  )
 
   const hourInMilliseconds = 60 * 60 * 1000
   await seedStorage({
@@ -185,30 +185,62 @@ test('captures the five store screenshots', async ({
   await expect(
     autoExportPage.getByText(messages.autoExportPage_nextRun.message),
   ).toBeVisible()
-  await expect(
-    autoExportPage.getByText(messages.autoExportPage_off.message, {
-      exact: true,
-    }),
-  ).toHaveCount(0)
   await expect(autoExportPage.getByRole('switch').first()).toBeChecked()
-  await capture(autoExportPage, locale, '03-auto-export.png')
+  const autoExportShot = await captureRaw(
+    autoExportPage,
+    'body',
+    '03-auto-export.png',
+  )
+  await composeUiSlide(
+    composer,
+    {
+      headline: 'Scheduled backups, hands-free',
+      subtitle: 'Daily or weekly, straight to your Downloads folder.',
+      screenshot: autoExportShot,
+      cardWidth: CARD_WIDTH,
+      cardTop: CARD_TOP,
+    },
+    outputPath('03-auto-export.png'),
+  )
 
   const popup = await openExtensionPage('popup.html')
   await expect(popup.getByTestId('popup-frame')).toBeVisible()
   await popup.addStyleTag({
     content: `
-      body { min-height: 100vh; margin: 0; display: grid; place-items: center; background: var(--background); }
-      [data-testid="popup-frame"] { background: var(--popover); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 24px 64px rgb(0 0 0 / 0.45); }
+      html, body { background: transparent !important; }
+      [data-testid="popup-frame"] { background: var(--popover); border-radius: 16px; }
     `,
   })
-  await capture(popup, locale, '04-popup.png')
+  const popupShot = await captureRaw(
+    popup,
+    '[data-testid="popup-frame"]',
+    '04-popup.png',
+  )
+  const popupBox = await popup.getByTestId('popup-frame').boundingBox()
+  if (!popupBox) throw new Error('The popup frame has no bounding box')
+  await composeUiSlide(
+    composer,
+    {
+      headline: 'Export everything in one click',
+      subtitle: 'Right from the toolbar.',
+      screenshot: popupShot,
+      cardWidth: Math.round((popupBox.width * POPUP_HEIGHT) / popupBox.height),
+      cardTop: POPUP_CARD_TOP,
+      cardHeight: POPUP_HEIGHT,
+    },
+    outputPath('04-popup.png'),
+  )
 
-  const welcomePage = await openExtensionPage('app.html#/welcome')
-  await expect(
-    welcomePage.getByRole('heading', {
-      level: 2,
-      name: messages.welcome_heroTitle.message,
-    }),
-  ).toBeVisible()
-  await capture(welcomePage, locale, '05-welcome.png')
+  await composeLocalSlide(
+    composer,
+    { headline: 'Everything stays on your device' },
+    [
+      { icon: 'account', text: 'No account needed' },
+      { icon: 'upload', text: 'Nothing is uploaded — no cloud, no server' },
+      { icon: 'tracking', text: 'No analytics or tracking' },
+      { icon: 'source', text: 'Open source on GitHub' },
+    ],
+    outputPath('05-local.png'),
+  )
+  await composerBrowser.close()
 })
