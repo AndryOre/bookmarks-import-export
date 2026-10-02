@@ -41,4 +41,40 @@ describe('detectFormat', () => {
   it('is case-insensitive on mime type', () => {
     expect(detectFormat('{"a":1}', 'APPLICATION/JSON')).toBe('json')
   })
+
+  describe('fallbacks', () => {
+    const csv = 'title,url\nExample,https://example.com'
+    const html = '<!DOCTYPE NETSCAPE-Bookmark-file-1>\n<DL><p></DL><p>'
+
+    it('detects a CSV reported as application/vnd.ms-excel', () => {
+      expect(detectFormat(csv, 'application/vnd.ms-excel', 'export.csv')).toBe(
+        'csv',
+      )
+    })
+
+    it.each([
+      ['{"a":1}', 'a.json', 'json'],
+      [csv, 'a.csv', 'csv'],
+      [html, 'a.html', 'html'],
+      [html, 'A.HTM', 'html'],
+    ])('detects an empty MIME by extension (%#)', (content, name, expected) => {
+      expect(detectFormat(content, '', name)).toBe(expected)
+    })
+
+    it('detects by content when the extension is wrong', () => {
+      expect(detectFormat('{"a":1}', '', 'bookmarks.txt')).toBe('json')
+      expect(detectFormat(csv, '', 'bookmarks')).toBe('csv')
+      expect(detectFormat(html, 'text/plain', 'bookmarks.json')).toBe('html')
+    })
+
+    it('keeps unrelated content unknown', () => {
+      expect(detectFormat('hello world', '', 'notes.json')).toBe('unknown')
+      expect(detectFormat('42', '', 'notes.txt')).toBe('unknown')
+    })
+
+    it('never overrides a valid MIME with a different extension', () => {
+      expect(detectFormat('{"a":1}', 'application/json', 'a.csv')).toBe('json')
+      expect(detectFormat('{"a":1}', 'text/csv', 'a.json')).toBe('unknown')
+    })
+  })
 })

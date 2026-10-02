@@ -1,4 +1,5 @@
 import type { Page } from '@playwright/test'
+import { readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -243,6 +244,19 @@ test.describe('Import page', () => {
     await page.getByRole('button', { name: en.import_another.message }).click()
 
     await expect(page.getByText(en.dropFileHere.message)).toBeVisible()
+  })
+
+  test('a CSV reported with an Excel MIME type still imports', async ({
+    openExtensionPage,
+  }) => {
+    const page = await openImportPage(openExtensionPage)
+    await page.getByLabel(en.import_fileInputLabel.message).setInputFiles({
+      name: 'bookmarks.csv',
+      mimeType: 'application/vnd.ms-excel',
+      buffer: await readFile(path.join(FIXTURES_DIRECTORY, 'bookmarks.csv')),
+    })
+    await submitImport(page, 3)
+    await expectSuccess(page)
   })
 
   test('an unsupported file shows an inline error and no import button', async ({
