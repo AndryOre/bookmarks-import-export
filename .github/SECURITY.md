@@ -6,7 +6,7 @@ Please report security vulnerabilities **privately**, either via GitHub's
 built-in Private Vulnerability Reporting or by email:
 
 **→
-[Open a security advisory](https://github.com/AndryOre/bookmarks-import-export/security/advisories/new)**
+[Open a security advisory](https://github.com/AndryOre/snug/security/advisories/new)**
 
 **→ Or email [hello@andryore.dev](mailto:hello@andryore.dev)**
 
