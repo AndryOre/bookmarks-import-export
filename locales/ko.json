@@ -15,37 +15,13 @@
     "message": "설정",
     "description": "Settings"
   },
-  "exportFormat": {
-    "message": "내보내기 형식",
-    "description": "Placeholder text for the export format selector"
-  },
   "exportBookmarks": {
     "message": "내보내기",
     "description": "Export Bookmarks tab label in the popup"
   },
-  "refresh": {
-    "message": "새로고침",
-    "description": "Refresh"
-  },
-  "selectAll": {
-    "message": "모두 선택",
-    "description": "Select All"
-  },
-  "deselectAll": {
-    "message": "모두 선택 해제",
-    "description": "Deselect All"
-  },
-  "selected": {
-    "message": "선택됨",
-    "description": "Selected"
-  },
   "searchBookmarks": {
     "message": "북마크 검색",
     "description": "Search bookmarks"
-  },
-  "display": {
-    "message": "표시",
-    "description": "Display"
   },
   "export": {
     "message": "내보내기",
@@ -79,18 +55,6 @@
     "message": "마지막 사용 날짜 포함",
     "description": "Include last used dates"
   },
-  "includeDateGroupModified": {
-    "message": "폴더 수정 날짜 포함",
-    "description": "Include folder modification dates"
-  },
-  "hideOtherBookmarks": {
-    "message": "'기타 북마크' 폴더 숨기기",
-    "description": "Hide 'Other bookmarks' folder"
-  },
-  "hideParentFolder": {
-    "message": "상위 폴더 숨기기",
-    "description": "Hide parent folder"
-  },
   "dropFileHere": {
     "message": "북마크 파일을 여기에 놓으세요",
     "description": "File drop zone prompt"
@@ -102,10 +66,6 @@
   "supportedFormats": {
     "message": "HTML, JSON, CSV 지원",
     "description": "Supported import formats"
-  },
-  "changeFile": {
-    "message": "변경",
-    "description": "Button to change selected file"
   },
   "importMode": {
     "message": "가져오기 방식",
@@ -140,7 +100,7 @@
     "description": "Import mode: restore and replace description"
   },
   "importModeRestoreReplaceWarning": {
-    "message": "북마크바와 기타 북마크에 있는 현재 북마크가 모두 영구적으로 삭제돼요",
+    "message": "북마크바와 기타 북마크를 먼저 비웁니다. 안전 스냅샷으로 가져오기를 되돌릴 수 있습니다.",
     "description": "Warning shown for restore-replace mode"
   },
   "importPreview": {
@@ -161,7 +121,7 @@
     "description": "Title of the replace confirmation dialog"
   },
   "replaceConfirmDescription": {
-    "message": "가져오기 전에 북마크바와 기타 북마크에 있는 모든 북마크가 영구적으로 삭제돼요. 이 작업은 되돌릴 수 없어요.",
+    "message": "가져오기 전에 현재 북마크바와 기타 북마크가 비워집니다. 안전 스냅샷이 먼저 저장되므로 가져오기를 되돌릴 수 있습니다.",
     "description": "Body of the replace confirmation dialog"
   },
   "replaceConfirmButton": {
@@ -180,44 +140,20 @@
     "message": "북마크를 가져왔어요!",
     "description": "Bookmarks imported successfully"
   },
-  "import": {
-    "message": "가져오기",
-    "description": "Import"
-  },
-  "changelog_1_5_0_date": {
-    "message": "2025년 4월 29일",
-    "description": "Changelog 1.5.0 date"
-  },
   "changelog_1_5_0_1": {
     "message": "고급 가져오기를 추가했어요. 병합 또는 교체 옵션으로 북마크를 원래 위치(북마크바와 기타 북마크)에 복원할 수 있어요."
   },
   "changelog_1_5_0_1_link": {
     "message": "고급 가져오기 사용해 보기"
   },
-  "changelog_1_4_0_date": {
-    "message": "2025년 4월 29일",
-    "description": "Changelog 1.4.0 date"
-  },
   "changelog_1_4_0_1": {
     "message": "내보내기 파일 이름 템플릿을 직접 설정할 수 있어요. %yyyy, %mm, %dd 같은 날짜/시간 자리표시자를 쓰면 타임스탬프가 포함된 고유한 파일 이름이 자동으로 만들어져요."
-  },
-  "changelog_1_3_0_date": {
-    "message": "2025년 2월 16일",
-    "description": "Changelog 1.3.0 date"
   },
   "changelog_1_3_0_1": {
     "message": "시스템 테마 설정에 자동으로 맞춰지는 다크 모드를 추가했어요."
   },
-  "changelog_1_2_0_date": {
-    "message": "2025년 2월 14일",
-    "description": "Changelog 1.2.0 date"
-  },
   "changelog_1_2_0_1": {
     "message": "이제 브라우저 언어에 자동으로 맞춰져요! 영어와 스페인어를 지원해요."
-  },
-  "changelog_1_1_0_date": {
-    "message": "2025년 2월 13일",
-    "description": "Changelog 1.1.0 date"
   },
   "changelog_1_1_0_1": {
     "message": "가져온 북마크는 기존 북마크와 섞이지 않도록 별도의 폴더에 저장돼요"
@@ -227,10 +163,6 @@
   },
   "changelog_1_1_0_2_link": {
     "message": "새 내보내기 옵션 사용해 보기"
-  },
-  "changelog_1_0_0_date": {
-    "message": "2024년 8월 5일",
-    "description": "Changelog 1.0.0 date"
   },
   "changelog_1_0_0_1": {
     "message": "북마크를 더 세밀하게 다룰 수 있는 고급 내보내기 기능을 추가했어요."
@@ -244,10 +176,6 @@
   "changelog_1_0_0_3": {
     "message": "전반적인 성능을 개선해 더 부드럽게 사용할 수 있어요."
   },
-  "changelog_0_1_1_date": {
-    "message": "2024년 8월 4일",
-    "description": "Changelog 0.1.1 date"
-  },
   "changelog_0_1_1_1": {
     "message": "영어가 아닌 브라우저 언어를 쓰는 사용자에게 영향을 주던 심각한 버그를 수정했어요."
   },
@@ -259,10 +187,6 @@
   },
   "changelog_0_1_1_4": {
     "message": "일부 브라우저에서 확장 프로그램이 작동하지 않던 문제를 수정했어요."
-  },
-  "changelog_0_1_0_date": {
-    "message": "2024년 8월 3일",
-    "description": "Changelog 0.1.0 date"
   },
   "changelog_0_1_0_1": {
     "message": "북마크 가져오기/내보내기 확장 프로그램의 첫 출시예요."
@@ -353,10 +277,6 @@
     "message": "CSV 파일을 가져오지 못했어요",
     "description": "Error when CSV import fails"
   },
-  "autoExport": {
-    "message": "자동 내보내기",
-    "description": "Auto-export settings tab label"
-  },
   "autoExportNeverRun": {
     "message": "아직 실행된 적 없음",
     "description": "Status card value when auto-export has never run"
@@ -409,10 +329,6 @@
     "message": "내보내기 형식",
     "description": "Export formats section title"
   },
-  "changelog_2_0_0_date": {
-    "message": "2026년 10월 2일",
-    "description": "Changelog 2.0.0 date"
-  },
   "changelog_2_0_0_1": {
     "message": "이 확장 프로그램의 새 이름은 Snug예요. 확장 프로그램도, 모든 것을 기기 안에서만 처리한다는 약속도 그대로예요. 북마크를 내보내고, 가져오고, 예약 백업까지 하면서 어디로도 전송하지 않아요. 데이터와 설정은 그대로이고, 이름과 아이콘만 바뀌어요."
   },
@@ -422,10 +338,6 @@
   "changelog_2_0_0_2_link": {
     "message": "앱 열기"
   },
-  "changelog_1_7_0_date": {
-    "message": "2026년 10월 1일",
-    "description": "Changelog 1.7.0 date"
-  },
   "changelog_1_7_0_1": {
     "message": "자동 내보내기 설정에 상태 카드와 지금 내보내기 버튼을 추가했어요. 팝업에는 자동 내보내기가 켜짐, 꺼짐, 실패 중 어떤 상태인지 보여 주는 상태 줄도 생겼어요."
   },
@@ -434,10 +346,6 @@
   },
   "changelog_1_7_0_2": {
     "message": "CSV, HTML, JSON 파일을 가져올 때 허용되지 않는 URL 스키마(예: javascript:)를 거부하도록 보안을 강화했어요."
-  },
-  "changelog_1_6_0_date": {
-    "message": "2026년 4월 29일",
-    "description": "Changelog 1.6.0 date"
   },
   "changelog_1_6_0_1": {
     "message": "자동 내보내기를 추가했어요. 원하는 간격(12시간마다, 매일, 3일 또는 7일마다)으로 북마크를 선호하는 다운로드 폴더에 자동으로 저장해요."
@@ -493,10 +401,6 @@
   "shell_whatsNewUnseen": {
     "message": "새 소식",
     "description": "Accessible label of the unseen-update dot on the What's new nav item"
-  },
-  "shell_placeholder": {
-    "message": "이 화면은 곧 제공될 예정이에요.",
-    "description": "Placeholder text shown on App screens that are not built yet"
   },
   "shell_toggleSidebar": {
     "message": "사이드바 전환",
@@ -650,6 +554,10 @@
   "autoExportPage_folderDescription": {
     "message": "백업을 저장할 다운로드 폴더 안의 폴더예요.",
     "description": "Help text under the folder field"
+  },
+  "autoExportPage_downloadsPrefix": {
+    "message": "다운로드/",
+    "description": "Fixed prefix shown before the folder field: the name of the browser Downloads folder, with a trailing slash"
   },
   "autoExportPage_formatsDescription": {
     "message": "형식을 하나 이상 선택해야 해요.",
@@ -903,6 +811,34 @@
     "message": "검색 지우기",
     "description": "Export page empty state button that clears the search"
   },
+  "exportPage_treeLabel": {
+    "message": "북마크",
+    "description": "Accessible label of the bookmark tree on the Export page"
+  },
+  "exportPage_emptyTitle": {
+    "message": "아직 북마크가 없습니다",
+    "description": "Export page empty state title when the profile has no bookmarks"
+  },
+  "exportPage_emptyDescription": {
+    "message": "내보낼 북마크가 브라우저에 없습니다. 파일을 가져와서 시작하세요.",
+    "description": "Export page empty state description when the profile has no bookmarks"
+  },
+  "exportPage_goToImport": {
+    "message": "가져오기로 이동",
+    "description": "Export page empty state button that opens the Import page"
+  },
+  "exportPage_errorTitle": {
+    "message": "북마크를 불러오지 못했습니다",
+    "description": "Export page error state title when bookmarks fail to load"
+  },
+  "exportPage_errorDescription": {
+    "message": "북마크를 읽는 중 문제가 발생했습니다.",
+    "description": "Export page error state description when bookmarks fail to load"
+  },
+  "exportPage_tryAgain": {
+    "message": "다시 시도",
+    "description": "Export page error state button that reloads the bookmarks"
+  },
   "welcome_heroTitle": {
     "message": "환영합니다",
     "description": "Lead-in of the welcome page hero title; the Snug wordmark is rendered right after it"
@@ -928,5 +864,86 @@
         "content": "$1"
       }
     }
+  },
+  "import_replaceDiffTitle": {
+    "message": "바꾸면 북마크 $REMOVED$개가 삭제되고 $ADDED$개가 추가됩니다",
+    "description": "Replace diff alert title; $REMOVED$ and $ADDED$ are bookmark counts",
+    "placeholders": {
+      "removed": {
+        "content": "$1"
+      },
+      "added": {
+        "content": "$2"
+      }
+    }
+  },
+  "import_replaceDiffDescription": {
+    "message": "현재 북마크의 안전 스냅샷이 먼저 저장되므로 가져오기를 되돌릴 수 있습니다.",
+    "description": "Replace diff alert body"
+  },
+  "import_undo": {
+    "message": "가져오기 되돌리기",
+    "description": "Button that undoes a replace import"
+  },
+  "import_undoing": {
+    "message": "되돌리는 중…",
+    "description": "Undo button label while restoring"
+  },
+  "import_undoneTitle": {
+    "message": "가져오기를 되돌렸습니다",
+    "description": "Title shown after an import was undone"
+  },
+  "import_undoneDescription": {
+    "message": "안전 스냅샷에서 북마크를 복원했습니다.",
+    "description": "Body shown after an import was undone"
+  },
+  "import_undoFailedTitle": {
+    "message": "가져오기를 되돌릴 수 없습니다",
+    "description": "Error title when undoing an import fails"
+  },
+  "safetySnapshot_title": {
+    "message": "안전 스냅샷",
+    "description": "Settings card title"
+  },
+  "safetySnapshot_description": {
+    "message": "바꾸기 전에 자동으로 만들어집니다. 가장 최근 것 하나만 보관됩니다.",
+    "description": "Settings card description"
+  },
+  "safetySnapshot_fileNote": {
+    "message": "같은 사본이 다운로드 폴더에 파일로 저장됩니다.",
+    "description": "Note that the snapshot is also a file in Downloads"
+  },
+  "safetySnapshot_restore": {
+    "message": "스냅샷 복원",
+    "description": "Button that restores the Safety snapshot"
+  },
+  "safetySnapshot_emptyTitle": {
+    "message": "아직 스냅샷이 없습니다",
+    "description": "Empty state title when no snapshot exists"
+  },
+  "safetySnapshot_emptyDescription": {
+    "message": "북마크를 처음 바꿀 때 자동으로 만들어집니다.",
+    "description": "Empty state body when no snapshot exists"
+  },
+  "safetySnapshot_restoreTitle": {
+    "message": "이 스냅샷을 복원할까요?",
+    "description": "Restore confirm dialog title"
+  },
+  "safetySnapshot_restoreDescription": {
+    "message": "북마크바와 기타 북마크가 $DATE$의 스냅샷으로 바뀝니다. 현재 북마크의 새 스냅샷이 먼저 저장됩니다.",
+    "description": "Restore confirm dialog body; $DATE$ is when the snapshot was taken",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      }
+    }
+  },
+  "safetySnapshot_restoreConfirm": {
+    "message": "예, 복원",
+    "description": "Confirm button in the restore dialog"
+  },
+  "safetySnapshot_restored": {
+    "message": "스냅샷을 복원했습니다.",
+    "description": "Shown after the snapshot was restored"
   }
 }

@@ -21,7 +21,7 @@ export interface SafetySnapshot {
  * Storage key of the latest Safety snapshot in `chrome.storage.local`. Only
  * one is ever kept: saving a new one overwrites it.
  */
-const safetySnapshotStore = storage.defineItem<SafetySnapshot | null>(
+export const safetySnapshotStore = storage.defineItem<SafetySnapshot | null>(
   'local:safetySnapshot',
   { fallback: null },
 )

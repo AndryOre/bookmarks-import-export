@@ -90,6 +90,9 @@ the threat model.
   `storage.defineItem` calls from `wxt`'s storage wrapper.
 - **`use-storage-item.ts`** — a React hook that subscribes an exported store to
   component state.
+- **`tree-navigation.ts`** — pure helpers behind the Export tree's keyboard
+  support: flattening the visible rows with their ARIA level/position, and
+  mapping an arrow/Home/End key to a focus, expand or collapse action.
 - **`types.ts`** — the shared type vocabulary: `BookmarkNode`,
   `ExtendedBookmarkTreeNode`, `ParsedBookmark`, `BookmarkFormat`, `ImportMode`,
   `AutoExportConfig`, `ImportPreview`, `CheckedState`, and the component prop
@@ -101,9 +104,9 @@ the threat model.
 ### Components (`components/`)
 
 - **`components/export/`** — the Export page's pieces: `bookmark-tree.tsx` (the
-  checkable tree, exposing a `BookmarkTreeHandle` for select-all/deselect-all/
+  WAI-ARIA tree, exposing a `BookmarkTreeHandle` for select-all/deselect-all/
   refresh/get-selected), `export-toolbar.tsx`, `export-bar.tsx` and
-  `export-tree-states.tsx` (loading/empty/no-results).
+  `export-tree-states.tsx` (loading/no-bookmarks/load-error/no-results).
 - **`components/import/`** — the Import page's steps: `import-file-step.tsx`,
   `import-mode-step.tsx`, `import-preview-step.tsx` and the `import-step.tsx`
   wrapper.
@@ -231,8 +234,9 @@ the next run that succeeds, on any trigger, clears it.
   "folder" mode for CSV files, never a restore mode.
 - `restore-replace` import mode is destructive: it calls
   `chrome.bookmarks.removeTree` on every existing bookmarks-bar and
-  other-bookmarks child before writing the imported tree in their place. There
-  is no undo.
+  other-bookmarks child before writing the imported tree in their place. A
+  Safety snapshot is taken first (`lib/safety-snapshot.ts`), and the Import
+  result's Undo import and the Settings Safety snapshot card restore it.
 - All persisted settings go through `storage.defineItem` with a
   `local:`-prefixed key (`lib/storage.ts`) — there is no `sync:`-scoped storage
   anywhere in this codebase.

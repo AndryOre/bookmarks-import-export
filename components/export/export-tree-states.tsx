@@ -1,7 +1,8 @@
 import { i18n } from '#i18n'
-import { SearchXIcon } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
+import { BookmarkXIcon, SearchXIcon, TriangleAlertIcon } from 'lucide-react'
 
-import { Button } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
 import {
   Empty,
   EmptyContent,
@@ -11,6 +12,7 @@ import {
   EmptyTitle,
 } from '@/components/ui/empty'
 import { Skeleton } from '@/components/ui/skeleton'
+import { APP_ROUTES } from '@/lib/app-url'
 import { cn } from '@/lib/utils'
 
 interface SkeletonRowProperties {
@@ -106,6 +108,67 @@ export function ExportTreeEmpty({
       <EmptyContent>
         <Button variant="outline" size="sm" onClick={onClearSearch}>
           {i18n.t('exportPage_clearSearch')}
+        </Button>
+      </EmptyContent>
+    </Empty>
+  )
+}
+
+/**
+ * Empty state shown when the browser profile has no bookmarks at all, with a
+ * link to the Import page.
+ * @returns The empty state markup.
+ */
+export function ExportTreeNoBookmarks() {
+  return (
+    <Empty>
+      <EmptyHeader>
+        <EmptyMedia variant="icon">
+          <BookmarkXIcon />
+        </EmptyMedia>
+        <EmptyTitle>{i18n.t('exportPage_emptyTitle')}</EmptyTitle>
+        <EmptyDescription>
+          {i18n.t('exportPage_emptyDescription')}
+        </EmptyDescription>
+      </EmptyHeader>
+      <EmptyContent>
+        <Link
+          to={APP_ROUTES.import}
+          className={buttonVariants({ variant: 'outline', size: 'sm' })}
+        >
+          {i18n.t('exportPage_goToImport')}
+        </Link>
+      </EmptyContent>
+    </Empty>
+  )
+}
+
+interface ExportTreeErrorProperties {
+  onRetry: () => void
+}
+
+/**
+ * Error state shown when `bookmarks.getTree` fails, with an action that
+ * reloads the tree.
+ * @param properties The error-state props.
+ * @param properties.onRetry Called when "Try again" is pressed.
+ * @returns The error state markup.
+ */
+export function ExportTreeError({ onRetry }: ExportTreeErrorProperties) {
+  return (
+    <Empty role="alert">
+      <EmptyHeader>
+        <EmptyMedia variant="icon">
+          <TriangleAlertIcon />
+        </EmptyMedia>
+        <EmptyTitle>{i18n.t('exportPage_errorTitle')}</EmptyTitle>
+        <EmptyDescription>
+          {i18n.t('exportPage_errorDescription')}
+        </EmptyDescription>
+      </EmptyHeader>
+      <EmptyContent>
+        <Button variant="outline" size="sm" onClick={onRetry}>
+          {i18n.t('exportPage_tryAgain')}
         </Button>
       </EmptyContent>
     </Empty>

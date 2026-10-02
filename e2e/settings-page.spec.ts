@@ -95,3 +95,68 @@ test('default import mode persists and is shown in the popup', async ({
     en.importModeFolder.message,
   )
 })
+
+test('Safety snapshot card shows an empty state when no snapshot exists', async ({
+  openExtensionPage,
+}) => {
+  const page = await openExtensionPage('app.html#/settings')
+
+  await expect(
+    page.getByText(en.safetySnapshot_emptyTitle.message),
+  ).toBeVisible()
+  await expect(
+    page.getByRole('button', { name: en.safetySnapshot_restore.message }),
+  ).toHaveCount(0)
+})
+
+test('Restore snapshot asks for confirmation and restores the snapshot', async ({
+  openExtensionPage,
+  seedBookmarks,
+  seedStorage,
+  readBookmarkTree,
+}) => {
+  await seedBookmarks([
+    { title: 'Current', url: 'https://current.example/page' },
+  ])
+  await seedStorage({
+    safetySnapshot: {
+      takenAt: Date.now(),
+      roots: [
+        { id: '1', title: 'Bookmarks bar', dateAdded: 0, children: [] },
+        {
+          id: '2',
+          title: 'Other bookmarks',
+          dateAdded: 0,
+          children: [
+            {
+              title: 'Snapshot',
+              url: 'https://snapshot.example/page',
+              dateAdded: 0,
+            },
+          ],
+        },
+      ],
+    },
+  })
+  const page = await openExtensionPage('app.html#/settings')
+
+  await expect(page.getByText('1 bookmarks')).toBeVisible()
+  await page
+    .getByRole('button', { name: en.safetySnapshot_restore.message })
+    .click()
+  await expect(
+    page.getByRole('alertdialog', {
+      name: en.safetySnapshot_restoreTitle.message,
+    }),
+  ).toBeVisible()
+  await page
+    .getByRole('button', { name: en.safetySnapshot_restoreConfirm.message })
+    .click()
+  await expect(page.getByText(en.safetySnapshot_restored.message)).toBeVisible()
+
+  const [root] = await readBookmarkTree()
+  const otherBookmarks = root?.children?.find((n) => n.id === '2')
+  expect(otherBookmarks?.children?.map((n) => n.url)).toEqual([
+    'https://snapshot.example/page',
+  ])
+})

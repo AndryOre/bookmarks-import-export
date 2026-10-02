@@ -73,7 +73,7 @@ test('restore-replace requires confirmation, and canceling imports nothing', asy
   await selectDefaultMode(popup, 'Restore — replace')
   await expect(
     popup.getByText(
-      'This will permanently delete all current bookmarks in your Bookmarks Bar and Other Bookmarks',
+      'Clears your Bookmarks Bar and Other Bookmarks first. A Safety snapshot lets you undo the import.',
     ),
   ).toBeVisible()
 

@@ -15,37 +15,13 @@
     "message": "Paramètres",
     "description": "Settings"
   },
-  "exportFormat": {
-    "message": "Format d'exportation",
-    "description": "Placeholder text for the export format selector"
-  },
   "exportBookmarks": {
     "message": "Exporter",
     "description": "Export Bookmarks tab label in the popup"
   },
-  "refresh": {
-    "message": "Actualiser",
-    "description": "Refresh"
-  },
-  "selectAll": {
-    "message": "Tout sélectionner",
-    "description": "Select All"
-  },
-  "deselectAll": {
-    "message": "Tout désélectionner",
-    "description": "Deselect All"
-  },
-  "selected": {
-    "message": "Sélectionné",
-    "description": "Selected"
-  },
   "searchBookmarks": {
     "message": "Rechercher dans les favoris",
     "description": "Search bookmarks"
-  },
-  "display": {
-    "message": "Affichage",
-    "description": "Display"
   },
   "export": {
     "message": "Exporter",
@@ -79,18 +55,6 @@
     "message": "Inclure les dates de dernière utilisation",
     "description": "Include last used dates"
   },
-  "includeDateGroupModified": {
-    "message": "Inclure les dates de modification des dossiers",
-    "description": "Include folder modification dates"
-  },
-  "hideOtherBookmarks": {
-    "message": "Masquer le dossier « Autres favoris »",
-    "description": "Hide 'Other bookmarks' folder"
-  },
-  "hideParentFolder": {
-    "message": "Masquer le dossier parent",
-    "description": "Hide parent folder"
-  },
   "dropFileHere": {
     "message": "Déposez ici votre fichier de favoris",
     "description": "File drop zone prompt"
@@ -102,10 +66,6 @@
   "supportedFormats": {
     "message": "Formats pris en charge : HTML, JSON et CSV",
     "description": "Supported import formats"
-  },
-  "changeFile": {
-    "message": "Changer",
-    "description": "Button to change selected file"
   },
   "importMode": {
     "message": "Mode d'importation",
@@ -140,7 +100,7 @@
     "description": "Import mode: restore and replace description"
   },
   "importModeRestoreReplaceWarning": {
-    "message": "Cette action supprimera définitivement tous les favoris actuels de votre barre de favoris et de vos autres favoris",
+    "message": "Vide d'abord votre barre de favoris et Autres favoris. Un instantané de sécurité permet d'annuler l'importation.",
     "description": "Warning shown for restore-replace mode"
   },
   "importPreview": {
@@ -161,7 +121,7 @@
     "description": "Title of the replace confirmation dialog"
   },
   "replaceConfirmDescription": {
-    "message": "Tous les favoris actuellement présents dans votre barre de favoris et vos autres favoris seront définitivement supprimés avant l'importation. Cette action est irréversible.",
+    "message": "Votre barre de favoris et Autres favoris actuels sont vidés avant l'importation. Un instantané de sécurité est enregistré d'abord, pour que vous puissiez annuler l'importation.",
     "description": "Body of the replace confirmation dialog"
   },
   "replaceConfirmButton": {
@@ -180,44 +140,20 @@
     "message": "Favoris importés.",
     "description": "Bookmarks imported successfully"
   },
-  "import": {
-    "message": "Importer",
-    "description": "Import"
-  },
-  "changelog_1_5_0_date": {
-    "message": "29 avril 2025",
-    "description": "Changelog 1.5.0 date"
-  },
   "changelog_1_5_0_1": {
     "message": "Ajout de l'importation avancée : restaurez vos favoris à leur emplacement d'origine (barre de favoris et autres favoris), avec fusion ou remplacement au choix."
   },
   "changelog_1_5_0_1_link": {
     "message": "Essayer l'importation avancée"
   },
-  "changelog_1_4_0_date": {
-    "message": "29 avril 2025",
-    "description": "Changelog 1.4.0 date"
-  },
   "changelog_1_4_0_1": {
     "message": "Ajout de modèles de nom de fichier personnalisables pour les exportations : utilisez des variables de date et d'heure comme %yyyy, %mm, %dd pour obtenir automatiquement des noms de fichier uniques et horodatés."
-  },
-  "changelog_1_3_0_date": {
-    "message": "16 février 2025",
-    "description": "Changelog 1.3.0 date"
   },
   "changelog_1_3_0_1": {
     "message": "Ajout du mode sombre, qui suit automatiquement le thème de votre système."
   },
-  "changelog_1_2_0_date": {
-    "message": "14 février 2025",
-    "description": "Changelog 1.2.0 date"
-  },
   "changelog_1_2_0_1": {
     "message": "L'extension s'adapte désormais automatiquement à la langue de votre navigateur. Disponible en anglais et en espagnol."
-  },
-  "changelog_1_1_0_date": {
-    "message": "13 février 2025",
-    "description": "Changelog 1.1.0 date"
   },
   "changelog_1_1_0_1": {
     "message": "Les favoris importés sont désormais placés dans leur propre dossier pour ne pas se mélanger à vos favoris existants"
@@ -227,10 +163,6 @@
   },
   "changelog_1_1_0_2_link": {
     "message": "Essayer les nouvelles options d'exportation"
-  },
-  "changelog_1_0_0_date": {
-    "message": "5 août 2024",
-    "description": "Changelog 1.0.0 date"
   },
   "changelog_1_0_0_1": {
     "message": "Ajout de l'exportation avancée pour un meilleur contrôle de vos favoris."
@@ -244,10 +176,6 @@
   "changelog_1_0_0_3": {
     "message": "Amélioration générale des performances pour une utilisation plus fluide."
   },
-  "changelog_0_1_1_date": {
-    "message": "4 août 2024",
-    "description": "Changelog 0.1.1 date"
-  },
   "changelog_0_1_1_1": {
     "message": "Correction d'un bug critique qui touchait les utilisateurs dont le navigateur n'est pas en anglais."
   },
@@ -259,10 +187,6 @@
   },
   "changelog_0_1_1_4": {
     "message": "Correction d'un problème : l'extension ne fonctionnait pas dans certains navigateurs."
-  },
-  "changelog_0_1_0_date": {
-    "message": "3 août 2024",
-    "description": "Changelog 0.1.0 date"
   },
   "changelog_0_1_0_1": {
     "message": "Première version de l'extension d'importation et d'exportation de favoris."
@@ -353,10 +277,6 @@
     "message": "Échec de l'importation du fichier CSV",
     "description": "Error when CSV import fails"
   },
-  "autoExport": {
-    "message": "Exportation automatique",
-    "description": "Auto-export settings tab label"
-  },
   "autoExportNeverRun": {
     "message": "Jamais exécutée",
     "description": "Status card value when auto-export has never run"
@@ -409,10 +329,6 @@
     "message": "Formats d'exportation",
     "description": "Export formats section title"
   },
-  "changelog_2_0_0_date": {
-    "message": "2 octobre 2026",
-    "description": "Changelog 2.0.0 date"
-  },
   "changelog_2_0_0_1": {
     "message": "Cette extension a un nouveau nom : Snug. C'est la même extension, avec la même promesse du tout local : exportation, importation et sauvegardes planifiées de vos favoris, sans que rien ne soit jamais envoyé ailleurs. Vos données et vos paramètres ne changent pas ; seuls le nom et l'icône changent."
   },
@@ -422,10 +338,6 @@
   "changelog_2_0_0_2_link": {
     "message": "Ouvrir l'application"
   },
-  "changelog_1_7_0_date": {
-    "message": "1er octobre 2026",
-    "description": "Changelog 1.7.0 date"
-  },
   "changelog_1_7_0_1": {
     "message": "Ajout d'une carte d'état et d'un bouton Exporter maintenant dans les paramètres d'exportation automatique, ainsi que d'une ligne d'état dans la fenêtre contextuelle indiquant si l'exportation automatique est activée, désactivée ou en échec."
   },
@@ -434,10 +346,6 @@
   },
   "changelog_1_7_0_2": {
     "message": "Renforcement de l'importation : les schémas d'URL non autorisés (par exemple javascript:) sont désormais rejetés dans les fichiers CSV, HTML et JSON."
-  },
-  "changelog_1_6_0_date": {
-    "message": "29 avril 2026",
-    "description": "Changelog 1.6.0 date"
   },
   "changelog_1_6_0_1": {
     "message": "Ajout de l'exportation automatique : enregistrez vos favoris automatiquement à intervalles personnalisés (toutes les 12 heures, tous les jours, tous les 3 ou 7 jours) dans le dossier de téléchargement de votre choix."
@@ -493,10 +401,6 @@
   "shell_whatsNewUnseen": {
     "message": "Nouveau",
     "description": "Accessible label of the unseen-update dot on the What's new nav item"
-  },
-  "shell_placeholder": {
-    "message": "Cet écran arrive bientôt.",
-    "description": "Placeholder text shown on App screens that are not built yet"
   },
   "shell_toggleSidebar": {
     "message": "Afficher ou masquer la barre latérale",
@@ -650,6 +554,10 @@
   "autoExportPage_folderDescription": {
     "message": "Dossier, dans votre dossier Téléchargements, où sont enregistrées les sauvegardes.",
     "description": "Help text under the folder field"
+  },
+  "autoExportPage_downloadsPrefix": {
+    "message": "Téléchargements/",
+    "description": "Fixed prefix shown before the folder field: the name of the browser Downloads folder, with a trailing slash"
   },
   "autoExportPage_formatsDescription": {
     "message": "Au moins un format doit rester sélectionné.",
@@ -903,6 +811,34 @@
     "message": "Effacer la recherche",
     "description": "Export page empty state button that clears the search"
   },
+  "exportPage_treeLabel": {
+    "message": "Favoris",
+    "description": "Accessible label of the bookmark tree on the Export page"
+  },
+  "exportPage_emptyTitle": {
+    "message": "Aucun favori pour l'instant",
+    "description": "Export page empty state title when the profile has no bookmarks"
+  },
+  "exportPage_emptyDescription": {
+    "message": "Votre navigateur n'a aucun favori à exporter. Importez un fichier pour commencer.",
+    "description": "Export page empty state description when the profile has no bookmarks"
+  },
+  "exportPage_goToImport": {
+    "message": "Aller à Importer",
+    "description": "Export page empty state button that opens the Import page"
+  },
+  "exportPage_errorTitle": {
+    "message": "Impossible de charger vos favoris",
+    "description": "Export page error state title when bookmarks fail to load"
+  },
+  "exportPage_errorDescription": {
+    "message": "Une erreur s'est produite lors de la lecture de vos favoris.",
+    "description": "Export page error state description when bookmarks fail to load"
+  },
+  "exportPage_tryAgain": {
+    "message": "Réessayer",
+    "description": "Export page error state button that reloads the bookmarks"
+  },
   "welcome_heroTitle": {
     "message": "Bienvenue dans",
     "description": "Lead-in of the welcome page hero title; the Snug wordmark is rendered right after it"
@@ -928,5 +864,86 @@
         "content": "$1"
       }
     }
+  },
+  "import_replaceDiffTitle": {
+    "message": "Le remplacement supprimera $REMOVED$ favoris et en ajoutera $ADDED$",
+    "description": "Replace diff alert title; $REMOVED$ and $ADDED$ are bookmark counts",
+    "placeholders": {
+      "removed": {
+        "content": "$1"
+      },
+      "added": {
+        "content": "$2"
+      }
+    }
+  },
+  "import_replaceDiffDescription": {
+    "message": "Un instantané de sécurité de vos favoris actuels est enregistré d'abord, pour que vous puissiez annuler l'importation.",
+    "description": "Replace diff alert body"
+  },
+  "import_undo": {
+    "message": "Annuler l'importation",
+    "description": "Button that undoes a replace import"
+  },
+  "import_undoing": {
+    "message": "Annulation…",
+    "description": "Undo button label while restoring"
+  },
+  "import_undoneTitle": {
+    "message": "Importation annulée",
+    "description": "Title shown after an import was undone"
+  },
+  "import_undoneDescription": {
+    "message": "Vos favoris ont été restaurés à partir de l'instantané de sécurité.",
+    "description": "Body shown after an import was undone"
+  },
+  "import_undoFailedTitle": {
+    "message": "Impossible d'annuler l'importation",
+    "description": "Error title when undoing an import fails"
+  },
+  "safetySnapshot_title": {
+    "message": "Instantané de sécurité",
+    "description": "Settings card title"
+  },
+  "safetySnapshot_description": {
+    "message": "Créé automatiquement avant chaque remplacement. Seul le plus récent est conservé.",
+    "description": "Settings card description"
+  },
+  "safetySnapshot_fileNote": {
+    "message": "La même copie est enregistrée sous forme de fichier dans votre dossier Téléchargements.",
+    "description": "Note that the snapshot is also a file in Downloads"
+  },
+  "safetySnapshot_restore": {
+    "message": "Restaurer l'instantané",
+    "description": "Button that restores the Safety snapshot"
+  },
+  "safetySnapshot_emptyTitle": {
+    "message": "Aucun instantané pour l'instant",
+    "description": "Empty state title when no snapshot exists"
+  },
+  "safetySnapshot_emptyDescription": {
+    "message": "Un instantané est créé automatiquement la première fois que vous remplacez vos favoris.",
+    "description": "Empty state body when no snapshot exists"
+  },
+  "safetySnapshot_restoreTitle": {
+    "message": "Restaurer cet instantané ?",
+    "description": "Restore confirm dialog title"
+  },
+  "safetySnapshot_restoreDescription": {
+    "message": "Votre barre de favoris et Autres favoris seront remplacés par l'instantané du $DATE$. Un nouvel instantané de vos favoris actuels est enregistré d'abord.",
+    "description": "Restore confirm dialog body; $DATE$ is when the snapshot was taken",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      }
+    }
+  },
+  "safetySnapshot_restoreConfirm": {
+    "message": "Oui, restaurer",
+    "description": "Confirm button in the restore dialog"
+  },
+  "safetySnapshot_restored": {
+    "message": "Instantané restauré.",
+    "description": "Shown after the snapshot was restored"
   }
 }

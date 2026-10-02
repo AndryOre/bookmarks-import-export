@@ -167,6 +167,53 @@ test.describe('Import page', () => {
     ])
   })
 
+  test('replace preview shows removed and added counts, with no "cannot be undone" copy', async ({
+    openExtensionPage,
+    seedBookmarks,
+  }) => {
+    await seedBookmarks([
+      { title: 'Existing', url: 'https://existing-other.example/page' },
+    ])
+    const page = await openImportPage(openExtensionPage)
+    await chooseFile(page, 'bookmarks.json')
+    await selectMode(page, 'Restore — replace')
+
+    await expect(
+      page.getByText('Replace will remove 1 bookmarks and add 3'),
+    ).toBeVisible()
+    await submitImport(page, 3)
+    await expect(page.getByText(/cannot be undone/i)).toHaveCount(0)
+  })
+
+  test('Undo import restores the pre-import bookmarks', async ({
+    openExtensionPage,
+    seedBookmarks,
+    readBookmarkTree,
+  }) => {
+    await seedBookmarks([
+      { title: 'Existing', url: 'https://existing-other.example/page' },
+    ])
+    const page = await openImportPage(openExtensionPage)
+    await chooseFile(page, 'bookmarks.json')
+    await selectMode(page, 'Restore — replace')
+    await submitImport(page, 3)
+    await page
+      .getByRole('button', { name: en.import_replaceConfirm.message })
+      .click()
+    await expectSuccess(page)
+
+    await page.getByRole('button', { name: en.import_undo.message }).click()
+    await expect(page.getByText(en.import_undoneTitle.message)).toBeVisible()
+
+    const [root] = await readBookmarkTree()
+    const bookmarksBar = root?.children?.find((n) => n.id === '1')
+    const otherBookmarks = root?.children?.find((n) => n.id === '2')
+    expect(bookmarksBar?.children ?? []).toEqual([])
+    expect(otherBookmarks?.children?.map((n) => n.url)).toEqual([
+      'https://existing-other.example/page',
+    ])
+  })
+
   test('cancelling the replace confirmation writes nothing', async ({
     openExtensionPage,
     seedBookmarks,

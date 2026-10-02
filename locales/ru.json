@@ -15,37 +15,13 @@
     "message": "Настройки",
     "description": "Settings"
   },
-  "exportFormat": {
-    "message": "Формат экспорта",
-    "description": "Placeholder text for the export format selector"
-  },
   "exportBookmarks": {
     "message": "Экспорт",
     "description": "Export Bookmarks tab label in the popup"
   },
-  "refresh": {
-    "message": "Обновить",
-    "description": "Refresh"
-  },
-  "selectAll": {
-    "message": "Выбрать все",
-    "description": "Select All"
-  },
-  "deselectAll": {
-    "message": "Снять выбор",
-    "description": "Deselect All"
-  },
-  "selected": {
-    "message": "Выбрано",
-    "description": "Selected"
-  },
   "searchBookmarks": {
     "message": "Поиск по закладкам",
     "description": "Search bookmarks"
-  },
-  "display": {
-    "message": "Отображение",
-    "description": "Display"
   },
   "export": {
     "message": "Экспорт",
@@ -79,18 +55,6 @@
     "message": "Включать даты последнего использования",
     "description": "Include last used dates"
   },
-  "includeDateGroupModified": {
-    "message": "Включать даты изменения папок",
-    "description": "Include folder modification dates"
-  },
-  "hideOtherBookmarks": {
-    "message": "Скрыть папку «Другие закладки»",
-    "description": "Hide 'Other bookmarks' folder"
-  },
-  "hideParentFolder": {
-    "message": "Скрыть родительскую папку",
-    "description": "Hide parent folder"
-  },
   "dropFileHere": {
     "message": "Перетащите сюда файл с закладками",
     "description": "File drop zone prompt"
@@ -102,10 +66,6 @@
   "supportedFormats": {
     "message": "Поддерживаются HTML, JSON и CSV",
     "description": "Supported import formats"
-  },
-  "changeFile": {
-    "message": "Изменить",
-    "description": "Button to change selected file"
   },
   "importMode": {
     "message": "Режим импорта",
@@ -140,7 +100,7 @@
     "description": "Import mode: restore and replace description"
   },
   "importModeRestoreReplaceWarning": {
-    "message": "Все текущие закладки на панели закладок и в папке «Другие закладки» будут удалены без возможности восстановления",
+    "message": "Сначала очищает панель закладок и «Другие закладки». Страховой снимок позволяет отменить импорт.",
     "description": "Warning shown for restore-replace mode"
   },
   "importPreview": {
@@ -161,7 +121,7 @@
     "description": "Title of the replace confirmation dialog"
   },
   "replaceConfirmDescription": {
-    "message": "Перед импортом все закладки на панели закладок и в папке «Другие закладки» будут удалены без возможности восстановления. Это действие нельзя отменить.",
+    "message": "Текущие панель закладок и «Другие закладки» очищаются перед импортом. Сначала сохраняется страховой снимок, чтобы вы могли отменить импорт.",
     "description": "Body of the replace confirmation dialog"
   },
   "replaceConfirmButton": {
@@ -180,44 +140,20 @@
     "message": "Закладки импортированы!",
     "description": "Bookmarks imported successfully"
   },
-  "import": {
-    "message": "Импорт",
-    "description": "Import"
-  },
-  "changelog_1_5_0_date": {
-    "message": "29 апреля 2025 г.",
-    "description": "Changelog 1.5.0 date"
-  },
   "changelog_1_5_0_1": {
     "message": "Добавлен расширенный импорт: закладки возвращаются на прежние места (панель закладок и «Другие закладки»), с вариантами «объединить» и «заменить»."
   },
   "changelog_1_5_0_1_link": {
     "message": "Попробовать расширенный импорт"
   },
-  "changelog_1_4_0_date": {
-    "message": "29 апреля 2025 г.",
-    "description": "Changelog 1.4.0 date"
-  },
   "changelog_1_4_0_1": {
     "message": "Добавлены настраиваемые шаблоны имён файлов для экспорта: подставляйте дату и время через %yyyy, %mm, %dd — имена с отметкой времени создаются автоматически."
-  },
-  "changelog_1_3_0_date": {
-    "message": "16 февраля 2025 г.",
-    "description": "Changelog 1.3.0 date"
   },
   "changelog_1_3_0_1": {
     "message": "Добавлена тёмная тема: она автоматически совпадает с темой вашей системы."
   },
-  "changelog_1_2_0_date": {
-    "message": "14 февраля 2025 г.",
-    "description": "Changelog 1.2.0 date"
-  },
   "changelog_1_2_0_1": {
     "message": "Теперь расширение автоматически подстраивается под язык вашего браузера. Доступны английский и испанский."
-  },
-  "changelog_1_1_0_date": {
-    "message": "13 февраля 2025 г.",
-    "description": "Changelog 1.1.0 date"
   },
   "changelog_1_1_0_1": {
     "message": "Импортированные закладки теперь попадают в отдельную папку и не смешиваются с вашими текущими"
@@ -227,10 +163,6 @@
   },
   "changelog_1_1_0_2_link": {
     "message": "Посмотреть новые параметры экспорта"
-  },
-  "changelog_1_0_0_date": {
-    "message": "5 августа 2024 г.",
-    "description": "Changelog 1.0.0 date"
   },
   "changelog_1_0_0_1": {
     "message": "Добавлен расширенный экспорт — больше контроля над вашими закладками."
@@ -244,10 +176,6 @@
   "changelog_1_0_0_3": {
     "message": "Повышена общая производительность — работа стала плавнее."
   },
-  "changelog_0_1_1_date": {
-    "message": "4 августа 2024 г.",
-    "description": "Changelog 0.1.1 date"
-  },
   "changelog_0_1_1_1": {
     "message": "Исправлена критическая ошибка, затрагивавшая пользователей с неанглийским языком браузера."
   },
@@ -259,10 +187,6 @@
   },
   "changelog_0_1_1_4": {
     "message": "Исправлена ошибка, из-за которой расширение не работало в некоторых браузерах."
-  },
-  "changelog_0_1_0_date": {
-    "message": "3 августа 2024 г.",
-    "description": "Changelog 0.1.0 date"
   },
   "changelog_0_1_0_1": {
     "message": "Первый выпуск расширения для импорта и экспорта закладок."
@@ -353,10 +277,6 @@
     "message": "Не удалось импортировать файл CSV",
     "description": "Error when CSV import fails"
   },
-  "autoExport": {
-    "message": "Автоэкспорт",
-    "description": "Auto-export settings tab label"
-  },
   "autoExportNeverRun": {
     "message": "Ещё не запускался",
     "description": "Status card value when auto-export has never run"
@@ -409,10 +329,6 @@
     "message": "Форматы экспорта",
     "description": "Export formats section title"
   },
-  "changelog_2_0_0_date": {
-    "message": "2 октября 2026 г.",
-    "description": "Changelog 2.0.0 date"
-  },
   "changelog_2_0_0_1": {
     "message": "У расширения новое имя — Snug. Расширение то же, обещание то же: всё остаётся на вашем устройстве. Экспорт, импорт и резервное копирование закладок по расписанию, и ничего никуда не отправляется. Ваши данные и настройки не меняются — только имя и значок."
   },
@@ -422,10 +338,6 @@
   "changelog_2_0_0_2_link": {
     "message": "Открыть приложение"
   },
-  "changelog_1_7_0_date": {
-    "message": "1 октября 2026 г.",
-    "description": "Changelog 1.7.0 date"
-  },
   "changelog_1_7_0_1": {
     "message": "В настройки автоэкспорта добавлены карточка состояния и кнопка «Экспортировать сейчас», а во всплывающем окне — строка состояния: автоэкспорт включён, выключен или завершился ошибкой."
   },
@@ -434,10 +346,6 @@
   },
   "changelog_1_7_0_2": {
     "message": "Импорт закладок стал строже: адреса с запрещёнными схемами (например, javascript:) в файлах CSV, HTML и JSON отклоняются."
-  },
-  "changelog_1_6_0_date": {
-    "message": "29 апреля 2026 г.",
-    "description": "Changelog 1.6.0 date"
   },
   "changelog_1_6_0_1": {
     "message": "Добавлен автоэкспорт: закладки автоматически сохраняются с выбранным интервалом (каждые 12 часов, ежедневно, раз в 3 или 7 дней) в нужную папку загрузок."
@@ -493,10 +401,6 @@
   "shell_whatsNewUnseen": {
     "message": "Новое",
     "description": "Accessible label of the unseen-update dot on the What's new nav item"
-  },
-  "shell_placeholder": {
-    "message": "Этот раздел скоро появится.",
-    "description": "Placeholder text shown on App screens that are not built yet"
   },
   "shell_toggleSidebar": {
     "message": "Показать или скрыть боковую панель",
@@ -650,6 +554,10 @@
   "autoExportPage_folderDescription": {
     "message": "Папка внутри «Скачанных файлов», куда сохраняются копии.",
     "description": "Help text under the folder field"
+  },
+  "autoExportPage_downloadsPrefix": {
+    "message": "Загрузки/",
+    "description": "Fixed prefix shown before the folder field: the name of the browser Downloads folder, with a trailing slash"
   },
   "autoExportPage_formatsDescription": {
     "message": "Должен остаться выбранным хотя бы один формат.",
@@ -903,6 +811,34 @@
     "message": "Очистить поиск",
     "description": "Export page empty state button that clears the search"
   },
+  "exportPage_treeLabel": {
+    "message": "Закладки",
+    "description": "Accessible label of the bookmark tree on the Export page"
+  },
+  "exportPage_emptyTitle": {
+    "message": "Закладок пока нет",
+    "description": "Export page empty state title when the profile has no bookmarks"
+  },
+  "exportPage_emptyDescription": {
+    "message": "В вашем браузере нет закладок для экспорта. Импортируйте файл, чтобы начать.",
+    "description": "Export page empty state description when the profile has no bookmarks"
+  },
+  "exportPage_goToImport": {
+    "message": "Перейти к импорту",
+    "description": "Export page empty state button that opens the Import page"
+  },
+  "exportPage_errorTitle": {
+    "message": "Не удалось загрузить закладки",
+    "description": "Export page error state title when bookmarks fail to load"
+  },
+  "exportPage_errorDescription": {
+    "message": "При чтении закладок что-то пошло не так.",
+    "description": "Export page error state description when bookmarks fail to load"
+  },
+  "exportPage_tryAgain": {
+    "message": "Повторить",
+    "description": "Export page error state button that reloads the bookmarks"
+  },
   "welcome_heroTitle": {
     "message": "Добро пожаловать в",
     "description": "Lead-in of the welcome page hero title; the Snug wordmark is rendered right after it"
@@ -928,5 +864,86 @@
         "content": "$1"
       }
     }
+  },
+  "import_replaceDiffTitle": {
+    "message": "Замена удалит закладок: $REMOVED$ и добавит: $ADDED$",
+    "description": "Replace diff alert title; $REMOVED$ and $ADDED$ are bookmark counts",
+    "placeholders": {
+      "removed": {
+        "content": "$1"
+      },
+      "added": {
+        "content": "$2"
+      }
+    }
+  },
+  "import_replaceDiffDescription": {
+    "message": "Сначала сохраняется страховой снимок ваших текущих закладок, чтобы вы могли отменить импорт.",
+    "description": "Replace diff alert body"
+  },
+  "import_undo": {
+    "message": "Отменить импорт",
+    "description": "Button that undoes a replace import"
+  },
+  "import_undoing": {
+    "message": "Отмена…",
+    "description": "Undo button label while restoring"
+  },
+  "import_undoneTitle": {
+    "message": "Импорт отменён",
+    "description": "Title shown after an import was undone"
+  },
+  "import_undoneDescription": {
+    "message": "Закладки восстановлены из страхового снимка.",
+    "description": "Body shown after an import was undone"
+  },
+  "import_undoFailedTitle": {
+    "message": "Не удалось отменить импорт",
+    "description": "Error title when undoing an import fails"
+  },
+  "safetySnapshot_title": {
+    "message": "Страховой снимок",
+    "description": "Settings card title"
+  },
+  "safetySnapshot_description": {
+    "message": "Создаётся автоматически перед каждой заменой. Хранится только последний.",
+    "description": "Settings card description"
+  },
+  "safetySnapshot_fileNote": {
+    "message": "Та же копия сохраняется файлом в папке «Загрузки».",
+    "description": "Note that the snapshot is also a file in Downloads"
+  },
+  "safetySnapshot_restore": {
+    "message": "Восстановить снимок",
+    "description": "Button that restores the Safety snapshot"
+  },
+  "safetySnapshot_emptyTitle": {
+    "message": "Снимка пока нет",
+    "description": "Empty state title when no snapshot exists"
+  },
+  "safetySnapshot_emptyDescription": {
+    "message": "Он создаётся автоматически при первой замене закладок.",
+    "description": "Empty state body when no snapshot exists"
+  },
+  "safetySnapshot_restoreTitle": {
+    "message": "Восстановить этот снимок?",
+    "description": "Restore confirm dialog title"
+  },
+  "safetySnapshot_restoreDescription": {
+    "message": "Панель закладок и «Другие закладки» будут заменены снимком от $DATE$. Сначала сохраняется новый снимок ваших текущих закладок.",
+    "description": "Restore confirm dialog body; $DATE$ is when the snapshot was taken",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      }
+    }
+  },
+  "safetySnapshot_restoreConfirm": {
+    "message": "Да, восстановить",
+    "description": "Confirm button in the restore dialog"
+  },
+  "safetySnapshot_restored": {
+    "message": "Снимок восстановлен.",
+    "description": "Shown after the snapshot was restored"
   }
 }

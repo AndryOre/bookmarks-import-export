@@ -15,37 +15,13 @@
     "message": "設定",
     "description": "Settings"
   },
-  "exportFormat": {
-    "message": "書き出し形式",
-    "description": "Placeholder text for the export format selector"
-  },
   "exportBookmarks": {
     "message": "書き出し",
     "description": "Export Bookmarks tab label in the popup"
   },
-  "refresh": {
-    "message": "更新",
-    "description": "Refresh"
-  },
-  "selectAll": {
-    "message": "すべて選択",
-    "description": "Select All"
-  },
-  "deselectAll": {
-    "message": "すべて選択解除",
-    "description": "Deselect All"
-  },
-  "selected": {
-    "message": "選択中",
-    "description": "Selected"
-  },
   "searchBookmarks": {
     "message": "ブックマークを検索",
     "description": "Search bookmarks"
-  },
-  "display": {
-    "message": "表示",
-    "description": "Display"
   },
   "export": {
     "message": "書き出し",
@@ -79,18 +55,6 @@
     "message": "最終使用日を含める",
     "description": "Include last used dates"
   },
-  "includeDateGroupModified": {
-    "message": "フォルダの更新日を含める",
-    "description": "Include folder modification dates"
-  },
-  "hideOtherBookmarks": {
-    "message": "「その他のブックマーク」フォルダを非表示",
-    "description": "Hide 'Other bookmarks' folder"
-  },
-  "hideParentFolder": {
-    "message": "親フォルダを非表示",
-    "description": "Hide parent folder"
-  },
   "dropFileHere": {
     "message": "ブックマークファイルをここにドロップ",
     "description": "File drop zone prompt"
@@ -102,10 +66,6 @@
   "supportedFormats": {
     "message": "HTML、JSON、CSVに対応",
     "description": "Supported import formats"
-  },
-  "changeFile": {
-    "message": "変更",
-    "description": "Button to change selected file"
   },
   "importMode": {
     "message": "読み込みモード",
@@ -140,7 +100,7 @@
     "description": "Import mode: restore and replace description"
   },
   "importModeRestoreReplaceWarning": {
-    "message": "ブックマークバーと「その他のブックマーク」にある現在のブックマークがすべて完全に削除されます",
+    "message": "ブックマークバーとその他のブックマークを先に空にします。安全スナップショットでインポートを元に戻せます。",
     "description": "Warning shown for restore-replace mode"
   },
   "importPreview": {
@@ -161,7 +121,7 @@
     "description": "Title of the replace confirmation dialog"
   },
   "replaceConfirmDescription": {
-    "message": "読み込みの前に、ブックマークバーと「その他のブックマーク」にあるすべてのブックマークが完全に削除されます。この操作は元に戻せません。",
+    "message": "インポート前に、現在のブックマークバーとその他のブックマークが空になります。安全スナップショットが先に保存されるため、インポートを元に戻せます。",
     "description": "Body of the replace confirmation dialog"
   },
   "replaceConfirmButton": {
@@ -180,44 +140,20 @@
     "message": "ブックマークを読み込みました。",
     "description": "Bookmarks imported successfully"
   },
-  "import": {
-    "message": "読み込み",
-    "description": "Import"
-  },
-  "changelog_1_5_0_date": {
-    "message": "2025年4月29日",
-    "description": "Changelog 1.5.0 date"
-  },
   "changelog_1_5_0_1": {
     "message": "高度な読み込みを追加しました。ブックマークバーと「その他のブックマーク」の元の場所にブックマークを復元でき、統合と置き換えを選べます。"
   },
   "changelog_1_5_0_1_link": {
     "message": "高度な読み込みを試す"
   },
-  "changelog_1_4_0_date": {
-    "message": "2025年4月29日",
-    "description": "Changelog 1.4.0 date"
-  },
   "changelog_1_4_0_1": {
     "message": "書き出しのファイル名テンプレートを追加しました。%yyyy、%mm、%ddなどの日時プレースホルダーを使うと、日時入りの一意なファイル名が自動で作られます。"
-  },
-  "changelog_1_3_0_date": {
-    "message": "2025年2月16日",
-    "description": "Changelog 1.3.0 date"
   },
   "changelog_1_3_0_1": {
     "message": "ダークモードに対応しました。システムのテーマ設定に自動で合わせます。"
   },
-  "changelog_1_2_0_date": {
-    "message": "2025年2月14日",
-    "description": "Changelog 1.2.0 date"
-  },
   "changelog_1_2_0_1": {
     "message": "ブラウザの言語に自動で合わせるようになりました。英語とスペイン語で利用できます。"
-  },
-  "changelog_1_1_0_date": {
-    "message": "2025年2月13日",
-    "description": "Changelog 1.1.0 date"
   },
   "changelog_1_1_0_1": {
     "message": "読み込んだブックマークは専用のフォルダに入るようになり、既存のブックマークと混ざりません"
@@ -227,10 +163,6 @@
   },
   "changelog_1_1_0_2_link": {
     "message": "新しい書き出しオプションを試す"
-  },
-  "changelog_1_0_0_date": {
-    "message": "2024年8月5日",
-    "description": "Changelog 1.0.0 date"
   },
   "changelog_1_0_0_1": {
     "message": "ブックマークをより細かく扱える高度な書き出し機能を追加しました。"
@@ -244,10 +176,6 @@
   "changelog_1_0_0_3": {
     "message": "全体のパフォーマンスを改善し、より快適に使えるようにしました。"
   },
-  "changelog_0_1_1_date": {
-    "message": "2024年8月4日",
-    "description": "Changelog 0.1.1 date"
-  },
   "changelog_0_1_1_1": {
     "message": "英語以外のブラウザ言語を使うユーザーに影響する重大な不具合を修正しました。"
   },
@@ -259,10 +187,6 @@
   },
   "changelog_0_1_1_4": {
     "message": "一部のブラウザで拡張機能が動作しない問題を修正しました。"
-  },
-  "changelog_0_1_0_date": {
-    "message": "2024年8月3日",
-    "description": "Changelog 0.1.0 date"
   },
   "changelog_0_1_0_1": {
     "message": "ブックマークの読み込み・書き出し拡張機能の初回リリースです。"
@@ -353,10 +277,6 @@
     "message": "CSVファイルの読み込みに失敗しました",
     "description": "Error when CSV import fails"
   },
-  "autoExport": {
-    "message": "自動書き出し",
-    "description": "Auto-export settings tab label"
-  },
   "autoExportNeverRun": {
     "message": "未実行",
     "description": "Status card value when auto-export has never run"
@@ -409,10 +329,6 @@
     "message": "書き出し形式",
     "description": "Export formats section title"
   },
-  "changelog_2_0_0_date": {
-    "message": "2026年10月2日",
-    "description": "Changelog 2.0.0 date"
-  },
   "changelog_2_0_0_1": {
     "message": "この拡張機能の名前が Snug に変わりました。拡張機能そのものも、端末内だけで完結するという約束も変わりません。ブックマークの書き出し、読み込み、スケジュールバックアップを行い、データがどこかに送信されることはありません。データや設定は何も変わらず、名前とアイコンだけが新しくなります。"
   },
@@ -422,10 +338,6 @@
   "changelog_2_0_0_2_link": {
     "message": "アプリを開く"
   },
-  "changelog_1_7_0_date": {
-    "message": "2026年10月1日",
-    "description": "Changelog 1.7.0 date"
-  },
   "changelog_1_7_0_1": {
     "message": "自動書き出しの設定にステータスカードと「今すぐ書き出す」ボタンを追加しました。ポップアップには、自動書き出しがオン、オフ、失敗のいずれかを示すステータス行も表示されます。"
   },
@@ -434,10 +346,6 @@
   },
   "changelog_1_7_0_2": {
     "message": "CSV、HTML、JSONファイルの読み込みで、許可されていないURLスキーム（javascript:など）を拒否するよう強化しました。"
-  },
-  "changelog_1_6_0_date": {
-    "message": "2026年4月29日",
-    "description": "Changelog 1.6.0 date"
   },
   "changelog_1_6_0_1": {
     "message": "自動書き出しを追加しました。ブックマークを任意の間隔（12時間ごと、毎日、3日ごと、7日ごと）で、指定したダウンロードフォルダに自動保存します。"
@@ -493,10 +401,6 @@
   "shell_whatsNewUnseen": {
     "message": "新着",
     "description": "Accessible label of the unseen-update dot on the What's new nav item"
-  },
-  "shell_placeholder": {
-    "message": "この画面は近日公開予定です。",
-    "description": "Placeholder text shown on App screens that are not built yet"
   },
   "shell_toggleSidebar": {
     "message": "サイドバーを切り替え",
@@ -650,6 +554,10 @@
   "autoExportPage_folderDescription": {
     "message": "バックアップを保存する、ダウンロードフォルダ内のフォルダです。",
     "description": "Help text under the folder field"
+  },
+  "autoExportPage_downloadsPrefix": {
+    "message": "ダウンロード/",
+    "description": "Fixed prefix shown before the folder field: the name of the browser Downloads folder, with a trailing slash"
   },
   "autoExportPage_formatsDescription": {
     "message": "形式を1つ以上選んだままにしてください。",
@@ -903,6 +811,34 @@
     "message": "検索をクリア",
     "description": "Export page empty state button that clears the search"
   },
+  "exportPage_treeLabel": {
+    "message": "ブックマーク",
+    "description": "Accessible label of the bookmark tree on the Export page"
+  },
+  "exportPage_emptyTitle": {
+    "message": "ブックマークはまだありません",
+    "description": "Export page empty state title when the profile has no bookmarks"
+  },
+  "exportPage_emptyDescription": {
+    "message": "エクスポートできるブックマークがブラウザにありません。ファイルをインポートして始めましょう。",
+    "description": "Export page empty state description when the profile has no bookmarks"
+  },
+  "exportPage_goToImport": {
+    "message": "インポートへ移動",
+    "description": "Export page empty state button that opens the Import page"
+  },
+  "exportPage_errorTitle": {
+    "message": "ブックマークを読み込めませんでした",
+    "description": "Export page error state title when bookmarks fail to load"
+  },
+  "exportPage_errorDescription": {
+    "message": "ブックマークの読み取り中に問題が発生しました。",
+    "description": "Export page error state description when bookmarks fail to load"
+  },
+  "exportPage_tryAgain": {
+    "message": "再試行",
+    "description": "Export page error state button that reloads the bookmarks"
+  },
   "welcome_heroTitle": {
     "message": "ようこそ",
     "description": "Lead-in of the welcome page hero title; the Snug wordmark is rendered right after it"
@@ -928,5 +864,86 @@
         "content": "$1"
       }
     }
+  },
+  "import_replaceDiffTitle": {
+    "message": "置き換えると、ブックマークが$REMOVED$件削除され、$ADDED$件追加されます",
+    "description": "Replace diff alert title; $REMOVED$ and $ADDED$ are bookmark counts",
+    "placeholders": {
+      "removed": {
+        "content": "$1"
+      },
+      "added": {
+        "content": "$2"
+      }
+    }
+  },
+  "import_replaceDiffDescription": {
+    "message": "現在のブックマークの安全スナップショットが先に保存されるため、インポートを元に戻せます。",
+    "description": "Replace diff alert body"
+  },
+  "import_undo": {
+    "message": "インポートを元に戻す",
+    "description": "Button that undoes a replace import"
+  },
+  "import_undoing": {
+    "message": "元に戻しています…",
+    "description": "Undo button label while restoring"
+  },
+  "import_undoneTitle": {
+    "message": "インポートを元に戻しました",
+    "description": "Title shown after an import was undone"
+  },
+  "import_undoneDescription": {
+    "message": "安全スナップショットからブックマークを復元しました。",
+    "description": "Body shown after an import was undone"
+  },
+  "import_undoFailedTitle": {
+    "message": "インポートを元に戻せませんでした",
+    "description": "Error title when undoing an import fails"
+  },
+  "safetySnapshot_title": {
+    "message": "安全スナップショット",
+    "description": "Settings card title"
+  },
+  "safetySnapshot_description": {
+    "message": "置き換えの前に自動で作成されます。最新の1件のみ保持されます。",
+    "description": "Settings card description"
+  },
+  "safetySnapshot_fileNote": {
+    "message": "同じコピーがダウンロードフォルダにファイルとして保存されます。",
+    "description": "Note that the snapshot is also a file in Downloads"
+  },
+  "safetySnapshot_restore": {
+    "message": "スナップショットを復元",
+    "description": "Button that restores the Safety snapshot"
+  },
+  "safetySnapshot_emptyTitle": {
+    "message": "スナップショットはまだありません",
+    "description": "Empty state title when no snapshot exists"
+  },
+  "safetySnapshot_emptyDescription": {
+    "message": "ブックマークを初めて置き換えるときに自動で作成されます。",
+    "description": "Empty state body when no snapshot exists"
+  },
+  "safetySnapshot_restoreTitle": {
+    "message": "このスナップショットを復元しますか？",
+    "description": "Restore confirm dialog title"
+  },
+  "safetySnapshot_restoreDescription": {
+    "message": "ブックマークバーとその他のブックマークは、$DATE$のスナップショットに置き換えられます。現在のブックマークの新しいスナップショットが先に保存されます。",
+    "description": "Restore confirm dialog body; $DATE$ is when the snapshot was taken",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      }
+    }
+  },
+  "safetySnapshot_restoreConfirm": {
+    "message": "はい、復元する",
+    "description": "Confirm button in the restore dialog"
+  },
+  "safetySnapshot_restored": {
+    "message": "スナップショットを復元しました。",
+    "description": "Shown after the snapshot was restored"
   }
 }

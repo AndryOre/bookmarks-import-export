@@ -138,9 +138,11 @@ format they expected) or clearly didn't — and back out.
   validation, not on an extra allowlist/sanitization pass over titles or URLs. A
   future hostile input class not covered by "parse as inert data" is not
   automatically defended against.
-- **`restore-replace` has no undo.** Once confirmed, the bookmarks it deletes
-  are gone; recovery depends on the user having a separate backup (e.g. a prior
-  auto-export file), not on any feature in the extension itself.
+- **`restore-replace` is undoable only through the latest Safety snapshot.**
+  Before it deletes anything, the extension saves a snapshot (a file in
+  Downloads plus one copy in `storage.local`); the Import result's Undo import
+  and Settings' Restore snapshot restore it. Only the latest snapshot is kept,
+  so an older replace cannot be undone once a newer snapshot exists.
 - **Single maintainer, no backup reviewer.** There is no second maintainer to
   review security-relevant changes or act as a continuity backup if the primary
   maintainer is unavailable. This is a deliberate, accepted gap for this

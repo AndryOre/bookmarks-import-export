@@ -8,6 +8,8 @@ import { ExportBar } from '@/components/export/export-bar'
 import { ExportToolbar } from '@/components/export/export-toolbar'
 import {
   ExportTreeEmpty,
+  ExportTreeError,
+  ExportTreeNoBookmarks,
   ExportTreeSkeleton,
 } from '@/components/export/export-tree-states'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -136,6 +138,8 @@ export function ExportRoute() {
               onTotalChange={setTotalCount}
               className="overflow-visible"
               loadingState={<ExportTreeSkeleton />}
+              noBookmarksState={<ExportTreeNoBookmarks />}
+              errorState={(retry) => <ExportTreeError onRetry={retry} />}
               emptyState={
                 <ExportTreeEmpty
                   searchTerm={searchTerm}
