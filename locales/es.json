@@ -15,10 +15,6 @@
     "message": "Ajustes",
     "description": "Ajustes"
   },
-  "settingsDescription": {
-    "message": "Personaliza tu experiencia de importación/exportación de marcadores.",
-    "description": "Descripción de ajustes"
-  },
   "exportFormat": {
     "message": "Formato de exportación",
     "description": "Texto de placeholder del selector de formato de exportación"
@@ -411,6 +407,19 @@
   "autoExportFormats": {
     "message": "Formatos de exportación",
     "description": "Título de la sección de formatos de exportación"
+  },
+  "changelog_2_0_0_date": {
+    "message": "2 de octubre de 2026",
+    "description": "Fecha del changelog 2.0.0"
+  },
+  "changelog_2_0_0_1": {
+    "message": "Esta extensión tiene un nuevo nombre: Snug. La misma extensión, la misma promesa de siempre: exportar, importar y respaldar tus marcadores según el horario que configures, sin enviar nada a ningún lado. Tus datos y tu configuración no cambian — solo el nombre y el ícono."
+  },
+  "changelog_2_0_0_2": {
+    "message": "La App ahora es una sola página con barra lateral (Exportar, Importar, Exportación automática, Ajustes, Novedades), además de un popup compacto y el nuevo ícono y paleta de Snug."
+  },
+  "changelog_2_0_0_2_link": {
+    "message": "Abrir la App"
   },
   "changelog_1_7_0_date": {
     "message": "1 de octubre de 2026",
