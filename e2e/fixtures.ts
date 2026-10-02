@@ -30,6 +30,7 @@ export type SeedBookmark = {
  * instead of reimplementing `launchPersistentContext` setup.
  */
 type ExtensionFixtures = {
+  browserLocale: string | undefined
   context: BrowserContext
   extensionId: string
   serviceWorker: Worker
@@ -49,16 +50,23 @@ type ExtensionFixtures = {
  * `fakeBrowser`.
  */
 export const test = base.extend<ExtensionFixtures>({
-  context: async ({}, use) => {
+  browserLocale: [undefined, { option: true }],
+
+  context: async ({ browserLocale }, use) => {
     const userDataDirectory = await mkdtemp(path.join(tmpdir(), 'snug-e2e-'))
 
     const context = await chromium.launchPersistentContext(userDataDirectory, {
       channel: 'chromium',
+      locale: browserLocale,
       headless: !process.env.PWDEBUG,
       args: [
         `--disable-extensions-except=${EXTENSION_DIR}`,
         `--load-extension=${EXTENSION_DIR}`,
+        ...(browserLocale ? [`--lang=${browserLocale}`] : []),
       ],
+      env: browserLocale
+        ? { ...process.env, LANGUAGE: browserLocale }
+        : undefined,
     })
 
     await use(context)
