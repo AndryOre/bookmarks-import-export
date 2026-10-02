@@ -294,8 +294,7 @@ Unchanged from v1.3.0.
    fields stay dashboard-managed. Finish the dashboard work first, or the
    submission goes for review with the old listing data.
 2. **Recommended order in the dashboard.**
-   1. Land checklist items 1 and 2 on `main` and confirm `bun run check` and
-      `bun run test` pass.
+   1. Confirm `main` is green: `bun run check` and `bun run test` pass.
    2. Open the item's draft in the Developer Dashboard. Do not submit yet.
    3. Store listing tab, English: summary and description are package-sourced,
       so enter the detailed description, category, homepage URL and support URL.
