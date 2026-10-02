@@ -15,37 +15,13 @@
     "message": "设置",
     "description": "Settings"
   },
-  "exportFormat": {
-    "message": "导出格式",
-    "description": "Placeholder text for the export format selector"
-  },
   "exportBookmarks": {
     "message": "导出",
     "description": "Export Bookmarks tab label in the popup"
   },
-  "refresh": {
-    "message": "刷新",
-    "description": "Refresh"
-  },
-  "selectAll": {
-    "message": "全选",
-    "description": "Select All"
-  },
-  "deselectAll": {
-    "message": "取消全选",
-    "description": "Deselect All"
-  },
-  "selected": {
-    "message": "已选",
-    "description": "Selected"
-  },
   "searchBookmarks": {
     "message": "搜索书签",
     "description": "Search bookmarks"
-  },
-  "display": {
-    "message": "显示",
-    "description": "Display"
   },
   "export": {
     "message": "导出",
@@ -79,18 +55,6 @@
     "message": "包含最近使用日期",
     "description": "Include last used dates"
   },
-  "includeDateGroupModified": {
-    "message": "包含文件夹修改日期",
-    "description": "Include folder modification dates"
-  },
-  "hideOtherBookmarks": {
-    "message": "隐藏“其他书签”文件夹",
-    "description": "Hide 'Other bookmarks' folder"
-  },
-  "hideParentFolder": {
-    "message": "隐藏上级文件夹",
-    "description": "Hide parent folder"
-  },
   "dropFileHere": {
     "message": "将书签文件拖放到此处",
     "description": "File drop zone prompt"
@@ -102,10 +66,6 @@
   "supportedFormats": {
     "message": "支持 HTML、JSON 和 CSV",
     "description": "Supported import formats"
-  },
-  "changeFile": {
-    "message": "更换",
-    "description": "Button to change selected file"
   },
   "importMode": {
     "message": "导入方式",
@@ -180,44 +140,20 @@
     "message": "书签导入成功！",
     "description": "Bookmarks imported successfully"
   },
-  "import": {
-    "message": "导入",
-    "description": "Import"
-  },
-  "changelog_1_5_0_date": {
-    "message": "2025年4月29日",
-    "description": "Changelog 1.5.0 date"
-  },
   "changelog_1_5_0_1": {
     "message": "新增高级导入——将书签恢复到原来的位置（书签栏和其他书签），可选择合并或替换。"
   },
   "changelog_1_5_0_1_link": {
     "message": "试试高级导入"
   },
-  "changelog_1_4_0_date": {
-    "message": "2025年4月29日",
-    "description": "Changelog 1.4.0 date"
-  },
   "changelog_1_4_0_1": {
     "message": "新增可自定义的导出文件名模板——使用 %yyyy、%mm、%dd 等日期/时间占位符，自动生成带时间戳的唯一文件名。"
-  },
-  "changelog_1_3_0_date": {
-    "message": "2025年2月16日",
-    "description": "Changelog 1.3.0 date"
   },
   "changelog_1_3_0_1": {
     "message": "新增深色模式支持，自动匹配系统主题偏好。"
   },
-  "changelog_1_2_0_date": {
-    "message": "2025年2月14日",
-    "description": "Changelog 1.2.0 date"
-  },
   "changelog_1_2_0_1": {
     "message": "现在会自动适应浏览器的语言！支持英语和西班牙语。"
-  },
-  "changelog_1_1_0_date": {
-    "message": "2025年2月13日",
-    "description": "Changelog 1.1.0 date"
   },
   "changelog_1_1_0_1": {
     "message": "导入的书签现在会放入单独的文件夹，避免与现有书签混在一起"
@@ -227,10 +163,6 @@
   },
   "changelog_1_1_0_2_link": {
     "message": "试试新的导出选项"
-  },
-  "changelog_1_0_0_date": {
-    "message": "2024年8月5日",
-    "description": "Changelog 1.0.0 date"
   },
   "changelog_1_0_0_1": {
     "message": "新增高级导出功能，让你更好地掌控书签。"
@@ -244,10 +176,6 @@
   "changelog_1_0_0_3": {
     "message": "整体性能优化，使用更流畅。"
   },
-  "changelog_0_1_1_date": {
-    "message": "2024年8月4日",
-    "description": "Changelog 0.1.1 date"
-  },
   "changelog_0_1_1_1": {
     "message": "修复了影响非英语浏览器语言用户的严重错误。"
   },
@@ -259,10 +187,6 @@
   },
   "changelog_0_1_1_4": {
     "message": "修复了扩展程序在部分浏览器中无法运行的问题。"
-  },
-  "changelog_0_1_0_date": {
-    "message": "2024年8月3日",
-    "description": "Changelog 0.1.0 date"
   },
   "changelog_0_1_0_1": {
     "message": "书签导入/导出扩展程序的首个版本。"
@@ -353,10 +277,6 @@
     "message": "导入 CSV 文件失败",
     "description": "Error when CSV import fails"
   },
-  "autoExport": {
-    "message": "自动导出",
-    "description": "Auto-export settings tab label"
-  },
   "autoExportNeverRun": {
     "message": "尚未运行",
     "description": "Status card value when auto-export has never run"
@@ -409,10 +329,6 @@
     "message": "导出格式",
     "description": "Export formats section title"
   },
-  "changelog_2_0_0_date": {
-    "message": "2026年10月2日",
-    "description": "Changelog 2.0.0 date"
-  },
   "changelog_2_0_0_1": {
     "message": "这个扩展程序有了新名称：Snug。还是同一个扩展程序，同样只在本地运行——导出、导入书签并定时备份，绝不向任何地方发送数据。你的数据和设置都不会改变，只有名称和图标变了。"
   },
@@ -422,10 +338,6 @@
   "changelog_2_0_0_2_link": {
     "message": "打开应用"
   },
-  "changelog_1_7_0_date": {
-    "message": "2026年10月1日",
-    "description": "Changelog 1.7.0 date"
-  },
   "changelog_1_7_0_1": {
     "message": "自动导出设置新增状态卡片和“立即导出”按钮，弹出窗口也新增状态行，显示自动导出是已开启、已关闭还是失败。"
   },
@@ -434,10 +346,6 @@
   },
   "changelog_1_7_0_2": {
     "message": "加强了书签导入的安全性：拒绝 CSV、HTML 和 JSON 文件中不允许的 URL 协议（例如 javascript:）。"
-  },
-  "changelog_1_6_0_date": {
-    "message": "2026年4月29日",
-    "description": "Changelog 1.6.0 date"
   },
   "changelog_1_6_0_1": {
     "message": "新增自动导出——按自定义间隔（每 12 小时、每天、每 3 天或每 7 天）自动将书签保存到你指定的下载文件夹。"
@@ -493,10 +401,6 @@
   "shell_whatsNewUnseen": {
     "message": "新",
     "description": "Accessible label of the unseen-update dot on the What's new nav item"
-  },
-  "shell_placeholder": {
-    "message": "此页面即将推出。",
-    "description": "Placeholder text shown on App screens that are not built yet"
   },
   "shell_toggleSidebar": {
     "message": "切换侧边栏",
@@ -650,6 +554,10 @@
   "autoExportPage_folderDescription": {
     "message": "备份保存位置：“下载内容”文件夹中的子文件夹。",
     "description": "Help text under the folder field"
+  },
+  "autoExportPage_downloadsPrefix": {
+    "message": "下载/",
+    "description": "Fixed prefix shown before the folder field: the name of the browser Downloads folder, with a trailing slash"
   },
   "autoExportPage_formatsDescription": {
     "message": "至少需保留一种格式。",

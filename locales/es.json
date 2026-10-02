@@ -15,37 +15,13 @@
     "message": "Ajustes",
     "description": "Ajustes"
   },
-  "exportFormat": {
-    "message": "Formato de exportación",
-    "description": "Texto de placeholder del selector de formato de exportación"
-  },
   "exportBookmarks": {
     "message": "Exportar",
     "description": "Etiqueta de la pestaña Exportar Marcadores en el popup"
   },
-  "refresh": {
-    "message": "Refrescar",
-    "description": "Refrescar"
-  },
-  "selectAll": {
-    "message": "Seleccionar Todo",
-    "description": "Seleccionar Todo"
-  },
-  "deselectAll": {
-    "message": "Deseleccionar Todo",
-    "description": "Deseleccionar Todo"
-  },
-  "selected": {
-    "message": "Seleccionado",
-    "description": "Seleccionado"
-  },
   "searchBookmarks": {
     "message": "Buscar marcadores",
     "description": "Buscar marcadores"
-  },
-  "display": {
-    "message": "Mostrar",
-    "description": "Mostrar"
   },
   "export": {
     "message": "Exportar",
@@ -79,18 +55,6 @@
     "message": "Incluir fechas de uso",
     "description": "Incluir fechas de uso"
   },
-  "includeDateGroupModified": {
-    "message": "Incluir fechas de modificación de carpetas",
-    "description": "Incluir fechas de modificación de carpetas"
-  },
-  "hideOtherBookmarks": {
-    "message": "Ocultar carpeta 'Otros marcadores'",
-    "description": "Ocultar carpeta 'Otros marcadores'"
-  },
-  "hideParentFolder": {
-    "message": "Ocultar carpeta padre",
-    "description": "Ocultar carpeta padre"
-  },
   "dropFileHere": {
     "message": "Suelta tu archivo de marcadores aquí",
     "description": "Texto del área de soltar archivo"
@@ -102,10 +66,6 @@
   "supportedFormats": {
     "message": "Compatible con HTML, JSON y CSV",
     "description": "Formatos de importación admitidos"
-  },
-  "changeFile": {
-    "message": "Cambiar",
-    "description": "Botón para cambiar el archivo seleccionado"
   },
   "importMode": {
     "message": "Modo de importación",
@@ -180,43 +140,20 @@
     "message": "Marcadores importados correctamente!",
     "description": "Marcadores importados correctamente"
   },
-  "import": {
-    "message": "Importar",
-    "description": "Importar"
-  },
-  "changelog_1_5_0_date": {
-    "message": "29 de abril de 2025",
-    "description": "Fecha del changelog 1.5.0"
-  },
   "changelog_1_5_0_1": {
     "message": "Añadida Importación Avanzada — restaura los marcadores a sus ubicaciones originales (Barra de marcadores y Otros marcadores), con opciones de combinar o reemplazar."
   },
   "changelog_1_5_0_1_link": {
     "message": "Probar Importación Avanzada"
   },
-  "changelog_1_4_0_date": {
-    "message": "29 de abril de 2025",
-    "description": "Fecha del changelog 1.4.0"
-  },
   "changelog_1_4_0_1": {
     "message": "Añadidas plantillas de nombre de archivo personalizables para las exportaciones — usa marcadores de fecha y hora como %yyyy, %mm, %dd para generar nombres únicos con timestamp automáticamente."
-  },
-  "changelog_1_3_0_date": {
-    "message": "16 de febrero de 2025",
-    "description": "Fecha del changelog 1.3.0"
   },
   "changelog_1_3_0_1": {
     "message": "Añadido modo oscuro que se adapta automáticamente a las preferencias de tema de tu sistema."
   },
-  "changelog_1_2_0_date": {
-    "message": "14 de febrero de 2025"
-  },
   "changelog_1_2_0_1": {
     "message": "¡Ahora se adapta automáticamente al idioma de tu navegador! Disponible en español e inglés."
-  },
-  "changelog_1_1_0_date": {
-    "message": "13 de febrero de 2025",
-    "description": "Fecha del changelog 1.1.0"
   },
   "changelog_1_1_0_1": {
     "message": "Los marcadores importados ahora van a su propia carpeta para evitar mezclarlos con tus marcadores existentes"
@@ -226,10 +163,6 @@
   },
   "changelog_1_1_0_2_link": {
     "message": "Prueba las nuevas opciones de exportación"
-  },
-  "changelog_1_0_0_date": {
-    "message": "5 de agosto de 2024",
-    "description": "Fecha del changelog 1.0.0"
   },
   "changelog_1_0_0_1": {
     "message": "Añadida nueva exportación avanzada para más control sobre tus marcadores."
@@ -243,10 +176,6 @@
   "changelog_1_0_0_3": {
     "message": "Mejorado rendimiento general para una experiencia más suave."
   },
-  "changelog_0_1_1_date": {
-    "message": "4 de agosto de 2024",
-    "description": "Fecha del changelog 0.1.1"
-  },
   "changelog_0_1_1_1": {
     "message": "Corregido un error crítico que afectaba a los usuarios con navegadores que no usan inglés."
   },
@@ -258,10 +187,6 @@
   },
   "changelog_0_1_1_4": {
     "message": "Corregido un problema donde la extensión no funcionaba en algunos navegadores."
-  },
-  "changelog_0_1_0_date": {
-    "message": "3 de agosto de 2024",
-    "description": "Fecha del changelog 0.1.0"
   },
   "changelog_0_1_0_1": {
     "message": "Primera versión de la extensión Importar/Exportar Marcadores."
@@ -352,10 +277,6 @@
     "message": "Falló al importar archivo CSV",
     "description": "Error cuando la importación CSV falla"
   },
-  "autoExport": {
-    "message": "Exportación automática",
-    "description": "Etiqueta de la pestaña de exportación automática"
-  },
   "autoExportNeverRun": {
     "message": "Aún no se ha ejecutado",
     "description": "Valor mostrado cuando la exportación automática nunca se ha ejecutado"
@@ -408,10 +329,6 @@
     "message": "Formatos de exportación",
     "description": "Título de la sección de formatos de exportación"
   },
-  "changelog_2_0_0_date": {
-    "message": "2 de octubre de 2026",
-    "description": "Fecha del changelog 2.0.0"
-  },
   "changelog_2_0_0_1": {
     "message": "Esta extensión tiene un nuevo nombre: Snug. La misma extensión, la misma promesa de siempre: exportar, importar y respaldar tus marcadores según el horario que configures, sin enviar nada a ningún lado. Tus datos y tu configuración no cambian — solo el nombre y el ícono."
   },
@@ -421,10 +338,6 @@
   "changelog_2_0_0_2_link": {
     "message": "Abrir la App"
   },
-  "changelog_1_7_0_date": {
-    "message": "1 de octubre de 2026",
-    "description": "Fecha del changelog 1.7.0"
-  },
   "changelog_1_7_0_1": {
     "message": "Añadida una tarjeta de estado y un botón Exportar ahora en los ajustes de exportación automática, además de una línea de estado en el popup que muestra si la exportación automática está activada, desactivada o falló."
   },
@@ -433,10 +346,6 @@
   },
   "changelog_1_7_0_2": {
     "message": "Reforzada la importación de marcadores para rechazar esquemas de URL no permitidos (p. ej. javascript:) en archivos CSV, HTML y JSON."
-  },
-  "changelog_1_6_0_date": {
-    "message": "29 de abril de 2026",
-    "description": "Fecha del changelog 1.6.0"
   },
   "changelog_1_6_0_1": {
     "message": "Añadida exportación automática — guarda tus marcadores automáticamente en intervalos personalizados (cada 12 horas, diariamente, cada 3 o 7 días) en tu carpeta de descargas preferida."
@@ -492,10 +401,6 @@
   "shell_whatsNewUnseen": {
     "message": "Nuevo",
     "description": "Etiqueta accesible del punto de novedades sin ver"
-  },
-  "shell_placeholder": {
-    "message": "Esta pantalla estará disponible pronto.",
-    "description": "Texto de marcador en pantallas de la App que aún no están construidas"
   },
   "shell_toggleSidebar": {
     "message": "Alternar barra lateral",
@@ -649,6 +554,10 @@
   "autoExportPage_folderDescription": {
     "message": "Carpeta dentro de Descargas donde se guardan las copias.",
     "description": "Texto de ayuda bajo el campo de carpeta"
+  },
+  "autoExportPage_downloadsPrefix": {
+    "message": "Descargas/",
+    "description": "Fixed prefix shown before the folder field: the name of the browser Downloads folder, with a trailing slash"
   },
   "autoExportPage_formatsDescription": {
     "message": "Debe quedar al menos un formato seleccionado.",

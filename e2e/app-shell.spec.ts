@@ -28,9 +28,7 @@ for (const route of ROUTES) {
       export: en.exportOptions_title.message,
       settings: en.settingsPage_appearanceTitle.message,
     }
-    await expect(
-      page.getByText(stubTexts[route.hash] ?? en.shell_placeholder.message),
-    ).toBeVisible()
+    await expect(page.getByText(stubTexts[route.hash] ?? '')).toBeVisible()
   })
 }
 

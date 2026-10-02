@@ -15,37 +15,13 @@
     "message": "Impostazioni",
     "description": "Settings"
   },
-  "exportFormat": {
-    "message": "Formato di esportazione",
-    "description": "Placeholder text for the export format selector"
-  },
   "exportBookmarks": {
     "message": "Esporta",
     "description": "Export Bookmarks tab label in the popup"
   },
-  "refresh": {
-    "message": "Aggiorna",
-    "description": "Refresh"
-  },
-  "selectAll": {
-    "message": "Seleziona tutto",
-    "description": "Select All"
-  },
-  "deselectAll": {
-    "message": "Deseleziona tutto",
-    "description": "Deselect All"
-  },
-  "selected": {
-    "message": "Selezionati",
-    "description": "Selected"
-  },
   "searchBookmarks": {
     "message": "Cerca segnalibri",
     "description": "Search bookmarks"
-  },
-  "display": {
-    "message": "Visualizzazione",
-    "description": "Display"
   },
   "export": {
     "message": "Esporta",
@@ -79,18 +55,6 @@
     "message": "Includi le date dell'ultimo utilizzo",
     "description": "Include last used dates"
   },
-  "includeDateGroupModified": {
-    "message": "Includi le date di modifica delle cartelle",
-    "description": "Include folder modification dates"
-  },
-  "hideOtherBookmarks": {
-    "message": "Nascondi la cartella \"Altri segnalibri\"",
-    "description": "Hide 'Other bookmarks' folder"
-  },
-  "hideParentFolder": {
-    "message": "Nascondi la cartella principale",
-    "description": "Hide parent folder"
-  },
   "dropFileHere": {
     "message": "Trascina qui il tuo file di segnalibri",
     "description": "File drop zone prompt"
@@ -102,10 +66,6 @@
   "supportedFormats": {
     "message": "Supporta HTML, JSON e CSV",
     "description": "Supported import formats"
-  },
-  "changeFile": {
-    "message": "Cambia",
-    "description": "Button to change selected file"
   },
   "importMode": {
     "message": "Modalità di importazione",
@@ -180,44 +140,20 @@
     "message": "Segnalibri importati correttamente!",
     "description": "Bookmarks imported successfully"
   },
-  "import": {
-    "message": "Importa",
-    "description": "Import"
-  },
-  "changelog_1_5_0_date": {
-    "message": "29 aprile 2025",
-    "description": "Changelog 1.5.0 date"
-  },
   "changelog_1_5_0_1": {
     "message": "Aggiunta l'importazione avanzata — ripristina i segnalibri nelle posizioni originali (Barra dei segnalibri e Altri segnalibri), con le opzioni di unione o sostituzione."
   },
   "changelog_1_5_0_1_link": {
     "message": "Prova l'importazione avanzata"
   },
-  "changelog_1_4_0_date": {
-    "message": "29 aprile 2025",
-    "description": "Changelog 1.4.0 date"
-  },
   "changelog_1_4_0_1": {
     "message": "Aggiunti modelli di nome file personalizzabili per le esportazioni — usa segnaposto di data e ora come %yyyy, %mm, %dd per creare automaticamente nomi di file univoci con data e ora."
-  },
-  "changelog_1_3_0_date": {
-    "message": "16 febbraio 2025",
-    "description": "Changelog 1.3.0 date"
   },
   "changelog_1_3_0_1": {
     "message": "Aggiunto il supporto per la modalità scura, che segue automaticamente le preferenze del tema del tuo sistema."
   },
-  "changelog_1_2_0_date": {
-    "message": "14 febbraio 2025",
-    "description": "Changelog 1.2.0 date"
-  },
   "changelog_1_2_0_1": {
     "message": "Ora si adatta automaticamente alla lingua del tuo browser! Disponibile in inglese e spagnolo."
-  },
-  "changelog_1_1_0_date": {
-    "message": "13 febbraio 2025",
-    "description": "Changelog 1.1.0 date"
   },
   "changelog_1_1_0_1": {
     "message": "I segnalibri importati ora finiscono in una cartella dedicata, per non mescolarsi con quelli già presenti"
@@ -227,10 +163,6 @@
   },
   "changelog_1_1_0_2_link": {
     "message": "Prova le nuove opzioni di esportazione"
-  },
-  "changelog_1_0_0_date": {
-    "message": "5 agosto 2024",
-    "description": "Changelog 1.0.0 date"
   },
   "changelog_1_0_0_1": {
     "message": "Aggiunta la nuova funzione di esportazione avanzata, per avere più controllo sui tuoi segnalibri."
@@ -244,10 +176,6 @@
   "changelog_1_0_0_3": {
     "message": "Migliorate le prestazioni generali per un'esperienza più fluida."
   },
-  "changelog_0_1_1_date": {
-    "message": "4 agosto 2024",
-    "description": "Changelog 0.1.1 date"
-  },
   "changelog_0_1_1_1": {
     "message": "Corretto un bug critico che riguardava chi usava un browser con una lingua diversa dall'inglese."
   },
@@ -259,10 +187,6 @@
   },
   "changelog_0_1_1_4": {
     "message": "Risolto un problema per cui l'estensione non funzionava in alcuni browser."
-  },
-  "changelog_0_1_0_date": {
-    "message": "3 agosto 2024",
-    "description": "Changelog 0.1.0 date"
   },
   "changelog_0_1_0_1": {
     "message": "Prima versione dell'estensione per importare ed esportare i segnalibri."
@@ -353,10 +277,6 @@
     "message": "Impossibile importare il file CSV",
     "description": "Error when CSV import fails"
   },
-  "autoExport": {
-    "message": "Esportazione automatica",
-    "description": "Auto-export settings tab label"
-  },
   "autoExportNeverRun": {
     "message": "Mai eseguita",
     "description": "Status card value when auto-export has never run"
@@ -409,10 +329,6 @@
     "message": "Formati di esportazione",
     "description": "Export formats section title"
   },
-  "changelog_2_0_0_date": {
-    "message": "2 ottobre 2026",
-    "description": "Changelog 2.0.0 date"
-  },
   "changelog_2_0_0_1": {
     "message": "Questa estensione ha un nuovo nome: Snug. Stessa estensione, stessa promessa di restare tutto in locale — esportazione, importazione e backup pianificati dei tuoi segnalibri, senza che nulla venga mai inviato altrove. Per i tuoi dati e le tue impostazioni non cambia nulla; cambiano solo il nome e l'icona."
   },
@@ -422,10 +338,6 @@
   "changelog_2_0_0_2_link": {
     "message": "Apri l'app"
   },
-  "changelog_1_7_0_date": {
-    "message": "1 ottobre 2026",
-    "description": "Changelog 1.7.0 date"
-  },
   "changelog_1_7_0_1": {
     "message": "Aggiunti una scheda di stato e un pulsante Esporta ora alle impostazioni dell'esportazione automatica, più una riga di stato nel popup che indica se l'esportazione automatica è attiva, disattivata o non riuscita."
   },
@@ -434,10 +346,6 @@
   },
   "changelog_1_7_0_2": {
     "message": "Rese più sicure le importazioni di segnalibri: ora vengono rifiutati gli schemi URL non consentiti (ad es. javascript:) nei file CSV, HTML e JSON."
-  },
-  "changelog_1_6_0_date": {
-    "message": "29 aprile 2026",
-    "description": "Changelog 1.6.0 date"
   },
   "changelog_1_6_0_1": {
     "message": "Aggiunta l'esportazione automatica — salva automaticamente i tuoi segnalibri a intervalli personalizzati (ogni 12 ore, ogni giorno, ogni 3 o 7 giorni) nella cartella di download che preferisci."
@@ -493,10 +401,6 @@
   "shell_whatsNewUnseen": {
     "message": "Nuovo",
     "description": "Accessible label of the unseen-update dot on the What's new nav item"
-  },
-  "shell_placeholder": {
-    "message": "Questa schermata sarà disponibile a breve.",
-    "description": "Placeholder text shown on App screens that are not built yet"
   },
   "shell_toggleSidebar": {
     "message": "Mostra o nascondi la barra laterale",
@@ -650,6 +554,10 @@
   "autoExportPage_folderDescription": {
     "message": "Cartella all'interno di Download in cui vengono salvati i backup.",
     "description": "Help text under the folder field"
+  },
+  "autoExportPage_downloadsPrefix": {
+    "message": "Download/",
+    "description": "Fixed prefix shown before the folder field: the name of the browser Downloads folder, with a trailing slash"
   },
   "autoExportPage_formatsDescription": {
     "message": "Deve restare selezionato almeno un formato.",

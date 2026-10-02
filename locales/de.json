@@ -15,37 +15,13 @@
     "message": "Einstellungen",
     "description": "Settings"
   },
-  "exportFormat": {
-    "message": "Exportformat",
-    "description": "Placeholder text for the export format selector"
-  },
   "exportBookmarks": {
     "message": "Exportieren",
     "description": "Export Bookmarks tab label in the popup"
   },
-  "refresh": {
-    "message": "Aktualisieren",
-    "description": "Refresh"
-  },
-  "selectAll": {
-    "message": "Alle auswählen",
-    "description": "Select All"
-  },
-  "deselectAll": {
-    "message": "Auswahl aufheben",
-    "description": "Deselect All"
-  },
-  "selected": {
-    "message": "Ausgewählt",
-    "description": "Selected"
-  },
   "searchBookmarks": {
     "message": "Lesezeichen durchsuchen",
     "description": "Search bookmarks"
-  },
-  "display": {
-    "message": "Anzeige",
-    "description": "Display"
   },
   "export": {
     "message": "Export",
@@ -79,18 +55,6 @@
     "message": "Datum der letzten Nutzung einbeziehen",
     "description": "Include last used dates"
   },
-  "includeDateGroupModified": {
-    "message": "Änderungsdatum von Ordnern einbeziehen",
-    "description": "Include folder modification dates"
-  },
-  "hideOtherBookmarks": {
-    "message": "Ordner „Weitere Lesezeichen“ ausblenden",
-    "description": "Hide 'Other bookmarks' folder"
-  },
-  "hideParentFolder": {
-    "message": "Übergeordneten Ordner ausblenden",
-    "description": "Hide parent folder"
-  },
   "dropFileHere": {
     "message": "Lesezeichendatei hierher ziehen",
     "description": "File drop zone prompt"
@@ -102,10 +66,6 @@
   "supportedFormats": {
     "message": "Unterstützt HTML, JSON und CSV",
     "description": "Supported import formats"
-  },
-  "changeFile": {
-    "message": "Ändern",
-    "description": "Button to change selected file"
   },
   "importMode": {
     "message": "Importmodus",
@@ -180,44 +140,20 @@
     "message": "Lesezeichen erfolgreich importiert!",
     "description": "Bookmarks imported successfully"
   },
-  "import": {
-    "message": "Import",
-    "description": "Import"
-  },
-  "changelog_1_5_0_date": {
-    "message": "29. April 2025",
-    "description": "Changelog 1.5.0 date"
-  },
   "changelog_1_5_0_1": {
     "message": "Erweiterter Import hinzugefügt – stelle Lesezeichen an ihren ursprünglichen Orten (Lesezeichenleiste und Weitere Lesezeichen) wieder her, wahlweise zusammenführend oder ersetzend."
   },
   "changelog_1_5_0_1_link": {
     "message": "Erweiterten Import ausprobieren"
   },
-  "changelog_1_4_0_date": {
-    "message": "29. April 2025",
-    "description": "Changelog 1.4.0 date"
-  },
   "changelog_1_4_0_1": {
     "message": "Anpassbare Dateinamenvorlagen für Exporte hinzugefügt – mit Datums- und Uhrzeit-Platzhaltern wie %yyyy, %mm, %dd entstehen automatisch eindeutige Dateinamen mit Zeitstempel."
-  },
-  "changelog_1_3_0_date": {
-    "message": "16. Februar 2025",
-    "description": "Changelog 1.3.0 date"
   },
   "changelog_1_3_0_1": {
     "message": "Dunkelmodus hinzugefügt, der sich automatisch an das Design deines Systems anpasst."
   },
-  "changelog_1_2_0_date": {
-    "message": "14. Februar 2025",
-    "description": "Changelog 1.2.0 date"
-  },
   "changelog_1_2_0_1": {
     "message": "Passt sich jetzt automatisch der Sprache deines Browsers an! Verfügbar auf Englisch und Spanisch."
-  },
-  "changelog_1_1_0_date": {
-    "message": "13. Februar 2025",
-    "description": "Changelog 1.1.0 date"
   },
   "changelog_1_1_0_1": {
     "message": "Importierte Lesezeichen landen jetzt in einem eigenen Ordner und vermischen sich nicht mit deinen vorhandenen Lesezeichen"
@@ -227,10 +163,6 @@
   },
   "changelog_1_1_0_2_link": {
     "message": "Neue Exportoptionen ausprobieren"
-  },
-  "changelog_1_0_0_date": {
-    "message": "5. August 2024",
-    "description": "Changelog 1.0.0 date"
   },
   "changelog_1_0_0_1": {
     "message": "Neue Funktion „Erweiterter Export“ für mehr Kontrolle über deine Lesezeichen hinzugefügt."
@@ -244,10 +176,6 @@
   "changelog_1_0_0_3": {
     "message": "Gesamtleistung für ein flüssigeres Erlebnis verbessert."
   },
-  "changelog_0_1_1_date": {
-    "message": "4. August 2024",
-    "description": "Changelog 0.1.1 date"
-  },
   "changelog_0_1_1_1": {
     "message": "Einen kritischen Fehler behoben, der Nutzer mit nicht englischen Browsersprachen betraf."
   },
@@ -259,10 +187,6 @@
   },
   "changelog_0_1_1_4": {
     "message": "Ein Problem behoben, bei dem die Erweiterung in einigen Browsern nicht funktionierte."
-  },
-  "changelog_0_1_0_date": {
-    "message": "3. August 2024",
-    "description": "Changelog 0.1.0 date"
   },
   "changelog_0_1_0_1": {
     "message": "Erstveröffentlichung der Erweiterung „Bookmark Import/Export“."
@@ -353,10 +277,6 @@
     "message": "CSV-Datei konnte nicht importiert werden",
     "description": "Error when CSV import fails"
   },
-  "autoExport": {
-    "message": "Auto-Export",
-    "description": "Auto-export settings tab label"
-  },
   "autoExportNeverRun": {
     "message": "Noch nie ausgeführt",
     "description": "Status card value when auto-export has never run"
@@ -409,10 +329,6 @@
     "message": "Exportformate",
     "description": "Export formats section title"
   },
-  "changelog_2_0_0_date": {
-    "message": "2. Oktober 2026",
-    "description": "Changelog 2.0.0 date"
-  },
   "changelog_2_0_0_1": {
     "message": "Diese Erweiterung hat einen neuen Namen: Snug. Dieselbe Erweiterung, dasselbe Versprechen, alles lokal zu halten – Export, Import und geplante Sicherungen für deine Lesezeichen, ohne dass je etwas irgendwohin gesendet wird. An deinen Daten und Einstellungen ändert sich nichts; nur Name und Symbol sind neu."
   },
@@ -422,10 +338,6 @@
   "changelog_2_0_0_2_link": {
     "message": "App öffnen"
   },
-  "changelog_1_7_0_date": {
-    "message": "1. Oktober 2026",
-    "description": "Changelog 1.7.0 date"
-  },
   "changelog_1_7_0_1": {
     "message": "Statuskarte und Schaltfläche „Jetzt exportieren“ in den Auto-Export-Einstellungen hinzugefügt, dazu eine Statuszeile im Popup, die zeigt, ob der Auto-Export an, aus oder fehlgeschlagen ist."
   },
@@ -434,10 +346,6 @@
   },
   "changelog_1_7_0_2": {
     "message": "Lesezeichen-Importe gehärtet: Nicht zulässige URL-Schemata (z. B. javascript:) in CSV-, HTML- und JSON-Dateien werden jetzt abgelehnt."
-  },
-  "changelog_1_6_0_date": {
-    "message": "29. April 2026",
-    "description": "Changelog 1.6.0 date"
   },
   "changelog_1_6_0_1": {
     "message": "Auto-Export hinzugefügt – speichere deine Lesezeichen automatisch in individuellen Intervallen (alle 12 Stunden, täglich, alle 3 oder 7 Tage) in deinem bevorzugten Download-Ordner."
@@ -493,10 +401,6 @@
   "shell_whatsNewUnseen": {
     "message": "Neu",
     "description": "Accessible label of the unseen-update dot on the What's new nav item"
-  },
-  "shell_placeholder": {
-    "message": "Dieser Bereich kommt bald.",
-    "description": "Placeholder text shown on App screens that are not built yet"
   },
   "shell_toggleSidebar": {
     "message": "Seitenleiste ein-/ausblenden",
@@ -650,6 +554,10 @@
   "autoExportPage_folderDescription": {
     "message": "Ordner innerhalb deines Download-Ordners, in dem die Sicherungen gespeichert werden.",
     "description": "Help text under the folder field"
+  },
+  "autoExportPage_downloadsPrefix": {
+    "message": "Downloads/",
+    "description": "Fixed prefix shown before the folder field: the name of the browser Downloads folder, with a trailing slash"
   },
   "autoExportPage_formatsDescription": {
     "message": "Mindestens ein Format muss ausgewählt bleiben.",
