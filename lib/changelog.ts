@@ -1,5 +1,7 @@
 import type { GeneratedI18nStructure } from '#i18n'
 
+import { APP_ROUTES, getAppUrl } from './app-url'
+
 /**
  * Every changelog key is rendered as plain, argument-less text, so this
  * narrows to the subset of `i18n.t()` keys valid for that call shape
@@ -39,16 +41,16 @@ interface ChangelogItem {
  * item and its optional link label (see the generated
  * `GeneratedI18nStructure` for the actual message strings). `linkUrl`
  * pairs with `linkKey` to make an item's link label point at an
- * extension-internal page.
+ * App route (built with `getAppUrl`).
  *
  * The root `CHANGELOG.md` mirrors these entries for human readers outside
  * the extension and must be kept in sync by hand alongside this function.
  * @returns The changelog entries, newest release first.
  */
 export function getChangelog(): ChangelogEntry[] {
-  const advancedExportUrl = browser.runtime.getURL('/advanced-export.html')
-
-  const advancedImportUrl = browser.runtime.getURL('/advanced-import.html')
+  const exportUrl = getAppUrl(APP_ROUTES.export)
+  const importUrl = getAppUrl(APP_ROUTES.import)
+  const autoExportUrl = getAppUrl(APP_ROUTES.autoExport)
 
   return [
     {
@@ -58,7 +60,7 @@ export function getChangelog(): ChangelogEntry[] {
         {
           textKey: 'changelog_1_7_0_1',
           linkKey: 'changelog_1_7_0_1_link',
-          linkUrl: `${advancedExportUrl}?settings=auto-export`,
+          linkUrl: autoExportUrl,
         },
         {
           textKey: 'changelog_1_7_0_2',
@@ -72,7 +74,7 @@ export function getChangelog(): ChangelogEntry[] {
         {
           textKey: 'changelog_1_6_0_1',
           linkKey: 'changelog_1_6_0_1_link',
-          linkUrl: `${advancedExportUrl}?settings=auto-export`,
+          linkUrl: autoExportUrl,
         },
       ],
     },
@@ -83,7 +85,7 @@ export function getChangelog(): ChangelogEntry[] {
         {
           textKey: 'changelog_1_5_0_1',
           linkKey: 'changelog_1_5_0_1_link',
-          linkUrl: advancedImportUrl,
+          linkUrl: importUrl,
         },
       ],
     },
@@ -110,7 +112,7 @@ export function getChangelog(): ChangelogEntry[] {
         {
           textKey: 'changelog_1_1_0_2',
           linkKey: 'changelog_1_1_0_2_link',
-          linkUrl: advancedExportUrl,
+          linkUrl: exportUrl,
         },
       ],
     },
@@ -121,7 +123,7 @@ export function getChangelog(): ChangelogEntry[] {
         {
           textKey: 'changelog_1_0_0_1',
           linkKey: 'changelog_1_0_0_1_link',
-          linkUrl: advancedExportUrl,
+          linkUrl: exportUrl,
         },
         { textKey: 'changelog_1_0_0_2' },
         { textKey: 'changelog_1_0_0_3' },
