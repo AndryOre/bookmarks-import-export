@@ -36,6 +36,30 @@ function placeholderNames(entry: LocaleEntry): string[] {
   )
 }
 
+/**
+ * @param entry A single message entry.
+ * @returns The declared placeholder names whose `$NAME$` token is absent from
+ * the message text (compared case-insensitively, as Chrome does).
+ */
+function missingPlaceholderTokens(entry: LocaleEntry): string[] {
+  return Object.keys(entry.placeholders ?? {}).filter(
+    (name) => !entry.message.toLowerCase().includes(`$${name.toLowerCase()}$`),
+  )
+}
+
+/**
+ * @param messages A whole locale file.
+ * @returns Human-readable problems: empty messages and unused placeholders.
+ */
+function findContentProblems(messages: LocaleMessages): string[] {
+  return Object.entries(messages).flatMap(([key, entry]) => [
+    ...(entry.message.trim() === '' ? [`${key}: empty message`] : []),
+    ...missingPlaceholderTokens(entry).map(
+      (name) => `${key}: placeholder $${name}$ missing from message`,
+    ),
+  ])
+}
+
 const locales = new Map(
   Object.entries(localeModules).map(([path, messages]) => [
     localeCode(path),
@@ -43,15 +67,51 @@ const locales = new Map(
   ]),
 )
 const sourceMessages: LocaleMessages = locales.get(SOURCE_LOCALE) ?? {}
-const translatedLocales = locales
-  .entries()
-  .filter(([code]) => code !== SOURCE_LOCALE)
-  .toArray()
+const allLocales = locales.entries().toArray()
+const translatedLocales = allLocales.filter(([code]) => code !== SOURCE_LOCALE)
 
 describe('locale parity', () => {
   it('finds the source locale and at least one translation', () => {
     expect(Object.keys(sourceMessages).length).toBeGreaterThan(0)
     expect(translatedLocales.length).toBeGreaterThanOrEqual(1)
+  })
+
+  describe('content checks', () => {
+    it('flags an empty message', () => {
+      expect(findContentProblems({ a: { message: '  ' } })).toEqual([
+        'a: empty message',
+      ])
+    })
+
+    it('flags a declared placeholder missing from the message', () => {
+      const fixture = {
+        a: {
+          message: 'Hello',
+          placeholders: { count: { content: '$1' } },
+        },
+      }
+      expect(findContentProblems(fixture)).toEqual([
+        'a: placeholder $count$ missing from message',
+      ])
+    })
+
+    it('accepts a placeholder token in any letter case', () => {
+      const fixture = {
+        a: {
+          message: 'Total $COUNT$',
+          placeholders: { count: { content: '$1' } },
+        },
+      }
+      expect(findContentProblems(fixture)).toEqual([])
+    })
+  })
+
+  describe.each(allLocales)('%s content', (code, messages) => {
+    it('has no empty messages and every placeholder token is used', () => {
+      expect({ locale: code, problems: findContentProblems(messages) }).toEqual(
+        { locale: code, problems: [] },
+      )
+    })
   })
 
   describe.each(translatedLocales)('%s', (code, messages) => {

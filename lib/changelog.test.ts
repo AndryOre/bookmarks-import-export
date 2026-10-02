@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import { fakeBrowser } from 'wxt/testing/fake-browser'
 
 import { APP_ROUTES, getAppUrl } from './app-url'
-import { getChangelog } from './changelog'
+import { formatChangelogDate, getChangelog } from './changelog'
 
 beforeEach(() => {
   fakeBrowser.reset()
@@ -53,5 +53,25 @@ describe('getChangelog', () => {
     const entry = entries.find((entry) => entry.version === '1.4.0')
     expect(entry?.items[0]?.linkKey).toBeUndefined()
     expect(entry?.items[0]?.linkUrl).toBeUndefined()
+  })
+})
+
+describe('changelog dates', () => {
+  it('stores every release date as a valid ISO date', () => {
+    for (const { isoDate } of getChangelog()) {
+      expect(isoDate).toMatch(/^\d{4}-\d{2}-\d{2}$/)
+      expect(Number.isNaN(new Date(`${isoDate}T00:00:00Z`).getTime())).toBe(
+        false,
+      )
+    }
+  })
+
+  it('formats the date in the requested locale', () => {
+    expect(formatChangelogDate('2026-10-02', 'en')).toBe('October 2, 2026')
+    expect(formatChangelogDate('2026-10-02', 'es')).toBe('2 de octubre de 2026')
+  })
+
+  it('does not shift the day with the process timezone', () => {
+    expect(formatChangelogDate('2025-02-13', 'en')).toBe('February 13, 2025')
   })
 })

@@ -53,8 +53,6 @@ import type {
 } from '@/lib/types'
 import { useStorageItem } from '@/lib/use-storage-item'
 
-const DOWNLOADS_PREFIX = 'Downloads/'
-
 const INTERVAL_OPTIONS: { value: AutoExportInterval; label: string }[] = [
   { value: '12h', label: 'autoExportPage_interval12h' },
   { value: '1d', label: 'autoExportPage_interval1d' },
@@ -355,7 +353,9 @@ export function AutoExportRoute() {
               </FieldLabel>
               <InputGroup>
                 <InputGroupAddon>
-                  <InputGroupText>{DOWNLOADS_PREFIX}</InputGroupText>
+                  <InputGroupText>
+                    {i18n.t('autoExportPage_downloadsPrefix')}
+                  </InputGroupText>
                 </InputGroupAddon>
                 <InputGroupInput
                   id="auto-export-folder"

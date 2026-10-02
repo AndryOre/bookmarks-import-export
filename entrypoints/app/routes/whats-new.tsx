@@ -10,7 +10,7 @@ import {
   ItemTitle,
 } from '@/components/ui/item'
 import { CHROME_WEB_STORE_URL } from '@/lib/brand'
-import { getChangelog } from '@/lib/changelog'
+import { formatChangelogDate, getChangelog } from '@/lib/changelog'
 
 /**
  * The What's new screen: a changelog timeline (newest first, installed
@@ -26,7 +26,7 @@ export function WhatsNewRoute() {
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-6">
       <ol className="flex flex-col">
-        {changelog.map(({ version, dateKey, items }, index) => {
+        {changelog.map(({ version, isoDate, items }, index) => {
           const isLast = index === changelog.length - 1
           return (
             <li key={version} className="flex gap-4">
@@ -48,7 +48,7 @@ export function WhatsNewRoute() {
                     <Badge>{i18n.t('whatsNew_current')}</Badge>
                   )}
                   <span className="text-sm text-muted-foreground">
-                    {i18n.t(dateKey)}
+                    {formatChangelogDate(isoDate, browser.i18n.getUILanguage())}
                   </span>
                 </div>
                 <ul className="ml-4 flex list-outside list-disc flex-col gap-1">

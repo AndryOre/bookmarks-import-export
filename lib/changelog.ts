@@ -18,7 +18,7 @@ type I18nKey = {
 
 export interface ChangelogEntry {
   version: string
-  dateKey: I18nKey
+  isoDate: string
   items: ChangelogItem[]
 }
 
@@ -34,9 +34,9 @@ interface ChangelogItem {
  * that generates this list from `CHANGELOG.md`, git tags, or anything
  * else, so a new release means adding an entry here directly.
  *
- * Each entry's `dateKey`, `textKey`, and optional `linkKey` are i18n
+ * Each entry's `isoDate` is a `YYYY-MM-DD` release date, rendered with
+ * `formatChangelogDate`. Its `textKey` and optional `linkKey` are i18n
  * message keys, not literal text, following the naming convention
- * `changelog_<version_with_underscores>_date` for the date and
  * `changelog_<version_with_underscores>_<item_index>[_link]` for each
  * item and its optional link label (see the generated
  * `GeneratedI18nStructure` for the actual message strings). `linkUrl`
@@ -55,7 +55,7 @@ export function getChangelog(): ChangelogEntry[] {
   return [
     {
       version: '2.0.0',
-      dateKey: 'changelog_2_0_0_date',
+      isoDate: '2026-10-02',
       items: [
         {
           textKey: 'changelog_2_0_0_1',
@@ -69,7 +69,7 @@ export function getChangelog(): ChangelogEntry[] {
     },
     {
       version: '1.7.0',
-      dateKey: 'changelog_1_7_0_date',
+      isoDate: '2026-10-01',
       items: [
         {
           textKey: 'changelog_1_7_0_1',
@@ -83,7 +83,7 @@ export function getChangelog(): ChangelogEntry[] {
     },
     {
       version: '1.6.0',
-      dateKey: 'changelog_1_6_0_date',
+      isoDate: '2026-04-29',
       items: [
         {
           textKey: 'changelog_1_6_0_1',
@@ -94,7 +94,7 @@ export function getChangelog(): ChangelogEntry[] {
     },
     {
       version: '1.5.0',
-      dateKey: 'changelog_1_5_0_date',
+      isoDate: '2025-04-29',
       items: [
         {
           textKey: 'changelog_1_5_0_1',
@@ -105,22 +105,22 @@ export function getChangelog(): ChangelogEntry[] {
     },
     {
       version: '1.4.0',
-      dateKey: 'changelog_1_4_0_date',
+      isoDate: '2025-04-29',
       items: [{ textKey: 'changelog_1_4_0_1' }],
     },
     {
       version: '1.3.0',
-      dateKey: 'changelog_1_3_0_date',
+      isoDate: '2025-02-16',
       items: [{ textKey: 'changelog_1_3_0_1' }],
     },
     {
       version: '1.2.0',
-      dateKey: 'changelog_1_2_0_date',
+      isoDate: '2025-02-14',
       items: [{ textKey: 'changelog_1_2_0_1' }],
     },
     {
       version: '1.1.0',
-      dateKey: 'changelog_1_1_0_date',
+      isoDate: '2025-02-13',
       items: [
         { textKey: 'changelog_1_1_0_1' },
         {
@@ -132,7 +132,7 @@ export function getChangelog(): ChangelogEntry[] {
     },
     {
       version: '1.0.0',
-      dateKey: 'changelog_1_0_0_date',
+      isoDate: '2024-08-05',
       items: [
         {
           textKey: 'changelog_1_0_0_1',
@@ -145,7 +145,7 @@ export function getChangelog(): ChangelogEntry[] {
     },
     {
       version: '0.1.1',
-      dateKey: 'changelog_0_1_1_date',
+      isoDate: '2024-08-04',
       items: [
         { textKey: 'changelog_0_1_1_1' },
         { textKey: 'changelog_0_1_1_2' },
@@ -155,7 +155,7 @@ export function getChangelog(): ChangelogEntry[] {
     },
     {
       version: '0.1.0',
-      dateKey: 'changelog_0_1_0_date',
+      isoDate: '2024-08-03',
       items: [
         { textKey: 'changelog_0_1_0_1' },
         { textKey: 'changelog_0_1_0_2' },
@@ -163,4 +163,19 @@ export function getChangelog(): ChangelogEntry[] {
       ],
     },
   ]
+}
+
+/**
+ * Formats a changelog `YYYY-MM-DD` release date for display. The date is
+ * parsed and formatted in UTC so the shown day never shifts with the
+ * viewer's timezone.
+ * @param isoDate The release date as `YYYY-MM-DD`.
+ * @param locale A BCP 47 locale tag; defaults to the runtime locale.
+ * @returns The long-form localized date, such as `October 2, 2026`.
+ */
+export function formatChangelogDate(isoDate: string, locale?: string): string {
+  return new Intl.DateTimeFormat(locale, {
+    dateStyle: 'long',
+    timeZone: 'UTC',
+  }).format(new Date(`${isoDate}T00:00:00Z`))
 }

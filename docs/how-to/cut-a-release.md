@@ -3,18 +3,18 @@
 1. Bump the `version` field in `package.json` to the new version number.
 
 2. Add a new entry to the top of the array `getChangelog()` returns in
-   `lib/changelog.ts`: a `version`, a `dateKey`, and one or more `items` (each
-   an object with a `textKey` and, optionally, a `linkKey` + `linkUrl` for
-   entries that link to a specific page, e.g. an App route built with
-   `getAppUrl` (`lib/app-url.ts`) or via `browser.runtime.getURL`). Add the same
-   entry (version, date, and items) to the top of the root `CHANGELOG.md` at the
-   same time.
+   `lib/changelog.ts`: a `version`, an `isoDate` (`YYYY-MM-DD`), and one or more
+   `items` (each an object with a `textKey` and, optionally, a `linkKey` +
+   `linkUrl` for entries that link to a specific page, e.g. an App route built
+   with `getAppUrl` (`lib/app-url.ts`) or via `browser.runtime.getURL`). Add the
+   same entry (version, date, and items) to the top of the root `CHANGELOG.md`
+   at the same time.
 
-3. Add the i18n keys that entry references (its `dateKey`, every item's
-   `textKey`, and any `linkKey`) to **both** `locales/en.json` and
-   `locales/es.json`. `lib/locale-parity.test.ts` requires every locale to carry
-   the same top-level key set as `en.json`, so a new changelog entry with keys
-   missing from either file fails that test.
+3. Add the i18n keys that entry references (every item's `textKey` and any
+   `linkKey`; the date needs no key) to **every** file in `locales/`.
+   `lib/locale-parity.test.ts` requires every locale to carry the same top-level
+   key set as `en.json`, so a new changelog entry with keys missing from either
+   file fails that test.
 
 4. Run `bun run check` and `bun run test` to confirm the version bump, changelog
    entry, and locale keys are all consistent.
