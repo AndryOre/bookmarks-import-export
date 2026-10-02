@@ -4,12 +4,12 @@ Issues and specs for snug live in Linear. Every operation goes through the
 `mcp__linear-server__*` MCP tools — there is no CLI equivalent to `gh`/`glab`
 for Linear in this setup.
 
-- Team: `AndryOre` (key `AO`). Project: `Bookmarks Import/Export` (exists —
-  every `Spec:` issue must pass `project: "Snug"` explicitly when created — an
-  issue with `Auto-close stale issues` enabled and no active cycle/project is
-  only exempt from that auto-close while it belongs to one. A `Spec:` can sit
-  untouched for months while its tickets get worked, so without `project` set it
-  risks auto-closing out from under its own ticket cascade. **Sub-issues do NOT
+- Team: `AndryOre` (key `AO`). Project: `Snug` (exists — every `Spec:` issue
+  must pass `project: "Snug"` explicitly when created — an issue with
+  `Auto-close stale issues` enabled and no active cycle/project is only exempt
+  from that auto-close while it belongs to one. A `Spec:` can sit untouched for
+  months while its tickets get worked, so without `project` set it risks
+  auto-closing out from under its own ticket cascade. **Sub-issues do NOT
   reliably inherit the parent's project** — verified twice in this workspace
   (AO-879..884 under AO-878, AO-1012..1018 under AO-1011): every sub-issue came
   back with no `project` field and was invisible to a project-filtered
