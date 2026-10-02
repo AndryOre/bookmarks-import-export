@@ -45,6 +45,7 @@
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest",
     "test:e2e": "wxt build && playwright test",
+    "store:screenshots": "wxt build && playwright test -c playwright.store.config.ts",
     "postinstall": "wxt prepare",
     "prepare": "bunx --bun husky"
   },
