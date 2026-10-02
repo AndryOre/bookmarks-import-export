@@ -2,8 +2,8 @@
 
 This document describes the project's direction at a high level. It is reviewed
 yearly; day-to-day planning happens in [Linear](https://linear.app/) and
-[GitHub issues](https://github.com/AndryOre/bookmarks-import-export/issues),
-which are the source of truth for what's actually being worked on next.
+[GitHub issues](https://github.com/AndryOre/snug/issues), which are the source
+of truth for what's actually being worked on next.
 
 ## Next 12 months
 
@@ -42,8 +42,6 @@ posture (see the [Privacy Policy](PRIVACY_POLICY.md)):
 ## Where planning actually happens
 
 This roadmap is intentionally coarse. Concrete, scheduled work lives in Linear
-and in
-[GitHub issues](https://github.com/AndryOre/bookmarks-import-export/issues) —
-those are the places to check for what's happening next, and the places to
-propose new work. This document itself is reviewed yearly to keep it aligned
-with reality.
+and in [GitHub issues](https://github.com/AndryOre/snug/issues) — those are the
+places to check for what's happening next, and the places to propose new work.
+This document itself is reviewed yearly to keep it aligned with reality.
