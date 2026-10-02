@@ -919,5 +919,14 @@
         "content": "$1"
       }
     }
+  },
+  "safetySnapshotFailed": {
+    "message": "Não foi possível salvar um instantâneo de segurança, então nada foi alterado: $REASON$",
+    "description": "Error when the Safety snapshot cannot be saved; $REASON$ is the cause",
+    "placeholders": {
+      "reason": {
+        "content": "$1"
+      }
+    }
   }
 }

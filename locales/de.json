@@ -919,5 +919,14 @@
         "content": "$1"
       }
     }
+  },
+  "safetySnapshotFailed": {
+    "message": "Der Sicherheits-Snapshot konnte nicht gespeichert werden, daher wurde nichts geändert: $REASON$",
+    "description": "Error when the Safety snapshot cannot be saved; $REASON$ is the cause",
+    "placeholders": {
+      "reason": {
+        "content": "$1"
+      }
+    }
   }
 }

@@ -1,11 +1,33 @@
-import { beforeEach, describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { fakeBrowser } from 'wxt/testing/fake-browser'
 
 import { getImportPreview } from './import-preview'
+import { downloadViaOffscreenDocument } from './offscreen-download'
 import { runImport } from './run-import'
+import { readLatestSafetySnapshot } from './safety-snapshot'
 import {
   getFakeBookmarksRoot,
   resetFakeBookmarks,
+  seedFakeBookmarksTree,
 } from './testing/fake-bookmarks'
+import type { ExtendedBookmarkTreeNode } from './types'
+
+vi.mock('./offscreen-download', () => ({
+  downloadViaOffscreenDocument: vi.fn(async () => {}),
+}))
+
+const downloadMock = vi.mocked(downloadViaOffscreenDocument)
+
+function existing(): ExtendedBookmarkTreeNode[] {
+  return [
+    {
+      id: 'x',
+      title: 'Existing',
+      url: 'https://existing.example/',
+      syncing: false,
+    },
+  ]
+}
 
 const CSV_FIXTURE = 'title,url\nCSV A,https://csv.example/page\n'
 
@@ -32,7 +54,10 @@ function collectUrls(nodes: UrlNode[]): string[] {
 }
 
 beforeEach(() => {
+  fakeBrowser.reset()
   resetFakeBookmarks()
+  downloadMock.mockReset()
+  downloadMock.mockResolvedValue()
 })
 
 describe('runImport', () => {
@@ -66,5 +91,46 @@ describe('runImport', () => {
     expect(collectUrls(getFakeBookmarksRoot().children ?? [])).toEqual([
       'https://csv.example/page',
     ])
+  })
+
+  describe('Safety snapshot', () => {
+    it('takes a snapshot before a restore-replace and then replaces', async () => {
+      seedFakeBookmarksTree(existing())
+
+      await runImport(SINGLE_ROOT_JSON, 'application/json', 'restore-replace')
+
+      expect(downloadMock).toHaveBeenCalledTimes(1)
+      const stored = await readLatestSafetySnapshot()
+      expect(stored?.roots[0]?.children?.[0]?.url).toBe(
+        'https://existing.example/',
+      )
+      expect(collectUrls(getFakeBookmarksRoot().children ?? [])).toEqual([
+        'https://root-a.example/page',
+        'https://root-b.example/page',
+      ])
+    })
+
+    it('does not delete anything when the snapshot cannot be saved', async () => {
+      seedFakeBookmarksTree(existing())
+      downloadMock.mockRejectedValueOnce(new Error('blocked'))
+
+      await expect(
+        runImport(SINGLE_ROOT_JSON, 'application/json', 'restore-replace'),
+      ).rejects.toThrow()
+
+      expect(collectUrls(getFakeBookmarksRoot().children ?? [])).toEqual([
+        'https://existing.example/',
+      ])
+    })
+
+    it.each(['folder', 'restore-merge'] as const)(
+      'does not take a snapshot for %s imports',
+      async (mode) => {
+        await runImport(SINGLE_ROOT_JSON, 'application/json', mode)
+
+        expect(downloadMock).not.toHaveBeenCalled()
+        expect(await readLatestSafetySnapshot()).toBeNull()
+      },
+    )
   })
 })

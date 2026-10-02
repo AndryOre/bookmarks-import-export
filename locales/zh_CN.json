@@ -919,5 +919,14 @@
         "content": "$1"
       }
     }
+  },
+  "safetySnapshotFailed": {
+    "message": "无法保存安全快照，因此未做任何更改：$REASON$",
+    "description": "Error when the Safety snapshot cannot be saved; $REASON$ is the cause",
+    "placeholders": {
+      "reason": {
+        "content": "$1"
+      }
+    }
   }
 }

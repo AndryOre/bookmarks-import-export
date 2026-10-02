@@ -919,5 +919,14 @@
         "content": "$1"
       }
     }
+  },
+  "safetySnapshotFailed": {
+    "message": "セーフティスナップショットを保存できなかったため、何も変更されていません: $REASON$",
+    "description": "Error when the Safety snapshot cannot be saved; $REASON$ is the cause",
+    "placeholders": {
+      "reason": {
+        "content": "$1"
+      }
+    }
   }
 }

@@ -4,12 +4,15 @@ import { detectFormat } from './detect-format'
 import { importFromCSV } from './importers/import-csv'
 import { importFromHTML } from './importers/import-html'
 import { importFromJSON, normalizeJsonRoot } from './importers/import-json'
+import { takeSafetySnapshot } from './safety-snapshot'
 import type { ImportMode } from './types'
 
 /**
  * Imports the raw content of a bookmarks file into the browser's bookmark
  * tree, dispatching on the detected format. CSV has no location data, so it
- * ignores `mode` and always imports into a folder.
+ * ignores `mode` and always imports into a folder. Before a Restore-replace of
+ * HTML or JSON content, a Safety snapshot is taken; if it cannot be saved the
+ * error is thrown and nothing is deleted.
  * @param text The raw file content.
  * @param mimeType The file's MIME type, used to help detect its format.
  * @param mode How the bookmarks are written into the existing tree.
@@ -26,11 +29,14 @@ export async function runImport(
 
   switch (format) {
     case 'html': {
+      if (mode === 'restore-replace') await takeSafetySnapshot()
       await importFromHTML(text, mode)
       break
     }
     case 'json': {
-      await importFromJSON(normalizeJsonRoot(JSON.parse(text)), mode)
+      const roots = normalizeJsonRoot(JSON.parse(text))
+      if (mode === 'restore-replace') await takeSafetySnapshot()
+      await importFromJSON(roots, mode)
       break
     }
     case 'csv': {
