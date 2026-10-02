@@ -5,11 +5,11 @@ canvas — a plain single-page HTML artifact with one artboard per screen plus i
 empty/error/loading states. A product area gets exactly one canvas; new screens
 for the same area are appended to it rather than creating a new one.
 
-| Canvas                | Area                                                                                                    | URL                                               |
-| --------------------- | ------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
-| `App.dc.html`         | The single App: shell, sidebar, every page, popup; Snug palette, sidebar header and Welcome hero boards | https://claude.ai/artifact/AYJ4YaSAT3rG5QeBXfoKHf |
-| `ImportModes.dc.html` | Import mode selection (popup + Advanced Import)                                                         | https://claude.ai/artifact/VDALZbJQZxQBfsp6GfQMsB |
-| `AutoExport.dc.html`  | Auto-export status + Export now (Settings, popup)                                                       | https://claude.ai/artifact/FUY8y42Ck4yczPXwTEbEFk |
+| Canvas                | Area                                                                                                                                                                                                                                                                 | URL                                               |
+| --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
+| `App.dc.html`         | The single App: shell, sidebar, every page, popup; Snug palette, sidebar header and Welcome hero boards; v2 completion boards N1–N23 (Duplicates, Safety snapshot and Undo, Skip duplicates, progress and cancel, six formats, schedules and retention, tree states) | https://claude.ai/artifact/AYJ4YaSAT3rG5QeBXfoKHf |
+| `ImportModes.dc.html` | Import mode selection (popup + Advanced Import)                                                                                                                                                                                                                      | https://claude.ai/artifact/VDALZbJQZxQBfsp6GfQMsB |
+| `AutoExport.dc.html`  | Auto-export status + Export now (Settings, popup)                                                                                                                                                                                                                    | https://claude.ai/artifact/FUY8y42Ck4yczPXwTEbEFk |
 
 **Superseded:** `ImportModes.dc.html` (Advanced Import page, settings dialog)
 and `AutoExport.dc.html` (settings-dialog tab) predate the App redesign and

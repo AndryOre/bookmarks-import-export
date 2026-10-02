@@ -43,4 +43,5 @@ described below.
 - Every deep link must go through `getAppUrl`; hard-coded `app.html#/...`
   strings are a smell.
 - Adding a screen means adding a route module and a nav entry, not an
-  entrypoint.
+  entrypoint. The only exception is the four legacy redirect pages in
+  [ADR 0007](0007-legacy-page-redirects.md).
