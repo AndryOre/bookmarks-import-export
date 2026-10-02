@@ -142,4 +142,13 @@ export interface BookmarkTreeProperties {
    * Rendered instead of the tree when an active search matches nothing.
    */
   emptyState?: ReactNode
+  /**
+   * Rendered instead of the tree when the profile has no bookmarks at all.
+   */
+  noBookmarksState?: ReactNode
+  /**
+   * Rendered instead of the tree when loading the bookmarks failed; receives
+   * a callback that retries the load.
+   */
+  errorState?: (retry: () => void) => ReactNode
 }

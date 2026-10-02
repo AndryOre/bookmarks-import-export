@@ -903,6 +903,34 @@
     "message": "Очистить поиск",
     "description": "Export page empty state button that clears the search"
   },
+  "exportPage_treeLabel": {
+    "message": "Закладки",
+    "description": "Accessible label of the bookmark tree on the Export page"
+  },
+  "exportPage_emptyTitle": {
+    "message": "Закладок пока нет",
+    "description": "Export page empty state title when the profile has no bookmarks"
+  },
+  "exportPage_emptyDescription": {
+    "message": "В вашем браузере нет закладок для экспорта. Импортируйте файл, чтобы начать.",
+    "description": "Export page empty state description when the profile has no bookmarks"
+  },
+  "exportPage_goToImport": {
+    "message": "Перейти к импорту",
+    "description": "Export page empty state button that opens the Import page"
+  },
+  "exportPage_errorTitle": {
+    "message": "Не удалось загрузить закладки",
+    "description": "Export page error state title when bookmarks fail to load"
+  },
+  "exportPage_errorDescription": {
+    "message": "При чтении закладок что-то пошло не так.",
+    "description": "Export page error state description when bookmarks fail to load"
+  },
+  "exportPage_tryAgain": {
+    "message": "Повторить",
+    "description": "Export page error state button that reloads the bookmarks"
+  },
   "welcome_heroTitle": {
     "message": "Добро пожаловать в",
     "description": "Lead-in of the welcome page hero title; the Snug wordmark is rendered right after it"

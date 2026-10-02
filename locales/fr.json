@@ -903,6 +903,34 @@
     "message": "Effacer la recherche",
     "description": "Export page empty state button that clears the search"
   },
+  "exportPage_treeLabel": {
+    "message": "Favoris",
+    "description": "Accessible label of the bookmark tree on the Export page"
+  },
+  "exportPage_emptyTitle": {
+    "message": "Aucun favori pour l'instant",
+    "description": "Export page empty state title when the profile has no bookmarks"
+  },
+  "exportPage_emptyDescription": {
+    "message": "Votre navigateur n'a aucun favori à exporter. Importez un fichier pour commencer.",
+    "description": "Export page empty state description when the profile has no bookmarks"
+  },
+  "exportPage_goToImport": {
+    "message": "Aller à Importer",
+    "description": "Export page empty state button that opens the Import page"
+  },
+  "exportPage_errorTitle": {
+    "message": "Impossible de charger vos favoris",
+    "description": "Export page error state title when bookmarks fail to load"
+  },
+  "exportPage_errorDescription": {
+    "message": "Une erreur s'est produite lors de la lecture de vos favoris.",
+    "description": "Export page error state description when bookmarks fail to load"
+  },
+  "exportPage_tryAgain": {
+    "message": "Réessayer",
+    "description": "Export page error state button that reloads the bookmarks"
+  },
   "welcome_heroTitle": {
     "message": "Bienvenue dans",
     "description": "Lead-in of the welcome page hero title; the Snug wordmark is rendered right after it"

@@ -902,6 +902,34 @@
     "message": "Borrar búsqueda",
     "description": "Export page empty state button that clears the search"
   },
+  "exportPage_treeLabel": {
+    "message": "Marcadores",
+    "description": "Accessible label of the bookmark tree on the Export page"
+  },
+  "exportPage_emptyTitle": {
+    "message": "Aún no hay marcadores",
+    "description": "Export page empty state title when the profile has no bookmarks"
+  },
+  "exportPage_emptyDescription": {
+    "message": "Tu navegador no tiene marcadores para exportar. Importa un archivo para empezar.",
+    "description": "Export page empty state description when the profile has no bookmarks"
+  },
+  "exportPage_goToImport": {
+    "message": "Ir a Importar",
+    "description": "Export page empty state button that opens the Import page"
+  },
+  "exportPage_errorTitle": {
+    "message": "No se pudieron cargar tus marcadores",
+    "description": "Export page error state title when bookmarks fail to load"
+  },
+  "exportPage_errorDescription": {
+    "message": "Algo salió mal al leer tus marcadores.",
+    "description": "Export page error state description when bookmarks fail to load"
+  },
+  "exportPage_tryAgain": {
+    "message": "Reintentar",
+    "description": "Export page error state button that reloads the bookmarks"
+  },
   "welcome_heroTitle": {
     "message": "Te damos la bienvenida a",
     "description": "Parte inicial del título principal de la página de bienvenida; el logotipo de Snug se muestra justo después"
