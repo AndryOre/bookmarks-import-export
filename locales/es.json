@@ -975,5 +975,45 @@
   "popup_settings": {
     "message": "Ajustes",
     "description": "Accessible label of the popup footer settings icon button"
+  },
+  "settingsPage_appearanceTitle": {
+    "message": "Apariencia",
+    "description": "Settings page: appearanceTitle"
+  },
+  "settingsPage_theme": {
+    "message": "Tema",
+    "description": "Settings page: theme"
+  },
+  "settingsPage_themeDescription": {
+    "message": "Elige cómo se ve la extensión. Sistema sigue la configuración de tu sistema operativo.",
+    "description": "Settings page: themeDescription"
+  },
+  "settingsPage_themeSystem": {
+    "message": "Sistema",
+    "description": "Settings page: themeSystem"
+  },
+  "settingsPage_themeLight": {
+    "message": "Claro",
+    "description": "Settings page: themeLight"
+  },
+  "settingsPage_themeDark": {
+    "message": "Oscuro",
+    "description": "Settings page: themeDark"
+  },
+  "settingsPage_treeTitle": {
+    "message": "Árbol de marcadores",
+    "description": "Settings page: treeTitle"
+  },
+  "settingsPage_importTitle": {
+    "message": "Importar",
+    "description": "Settings page: importTitle"
+  },
+  "settingsPage_importDescription": {
+    "message": "Valores predeterminados para importar marcadores.",
+    "description": "Settings page: importDescription"
+  },
+  "settingsPage_importModeHelp": {
+    "message": "Se usa en el popup y viene preseleccionado en la página Importar.",
+    "description": "Settings page: importModeHelp"
   }
 }

@@ -26,11 +26,13 @@ for (const route of ROUTES) {
     await expect(
       page.getByRole('heading', { level: 1, name: route.title }),
     ).toBeVisible()
-    const stubText =
-      route.hash === 'export'
-        ? en.exportOptions_title.message
-        : en.shell_placeholder.message
-    await expect(page.getByText(stubText)).toBeVisible()
+    const stubTexts: Record<string, string> = {
+      export: en.exportOptions_title.message,
+      settings: en.settingsPage_appearanceTitle.message,
+    }
+    await expect(
+      page.getByText(stubTexts[route.hash] ?? en.shell_placeholder.message),
+    ).toBeVisible()
   })
 }
 
