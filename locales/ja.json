@@ -559,6 +559,10 @@
       }
     }
   },
+  "import_noBookmarks": {
+    "message": "このファイルにブックマークが見つからないため、インポートできるものがありません。",
+    "description": "Shown when an import file contains no bookmarks; explains the disabled Import button and the popup error"
+  },
   "import_importing": {
     "message": "読み込み中…",
     "description": "Primary button label while importing"
@@ -902,5 +906,18 @@
   "welcome_heroTitle": {
     "message": "ようこそ",
     "description": "Lead-in of the welcome page hero title; the Snug wordmark is rendered right after it"
+  },
+  "extensionManifestName": {
+    "message": "Snug: ブックマークの書き出し・読み込み・バックアップ",
+    "description": "Manifest-only extension name with a descriptor, shown as the Chrome Web Store title. Never rendered inside the extension."
+  },
+  "downloadInterrupted": {
+    "message": "ダウンロード $ID$ が中断されました。",
+    "description": "Last-run error when a download is interrupted; $ID$ is the download id",
+    "placeholders": {
+      "id": {
+        "content": "$1"
+      }
+    }
   }
 }

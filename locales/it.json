@@ -559,6 +559,10 @@
       }
     }
   },
+  "import_noBookmarks": {
+    "message": "Nessun segnalibro trovato in questo file, quindi non c'è nulla da importare.",
+    "description": "Shown when an import file contains no bookmarks; explains the disabled Import button and the popup error"
+  },
   "import_importing": {
     "message": "Importazione in corso…",
     "description": "Primary button label while importing"
@@ -902,5 +906,18 @@
   "welcome_heroTitle": {
     "message": "Benvenuto in",
     "description": "Lead-in of the welcome page hero title; the Snug wordmark is rendered right after it"
+  },
+  "extensionManifestName": {
+    "message": "Snug: esporta e fai il backup dei segnalibri, in locale",
+    "description": "Manifest-only extension name with a descriptor, shown as the Chrome Web Store title. Never rendered inside the extension."
+  },
+  "downloadInterrupted": {
+    "message": "Il download $ID$ è stato interrotto.",
+    "description": "Last-run error when a download is interrupted; $ID$ is the download id",
+    "placeholders": {
+      "id": {
+        "content": "$1"
+      }
+    }
   }
 }

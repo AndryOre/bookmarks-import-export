@@ -16,16 +16,17 @@ import type { ImportMode, ParsedBookmark } from '@/lib/types'
  * in place (it sets `isBookmarksBar`/`isOtherBookmarks`/`isMobileBookmarks`
  * on nodes it finds), so the array passed in should not be reused
  * elsewhere as if it were untouched.
- * @param bookmarks The previously exported bookmark tree to import.
+ * @param bookmarks The previously exported bookmark tree to import. A single
+ *   root object is accepted and treated as a one-element array.
  * @param mode Where and how the tree is written.
  * @returns Resolves once the import has finished.
  */
 export async function importFromJSON(
-  bookmarks: ParsedBookmark[],
+  bookmarks: ParsedBookmark[] | ParsedBookmark,
   mode: ImportMode = 'folder',
 ): Promise<void> {
   try {
-    const preprocessed = preprocessBookmarks(bookmarks)
+    const preprocessed = preprocessBookmarks(normalizeJsonRoot(bookmarks))
     await processBookmarks(preprocessed, mode)
   } catch (error) {
     if (error instanceof Error && error.message.startsWith('PROCESS_ERROR')) {
@@ -35,6 +36,17 @@ export async function importFromJSON(
       i18n.t('importFromJSONImportError', [(error as Error).message]),
     )
   }
+}
+
+/**
+ * Normalizes the parsed root of a JSON export to an array: a file whose root
+ * is a single object is treated as a one-element array. The one place this
+ * rule lives, shared by the preview and the importer so both agree on count.
+ * @param raw The value returned by `JSON.parse` for the file content.
+ * @returns The root as an array of nodes.
+ */
+export function normalizeJsonRoot(raw: unknown): ParsedBookmark[] {
+  return (Array.isArray(raw) ? raw : [raw]) as ParsedBookmark[]
 }
 
 /**

@@ -559,6 +559,10 @@
       }
     }
   },
+  "import_noBookmarks": {
+    "message": "No bookmarks found in this file, so there is nothing to import.",
+    "description": "Shown when an import file contains no bookmarks; explains the disabled Import button and the popup error"
+  },
   "import_importing": {
     "message": "Importing…",
     "description": "Primary button label while importing"
@@ -902,5 +906,18 @@
   "welcome_heroTitle": {
     "message": "Welcome to",
     "description": "Lead-in of the welcome page hero title; the Snug wordmark is rendered right after it"
+  },
+  "extensionManifestName": {
+    "message": "Snug: Bookmark Export, Import & Backup",
+    "description": "Manifest-only extension name with a descriptor, shown as the Chrome Web Store title. Never rendered inside the extension."
+  },
+  "downloadInterrupted": {
+    "message": "Download $ID$ was interrupted.",
+    "description": "Last-run error when a download is interrupted; $ID$ is the download id",
+    "placeholders": {
+      "id": {
+        "content": "$1"
+      }
+    }
   }
 }

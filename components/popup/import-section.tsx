@@ -25,43 +25,18 @@ import {
 } from '@/components/ui/select'
 import { Spinner } from '@/components/ui/spinner'
 import { toast } from '@/components/ui/toast'
-import { detectFormat } from '@/lib/detect-format'
 import { getImportModeItems } from '@/lib/import-mode-items'
 import { getImportPreview } from '@/lib/import-preview'
-import { importFromCSV } from '@/lib/importers/import-csv'
-import { importFromHTML } from '@/lib/importers/import-html'
-import { importFromJSON } from '@/lib/importers/import-json'
+import { runImport } from '@/lib/run-import'
 import { defaultImportModeStore } from '@/lib/storage'
 import type { ImportMode } from '@/lib/types'
 import { useStorageItem } from '@/lib/use-storage-item'
 
-type ImportFormat = 'csv' | 'html' | 'json'
-
 interface PendingImport {
-  format: ImportFormat
   text: string
+  mimeType: string
+  fileName: string
   mode: ImportMode
-}
-
-async function runImport(
-  format: ImportFormat,
-  text: string,
-  mode: ImportMode,
-): Promise<void> {
-  switch (format) {
-    case 'csv': {
-      await importFromCSV(text)
-      break
-    }
-    case 'json': {
-      await importFromJSON(JSON.parse(text), mode)
-      break
-    }
-    case 'html': {
-      await importFromHTML(text, mode)
-      break
-    }
-  }
 }
 
 /**
@@ -81,14 +56,15 @@ export function ImportSection() {
   const [pendingImport, setPendingImport] = useState<PendingImport | null>(null)
   const [isImporting, setIsImporting] = useState(false)
 
-  const performImport = async (
-    format: ImportFormat,
-    text: string,
-    importMode: ImportMode,
-  ) => {
+  const performImport = async ({
+    text,
+    mimeType,
+    fileName,
+    mode: importMode,
+  }: PendingImport) => {
     setIsImporting(true)
     try {
-      await runImport(format, text, importMode)
+      await runImport(text, mimeType, importMode, fileName)
       toast.add({
         type: 'success',
         title: i18n.t('popup_importSuccessTitle'),
@@ -114,12 +90,23 @@ export function ImportSection() {
     let prepared: PendingImport
     try {
       const text = await file.text()
-      const format = detectFormat(text, file.type)
+      const { format, totalCount, hasLocationData } = getImportPreview(
+        text,
+        file.type,
+        file.name,
+      )
       if (format === 'unknown') {
         throw new Error(i18n.t('unsupportedFileFormat'))
       }
-      const { hasLocationData } = getImportPreview(text, file.type)
-      prepared = { format, text, mode: hasLocationData ? mode : 'folder' }
+      if (totalCount === 0) {
+        throw new Error(i18n.t('import_noBookmarks'))
+      }
+      prepared = {
+        text,
+        mimeType: file.type,
+        fileName: file.name,
+        mode: hasLocationData ? mode : 'folder',
+      }
     } catch (error) {
       toast.add({
         type: 'error',
@@ -133,14 +120,14 @@ export function ImportSection() {
       setPendingImport(prepared)
       return
     }
-    await performImport(prepared.format, prepared.text, prepared.mode)
+    await performImport(prepared)
   }
 
   const handleConfirmReplace = () => {
     if (!pendingImport) return
-    const { format, text, mode: importMode } = pendingImport
+    const confirmed = pendingImport
     setPendingImport(null)
-    void performImport(format, text, importMode)
+    void performImport(confirmed)
   }
 
   return (

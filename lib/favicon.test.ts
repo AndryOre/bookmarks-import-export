@@ -115,4 +115,36 @@ describe('getFaviconBase64', () => {
     expect(result).toBe('')
     expect(consoleError).toHaveBeenCalledWith('Error fetching favicon', error)
   })
+
+  it('resolves to an empty string and logs when the FileReader errors', async () => {
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const readError = new Error('read failed')
+    vi.stubGlobal(
+      'FileReader',
+      class {
+        private onError: (() => void) | undefined
+        error = readError
+        addEventListener(type: string, callback: () => void): void {
+          if (type === 'error') this.onError = callback
+        }
+        readAsDataURL(): void {
+          queueMicrotask(() => this.onError?.())
+        }
+      },
+    )
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        blob: () => Promise.resolve(new Blob(['x'])),
+      }),
+    )
+
+    const result = await getFaviconBase64('https://example.com/')
+
+    expect(result).toBe('')
+    expect(consoleError).toHaveBeenCalledWith(
+      'Error fetching favicon',
+      readError,
+    )
+  })
 })

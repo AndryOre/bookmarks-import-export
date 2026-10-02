@@ -3,7 +3,7 @@ import { i18n } from '#i18n'
 import { detectFormat } from './detect-format'
 import { importFromCSV } from './importers/import-csv'
 import { importFromHTML } from './importers/import-html'
-import { importFromJSON } from './importers/import-json'
+import { importFromJSON, normalizeJsonRoot } from './importers/import-json'
 import type { ImportMode } from './types'
 
 /**
@@ -13,14 +13,16 @@ import type { ImportMode } from './types'
  * @param text The raw file content.
  * @param mimeType The file's MIME type, used to help detect its format.
  * @param mode How the bookmarks are written into the existing tree.
+ * @param fileName The file's name, a fallback hint when the MIME type fails.
  * @throws {Error} When the format is unsupported or the importer fails.
  */
 export async function runImport(
   text: string,
   mimeType: string,
   mode: ImportMode,
+  fileName?: string,
 ): Promise<void> {
-  const format = detectFormat(text, mimeType)
+  const format = detectFormat(text, mimeType, fileName)
 
   switch (format) {
     case 'html': {
@@ -28,7 +30,7 @@ export async function runImport(
       break
     }
     case 'json': {
-      await importFromJSON(JSON.parse(text), mode)
+      await importFromJSON(normalizeJsonRoot(JSON.parse(text)), mode)
       break
     }
     case 'csv': {

@@ -559,6 +559,10 @@
       }
     }
   },
+  "import_noBookmarks": {
+    "message": "Aucun favori trouvé dans ce fichier, il n'y a donc rien à importer.",
+    "description": "Shown when an import file contains no bookmarks; explains the disabled Import button and the popup error"
+  },
   "import_importing": {
     "message": "Importation…",
     "description": "Primary button label while importing"
@@ -902,5 +906,18 @@
   "welcome_heroTitle": {
     "message": "Bienvenue dans",
     "description": "Lead-in of the welcome page hero title; the Snug wordmark is rendered right after it"
+  },
+  "extensionManifestName": {
+    "message": "Snug : export et sauvegarde de favoris, en local",
+    "description": "Manifest-only extension name with a descriptor, shown as the Chrome Web Store title. Never rendered inside the extension."
+  },
+  "downloadInterrupted": {
+    "message": "Le téléchargement $ID$ a été interrompu.",
+    "description": "Last-run error when a download is interrupted; $ID$ is the download id",
+    "placeholders": {
+      "id": {
+        "content": "$1"
+      }
+    }
   }
 }

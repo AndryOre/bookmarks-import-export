@@ -2,7 +2,7 @@ import Papa from 'papaparse'
 
 import { detectFormat } from './detect-format'
 import { parseHTML } from './importers/import-html'
-import { preprocessBookmarks } from './importers/import-json'
+import { normalizeJsonRoot, preprocessBookmarks } from './importers/import-json'
 import type { ImportPreview, ParsedBookmark } from './types'
 
 function countBookmarks(nodes: ParsedBookmark[]): number {
@@ -26,13 +26,15 @@ function countBookmarks(nodes: ParsedBookmark[]): number {
  * `hasLocationData` is always `false` for the `'csv'` format.
  * @param text The raw file content to preview.
  * @param mimeType The file's MIME type, used to help detect its format.
+ * @param fileName The file's name, a fallback hint when the MIME type fails.
  * @returns A summary of the import this content would produce.
  */
 export function getImportPreview(
   text: string,
   mimeType: string,
+  fileName?: string,
 ): ImportPreview {
-  const format = detectFormat(text, mimeType)
+  const format = detectFormat(text, mimeType, fileName)
 
   try {
     if (format === 'html') {
@@ -55,9 +57,9 @@ export function getImportPreview(
     }
 
     if (format === 'json') {
-      const raw = JSON.parse(text)
-      const data: ParsedBookmark[] = Array.isArray(raw) ? raw : [raw]
-      const preprocessed = preprocessBookmarks(data)
+      const preprocessed = preprocessBookmarks(
+        normalizeJsonRoot(JSON.parse(text)),
+      )
       const barNode = preprocessed.find((n) => n.isBookmarksBar)
       const otherNode = preprocessed.find((n) => n.isOtherBookmarks)
       const mobileNode = preprocessed.find((n) => n.isMobileBookmarks)
