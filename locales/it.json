@@ -1,0 +1,906 @@
+{
+  "extensionName": {
+    "message": "Snug",
+    "description": "Name of the extension."
+  },
+  "extensionDescription": {
+    "message": "Esporta, importa e pianifica backup automatici dei segnalibri — HTML, JSON o CSV, sul tuo dispositivo, senza account né cloud.",
+    "description": "Description of the extension"
+  },
+  "welcomeSubtitle": {
+    "message": "Esporta, importa e fai il backup dei tuoi segnalibri — interamente sul tuo dispositivo.",
+    "description": "Welcome page subtitle"
+  },
+  "settings": {
+    "message": "Impostazioni",
+    "description": "Settings"
+  },
+  "exportFormat": {
+    "message": "Formato di esportazione",
+    "description": "Placeholder text for the export format selector"
+  },
+  "exportBookmarks": {
+    "message": "Esporta",
+    "description": "Export Bookmarks tab label in the popup"
+  },
+  "refresh": {
+    "message": "Aggiorna",
+    "description": "Refresh"
+  },
+  "selectAll": {
+    "message": "Seleziona tutto",
+    "description": "Select All"
+  },
+  "deselectAll": {
+    "message": "Deseleziona tutto",
+    "description": "Deselect All"
+  },
+  "selected": {
+    "message": "Selezionati",
+    "description": "Selected"
+  },
+  "searchBookmarks": {
+    "message": "Cerca segnalibri",
+    "description": "Search bookmarks"
+  },
+  "display": {
+    "message": "Visualizzazione",
+    "description": "Display"
+  },
+  "export": {
+    "message": "Esporta",
+    "description": "Export"
+  },
+  "showBookmarkIcon": {
+    "message": "Mostra l'icona dei segnalibri",
+    "description": "Show bookmark icon"
+  },
+  "showBookmarkIconDescription": {
+    "message": "Mostra le icone accanto ai segnalibri",
+    "description": "Show bookmark icon description"
+  },
+  "autoExpandFolders": {
+    "message": "Espandi cartelle automaticamente",
+    "description": "Auto expand folders"
+  },
+  "autoExpandFoldersDescription": {
+    "message": "Espande automaticamente le cartelle nell'albero dei segnalibri",
+    "description": "Auto expand folders description"
+  },
+  "includeIconData": {
+    "message": "Includi i dati delle icone",
+    "description": "Include icon data"
+  },
+  "includeDateAdded": {
+    "message": "Includi le date di creazione",
+    "description": "Include creation dates"
+  },
+  "includeDateLastUsed": {
+    "message": "Includi le date dell'ultimo utilizzo",
+    "description": "Include last used dates"
+  },
+  "includeDateGroupModified": {
+    "message": "Includi le date di modifica delle cartelle",
+    "description": "Include folder modification dates"
+  },
+  "hideOtherBookmarks": {
+    "message": "Nascondi la cartella \"Altri segnalibri\"",
+    "description": "Hide 'Other bookmarks' folder"
+  },
+  "hideParentFolder": {
+    "message": "Nascondi la cartella principale",
+    "description": "Hide parent folder"
+  },
+  "dropFileHere": {
+    "message": "Trascina qui il tuo file di segnalibri",
+    "description": "File drop zone prompt"
+  },
+  "orClickToSelect": {
+    "message": "oppure fai clic per selezionarlo",
+    "description": "Secondary file drop zone prompt"
+  },
+  "supportedFormats": {
+    "message": "Supporta HTML, JSON e CSV",
+    "description": "Supported import formats"
+  },
+  "changeFile": {
+    "message": "Cambia",
+    "description": "Button to change selected file"
+  },
+  "importMode": {
+    "message": "Modalità di importazione",
+    "description": "Import mode section label"
+  },
+  "defaultImportMode": {
+    "message": "Modalità di importazione predefinita",
+    "description": "Label for the quick-import default mode select"
+  },
+  "importModeFolder": {
+    "message": "Crea cartella",
+    "description": "Import mode: create folder"
+  },
+  "importModeFolderDescription": {
+    "message": "Aggiunge tutti i segnalibri a una nuova cartella \"Segnalibri importati\"",
+    "description": "Import mode: create folder description"
+  },
+  "importModeRestoreMerge": {
+    "message": "Ripristina — unisci",
+    "description": "Import mode: restore and merge"
+  },
+  "importModeRestoreMergeDescription": {
+    "message": "Inserisce i segnalibri nelle posizioni originali, insieme a quelli esistenti",
+    "description": "Import mode: restore and merge description"
+  },
+  "importModeRestoreReplace": {
+    "message": "Ripristina — sostituisci",
+    "description": "Import mode: restore and replace"
+  },
+  "importModeRestoreReplaceDescription": {
+    "message": "Elimina prima i segnalibri esistenti, poi ripristina nelle posizioni originali",
+    "description": "Import mode: restore and replace description"
+  },
+  "importModeRestoreReplaceWarning": {
+    "message": "Questa operazione eliminerà definitivamente tutti i segnalibri presenti nella Barra dei segnalibri e in Altri segnalibri",
+    "description": "Warning shown for restore-replace mode"
+  },
+  "importPreview": {
+    "message": "Anteprima",
+    "description": "Import preview section label"
+  },
+  "importPreviewCount": {
+    "message": "Segnalibri: $COUNT$",
+    "description": "Bookmark count in preview",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "replaceConfirmTitle": {
+    "message": "Sostituire i segnalibri esistenti?",
+    "description": "Title of the replace confirmation dialog"
+  },
+  "replaceConfirmDescription": {
+    "message": "Tutti i segnalibri presenti nella Barra dei segnalibri e in Altri segnalibri verranno eliminati definitivamente prima dell'importazione. L'operazione non può essere annullata.",
+    "description": "Body of the replace confirmation dialog"
+  },
+  "replaceConfirmButton": {
+    "message": "Sì, sostituisci",
+    "description": "Confirm button in the replace dialog"
+  },
+  "cancel": {
+    "message": "Annulla",
+    "description": "Cancel button"
+  },
+  "unsupportedFileFormat": {
+    "message": "Formato di file non supportato",
+    "description": "Unsupported file format"
+  },
+  "bookmarksImportedSuccessfully": {
+    "message": "Segnalibri importati correttamente!",
+    "description": "Bookmarks imported successfully"
+  },
+  "import": {
+    "message": "Importa",
+    "description": "Import"
+  },
+  "changelog_1_5_0_date": {
+    "message": "29 aprile 2025",
+    "description": "Changelog 1.5.0 date"
+  },
+  "changelog_1_5_0_1": {
+    "message": "Aggiunta l'importazione avanzata — ripristina i segnalibri nelle posizioni originali (Barra dei segnalibri e Altri segnalibri), con le opzioni di unione o sostituzione."
+  },
+  "changelog_1_5_0_1_link": {
+    "message": "Prova l'importazione avanzata"
+  },
+  "changelog_1_4_0_date": {
+    "message": "29 aprile 2025",
+    "description": "Changelog 1.4.0 date"
+  },
+  "changelog_1_4_0_1": {
+    "message": "Aggiunti modelli di nome file personalizzabili per le esportazioni — usa segnaposto di data e ora come %yyyy, %mm, %dd per creare automaticamente nomi di file univoci con data e ora."
+  },
+  "changelog_1_3_0_date": {
+    "message": "16 febbraio 2025",
+    "description": "Changelog 1.3.0 date"
+  },
+  "changelog_1_3_0_1": {
+    "message": "Aggiunto il supporto per la modalità scura, che segue automaticamente le preferenze del tema del tuo sistema."
+  },
+  "changelog_1_2_0_date": {
+    "message": "14 febbraio 2025",
+    "description": "Changelog 1.2.0 date"
+  },
+  "changelog_1_2_0_1": {
+    "message": "Ora si adatta automaticamente alla lingua del tuo browser! Disponibile in inglese e spagnolo."
+  },
+  "changelog_1_1_0_date": {
+    "message": "13 febbraio 2025",
+    "description": "Changelog 1.1.0 date"
+  },
+  "changelog_1_1_0_1": {
+    "message": "I segnalibri importati ora finiscono in una cartella dedicata, per non mescolarsi con quelli già presenti"
+  },
+  "changelog_1_1_0_2": {
+    "message": "Controllo più preciso su quali date includere nelle esportazioni"
+  },
+  "changelog_1_1_0_2_link": {
+    "message": "Prova le nuove opzioni di esportazione"
+  },
+  "changelog_1_0_0_date": {
+    "message": "5 agosto 2024",
+    "description": "Changelog 1.0.0 date"
+  },
+  "changelog_1_0_0_1": {
+    "message": "Aggiunta la nuova funzione di esportazione avanzata, per avere più controllo sui tuoi segnalibri."
+  },
+  "changelog_1_0_0_1_link": {
+    "message": "Prova l'esportazione avanzata"
+  },
+  "changelog_1_0_0_2": {
+    "message": "Introdotte le pagine di benvenuto e di aggiornamento, per tenerti informato sulle novità."
+  },
+  "changelog_1_0_0_3": {
+    "message": "Migliorate le prestazioni generali per un'esperienza più fluida."
+  },
+  "changelog_0_1_1_date": {
+    "message": "4 agosto 2024",
+    "description": "Changelog 0.1.1 date"
+  },
+  "changelog_0_1_1_1": {
+    "message": "Corretto un bug critico che riguardava chi usava un browser con una lingua diversa dall'inglese."
+  },
+  "changelog_0_1_1_2": {
+    "message": "Migliorata l'affidabilità delle funzioni di importazione ed esportazione."
+  },
+  "changelog_0_1_1_3": {
+    "message": "Risolto un problema per cui l'icona dell'estensione non compariva nella barra degli strumenti del browser."
+  },
+  "changelog_0_1_1_4": {
+    "message": "Risolto un problema per cui l'estensione non funzionava in alcuni browser."
+  },
+  "changelog_0_1_0_date": {
+    "message": "3 agosto 2024",
+    "description": "Changelog 0.1.0 date"
+  },
+  "changelog_0_1_0_1": {
+    "message": "Prima versione dell'estensione per importare ed esportare i segnalibri."
+  },
+  "changelog_0_1_0_2": {
+    "message": "Semplice funzione di importazione per file HTML e JSON."
+  },
+  "changelog_0_1_0_3": {
+    "message": "Funzionalità di base per esportare i segnalibri nei formati HTML e JSON."
+  },
+  "extensionInstalled": {
+    "message": "Snug installato",
+    "description": "Extension installed"
+  },
+  "extensionUpdated": {
+    "message": "Snug aggiornato alla versione $VERSION$",
+    "description": "Extension updated",
+    "placeholders": {
+      "version": {
+        "content": "$1"
+      }
+    }
+  },
+  "exportFilenameTemplate": {
+    "message": "Modello del nome file",
+    "description": "Label for the export filename template input"
+  },
+  "exportFilenameTemplatePreview": {
+    "message": "Anteprima:",
+    "description": "Label shown before the live filename preview"
+  },
+  "faviconError": {
+    "message": "Errore durante il recupero della favicon",
+    "description": "Error fetching favicon"
+  },
+  "importFromHTMLLoadError": {
+    "message": "Impossibile analizzare l'HTML: $ERROR$",
+    "description": "Failed to parse HTML",
+    "placeholders": {
+      "error": {
+        "content": "$1"
+      }
+    }
+  },
+  "importFromHTMLCreateError": {
+    "message": "Impossibile creare i segnalibri dall'HTML: $ERROR$",
+    "description": "Failed to create bookmarks from HTML",
+    "placeholders": {
+      "error": {
+        "content": "$1"
+      }
+    }
+  },
+  "importFromHTMLProcessError": {
+    "message": "Impossibile trovare la Barra dei segnalibri o la cartella Altri segnalibri",
+    "description": "Could not find Bookmarks bar or Other bookmarks folder"
+  },
+  "bookmarksBar": {
+    "message": "Barra dei segnalibri",
+    "description": "Bookmarks bar"
+  },
+  "importedBookmarks": {
+    "message": "Segnalibri importati",
+    "description": "Imported bookmarks"
+  },
+  "otherBookmarks": {
+    "message": "Altri segnalibri",
+    "description": "Other bookmarks"
+  },
+  "mobileBookmarks": {
+    "message": "Segnalibri dei dispositivi mobili",
+    "description": "Mobile bookmarks"
+  },
+  "importFromJSONImportError": {
+    "message": "Importazione non riuscita: $ERROR$",
+    "description": "Import failed",
+    "placeholders": {
+      "error": {
+        "content": "$1"
+      }
+    }
+  },
+  "importFromJSONProcessError": {
+    "message": "Impossibile trovare la Barra dei segnalibri o la cartella Altri segnalibri",
+    "description": "Error when JSON import cannot find required folders"
+  },
+  "importFromCSVImportError": {
+    "message": "Impossibile importare il file CSV",
+    "description": "Error when CSV import fails"
+  },
+  "autoExport": {
+    "message": "Esportazione automatica",
+    "description": "Auto-export settings tab label"
+  },
+  "autoExportNeverRun": {
+    "message": "Mai eseguita",
+    "description": "Status card value when auto-export has never run"
+  },
+  "exportNow": {
+    "message": "Esporta ora",
+    "description": "Button label to run an on-demand export immediately"
+  },
+  "exportNowSuccess": {
+    "message": "Esportazione completata",
+    "description": "Inline message shown after Export now succeeds"
+  },
+  "exportNowFailed": {
+    "message": "Esportazione non riuscita",
+    "description": "Inline message shown after Export now fails"
+  },
+  "enableAutoExport": {
+    "message": "Attiva l'esportazione automatica",
+    "description": "Enable auto export toggle label"
+  },
+  "enableAutoExportDescription": {
+    "message": "Esporta automaticamente i tuoi segnalibri nei formati HTML, JSON e CSV.",
+    "description": "Enable auto export toggle description"
+  },
+  "preferredExportTime": {
+    "message": "Orario di esportazione preferito",
+    "description": "Preferred export time section title"
+  },
+  "timeSelectionUnavailable": {
+    "message": "La selezione dell'orario è disponibile solo per intervalli di 24 ore o più",
+    "description": "Note shown when 12h interval is selected"
+  },
+  "hoursLabel": {
+    "message": "Ore",
+    "description": "Hours input label in time picker"
+  },
+  "minutesLabel": {
+    "message": "Minuti",
+    "description": "Minutes input label in time picker"
+  },
+  "periodLabel": {
+    "message": "AM/PM",
+    "description": "AM/PM selector label in time picker"
+  },
+  "exportPath": {
+    "message": "Percorso di esportazione",
+    "description": "Export path section title"
+  },
+  "autoExportFormats": {
+    "message": "Formati di esportazione",
+    "description": "Export formats section title"
+  },
+  "changelog_2_0_0_date": {
+    "message": "2 ottobre 2026",
+    "description": "Changelog 2.0.0 date"
+  },
+  "changelog_2_0_0_1": {
+    "message": "Questa estensione ha un nuovo nome: Snug. Stessa estensione, stessa promessa di restare tutto in locale — esportazione, importazione e backup pianificati dei tuoi segnalibri, senza che nulla venga mai inviato altrove. Per i tuoi dati e le tue impostazioni non cambia nulla; cambiano solo il nome e l'icona."
+  },
+  "changelog_2_0_0_2": {
+    "message": "L'app ora è una sola pagina con una barra laterale (Esporta, Importa, Esportazione automatica, Impostazioni, Novità), più un popup compatto, la nuova icona di Snug e la nuova palette."
+  },
+  "changelog_2_0_0_2_link": {
+    "message": "Apri l'app"
+  },
+  "changelog_1_7_0_date": {
+    "message": "1 ottobre 2026",
+    "description": "Changelog 1.7.0 date"
+  },
+  "changelog_1_7_0_1": {
+    "message": "Aggiunti una scheda di stato e un pulsante Esporta ora alle impostazioni dell'esportazione automatica, più una riga di stato nel popup che indica se l'esportazione automatica è attiva, disattivata o non riuscita."
+  },
+  "changelog_1_7_0_1_link": {
+    "message": "Apri le impostazioni dell'esportazione automatica"
+  },
+  "changelog_1_7_0_2": {
+    "message": "Rese più sicure le importazioni di segnalibri: ora vengono rifiutati gli schemi URL non consentiti (ad es. javascript:) nei file CSV, HTML e JSON."
+  },
+  "changelog_1_6_0_date": {
+    "message": "29 aprile 2026",
+    "description": "Changelog 1.6.0 date"
+  },
+  "changelog_1_6_0_1": {
+    "message": "Aggiunta l'esportazione automatica — salva automaticamente i tuoi segnalibri a intervalli personalizzati (ogni 12 ore, ogni giorno, ogni 3 o 7 giorni) nella cartella di download che preferisci."
+  },
+  "changelog_1_6_0_1_link": {
+    "message": "Apri le impostazioni dell'esportazione automatica"
+  },
+  "shell_navLabel": {
+    "message": "Navigazione principale",
+    "description": "Accessible label of the App sidebar navigation"
+  },
+  "shell_navExport": {
+    "message": "Esporta",
+    "description": "App sidebar nav item and page title"
+  },
+  "shell_navImport": {
+    "message": "Importa",
+    "description": "App sidebar nav item and page title"
+  },
+  "shell_navAutoExport": {
+    "message": "Esportazione automatica",
+    "description": "App sidebar nav item and page title"
+  },
+  "shell_navSettings": {
+    "message": "Impostazioni",
+    "description": "App sidebar nav item and page title"
+  },
+  "shell_navWhatsNew": {
+    "message": "Novità",
+    "description": "App sidebar nav item and page title"
+  },
+  "shell_titleWelcome": {
+    "message": "Benvenuto",
+    "description": "App page title for the first-run welcome screen"
+  },
+  "shell_version": {
+    "message": "Versione $VERSION$",
+    "description": "Installed version shown under the product name in the App sidebar",
+    "placeholders": {
+      "version": {
+        "content": "$1"
+      }
+    }
+  },
+  "shell_autoExportOn": {
+    "message": "Attiva",
+    "description": "Accessible status of the Auto-export nav item when scheduled backups are enabled"
+  },
+  "shell_autoExportFailed": {
+    "message": "Ultima esecuzione non riuscita",
+    "description": "Accessible status of the Auto-export nav item when the last run failed"
+  },
+  "shell_whatsNewUnseen": {
+    "message": "Nuovo",
+    "description": "Accessible label of the unseen-update dot on the What's new nav item"
+  },
+  "shell_placeholder": {
+    "message": "Questa schermata sarà disponibile a breve.",
+    "description": "Placeholder text shown on App screens that are not built yet"
+  },
+  "shell_toggleSidebar": {
+    "message": "Mostra o nascondi la barra laterale",
+    "description": "Accessible label of the sidebar trigger in the App header"
+  },
+  "exportOptions_title": {
+    "message": "Opzioni di esportazione",
+    "description": "Export options panel: Export options"
+  },
+  "exportOptions_includeIcons": {
+    "message": "Includi le favicon",
+    "description": "Export options panel: Include favicons"
+  },
+  "exportOptions_dateAdded": {
+    "message": "Data di aggiunta",
+    "description": "Export options panel: Date added"
+  },
+  "exportOptions_dateLastUsed": {
+    "message": "Data dell'ultimo utilizzo",
+    "description": "Export options panel: Date last used"
+  },
+  "exportOptions_folderDates": {
+    "message": "Date di modifica delle cartelle",
+    "description": "Export options panel: Folder modified dates"
+  },
+  "exportOptions_hideOther": {
+    "message": "Nascondi Altri segnalibri",
+    "description": "Export options panel: Hide other bookmarks"
+  },
+  "exportOptions_hideParent": {
+    "message": "Nascondi la cartella principale",
+    "description": "Export options panel: Hide parent folder"
+  },
+  "import_stepFile": {
+    "message": "File",
+    "description": "Heading of step 1 of the import flow"
+  },
+  "import_stepDone": {
+    "message": "Completato",
+    "description": "Screen reader text for a completed step"
+  },
+  "import_fileInputLabel": {
+    "message": "File dei segnalibri",
+    "description": "Accessible label of the file input"
+  },
+  "import_changeFile": {
+    "message": "Cambia file",
+    "description": "Button to pick a different file"
+  },
+  "import_restoreUnavailable": {
+    "message": "Questo file non contiene dati sulla posizione, quindi non può essere ripristinato nelle cartelle originali.",
+    "description": "Reason shown on disabled restore mode cards"
+  },
+  "import_submit": {
+    "message": "Importa segnalibri ($COUNT$)",
+    "description": "Primary import button",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "import_importing": {
+    "message": "Importazione in corso…",
+    "description": "Primary button label while importing"
+  },
+  "import_replaceTitle": {
+    "message": "Sostituire i segnalibri esistenti?",
+    "description": "Title of the replace confirmation dialog"
+  },
+  "import_replaceConfirm": {
+    "message": "Sostituisci e importa",
+    "description": "Destructive confirm button in the replace dialog"
+  },
+  "import_errorTitle": {
+    "message": "Importazione non riuscita",
+    "description": "Title of the import error alert"
+  },
+  "import_another": {
+    "message": "Importa un altro file",
+    "description": "Button shown after a successful import"
+  },
+  "import_openManager": {
+    "message": "Apri il gestore dei segnalibri",
+    "description": "Button that opens chrome://bookmarks"
+  },
+  "autoExportPage_saved": {
+    "message": "Salvato",
+    "description": "Toast shown after an Auto-export setting is saved"
+  },
+  "autoExportPage_succeeded": {
+    "message": "Riuscita",
+    "description": "Last-run badge when the last auto-export succeeded"
+  },
+  "autoExportPage_failed": {
+    "message": "Non riuscita",
+    "description": "Last-run badge when the last auto-export failed"
+  },
+  "autoExportPage_statusTitle": {
+    "message": "Stato",
+    "description": "Title of the Auto-export status card"
+  },
+  "autoExportPage_lastRun": {
+    "message": "Ultima esecuzione",
+    "description": "Status card label for the last run"
+  },
+  "autoExportPage_nextRun": {
+    "message": "Prossima esecuzione",
+    "description": "Status card label for the next run"
+  },
+  "autoExportPage_off": {
+    "message": "L'esportazione automatica è disattivata",
+    "description": "Status card next-run value when auto-export is off"
+  },
+  "autoExportPage_failureTitle": {
+    "message": "L'ultima esportazione automatica non è riuscita",
+    "description": "Title of the alert shown when the last run failed"
+  },
+  "autoExportPage_settingsTitle": {
+    "message": "Impostazioni",
+    "description": "Title of the Auto-export settings card"
+  },
+  "autoExportPage_settingsDescription": {
+    "message": "Le modifiche vengono salvate automaticamente.",
+    "description": "Description of the Auto-export settings card"
+  },
+  "autoExportPage_frequency": {
+    "message": "Frequenza",
+    "description": "Label of the frequency toggle group"
+  },
+  "autoExportPage_interval12h": {
+    "message": "Ogni 12 ore",
+    "description": "Frequency option: every 12 hours"
+  },
+  "autoExportPage_interval1d": {
+    "message": "Ogni giorno",
+    "description": "Frequency option: daily"
+  },
+  "autoExportPage_interval3d": {
+    "message": "Ogni 3 giorni",
+    "description": "Frequency option: every 3 days"
+  },
+  "autoExportPage_interval7d": {
+    "message": "Ogni settimana",
+    "description": "Frequency option: weekly"
+  },
+  "autoExportPage_folderDescription": {
+    "message": "Cartella all'interno di Download in cui vengono salvati i backup.",
+    "description": "Help text under the folder field"
+  },
+  "autoExportPage_formatsDescription": {
+    "message": "Deve restare selezionato almeno un formato.",
+    "description": "Help text under the formats toggle group"
+  },
+  "popup_exportAll": {
+    "message": "Esporta tutto",
+    "description": "Popup button that exports every bookmark in the remembered format"
+  },
+  "popup_exportFormatLabel": {
+    "message": "Formato di esportazione",
+    "description": "Accessible label of the popup format toggle group"
+  },
+  "popup_exportSuccessTitle": {
+    "message": "Segnalibri esportati: $COUNT$",
+    "description": "Popup toast title after a successful export",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "popup_exportFailedTitle": {
+    "message": "Esportazione non riuscita",
+    "description": "Popup toast title when an export fails"
+  },
+  "popup_chooseFile": {
+    "message": "Scegli file…",
+    "description": "Popup button that opens the file picker to import bookmarks"
+  },
+  "popup_importing": {
+    "message": "Importazione in corso…",
+    "description": "Popup import button label while an import is running"
+  },
+  "popup_importSuccessTitle": {
+    "message": "Segnalibri importati",
+    "description": "Popup toast title after a successful import"
+  },
+  "popup_importFailedTitle": {
+    "message": "Importazione non riuscita",
+    "description": "Popup toast title when an import fails"
+  },
+  "popup_replaceAlertTitle": {
+    "message": "I segnalibri esistenti verranno sostituiti",
+    "description": "Title of the popup alert shown when the default mode is Restore - replace"
+  },
+  "popup_statusNextRunTitle": {
+    "message": "Prossima esportazione automatica",
+    "description": "Popup status item title when auto-export is scheduled"
+  },
+  "popup_statusOffTitle": {
+    "message": "Imposta i backup pianificati",
+    "description": "Popup status item title when auto-export is off"
+  },
+  "popup_statusOffDescription": {
+    "message": "L'esportazione automatica è disattivata",
+    "description": "Popup status item description when auto-export is off"
+  },
+  "popup_statusFailedTitle": {
+    "message": "Ultima esportazione automatica non riuscita",
+    "description": "Popup status item title when the last auto-export failed"
+  },
+  "popup_statusFailedDescription": {
+    "message": "Apri l'esportazione automatica per controllare",
+    "description": "Popup status item description when the last auto-export failed"
+  },
+  "popup_openApp": {
+    "message": "Apri l'app",
+    "description": "Popup footer button that opens the full-page app"
+  },
+  "popup_settings": {
+    "message": "Impostazioni",
+    "description": "Accessible label of the popup footer settings icon button"
+  },
+  "settingsPage_appearanceTitle": {
+    "message": "Aspetto",
+    "description": "Settings page: appearanceTitle"
+  },
+  "settingsPage_theme": {
+    "message": "Tema",
+    "description": "Settings page: theme"
+  },
+  "settingsPage_themeDescription": {
+    "message": "Scegli l'aspetto dell'estensione. \"Sistema\" segue il tuo sistema operativo.",
+    "description": "Settings page: themeDescription"
+  },
+  "settingsPage_themeSystem": {
+    "message": "Sistema",
+    "description": "Settings page: themeSystem"
+  },
+  "settingsPage_themeLight": {
+    "message": "Chiaro",
+    "description": "Settings page: themeLight"
+  },
+  "settingsPage_themeDark": {
+    "message": "Scuro",
+    "description": "Settings page: themeDark"
+  },
+  "settingsPage_treeTitle": {
+    "message": "Albero dei segnalibri",
+    "description": "Settings page: treeTitle"
+  },
+  "settingsPage_importTitle": {
+    "message": "Importazione",
+    "description": "Settings page: importTitle"
+  },
+  "settingsPage_importDescription": {
+    "message": "Impostazioni predefinite per l'importazione dei segnalibri.",
+    "description": "Settings page: importDescription"
+  },
+  "settingsPage_importModeHelp": {
+    "message": "Usata dal popup e preselezionata nella pagina Importa.",
+    "description": "Settings page: importModeHelp"
+  },
+  "welcome_exportTitle": {
+    "message": "Crea il tuo primo backup",
+    "description": "Welcome page quick-start item title"
+  },
+  "welcome_exportDescription": {
+    "message": "Dieci secondi per avere una copia al sicuro dei tuoi segnalibri.",
+    "description": "Welcome page quick-start item description"
+  },
+  "welcome_exportAction": {
+    "message": "Esporta",
+    "description": "Welcome page quick-start item button"
+  },
+  "welcome_autoExportTitle": {
+    "message": "Imposta l'esportazione automatica",
+    "description": "Welcome page quick-start item title"
+  },
+  "welcome_autoExportDescription": {
+    "message": "Fai il backup in modo pianificato, senza nemmeno un clic.",
+    "description": "Welcome page quick-start item description"
+  },
+  "welcome_autoExportAction": {
+    "message": "Esportazione automatica",
+    "description": "Welcome page quick-start item button"
+  },
+  "welcome_importTitle": {
+    "message": "Importa i segnalibri",
+    "description": "Welcome page quick-start item title"
+  },
+  "welcome_importDescription": {
+    "message": "Porta qui i segnalibri di un altro browser o di un backup.",
+    "description": "Welcome page quick-start item description"
+  },
+  "welcome_importAction": {
+    "message": "Importa",
+    "description": "Welcome page quick-start item button"
+  },
+  "whatsNew_current": {
+    "message": "Attuale",
+    "description": "What's new screen string"
+  },
+  "whatsNew_reviewTitle": {
+    "message": "Ti piace l'estensione?",
+    "description": "What's new screen string"
+  },
+  "whatsNew_reviewDescription": {
+    "message": "Una valutazione veloce aiuta altre persone a trovarla.",
+    "description": "What's new screen string"
+  },
+  "whatsNew_reviewAction": {
+    "message": "Lascia una recensione",
+    "description": "What's new screen string"
+  },
+  "exportPage_title": {
+    "message": "Esporta segnalibri",
+    "description": "Export page heading"
+  },
+  "exportPage_description": {
+    "message": "Scegli cosa includere, poi scarica il file nel formato che preferisci.",
+    "description": "Export page one-line description"
+  },
+  "exportPage_expandAll": {
+    "message": "Espandi tutto",
+    "description": "Export page toolbar button that expands every folder"
+  },
+  "exportPage_collapseAll": {
+    "message": "Comprimi tutto",
+    "description": "Export page toolbar button that collapses every folder"
+  },
+  "exportPage_selectAllLabel": {
+    "message": "Seleziona tutti i segnalibri",
+    "description": "Accessible label of the master checkbox on the Export page"
+  },
+  "exportPage_loading": {
+    "message": "Caricamento dei segnalibri",
+    "description": "Accessible label of the loading placeholder on the Export page"
+  },
+  "exportPage_selectionCount": {
+    "message": "$SELECTED$ di $TOTAL$ selezionati",
+    "description": "Export page sticky bar selection count",
+    "placeholders": {
+      "selected": {
+        "content": "$1"
+      },
+      "total": {
+        "content": "$2"
+      }
+    }
+  },
+  "exportPage_nothingSelected": {
+    "message": "Nessuna selezione",
+    "description": "Export page sticky bar text when no bookmark is selected"
+  },
+  "exportPage_formatLabel": {
+    "message": "Formato di esportazione",
+    "description": "Accessible label of the Export page format toggle group"
+  },
+  "exportPage_exportButton": {
+    "message": "Esporta segnalibri ($COUNT$)",
+    "description": "Export page primary button",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "exportPage_exporting": {
+    "message": "Esportazione in corso…",
+    "description": "Export page primary button label while exporting"
+  },
+  "exportPage_successTitle": {
+    "message": "Segnalibri esportati: $COUNT$",
+    "description": "Export page toast title after a successful export",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "exportPage_failedTitle": {
+    "message": "Esportazione non riuscita",
+    "description": "Export page toast title when an export fails"
+  },
+  "exportPage_noResultsTitle": {
+    "message": "Nessun segnalibro corrisponde a \"$TERM$\"",
+    "description": "Export page empty state title when a search matches nothing",
+    "placeholders": {
+      "term": {
+        "content": "$1"
+      }
+    }
+  },
+  "exportPage_noResultsDescription": {
+    "message": "Prova con un'altra parola, oppure cancella la ricerca per vedere tutti i segnalibri.",
+    "description": "Export page empty state description"
+  },
+  "exportPage_clearSearch": {
+    "message": "Cancella ricerca",
+    "description": "Export page empty state button that clears the search"
+  },
+  "welcome_heroTitle": {
+    "message": "Benvenuto in",
+    "description": "Lead-in of the welcome page hero title; the Snug wordmark is rendered right after it"
+  }
+}

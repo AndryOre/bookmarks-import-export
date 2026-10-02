@@ -1,0 +1,906 @@
+{
+  "extensionName": {
+    "message": "Snug",
+    "description": "Name of the extension."
+  },
+  "extensionDescription": {
+    "message": "导出、导入书签，并定时自动备份——支持 HTML、JSON 或 CSV，全程在本机完成，无需账号，无需云端。",
+    "description": "Description of the extension"
+  },
+  "welcomeSubtitle": {
+    "message": "导出、导入并备份你的书签——全程在你的设备上完成。",
+    "description": "Welcome page subtitle"
+  },
+  "settings": {
+    "message": "设置",
+    "description": "Settings"
+  },
+  "exportFormat": {
+    "message": "导出格式",
+    "description": "Placeholder text for the export format selector"
+  },
+  "exportBookmarks": {
+    "message": "导出",
+    "description": "Export Bookmarks tab label in the popup"
+  },
+  "refresh": {
+    "message": "刷新",
+    "description": "Refresh"
+  },
+  "selectAll": {
+    "message": "全选",
+    "description": "Select All"
+  },
+  "deselectAll": {
+    "message": "取消全选",
+    "description": "Deselect All"
+  },
+  "selected": {
+    "message": "已选",
+    "description": "Selected"
+  },
+  "searchBookmarks": {
+    "message": "搜索书签",
+    "description": "Search bookmarks"
+  },
+  "display": {
+    "message": "显示",
+    "description": "Display"
+  },
+  "export": {
+    "message": "导出",
+    "description": "Export"
+  },
+  "showBookmarkIcon": {
+    "message": "显示书签图标",
+    "description": "Show bookmark icon"
+  },
+  "showBookmarkIconDescription": {
+    "message": "在书签旁显示图标",
+    "description": "Show bookmark icon description"
+  },
+  "autoExpandFolders": {
+    "message": "自动展开文件夹",
+    "description": "Auto expand folders"
+  },
+  "autoExpandFoldersDescription": {
+    "message": "在书签树中自动展开文件夹",
+    "description": "Auto expand folders description"
+  },
+  "includeIconData": {
+    "message": "包含图标数据",
+    "description": "Include icon data"
+  },
+  "includeDateAdded": {
+    "message": "包含创建日期",
+    "description": "Include creation dates"
+  },
+  "includeDateLastUsed": {
+    "message": "包含最近使用日期",
+    "description": "Include last used dates"
+  },
+  "includeDateGroupModified": {
+    "message": "包含文件夹修改日期",
+    "description": "Include folder modification dates"
+  },
+  "hideOtherBookmarks": {
+    "message": "隐藏“其他书签”文件夹",
+    "description": "Hide 'Other bookmarks' folder"
+  },
+  "hideParentFolder": {
+    "message": "隐藏上级文件夹",
+    "description": "Hide parent folder"
+  },
+  "dropFileHere": {
+    "message": "将书签文件拖放到此处",
+    "description": "File drop zone prompt"
+  },
+  "orClickToSelect": {
+    "message": "或点击选择",
+    "description": "Secondary file drop zone prompt"
+  },
+  "supportedFormats": {
+    "message": "支持 HTML、JSON 和 CSV",
+    "description": "Supported import formats"
+  },
+  "changeFile": {
+    "message": "更换",
+    "description": "Button to change selected file"
+  },
+  "importMode": {
+    "message": "导入方式",
+    "description": "Import mode section label"
+  },
+  "defaultImportMode": {
+    "message": "默认导入方式",
+    "description": "Label for the quick-import default mode select"
+  },
+  "importModeFolder": {
+    "message": "创建文件夹",
+    "description": "Import mode: create folder"
+  },
+  "importModeFolderDescription": {
+    "message": "将所有书签添加到新的“导入的书签”文件夹",
+    "description": "Import mode: create folder description"
+  },
+  "importModeRestoreMerge": {
+    "message": "恢复——合并",
+    "description": "Import mode: restore and merge"
+  },
+  "importModeRestoreMergeDescription": {
+    "message": "将书签放回原位置，与现有书签并存",
+    "description": "Import mode: restore and merge description"
+  },
+  "importModeRestoreReplace": {
+    "message": "恢复——替换",
+    "description": "Import mode: restore and replace"
+  },
+  "importModeRestoreReplaceDescription": {
+    "message": "先清除现有书签，再恢复到原位置",
+    "description": "Import mode: restore and replace description"
+  },
+  "importModeRestoreReplaceWarning": {
+    "message": "此操作将永久删除书签栏和其他书签中的所有现有书签",
+    "description": "Warning shown for restore-replace mode"
+  },
+  "importPreview": {
+    "message": "预览",
+    "description": "Import preview section label"
+  },
+  "importPreviewCount": {
+    "message": "$COUNT$ 个书签",
+    "description": "Bookmark count in preview",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "replaceConfirmTitle": {
+    "message": "要替换现有书签吗？",
+    "description": "Title of the replace confirmation dialog"
+  },
+  "replaceConfirmDescription": {
+    "message": "导入前，书签栏和其他书签中的所有现有书签都将被永久删除。此操作无法撤销。",
+    "description": "Body of the replace confirmation dialog"
+  },
+  "replaceConfirmButton": {
+    "message": "是，替换",
+    "description": "Confirm button in the replace dialog"
+  },
+  "cancel": {
+    "message": "取消",
+    "description": "Cancel button"
+  },
+  "unsupportedFileFormat": {
+    "message": "不支持的文件格式",
+    "description": "Unsupported file format"
+  },
+  "bookmarksImportedSuccessfully": {
+    "message": "书签导入成功！",
+    "description": "Bookmarks imported successfully"
+  },
+  "import": {
+    "message": "导入",
+    "description": "Import"
+  },
+  "changelog_1_5_0_date": {
+    "message": "2025年4月29日",
+    "description": "Changelog 1.5.0 date"
+  },
+  "changelog_1_5_0_1": {
+    "message": "新增高级导入——将书签恢复到原来的位置（书签栏和其他书签），可选择合并或替换。"
+  },
+  "changelog_1_5_0_1_link": {
+    "message": "试试高级导入"
+  },
+  "changelog_1_4_0_date": {
+    "message": "2025年4月29日",
+    "description": "Changelog 1.4.0 date"
+  },
+  "changelog_1_4_0_1": {
+    "message": "新增可自定义的导出文件名模板——使用 %yyyy、%mm、%dd 等日期/时间占位符，自动生成带时间戳的唯一文件名。"
+  },
+  "changelog_1_3_0_date": {
+    "message": "2025年2月16日",
+    "description": "Changelog 1.3.0 date"
+  },
+  "changelog_1_3_0_1": {
+    "message": "新增深色模式支持，自动匹配系统主题偏好。"
+  },
+  "changelog_1_2_0_date": {
+    "message": "2025年2月14日",
+    "description": "Changelog 1.2.0 date"
+  },
+  "changelog_1_2_0_1": {
+    "message": "现在会自动适应浏览器的语言！支持英语和西班牙语。"
+  },
+  "changelog_1_1_0_date": {
+    "message": "2025年2月13日",
+    "description": "Changelog 1.1.0 date"
+  },
+  "changelog_1_1_0_1": {
+    "message": "导入的书签现在会放入单独的文件夹，避免与现有书签混在一起"
+  },
+  "changelog_1_1_0_2": {
+    "message": "更精确地控制导出时要包含哪些日期"
+  },
+  "changelog_1_1_0_2_link": {
+    "message": "试试新的导出选项"
+  },
+  "changelog_1_0_0_date": {
+    "message": "2024年8月5日",
+    "description": "Changelog 1.0.0 date"
+  },
+  "changelog_1_0_0_1": {
+    "message": "新增高级导出功能，让你更好地掌控书签。"
+  },
+  "changelog_1_0_0_1_link": {
+    "message": "试试高级导出"
+  },
+  "changelog_1_0_0_2": {
+    "message": "新增欢迎页和更新页，让你及时了解新功能。"
+  },
+  "changelog_1_0_0_3": {
+    "message": "整体性能优化，使用更流畅。"
+  },
+  "changelog_0_1_1_date": {
+    "message": "2024年8月4日",
+    "description": "Changelog 0.1.1 date"
+  },
+  "changelog_0_1_1_1": {
+    "message": "修复了影响非英语浏览器语言用户的严重错误。"
+  },
+  "changelog_0_1_1_2": {
+    "message": "提升了导入和导出功能的可靠性。"
+  },
+  "changelog_0_1_1_3": {
+    "message": "修复了扩展程序图标未显示在浏览器工具栏中的问题。"
+  },
+  "changelog_0_1_1_4": {
+    "message": "修复了扩展程序在部分浏览器中无法运行的问题。"
+  },
+  "changelog_0_1_0_date": {
+    "message": "2024年8月3日",
+    "description": "Changelog 0.1.0 date"
+  },
+  "changelog_0_1_0_1": {
+    "message": "书签导入/导出扩展程序的首个版本。"
+  },
+  "changelog_0_1_0_2": {
+    "message": "支持导入 HTML 和 JSON 文件的基础功能。"
+  },
+  "changelog_0_1_0_3": {
+    "message": "支持将书签导出为 HTML 和 JSON 格式的基础功能。"
+  },
+  "extensionInstalled": {
+    "message": "Snug 已安装",
+    "description": "Extension installed"
+  },
+  "extensionUpdated": {
+    "message": "Snug 已更新至 $VERSION$ 版本",
+    "description": "Extension updated",
+    "placeholders": {
+      "version": {
+        "content": "$1"
+      }
+    }
+  },
+  "exportFilenameTemplate": {
+    "message": "文件名模板",
+    "description": "Label for the export filename template input"
+  },
+  "exportFilenameTemplatePreview": {
+    "message": "预览：",
+    "description": "Label shown before the live filename preview"
+  },
+  "faviconError": {
+    "message": "获取网站图标时出错",
+    "description": "Error fetching favicon"
+  },
+  "importFromHTMLLoadError": {
+    "message": "解析 HTML 失败：$ERROR$",
+    "description": "Failed to parse HTML",
+    "placeholders": {
+      "error": {
+        "content": "$1"
+      }
+    }
+  },
+  "importFromHTMLCreateError": {
+    "message": "根据 HTML 创建书签失败：$ERROR$",
+    "description": "Failed to create bookmarks from HTML",
+    "placeholders": {
+      "error": {
+        "content": "$1"
+      }
+    }
+  },
+  "importFromHTMLProcessError": {
+    "message": "找不到书签栏或其他书签文件夹",
+    "description": "Could not find Bookmarks bar or Other bookmarks folder"
+  },
+  "bookmarksBar": {
+    "message": "书签栏",
+    "description": "Bookmarks bar"
+  },
+  "importedBookmarks": {
+    "message": "导入的书签",
+    "description": "Imported bookmarks"
+  },
+  "otherBookmarks": {
+    "message": "其他书签",
+    "description": "Other bookmarks"
+  },
+  "mobileBookmarks": {
+    "message": "移动设备书签",
+    "description": "Mobile bookmarks"
+  },
+  "importFromJSONImportError": {
+    "message": "导入失败：$ERROR$",
+    "description": "Import failed",
+    "placeholders": {
+      "error": {
+        "content": "$1"
+      }
+    }
+  },
+  "importFromJSONProcessError": {
+    "message": "找不到书签栏或其他书签文件夹",
+    "description": "Error when JSON import cannot find required folders"
+  },
+  "importFromCSVImportError": {
+    "message": "导入 CSV 文件失败",
+    "description": "Error when CSV import fails"
+  },
+  "autoExport": {
+    "message": "自动导出",
+    "description": "Auto-export settings tab label"
+  },
+  "autoExportNeverRun": {
+    "message": "尚未运行",
+    "description": "Status card value when auto-export has never run"
+  },
+  "exportNow": {
+    "message": "立即导出",
+    "description": "Button label to run an on-demand export immediately"
+  },
+  "exportNowSuccess": {
+    "message": "导出完成",
+    "description": "Inline message shown after Export now succeeds"
+  },
+  "exportNowFailed": {
+    "message": "导出失败",
+    "description": "Inline message shown after Export now fails"
+  },
+  "enableAutoExport": {
+    "message": "启用自动导出",
+    "description": "Enable auto export toggle label"
+  },
+  "enableAutoExportDescription": {
+    "message": "自动将书签导出为 HTML、JSON 和 CSV 格式。",
+    "description": "Enable auto export toggle description"
+  },
+  "preferredExportTime": {
+    "message": "首选导出时间",
+    "description": "Preferred export time section title"
+  },
+  "timeSelectionUnavailable": {
+    "message": "仅当间隔为 24 小时或更长时，才可选择时间",
+    "description": "Note shown when 12h interval is selected"
+  },
+  "hoursLabel": {
+    "message": "小时",
+    "description": "Hours input label in time picker"
+  },
+  "minutesLabel": {
+    "message": "分钟",
+    "description": "Minutes input label in time picker"
+  },
+  "periodLabel": {
+    "message": "时段",
+    "description": "AM/PM selector label in time picker"
+  },
+  "exportPath": {
+    "message": "导出路径",
+    "description": "Export path section title"
+  },
+  "autoExportFormats": {
+    "message": "导出格式",
+    "description": "Export formats section title"
+  },
+  "changelog_2_0_0_date": {
+    "message": "2026年10月2日",
+    "description": "Changelog 2.0.0 date"
+  },
+  "changelog_2_0_0_1": {
+    "message": "这个扩展程序有了新名称：Snug。还是同一个扩展程序，同样只在本地运行——导出、导入书签并定时备份，绝不向任何地方发送数据。你的数据和设置都不会改变，只有名称和图标变了。"
+  },
+  "changelog_2_0_0_2": {
+    "message": "应用现在是带侧边栏的单一页面（导出、导入、自动导出、设置、新功能），另有精简的弹出窗口，以及全新的 Snug 图标和配色。"
+  },
+  "changelog_2_0_0_2_link": {
+    "message": "打开应用"
+  },
+  "changelog_1_7_0_date": {
+    "message": "2026年10月1日",
+    "description": "Changelog 1.7.0 date"
+  },
+  "changelog_1_7_0_1": {
+    "message": "自动导出设置新增状态卡片和“立即导出”按钮，弹出窗口也新增状态行，显示自动导出是已开启、已关闭还是失败。"
+  },
+  "changelog_1_7_0_1_link": {
+    "message": "打开自动导出设置"
+  },
+  "changelog_1_7_0_2": {
+    "message": "加强了书签导入的安全性：拒绝 CSV、HTML 和 JSON 文件中不允许的 URL 协议（例如 javascript:）。"
+  },
+  "changelog_1_6_0_date": {
+    "message": "2026年4月29日",
+    "description": "Changelog 1.6.0 date"
+  },
+  "changelog_1_6_0_1": {
+    "message": "新增自动导出——按自定义间隔（每 12 小时、每天、每 3 天或每 7 天）自动将书签保存到你指定的下载文件夹。"
+  },
+  "changelog_1_6_0_1_link": {
+    "message": "打开自动导出设置"
+  },
+  "shell_navLabel": {
+    "message": "主导航",
+    "description": "Accessible label of the App sidebar navigation"
+  },
+  "shell_navExport": {
+    "message": "导出",
+    "description": "App sidebar nav item and page title"
+  },
+  "shell_navImport": {
+    "message": "导入",
+    "description": "App sidebar nav item and page title"
+  },
+  "shell_navAutoExport": {
+    "message": "自动导出",
+    "description": "App sidebar nav item and page title"
+  },
+  "shell_navSettings": {
+    "message": "设置",
+    "description": "App sidebar nav item and page title"
+  },
+  "shell_navWhatsNew": {
+    "message": "新功能",
+    "description": "App sidebar nav item and page title"
+  },
+  "shell_titleWelcome": {
+    "message": "欢迎",
+    "description": "App page title for the first-run welcome screen"
+  },
+  "shell_version": {
+    "message": "版本 $VERSION$",
+    "description": "Installed version shown under the product name in the App sidebar",
+    "placeholders": {
+      "version": {
+        "content": "$1"
+      }
+    }
+  },
+  "shell_autoExportOn": {
+    "message": "已开启",
+    "description": "Accessible status of the Auto-export nav item when scheduled backups are enabled"
+  },
+  "shell_autoExportFailed": {
+    "message": "上次运行失败",
+    "description": "Accessible status of the Auto-export nav item when the last run failed"
+  },
+  "shell_whatsNewUnseen": {
+    "message": "新",
+    "description": "Accessible label of the unseen-update dot on the What's new nav item"
+  },
+  "shell_placeholder": {
+    "message": "此页面即将推出。",
+    "description": "Placeholder text shown on App screens that are not built yet"
+  },
+  "shell_toggleSidebar": {
+    "message": "切换侧边栏",
+    "description": "Accessible label of the sidebar trigger in the App header"
+  },
+  "exportOptions_title": {
+    "message": "导出选项",
+    "description": "Export options panel: Export options"
+  },
+  "exportOptions_includeIcons": {
+    "message": "包含网站图标",
+    "description": "Export options panel: Include favicons"
+  },
+  "exportOptions_dateAdded": {
+    "message": "添加日期",
+    "description": "Export options panel: Date added"
+  },
+  "exportOptions_dateLastUsed": {
+    "message": "最近使用日期",
+    "description": "Export options panel: Date last used"
+  },
+  "exportOptions_folderDates": {
+    "message": "文件夹修改日期",
+    "description": "Export options panel: Folder modified dates"
+  },
+  "exportOptions_hideOther": {
+    "message": "隐藏其他书签",
+    "description": "Export options panel: Hide other bookmarks"
+  },
+  "exportOptions_hideParent": {
+    "message": "隐藏上级文件夹",
+    "description": "Export options panel: Hide parent folder"
+  },
+  "import_stepFile": {
+    "message": "文件",
+    "description": "Heading of step 1 of the import flow"
+  },
+  "import_stepDone": {
+    "message": "已完成",
+    "description": "Screen reader text for a completed step"
+  },
+  "import_fileInputLabel": {
+    "message": "书签文件",
+    "description": "Accessible label of the file input"
+  },
+  "import_changeFile": {
+    "message": "更换文件",
+    "description": "Button to pick a different file"
+  },
+  "import_restoreUnavailable": {
+    "message": "此文件不含位置数据，无法恢复到原来的文件夹。",
+    "description": "Reason shown on disabled restore mode cards"
+  },
+  "import_submit": {
+    "message": "导入 $COUNT$ 个书签",
+    "description": "Primary import button",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "import_importing": {
+    "message": "正在导入…",
+    "description": "Primary button label while importing"
+  },
+  "import_replaceTitle": {
+    "message": "要替换现有书签吗？",
+    "description": "Title of the replace confirmation dialog"
+  },
+  "import_replaceConfirm": {
+    "message": "替换并导入",
+    "description": "Destructive confirm button in the replace dialog"
+  },
+  "import_errorTitle": {
+    "message": "导入失败",
+    "description": "Title of the import error alert"
+  },
+  "import_another": {
+    "message": "导入另一个文件",
+    "description": "Button shown after a successful import"
+  },
+  "import_openManager": {
+    "message": "打开书签管理器",
+    "description": "Button that opens chrome://bookmarks"
+  },
+  "autoExportPage_saved": {
+    "message": "已保存",
+    "description": "Toast shown after an Auto-export setting is saved"
+  },
+  "autoExportPage_succeeded": {
+    "message": "成功",
+    "description": "Last-run badge when the last auto-export succeeded"
+  },
+  "autoExportPage_failed": {
+    "message": "失败",
+    "description": "Last-run badge when the last auto-export failed"
+  },
+  "autoExportPage_statusTitle": {
+    "message": "状态",
+    "description": "Title of the Auto-export status card"
+  },
+  "autoExportPage_lastRun": {
+    "message": "上次运行",
+    "description": "Status card label for the last run"
+  },
+  "autoExportPage_nextRun": {
+    "message": "下次运行",
+    "description": "Status card label for the next run"
+  },
+  "autoExportPage_off": {
+    "message": "自动导出已关闭",
+    "description": "Status card next-run value when auto-export is off"
+  },
+  "autoExportPage_failureTitle": {
+    "message": "上次自动导出失败",
+    "description": "Title of the alert shown when the last run failed"
+  },
+  "autoExportPage_settingsTitle": {
+    "message": "设置",
+    "description": "Title of the Auto-export settings card"
+  },
+  "autoExportPage_settingsDescription": {
+    "message": "更改会自动保存。",
+    "description": "Description of the Auto-export settings card"
+  },
+  "autoExportPage_frequency": {
+    "message": "频率",
+    "description": "Label of the frequency toggle group"
+  },
+  "autoExportPage_interval12h": {
+    "message": "每 12 小时",
+    "description": "Frequency option: every 12 hours"
+  },
+  "autoExportPage_interval1d": {
+    "message": "每天",
+    "description": "Frequency option: daily"
+  },
+  "autoExportPage_interval3d": {
+    "message": "每 3 天",
+    "description": "Frequency option: every 3 days"
+  },
+  "autoExportPage_interval7d": {
+    "message": "每周",
+    "description": "Frequency option: weekly"
+  },
+  "autoExportPage_folderDescription": {
+    "message": "备份保存位置：“下载内容”文件夹中的子文件夹。",
+    "description": "Help text under the folder field"
+  },
+  "autoExportPage_formatsDescription": {
+    "message": "至少需保留一种格式。",
+    "description": "Help text under the formats toggle group"
+  },
+  "popup_exportAll": {
+    "message": "全部导出",
+    "description": "Popup button that exports every bookmark in the remembered format"
+  },
+  "popup_exportFormatLabel": {
+    "message": "导出格式",
+    "description": "Accessible label of the popup format toggle group"
+  },
+  "popup_exportSuccessTitle": {
+    "message": "已导出 $COUNT$ 个书签",
+    "description": "Popup toast title after a successful export",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "popup_exportFailedTitle": {
+    "message": "导出失败",
+    "description": "Popup toast title when an export fails"
+  },
+  "popup_chooseFile": {
+    "message": "选择文件…",
+    "description": "Popup button that opens the file picker to import bookmarks"
+  },
+  "popup_importing": {
+    "message": "正在导入…",
+    "description": "Popup import button label while an import is running"
+  },
+  "popup_importSuccessTitle": {
+    "message": "书签已导入",
+    "description": "Popup toast title after a successful import"
+  },
+  "popup_importFailedTitle": {
+    "message": "导入失败",
+    "description": "Popup toast title when an import fails"
+  },
+  "popup_replaceAlertTitle": {
+    "message": "现有书签将被替换",
+    "description": "Title of the popup alert shown when the default mode is Restore - replace"
+  },
+  "popup_statusNextRunTitle": {
+    "message": "下次自动导出",
+    "description": "Popup status item title when auto-export is scheduled"
+  },
+  "popup_statusOffTitle": {
+    "message": "设置定时备份",
+    "description": "Popup status item title when auto-export is off"
+  },
+  "popup_statusOffDescription": {
+    "message": "自动导出已关闭",
+    "description": "Popup status item description when auto-export is off"
+  },
+  "popup_statusFailedTitle": {
+    "message": "上次自动导出失败",
+    "description": "Popup status item title when the last auto-export failed"
+  },
+  "popup_statusFailedDescription": {
+    "message": "打开自动导出查看详情",
+    "description": "Popup status item description when the last auto-export failed"
+  },
+  "popup_openApp": {
+    "message": "打开应用",
+    "description": "Popup footer button that opens the full-page app"
+  },
+  "popup_settings": {
+    "message": "设置",
+    "description": "Accessible label of the popup footer settings icon button"
+  },
+  "settingsPage_appearanceTitle": {
+    "message": "外观",
+    "description": "Settings page: appearanceTitle"
+  },
+  "settingsPage_theme": {
+    "message": "主题",
+    "description": "Settings page: theme"
+  },
+  "settingsPage_themeDescription": {
+    "message": "选择扩展程序的外观。“系统”会跟随你的操作系统。",
+    "description": "Settings page: themeDescription"
+  },
+  "settingsPage_themeSystem": {
+    "message": "系统",
+    "description": "Settings page: themeSystem"
+  },
+  "settingsPage_themeLight": {
+    "message": "浅色",
+    "description": "Settings page: themeLight"
+  },
+  "settingsPage_themeDark": {
+    "message": "深色",
+    "description": "Settings page: themeDark"
+  },
+  "settingsPage_treeTitle": {
+    "message": "书签树",
+    "description": "Settings page: treeTitle"
+  },
+  "settingsPage_importTitle": {
+    "message": "导入",
+    "description": "Settings page: importTitle"
+  },
+  "settingsPage_importDescription": {
+    "message": "导入书签的默认设置。",
+    "description": "Settings page: importDescription"
+  },
+  "settingsPage_importModeHelp": {
+    "message": "弹出窗口会使用此设置，导入页面也会预先选中它。",
+    "description": "Settings page: importModeHelp"
+  },
+  "welcome_exportTitle": {
+    "message": "完成第一次备份",
+    "description": "Welcome page quick-start item title"
+  },
+  "welcome_exportDescription": {
+    "message": "十秒钟，就能得到书签的安全副本。",
+    "description": "Welcome page quick-start item description"
+  },
+  "welcome_exportAction": {
+    "message": "导出",
+    "description": "Welcome page quick-start item button"
+  },
+  "welcome_autoExportTitle": {
+    "message": "设置自动导出",
+    "description": "Welcome page quick-start item title"
+  },
+  "welcome_autoExportDescription": {
+    "message": "按计划备份，无需任何操作。",
+    "description": "Welcome page quick-start item description"
+  },
+  "welcome_autoExportAction": {
+    "message": "自动导出",
+    "description": "Welcome page quick-start item button"
+  },
+  "welcome_importTitle": {
+    "message": "导入书签",
+    "description": "Welcome page quick-start item title"
+  },
+  "welcome_importDescription": {
+    "message": "从其他浏览器或备份中导入书签。",
+    "description": "Welcome page quick-start item description"
+  },
+  "welcome_importAction": {
+    "message": "导入",
+    "description": "Welcome page quick-start item button"
+  },
+  "whatsNew_current": {
+    "message": "当前版本",
+    "description": "What's new screen string"
+  },
+  "whatsNew_reviewTitle": {
+    "message": "用得还满意吗？",
+    "description": "What's new screen string"
+  },
+  "whatsNew_reviewDescription": {
+    "message": "一个简单的评分，能帮助更多人发现它。",
+    "description": "What's new screen string"
+  },
+  "whatsNew_reviewAction": {
+    "message": "去评价",
+    "description": "What's new screen string"
+  },
+  "exportPage_title": {
+    "message": "导出书签",
+    "description": "Export page heading"
+  },
+  "exportPage_description": {
+    "message": "选择要包含的内容，然后以你喜欢的格式下载。",
+    "description": "Export page one-line description"
+  },
+  "exportPage_expandAll": {
+    "message": "全部展开",
+    "description": "Export page toolbar button that expands every folder"
+  },
+  "exportPage_collapseAll": {
+    "message": "全部收起",
+    "description": "Export page toolbar button that collapses every folder"
+  },
+  "exportPage_selectAllLabel": {
+    "message": "选择所有书签",
+    "description": "Accessible label of the master checkbox on the Export page"
+  },
+  "exportPage_loading": {
+    "message": "正在加载书签",
+    "description": "Accessible label of the loading placeholder on the Export page"
+  },
+  "exportPage_selectionCount": {
+    "message": "已选 $SELECTED$ / 共 $TOTAL$",
+    "description": "Export page sticky bar selection count",
+    "placeholders": {
+      "selected": {
+        "content": "$1"
+      },
+      "total": {
+        "content": "$2"
+      }
+    }
+  },
+  "exportPage_nothingSelected": {
+    "message": "未选择任何内容",
+    "description": "Export page sticky bar text when no bookmark is selected"
+  },
+  "exportPage_formatLabel": {
+    "message": "导出格式",
+    "description": "Accessible label of the Export page format toggle group"
+  },
+  "exportPage_exportButton": {
+    "message": "导出 $COUNT$ 个书签",
+    "description": "Export page primary button",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "exportPage_exporting": {
+    "message": "正在导出…",
+    "description": "Export page primary button label while exporting"
+  },
+  "exportPage_successTitle": {
+    "message": "已导出 $COUNT$ 个书签",
+    "description": "Export page toast title after a successful export",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "exportPage_failedTitle": {
+    "message": "导出失败",
+    "description": "Export page toast title when an export fails"
+  },
+  "exportPage_noResultsTitle": {
+    "message": "没有与“$TERM$”匹配的书签",
+    "description": "Export page empty state title when a search matches nothing",
+    "placeholders": {
+      "term": {
+        "content": "$1"
+      }
+    }
+  },
+  "exportPage_noResultsDescription": {
+    "message": "换个词试试，或清除搜索以查看所有书签。",
+    "description": "Export page empty state description"
+  },
+  "exportPage_clearSearch": {
+    "message": "清除搜索",
+    "description": "Export page empty state button that clears the search"
+  },
+  "welcome_heroTitle": {
+    "message": "欢迎使用",
+    "description": "Lead-in of the welcome page hero title; the Snug wordmark is rendered right after it"
+  }
+}

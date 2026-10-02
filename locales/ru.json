@@ -1,0 +1,906 @@
+{
+  "extensionName": {
+    "message": "Snug",
+    "description": "Name of the extension."
+  },
+  "extensionDescription": {
+    "message": "Экспорт, импорт и резервное копирование закладок по расписанию — HTML, JSON или CSV, на вашем устройстве, без аккаунта и облака.",
+    "description": "Description of the extension"
+  },
+  "welcomeSubtitle": {
+    "message": "Экспортируйте, импортируйте и сохраняйте копии закладок — полностью на вашем устройстве.",
+    "description": "Welcome page subtitle"
+  },
+  "settings": {
+    "message": "Настройки",
+    "description": "Settings"
+  },
+  "exportFormat": {
+    "message": "Формат экспорта",
+    "description": "Placeholder text for the export format selector"
+  },
+  "exportBookmarks": {
+    "message": "Экспорт",
+    "description": "Export Bookmarks tab label in the popup"
+  },
+  "refresh": {
+    "message": "Обновить",
+    "description": "Refresh"
+  },
+  "selectAll": {
+    "message": "Выбрать все",
+    "description": "Select All"
+  },
+  "deselectAll": {
+    "message": "Снять выбор",
+    "description": "Deselect All"
+  },
+  "selected": {
+    "message": "Выбрано",
+    "description": "Selected"
+  },
+  "searchBookmarks": {
+    "message": "Поиск по закладкам",
+    "description": "Search bookmarks"
+  },
+  "display": {
+    "message": "Отображение",
+    "description": "Display"
+  },
+  "export": {
+    "message": "Экспорт",
+    "description": "Export"
+  },
+  "showBookmarkIcon": {
+    "message": "Показывать значки закладок",
+    "description": "Show bookmark icon"
+  },
+  "showBookmarkIconDescription": {
+    "message": "Значки рядом с закладками",
+    "description": "Show bookmark icon description"
+  },
+  "autoExpandFolders": {
+    "message": "Раскрывать папки автоматически",
+    "description": "Auto expand folders"
+  },
+  "autoExpandFoldersDescription": {
+    "message": "Папки в дереве закладок раскрываются сами",
+    "description": "Auto expand folders description"
+  },
+  "includeIconData": {
+    "message": "Включать данные значков",
+    "description": "Include icon data"
+  },
+  "includeDateAdded": {
+    "message": "Включать даты создания",
+    "description": "Include creation dates"
+  },
+  "includeDateLastUsed": {
+    "message": "Включать даты последнего использования",
+    "description": "Include last used dates"
+  },
+  "includeDateGroupModified": {
+    "message": "Включать даты изменения папок",
+    "description": "Include folder modification dates"
+  },
+  "hideOtherBookmarks": {
+    "message": "Скрыть папку «Другие закладки»",
+    "description": "Hide 'Other bookmarks' folder"
+  },
+  "hideParentFolder": {
+    "message": "Скрыть родительскую папку",
+    "description": "Hide parent folder"
+  },
+  "dropFileHere": {
+    "message": "Перетащите сюда файл с закладками",
+    "description": "File drop zone prompt"
+  },
+  "orClickToSelect": {
+    "message": "или нажмите, чтобы выбрать",
+    "description": "Secondary file drop zone prompt"
+  },
+  "supportedFormats": {
+    "message": "Поддерживаются HTML, JSON и CSV",
+    "description": "Supported import formats"
+  },
+  "changeFile": {
+    "message": "Изменить",
+    "description": "Button to change selected file"
+  },
+  "importMode": {
+    "message": "Режим импорта",
+    "description": "Import mode section label"
+  },
+  "defaultImportMode": {
+    "message": "Режим импорта по умолчанию",
+    "description": "Label for the quick-import default mode select"
+  },
+  "importModeFolder": {
+    "message": "Создать папку",
+    "description": "Import mode: create folder"
+  },
+  "importModeFolderDescription": {
+    "message": "Все закладки попадут в новую папку «Импортированные закладки»",
+    "description": "Import mode: create folder description"
+  },
+  "importModeRestoreMerge": {
+    "message": "Восстановить — объединить",
+    "description": "Import mode: restore and merge"
+  },
+  "importModeRestoreMergeDescription": {
+    "message": "Закладки возвращаются на прежние места рядом с уже существующими",
+    "description": "Import mode: restore and merge description"
+  },
+  "importModeRestoreReplace": {
+    "message": "Восстановить — заменить",
+    "description": "Import mode: restore and replace"
+  },
+  "importModeRestoreReplaceDescription": {
+    "message": "Сначала удаляются текущие закладки, затем всё возвращается на прежние места",
+    "description": "Import mode: restore and replace description"
+  },
+  "importModeRestoreReplaceWarning": {
+    "message": "Все текущие закладки на панели закладок и в папке «Другие закладки» будут удалены без возможности восстановления",
+    "description": "Warning shown for restore-replace mode"
+  },
+  "importPreview": {
+    "message": "Предпросмотр",
+    "description": "Import preview section label"
+  },
+  "importPreviewCount": {
+    "message": "Закладок: $COUNT$",
+    "description": "Bookmark count in preview",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "replaceConfirmTitle": {
+    "message": "Заменить существующие закладки?",
+    "description": "Title of the replace confirmation dialog"
+  },
+  "replaceConfirmDescription": {
+    "message": "Перед импортом все закладки на панели закладок и в папке «Другие закладки» будут удалены без возможности восстановления. Это действие нельзя отменить.",
+    "description": "Body of the replace confirmation dialog"
+  },
+  "replaceConfirmButton": {
+    "message": "Да, заменить",
+    "description": "Confirm button in the replace dialog"
+  },
+  "cancel": {
+    "message": "Отмена",
+    "description": "Cancel button"
+  },
+  "unsupportedFileFormat": {
+    "message": "Неподдерживаемый формат файла",
+    "description": "Unsupported file format"
+  },
+  "bookmarksImportedSuccessfully": {
+    "message": "Закладки импортированы!",
+    "description": "Bookmarks imported successfully"
+  },
+  "import": {
+    "message": "Импорт",
+    "description": "Import"
+  },
+  "changelog_1_5_0_date": {
+    "message": "29 апреля 2025 г.",
+    "description": "Changelog 1.5.0 date"
+  },
+  "changelog_1_5_0_1": {
+    "message": "Добавлен расширенный импорт: закладки возвращаются на прежние места (панель закладок и «Другие закладки»), с вариантами «объединить» и «заменить»."
+  },
+  "changelog_1_5_0_1_link": {
+    "message": "Попробовать расширенный импорт"
+  },
+  "changelog_1_4_0_date": {
+    "message": "29 апреля 2025 г.",
+    "description": "Changelog 1.4.0 date"
+  },
+  "changelog_1_4_0_1": {
+    "message": "Добавлены настраиваемые шаблоны имён файлов для экспорта: подставляйте дату и время через %yyyy, %mm, %dd — имена с отметкой времени создаются автоматически."
+  },
+  "changelog_1_3_0_date": {
+    "message": "16 февраля 2025 г.",
+    "description": "Changelog 1.3.0 date"
+  },
+  "changelog_1_3_0_1": {
+    "message": "Добавлена тёмная тема: она автоматически совпадает с темой вашей системы."
+  },
+  "changelog_1_2_0_date": {
+    "message": "14 февраля 2025 г.",
+    "description": "Changelog 1.2.0 date"
+  },
+  "changelog_1_2_0_1": {
+    "message": "Теперь расширение автоматически подстраивается под язык вашего браузера. Доступны английский и испанский."
+  },
+  "changelog_1_1_0_date": {
+    "message": "13 февраля 2025 г.",
+    "description": "Changelog 1.1.0 date"
+  },
+  "changelog_1_1_0_1": {
+    "message": "Импортированные закладки теперь попадают в отдельную папку и не смешиваются с вашими текущими"
+  },
+  "changelog_1_1_0_2": {
+    "message": "Более точный выбор того, какие даты включать в экспорт"
+  },
+  "changelog_1_1_0_2_link": {
+    "message": "Посмотреть новые параметры экспорта"
+  },
+  "changelog_1_0_0_date": {
+    "message": "5 августа 2024 г.",
+    "description": "Changelog 1.0.0 date"
+  },
+  "changelog_1_0_0_1": {
+    "message": "Добавлен расширенный экспорт — больше контроля над вашими закладками."
+  },
+  "changelog_1_0_0_1_link": {
+    "message": "Попробовать расширенный экспорт"
+  },
+  "changelog_1_0_0_2": {
+    "message": "Добавлены страницы приветствия и обновлений, чтобы вы были в курсе новых возможностей."
+  },
+  "changelog_1_0_0_3": {
+    "message": "Повышена общая производительность — работа стала плавнее."
+  },
+  "changelog_0_1_1_date": {
+    "message": "4 августа 2024 г.",
+    "description": "Changelog 0.1.1 date"
+  },
+  "changelog_0_1_1_1": {
+    "message": "Исправлена критическая ошибка, затрагивавшая пользователей с неанглийским языком браузера."
+  },
+  "changelog_0_1_1_2": {
+    "message": "Повышена надёжность импорта и экспорта."
+  },
+  "changelog_0_1_1_3": {
+    "message": "Исправлена ошибка, из-за которой значок расширения не отображался на панели инструментов браузера."
+  },
+  "changelog_0_1_1_4": {
+    "message": "Исправлена ошибка, из-за которой расширение не работало в некоторых браузерах."
+  },
+  "changelog_0_1_0_date": {
+    "message": "3 августа 2024 г.",
+    "description": "Changelog 0.1.0 date"
+  },
+  "changelog_0_1_0_1": {
+    "message": "Первый выпуск расширения для импорта и экспорта закладок."
+  },
+  "changelog_0_1_0_2": {
+    "message": "Простой импорт файлов HTML и JSON."
+  },
+  "changelog_0_1_0_3": {
+    "message": "Базовый экспорт закладок в форматы HTML и JSON."
+  },
+  "extensionInstalled": {
+    "message": "Snug установлен",
+    "description": "Extension installed"
+  },
+  "extensionUpdated": {
+    "message": "Snug обновлён до версии $VERSION$",
+    "description": "Extension updated",
+    "placeholders": {
+      "version": {
+        "content": "$1"
+      }
+    }
+  },
+  "exportFilenameTemplate": {
+    "message": "Шаблон имени файла",
+    "description": "Label for the export filename template input"
+  },
+  "exportFilenameTemplatePreview": {
+    "message": "Предпросмотр:",
+    "description": "Label shown before the live filename preview"
+  },
+  "faviconError": {
+    "message": "Не удалось загрузить значок сайта",
+    "description": "Error fetching favicon"
+  },
+  "importFromHTMLLoadError": {
+    "message": "Не удалось разобрать HTML: $ERROR$",
+    "description": "Failed to parse HTML",
+    "placeholders": {
+      "error": {
+        "content": "$1"
+      }
+    }
+  },
+  "importFromHTMLCreateError": {
+    "message": "Не удалось создать закладки из HTML: $ERROR$",
+    "description": "Failed to create bookmarks from HTML",
+    "placeholders": {
+      "error": {
+        "content": "$1"
+      }
+    }
+  },
+  "importFromHTMLProcessError": {
+    "message": "Не удалось найти панель закладок или папку «Другие закладки»",
+    "description": "Could not find Bookmarks bar or Other bookmarks folder"
+  },
+  "bookmarksBar": {
+    "message": "Панель закладок",
+    "description": "Bookmarks bar"
+  },
+  "importedBookmarks": {
+    "message": "Импортированные закладки",
+    "description": "Imported bookmarks"
+  },
+  "otherBookmarks": {
+    "message": "Другие закладки",
+    "description": "Other bookmarks"
+  },
+  "mobileBookmarks": {
+    "message": "Закладки на мобильном устройстве",
+    "description": "Mobile bookmarks"
+  },
+  "importFromJSONImportError": {
+    "message": "Не удалось импортировать: $ERROR$",
+    "description": "Import failed",
+    "placeholders": {
+      "error": {
+        "content": "$1"
+      }
+    }
+  },
+  "importFromJSONProcessError": {
+    "message": "Не удалось найти панель закладок или папку «Другие закладки»",
+    "description": "Error when JSON import cannot find required folders"
+  },
+  "importFromCSVImportError": {
+    "message": "Не удалось импортировать файл CSV",
+    "description": "Error when CSV import fails"
+  },
+  "autoExport": {
+    "message": "Автоэкспорт",
+    "description": "Auto-export settings tab label"
+  },
+  "autoExportNeverRun": {
+    "message": "Ещё не запускался",
+    "description": "Status card value when auto-export has never run"
+  },
+  "exportNow": {
+    "message": "Экспортировать сейчас",
+    "description": "Button label to run an on-demand export immediately"
+  },
+  "exportNowSuccess": {
+    "message": "Экспорт завершён",
+    "description": "Inline message shown after Export now succeeds"
+  },
+  "exportNowFailed": {
+    "message": "Не удалось выполнить экспорт",
+    "description": "Inline message shown after Export now fails"
+  },
+  "enableAutoExport": {
+    "message": "Включить автоэкспорт",
+    "description": "Enable auto export toggle label"
+  },
+  "enableAutoExportDescription": {
+    "message": "Автоматический экспорт закладок в форматы HTML, JSON и CSV.",
+    "description": "Enable auto export toggle description"
+  },
+  "preferredExportTime": {
+    "message": "Предпочтительное время экспорта",
+    "description": "Preferred export time section title"
+  },
+  "timeSelectionUnavailable": {
+    "message": "Выбор времени доступен только для интервалов от 24 часов",
+    "description": "Note shown when 12h interval is selected"
+  },
+  "hoursLabel": {
+    "message": "Часы",
+    "description": "Hours input label in time picker"
+  },
+  "minutesLabel": {
+    "message": "Минуты",
+    "description": "Minutes input label in time picker"
+  },
+  "periodLabel": {
+    "message": "Период",
+    "description": "AM/PM selector label in time picker"
+  },
+  "exportPath": {
+    "message": "Путь экспорта",
+    "description": "Export path section title"
+  },
+  "autoExportFormats": {
+    "message": "Форматы экспорта",
+    "description": "Export formats section title"
+  },
+  "changelog_2_0_0_date": {
+    "message": "2 октября 2026 г.",
+    "description": "Changelog 2.0.0 date"
+  },
+  "changelog_2_0_0_1": {
+    "message": "У расширения новое имя — Snug. Расширение то же, обещание то же: всё остаётся на вашем устройстве. Экспорт, импорт и резервное копирование закладок по расписанию, и ничего никуда не отправляется. Ваши данные и настройки не меняются — только имя и значок."
+  },
+  "changelog_2_0_0_2": {
+    "message": "Приложение теперь — одна страница с боковой панелью (экспорт, импорт, автоэкспорт, настройки, что нового), а также компактное всплывающее окно, новый значок Snug и новая палитра."
+  },
+  "changelog_2_0_0_2_link": {
+    "message": "Открыть приложение"
+  },
+  "changelog_1_7_0_date": {
+    "message": "1 октября 2026 г.",
+    "description": "Changelog 1.7.0 date"
+  },
+  "changelog_1_7_0_1": {
+    "message": "В настройки автоэкспорта добавлены карточка состояния и кнопка «Экспортировать сейчас», а во всплывающем окне — строка состояния: автоэкспорт включён, выключен или завершился ошибкой."
+  },
+  "changelog_1_7_0_1_link": {
+    "message": "Открыть настройки автоэкспорта"
+  },
+  "changelog_1_7_0_2": {
+    "message": "Импорт закладок стал строже: адреса с запрещёнными схемами (например, javascript:) в файлах CSV, HTML и JSON отклоняются."
+  },
+  "changelog_1_6_0_date": {
+    "message": "29 апреля 2026 г.",
+    "description": "Changelog 1.6.0 date"
+  },
+  "changelog_1_6_0_1": {
+    "message": "Добавлен автоэкспорт: закладки автоматически сохраняются с выбранным интервалом (каждые 12 часов, ежедневно, раз в 3 или 7 дней) в нужную папку загрузок."
+  },
+  "changelog_1_6_0_1_link": {
+    "message": "Открыть настройки автоэкспорта"
+  },
+  "shell_navLabel": {
+    "message": "Главная навигация",
+    "description": "Accessible label of the App sidebar navigation"
+  },
+  "shell_navExport": {
+    "message": "Экспорт",
+    "description": "App sidebar nav item and page title"
+  },
+  "shell_navImport": {
+    "message": "Импорт",
+    "description": "App sidebar nav item and page title"
+  },
+  "shell_navAutoExport": {
+    "message": "Автоэкспорт",
+    "description": "App sidebar nav item and page title"
+  },
+  "shell_navSettings": {
+    "message": "Настройки",
+    "description": "App sidebar nav item and page title"
+  },
+  "shell_navWhatsNew": {
+    "message": "Что нового",
+    "description": "App sidebar nav item and page title"
+  },
+  "shell_titleWelcome": {
+    "message": "Добро пожаловать",
+    "description": "App page title for the first-run welcome screen"
+  },
+  "shell_version": {
+    "message": "Версия $VERSION$",
+    "description": "Installed version shown under the product name in the App sidebar",
+    "placeholders": {
+      "version": {
+        "content": "$1"
+      }
+    }
+  },
+  "shell_autoExportOn": {
+    "message": "Вкл.",
+    "description": "Accessible status of the Auto-export nav item when scheduled backups are enabled"
+  },
+  "shell_autoExportFailed": {
+    "message": "Последний запуск не удался",
+    "description": "Accessible status of the Auto-export nav item when the last run failed"
+  },
+  "shell_whatsNewUnseen": {
+    "message": "Новое",
+    "description": "Accessible label of the unseen-update dot on the What's new nav item"
+  },
+  "shell_placeholder": {
+    "message": "Этот раздел скоро появится.",
+    "description": "Placeholder text shown on App screens that are not built yet"
+  },
+  "shell_toggleSidebar": {
+    "message": "Показать или скрыть боковую панель",
+    "description": "Accessible label of the sidebar trigger in the App header"
+  },
+  "exportOptions_title": {
+    "message": "Параметры экспорта",
+    "description": "Export options panel: Export options"
+  },
+  "exportOptions_includeIcons": {
+    "message": "Включать значки сайтов",
+    "description": "Export options panel: Include favicons"
+  },
+  "exportOptions_dateAdded": {
+    "message": "Дата добавления",
+    "description": "Export options panel: Date added"
+  },
+  "exportOptions_dateLastUsed": {
+    "message": "Дата последнего использования",
+    "description": "Export options panel: Date last used"
+  },
+  "exportOptions_folderDates": {
+    "message": "Даты изменения папок",
+    "description": "Export options panel: Folder modified dates"
+  },
+  "exportOptions_hideOther": {
+    "message": "Скрыть другие закладки",
+    "description": "Export options panel: Hide other bookmarks"
+  },
+  "exportOptions_hideParent": {
+    "message": "Скрыть родительскую папку",
+    "description": "Export options panel: Hide parent folder"
+  },
+  "import_stepFile": {
+    "message": "Файл",
+    "description": "Heading of step 1 of the import flow"
+  },
+  "import_stepDone": {
+    "message": "Готово",
+    "description": "Screen reader text for a completed step"
+  },
+  "import_fileInputLabel": {
+    "message": "Файл с закладками",
+    "description": "Accessible label of the file input"
+  },
+  "import_changeFile": {
+    "message": "Выбрать другой файл",
+    "description": "Button to pick a different file"
+  },
+  "import_restoreUnavailable": {
+    "message": "В этом файле нет данных о расположении, поэтому восстановить закладки в прежние папки не получится.",
+    "description": "Reason shown on disabled restore mode cards"
+  },
+  "import_submit": {
+    "message": "Импортировать закладки: $COUNT$",
+    "description": "Primary import button",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "import_importing": {
+    "message": "Импортируем…",
+    "description": "Primary button label while importing"
+  },
+  "import_replaceTitle": {
+    "message": "Заменить существующие закладки?",
+    "description": "Title of the replace confirmation dialog"
+  },
+  "import_replaceConfirm": {
+    "message": "Заменить и импортировать",
+    "description": "Destructive confirm button in the replace dialog"
+  },
+  "import_errorTitle": {
+    "message": "Не удалось импортировать",
+    "description": "Title of the import error alert"
+  },
+  "import_another": {
+    "message": "Импортировать другой файл",
+    "description": "Button shown after a successful import"
+  },
+  "import_openManager": {
+    "message": "Открыть диспетчер закладок",
+    "description": "Button that opens chrome://bookmarks"
+  },
+  "autoExportPage_saved": {
+    "message": "Сохранено",
+    "description": "Toast shown after an Auto-export setting is saved"
+  },
+  "autoExportPage_succeeded": {
+    "message": "Успешно",
+    "description": "Last-run badge when the last auto-export succeeded"
+  },
+  "autoExportPage_failed": {
+    "message": "Ошибка",
+    "description": "Last-run badge when the last auto-export failed"
+  },
+  "autoExportPage_statusTitle": {
+    "message": "Состояние",
+    "description": "Title of the Auto-export status card"
+  },
+  "autoExportPage_lastRun": {
+    "message": "Последний запуск",
+    "description": "Status card label for the last run"
+  },
+  "autoExportPage_nextRun": {
+    "message": "Следующий запуск",
+    "description": "Status card label for the next run"
+  },
+  "autoExportPage_off": {
+    "message": "Автоэкспорт выключен",
+    "description": "Status card next-run value when auto-export is off"
+  },
+  "autoExportPage_failureTitle": {
+    "message": "Последний автоэкспорт не удался",
+    "description": "Title of the alert shown when the last run failed"
+  },
+  "autoExportPage_settingsTitle": {
+    "message": "Настройки",
+    "description": "Title of the Auto-export settings card"
+  },
+  "autoExportPage_settingsDescription": {
+    "message": "Изменения сохраняются автоматически.",
+    "description": "Description of the Auto-export settings card"
+  },
+  "autoExportPage_frequency": {
+    "message": "Периодичность",
+    "description": "Label of the frequency toggle group"
+  },
+  "autoExportPage_interval12h": {
+    "message": "Каждые 12 часов",
+    "description": "Frequency option: every 12 hours"
+  },
+  "autoExportPage_interval1d": {
+    "message": "Ежедневно",
+    "description": "Frequency option: daily"
+  },
+  "autoExportPage_interval3d": {
+    "message": "Каждые 3 дня",
+    "description": "Frequency option: every 3 days"
+  },
+  "autoExportPage_interval7d": {
+    "message": "Еженедельно",
+    "description": "Frequency option: weekly"
+  },
+  "autoExportPage_folderDescription": {
+    "message": "Папка внутри «Скачанных файлов», куда сохраняются копии.",
+    "description": "Help text under the folder field"
+  },
+  "autoExportPage_formatsDescription": {
+    "message": "Должен остаться выбранным хотя бы один формат.",
+    "description": "Help text under the formats toggle group"
+  },
+  "popup_exportAll": {
+    "message": "Экспортировать всё",
+    "description": "Popup button that exports every bookmark in the remembered format"
+  },
+  "popup_exportFormatLabel": {
+    "message": "Формат экспорта",
+    "description": "Accessible label of the popup format toggle group"
+  },
+  "popup_exportSuccessTitle": {
+    "message": "Экспортировано закладок: $COUNT$",
+    "description": "Popup toast title after a successful export",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "popup_exportFailedTitle": {
+    "message": "Не удалось выполнить экспорт",
+    "description": "Popup toast title when an export fails"
+  },
+  "popup_chooseFile": {
+    "message": "Выбрать файл…",
+    "description": "Popup button that opens the file picker to import bookmarks"
+  },
+  "popup_importing": {
+    "message": "Импортируем…",
+    "description": "Popup import button label while an import is running"
+  },
+  "popup_importSuccessTitle": {
+    "message": "Закладки импортированы",
+    "description": "Popup toast title after a successful import"
+  },
+  "popup_importFailedTitle": {
+    "message": "Не удалось импортировать",
+    "description": "Popup toast title when an import fails"
+  },
+  "popup_replaceAlertTitle": {
+    "message": "Существующие закладки будут заменены",
+    "description": "Title of the popup alert shown when the default mode is Restore - replace"
+  },
+  "popup_statusNextRunTitle": {
+    "message": "Следующий автоэкспорт",
+    "description": "Popup status item title when auto-export is scheduled"
+  },
+  "popup_statusOffTitle": {
+    "message": "Настройте резервное копирование по расписанию",
+    "description": "Popup status item title when auto-export is off"
+  },
+  "popup_statusOffDescription": {
+    "message": "Автоэкспорт выключен",
+    "description": "Popup status item description when auto-export is off"
+  },
+  "popup_statusFailedTitle": {
+    "message": "Последний автоэкспорт не удался",
+    "description": "Popup status item title when the last auto-export failed"
+  },
+  "popup_statusFailedDescription": {
+    "message": "Откройте автоэкспорт, чтобы разобраться",
+    "description": "Popup status item description when the last auto-export failed"
+  },
+  "popup_openApp": {
+    "message": "Открыть приложение",
+    "description": "Popup footer button that opens the full-page app"
+  },
+  "popup_settings": {
+    "message": "Настройки",
+    "description": "Accessible label of the popup footer settings icon button"
+  },
+  "settingsPage_appearanceTitle": {
+    "message": "Оформление",
+    "description": "Settings page: appearanceTitle"
+  },
+  "settingsPage_theme": {
+    "message": "Тема",
+    "description": "Settings page: theme"
+  },
+  "settingsPage_themeDescription": {
+    "message": "Выберите внешний вид расширения. «Системная» следует теме вашей операционной системы.",
+    "description": "Settings page: themeDescription"
+  },
+  "settingsPage_themeSystem": {
+    "message": "Системная",
+    "description": "Settings page: themeSystem"
+  },
+  "settingsPage_themeLight": {
+    "message": "Светлая",
+    "description": "Settings page: themeLight"
+  },
+  "settingsPage_themeDark": {
+    "message": "Тёмная",
+    "description": "Settings page: themeDark"
+  },
+  "settingsPage_treeTitle": {
+    "message": "Дерево закладок",
+    "description": "Settings page: treeTitle"
+  },
+  "settingsPage_importTitle": {
+    "message": "Импорт",
+    "description": "Settings page: importTitle"
+  },
+  "settingsPage_importDescription": {
+    "message": "Значения по умолчанию для импорта закладок.",
+    "description": "Settings page: importDescription"
+  },
+  "settingsPage_importModeHelp": {
+    "message": "Используется во всплывающем окне и выбирается заранее на странице импорта.",
+    "description": "Settings page: importModeHelp"
+  },
+  "welcome_exportTitle": {
+    "message": "Сделайте первую копию",
+    "description": "Welcome page quick-start item title"
+  },
+  "welcome_exportDescription": {
+    "message": "Десять секунд — и у вас есть надёжная копия закладок.",
+    "description": "Welcome page quick-start item description"
+  },
+  "welcome_exportAction": {
+    "message": "Экспорт",
+    "description": "Welcome page quick-start item button"
+  },
+  "welcome_autoExportTitle": {
+    "message": "Настройте автоэкспорт",
+    "description": "Welcome page quick-start item title"
+  },
+  "welcome_autoExportDescription": {
+    "message": "Копии по расписанию, без единого клика.",
+    "description": "Welcome page quick-start item description"
+  },
+  "welcome_autoExportAction": {
+    "message": "Автоэкспорт",
+    "description": "Welcome page quick-start item button"
+  },
+  "welcome_importTitle": {
+    "message": "Импортируйте закладки",
+    "description": "Welcome page quick-start item title"
+  },
+  "welcome_importDescription": {
+    "message": "Перенесите закладки из другого браузера или из копии.",
+    "description": "Welcome page quick-start item description"
+  },
+  "welcome_importAction": {
+    "message": "Импорт",
+    "description": "Welcome page quick-start item button"
+  },
+  "whatsNew_current": {
+    "message": "Текущая",
+    "description": "What's new screen string"
+  },
+  "whatsNew_reviewTitle": {
+    "message": "Нравится расширение?",
+    "description": "What's new screen string"
+  },
+  "whatsNew_reviewDescription": {
+    "message": "Короткая оценка поможет другим людям его найти.",
+    "description": "What's new screen string"
+  },
+  "whatsNew_reviewAction": {
+    "message": "Оставить отзыв",
+    "description": "What's new screen string"
+  },
+  "exportPage_title": {
+    "message": "Экспорт закладок",
+    "description": "Export page heading"
+  },
+  "exportPage_description": {
+    "message": "Выберите, что включить, и скачайте в удобном формате.",
+    "description": "Export page one-line description"
+  },
+  "exportPage_expandAll": {
+    "message": "Развернуть все",
+    "description": "Export page toolbar button that expands every folder"
+  },
+  "exportPage_collapseAll": {
+    "message": "Свернуть все",
+    "description": "Export page toolbar button that collapses every folder"
+  },
+  "exportPage_selectAllLabel": {
+    "message": "Выбрать все закладки",
+    "description": "Accessible label of the master checkbox on the Export page"
+  },
+  "exportPage_loading": {
+    "message": "Загрузка закладок",
+    "description": "Accessible label of the loading placeholder on the Export page"
+  },
+  "exportPage_selectionCount": {
+    "message": "Выбрано: $SELECTED$ из $TOTAL$",
+    "description": "Export page sticky bar selection count",
+    "placeholders": {
+      "selected": {
+        "content": "$1"
+      },
+      "total": {
+        "content": "$2"
+      }
+    }
+  },
+  "exportPage_nothingSelected": {
+    "message": "Ничего не выбрано",
+    "description": "Export page sticky bar text when no bookmark is selected"
+  },
+  "exportPage_formatLabel": {
+    "message": "Формат экспорта",
+    "description": "Accessible label of the Export page format toggle group"
+  },
+  "exportPage_exportButton": {
+    "message": "Экспортировать закладки: $COUNT$",
+    "description": "Export page primary button",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "exportPage_exporting": {
+    "message": "Экспортируем…",
+    "description": "Export page primary button label while exporting"
+  },
+  "exportPage_successTitle": {
+    "message": "Экспортировано закладок: $COUNT$",
+    "description": "Export page toast title after a successful export",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "exportPage_failedTitle": {
+    "message": "Не удалось выполнить экспорт",
+    "description": "Export page toast title when an export fails"
+  },
+  "exportPage_noResultsTitle": {
+    "message": "Нет закладок по запросу «$TERM$»",
+    "description": "Export page empty state title when a search matches nothing",
+    "placeholders": {
+      "term": {
+        "content": "$1"
+      }
+    }
+  },
+  "exportPage_noResultsDescription": {
+    "message": "Попробуйте другое слово или очистите поиск, чтобы увидеть все закладки.",
+    "description": "Export page empty state description"
+  },
+  "exportPage_clearSearch": {
+    "message": "Очистить поиск",
+    "description": "Export page empty state button that clears the search"
+  },
+  "welcome_heroTitle": {
+    "message": "Добро пожаловать в",
+    "description": "Lead-in of the welcome page hero title; the Snug wordmark is rendered right after it"
+  }
+}
