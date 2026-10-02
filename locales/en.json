@@ -15,10 +15,6 @@
     "message": "Settings",
     "description": "Settings"
   },
-  "settingsDescription": {
-    "message": "Customize your bookmark import/export experience.",
-    "description": "Settings description"
-  },
   "exportFormat": {
     "message": "Export format",
     "description": "Placeholder text for the export format selector"
@@ -412,6 +408,19 @@
   "autoExportFormats": {
     "message": "Export Formats",
     "description": "Export formats section title"
+  },
+  "changelog_2_0_0_date": {
+    "message": "October 2, 2026",
+    "description": "Changelog 2.0.0 date"
+  },
+  "changelog_2_0_0_1": {
+    "message": "This extension has a new name: Snug. Same extension, same local-only promise — export, import, and scheduled backups for your bookmarks, with nothing ever sent anywhere. Nothing about your data or settings changes; only the name and the icon do."
+  },
+  "changelog_2_0_0_2": {
+    "message": "The App is now one page with a sidebar (Export, Import, Auto-export, Settings, What's new), plus a compact popup and the new Snug icon and palette."
+  },
+  "changelog_2_0_0_2_link": {
+    "message": "Open the App"
   },
   "changelog_1_7_0_date": {
     "message": "October 1, 2026",
