@@ -1,4 +1,4 @@
-import { mkdir, readFile, stat } from 'node:fs/promises'
+import { copyFile, mkdir, readFile, stat } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { chromium } from 'playwright'
@@ -6,7 +6,7 @@ import { chromium } from 'playwright'
 /**
  * Regenerates the derived raster assets of the Snug brand kit from the SVG
  * sources in `docs/brand/logo`: the extension icon (`assets/icon.png`), PNG
- * marks, the Chrome Web Store icon and tiles, OG images and the README cover. Run with `bun run brand:export`.
+ * marks, the Chrome Web Store icon and tiles, OG images and the README banner (a copy of the store marquee). Run with `bun run brand:export`.
  *
  * Icons are drawn at 75% of a transparent canvas: the SVG's fixed size is forced
  * to fill its container, sized so the painted bookmark spans 96 of 128 px.
@@ -167,7 +167,11 @@ try {
     browser,
     path.join(storeAssets, 'small-tile-440x280.png'),
   )
-  await renderMarquee(browser, path.join(storeAssets, 'marquee-1400x560.png'))
+  const marqueePath = path.join(storeAssets, 'marquee-1400x560.png')
+  await renderMarquee(browser, marqueePath)
+  const readmeBannerPath = path.join(repoRoot, 'docs/assets/readme-banner.png')
+  await mkdir(path.dirname(readmeBannerPath), { recursive: true })
+  await copyFile(marqueePath, readmeBannerPath)
 
   const ogTaglines = {
     en: 'Export, import, and schedule automatic backups for your bookmarks &mdash; HTML, JSON, or CSV, all on your device, no account, no cloud.',
@@ -184,15 +188,6 @@ try {
     })
     assertOgSize(fileName, size)
   }
-
-  await renderBanner(browser, {
-    width: 1280,
-    height: 640,
-    outPath: path.join(repoRoot, 'docs/assets/readme-cover.png'),
-    lockupWidth: 380,
-    tagline:
-      'Export, import, and back up your bookmarks &mdash; entirely on your device.',
-  })
 } finally {
   await browser.close()
 }

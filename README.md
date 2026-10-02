@@ -1,4 +1,4 @@
-![Snug](docs/assets/readme-cover.png)
+![Snug](docs/assets/readme-banner.png)
 
 # Snug
 
