@@ -1,3 +1,4 @@
+import type { Page } from '@playwright/test'
 import { readFile } from 'node:fs/promises'
 
 import en from '../locales/en.json' with { type: 'json' }
@@ -36,6 +37,12 @@ const seedTree: SeedBookmark[] = [
 
 const searchboxName = en.searchBookmarks.message
 
+async function selectRow(page: Page, name: string) {
+  const row = page.getByRole('treeitem', { name, exact: true })
+  await row.focus()
+  await page.keyboard.press('Space')
+}
+
 function leafTitles(nodes: ExportedNode[]): string[] {
   const titles: string[] = []
   for (const node of nodes) {
@@ -62,8 +69,8 @@ test('exports a mixed selection as JSON and confirms with a toast', async ({
   await page
     .getByRole('button', { name: en.exportPage_expandAll.message })
     .click()
-  await page.getByRole('checkbox', { name: 'Standalone Link' }).check()
-  await page.getByRole('checkbox', { name: 'Personal Folder' }).check()
+  await selectRow(page, 'Standalone Link')
+  await selectRow(page, 'Personal Folder')
 
   await expect(page.getByText('3 of 6 selected')).toBeVisible()
 
@@ -93,7 +100,7 @@ test('exports a selection made from the search-filtered tree', async ({
   const page = await openExtensionPage('app.html#/export')
 
   await page.getByRole('searchbox', { name: searchboxName }).fill('Old Report')
-  await page.getByRole('checkbox', { name: 'Old Report' }).check()
+  await selectRow(page, 'Old Report')
   await page.getByRole('button', { name: 'JSON', exact: true }).click()
 
   const downloadPromise = page.waitForEvent('download')
@@ -117,7 +124,7 @@ test('pressing / focuses the search field and the term survives a reload', async
     .getByRole('button', { name: en.exportPage_expandAll.message })
     .click()
   await expect(
-    page.getByRole('checkbox', { name: 'Standalone Link' }),
+    page.getByRole('treeitem', { name: 'Standalone Link' }),
   ).toBeVisible()
   await page.keyboard.press('/')
   await expect(search).toBeFocused()
@@ -128,10 +135,10 @@ test('pressing / focuses the search field and the term survives a reload', async
   await page.reload()
   await expect(search).toHaveValue('Recipe')
   await expect(
-    page.getByRole('checkbox', { name: 'Recipe Page' }),
+    page.getByRole('treeitem', { name: 'Recipe Page' }),
   ).toBeVisible()
   await expect(
-    page.getByRole('checkbox', { name: 'Standalone Link' }),
+    page.getByRole('treeitem', { name: 'Standalone Link' }),
   ).toBeHidden()
 })
 
@@ -155,7 +162,7 @@ test('shows an empty state for a search with no matches and clears it', async ({
     .getByRole('button', { name: en.exportPage_expandAll.message })
     .click()
   await expect(
-    page.getByRole('checkbox', { name: 'Standalone Link' }),
+    page.getByRole('treeitem', { name: 'Standalone Link' }),
   ).toBeVisible()
 })
 
@@ -169,14 +176,14 @@ test('the master checkbox selects everything, and collapse all hides nested rows
   await page
     .getByRole('button', { name: en.exportPage_expandAll.message })
     .click()
-  await expect(page.getByRole('checkbox', { name: 'Old Report' })).toBeVisible()
+  await expect(page.getByRole('treeitem', { name: 'Old Report' })).toBeVisible()
 
   await page
     .getByRole('checkbox', { name: en.exportPage_selectAllLabel.message })
     .click()
   await expect(page.getByText('6 of 6 selected')).toBeVisible()
 
-  await page.getByRole('checkbox', { name: 'Old Report' }).uncheck()
+  await selectRow(page, 'Old Report')
   await expect(page.getByText('5 of 6 selected')).toBeVisible()
   await expect(
     page.getByRole('checkbox', {
@@ -187,5 +194,5 @@ test('the master checkbox selects everything, and collapse all hides nested rows
   await page
     .getByRole('button', { name: en.exportPage_collapseAll.message })
     .click()
-  await expect(page.getByRole('checkbox', { name: 'Old Report' })).toBeHidden()
+  await expect(page.getByRole('treeitem', { name: 'Old Report' })).toBeHidden()
 })

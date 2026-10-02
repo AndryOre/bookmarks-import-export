@@ -1,18 +1,21 @@
+import { i18n } from '#i18n'
 import type { Browser } from '@wxt-dev/browser'
 import { cn } from 'cn'
-import { File, Folder } from 'lucide-react'
+import { Check, File, Folder, Minus } from 'lucide-react'
 import {
   forwardRef,
   useCallback,
   useEffect,
   useImperativeHandle,
+  useMemo,
   useRef,
   useState,
 } from 'react'
 
-import { Checkbox } from '@/components/ui/checkbox'
 import { getFaviconUrl } from '@/lib/favicon'
 import { autoExpandFoldersStore, showBookmarkIconStore } from '@/lib/storage'
+import { flattenVisibleRows, resolveTreeKey } from '@/lib/tree-navigation'
+import type { FlatTreeRow } from '@/lib/tree-navigation'
 import type {
   BookmarkNode,
   BookmarkTreeHandle,
@@ -23,10 +26,12 @@ import type {
 import { useStorageItem } from '@/lib/use-storage-item'
 
 /**
- * Renders the checkbox tree of bookmarks used by the Export page.
- * Exposes an imperative handle (see {@link BookmarkTreeHandle}) so the
- * parent can drive selection and refreshes without lifting the
- * checked-state map into props.
+ * Renders the bookmark tree used by the Export page, following the WAI-ARIA
+ * tree pattern: a single tab stop with roving focus, arrow-key navigation,
+ * and selection exposed as `aria-checked` on each `treeitem`. Exposes an
+ * imperative handle (see {@link BookmarkTreeHandle}) so the parent can drive
+ * selection and refreshes without lifting the checked-state map into props.
+ * Reloads itself when the browser's bookmarks change.
  */
 export const BookmarkTree = forwardRef<
   BookmarkTreeHandle,
@@ -39,11 +44,14 @@ export const BookmarkTree = forwardRef<
     className,
     loadingState,
     emptyState,
+    noBookmarksState,
+    errorState,
   },
   reference,
 ) {
   const [nodes, setNodes] = useState<BookmarkNode[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [hasLoadError, setHasLoadError] = useState(false)
   /**
    * Checked state for leaf (bookmark) nodes only, keyed by bookmark id.
    * Folder checked/indeterminate state is never stored here — it's derived
@@ -53,6 +61,9 @@ export const BookmarkTree = forwardRef<
     new Map(),
   )
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set())
+  const [focusedId, setFocusedId] = useState<string | undefined>()
+  const treeReference = useRef<HTMLDivElement>(null)
+  const pendingFocusReference = useRef<string | undefined>(undefined)
   /**
    * Snapshot of `expandedFolders` from just before a search started, so it
    * can be restored once the search term is cleared. `null` means no
@@ -63,18 +74,27 @@ export const BookmarkTree = forwardRef<
   const [showBookmarkIcon] = useStorageItem(showBookmarkIconStore)
   const [autoExpandFolders] = useStorageItem(autoExpandFoldersStore)
 
-  const loadBookmarks = useCallback(async () => {
-    const tree = await fetchFullTree()
-    const rootNode = tree[0]
-    const withParentId = addParentIds(rootNode?.children ?? [])
-    setNodes(withParentId)
-    setIsLoading(false)
+  const loadBookmarks = useCallback(
+    async (options: { shouldKeepExpansion?: boolean } = {}) => {
+      try {
+        const tree = await fetchFullTree()
+        const rootNode = tree[0]
+        const withParentId = addParentIds(rootNode?.children ?? [])
+        setNodes(withParentId)
+        setHasLoadError(false)
+        setIsLoading(false)
 
-    if (!autoExpandFolders) return
+        if (!autoExpandFolders || options.shouldKeepExpansion) return
 
-    const allFolderIds = collectFolderIds(withParentId)
-    setExpandedFolders(new Set(allFolderIds))
-  }, [autoExpandFolders])
+        const allFolderIds = collectFolderIds(withParentId)
+        setExpandedFolders(new Set(allFolderIds))
+      } catch {
+        setHasLoadError(true)
+        setIsLoading(false)
+      }
+    },
+    [autoExpandFolders],
+  )
 
   /**
    * The imperative API exposed to the parent via `ref` (see
@@ -123,6 +143,32 @@ export const BookmarkTree = forwardRef<
   }, [loadBookmarks])
 
   /**
+   * Reloads the tree (keeping the user's expansion) whenever the browser
+   * adds, removes, edits or moves a bookmark, coalescing bursts such as an
+   * import into a single reload.
+   */
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout> | undefined
+    const scheduleReload = () => {
+      clearTimeout(timer)
+      timer = setTimeout(() => {
+        void loadBookmarks({ shouldKeepExpansion: true })
+      }, BOOKMARK_CHANGE_DEBOUNCE_MS)
+    }
+    const events = [
+      browser.bookmarks.onCreated,
+      browser.bookmarks.onRemoved,
+      browser.bookmarks.onChanged,
+      browser.bookmarks.onMoved,
+    ]
+    for (const event of events) event.addListener(scheduleReload)
+    return () => {
+      clearTimeout(timer)
+      for (const event of events) event.removeListener(scheduleReload)
+    }
+  }, [loadBookmarks])
+
+  /**
    * Drives the search UX: while a search term is active, expands every
    * folder that contains a match, after first snapshotting the
    * then-current expanded set into `preSearchExpandedReference`. Once the
@@ -155,6 +201,31 @@ export const BookmarkTree = forwardRef<
     onSelectionChange(count)
   }, [checkedState, nodes, onSelectionChange])
 
+  const isSearching = searchTerm.trim() !== ''
+  const visibleNodes = useMemo(
+    () => (isSearching ? filterNodes(nodes, searchTerm) : nodes),
+    [isSearching, nodes, searchTerm],
+  )
+  const rows = useMemo(
+    () => flattenVisibleRows(visibleNodes, expandedFolders),
+    [visibleNodes, expandedFolders],
+  )
+  const activeId = rows.some((row) => row.node.id === focusedId)
+    ? focusedId
+    : rows[0]?.node.id
+
+  useEffect(() => {
+    const pendingId = pendingFocusReference.current
+    if (pendingId === undefined) return
+    pendingFocusReference.current = undefined
+    const target = [
+      ...(treeReference.current?.querySelectorAll<HTMLElement>(
+        '[role="treeitem"]',
+      ) ?? []),
+    ].find((element) => element.dataset.nodeId === pendingId)
+    target?.focus()
+  })
+
   function handleToggleExpand(id: string) {
     setExpandedFolders((previous) => {
       const next = new Set(previous)
@@ -164,8 +235,20 @@ export const BookmarkTree = forwardRef<
     })
   }
 
-  function handleCheckedChange(node: BookmarkNode, value: CheckedState) {
-    const isChecked = value !== 'indeterminate' && value
+  function setFolderExpanded(id: string, isExpanded: boolean) {
+    setExpandedFolders((previous) => {
+      const next = new Set(previous)
+      if (isExpanded) next.add(id)
+      else next.delete(id)
+      return next
+    })
+  }
+
+  function handleToggleSelection(node: BookmarkNode) {
+    const current = node.url
+      ? (checkedState.get(node.id) ?? false)
+      : determineCheckedState(node.children ?? [], checkedState)
+    const isChecked = current !== true
 
     setCheckedState((previous) => {
       const next = new Map(previous)
@@ -179,143 +262,203 @@ export const BookmarkTree = forwardRef<
     })
   }
 
+  function handleRowKeyDown(
+    event: React.KeyboardEvent<HTMLElement>,
+    row: FlatTreeRow,
+  ) {
+    const hasModifier = event.ctrlKey || event.metaKey || event.altKey
+    if (hasModifier || event.target !== event.currentTarget) return
+
+    if (event.key === ' ') {
+      event.preventDefault()
+      handleToggleSelection(row.node)
+      return
+    }
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      if (row.isFolder) handleToggleExpand(row.node.id)
+      return
+    }
+
+    const action = resolveTreeKey(rows, row.node.id, event.key)
+    if (!action) return
+    event.preventDefault()
+    if (action.type === 'focus') {
+      pendingFocusReference.current = action.id
+      setFocusedId(action.id)
+    } else {
+      setFolderExpanded(action.id, action.type === 'expand')
+    }
+  }
+
+  function handleRetry() {
+    setHasLoadError(false)
+    setIsLoading(true)
+    void loadBookmarks()
+  }
+
+  if (hasLoadError && errorState) return errorState(handleRetry)
   if (isLoading && loadingState) return loadingState
 
-  const isSearching = searchTerm.trim() !== ''
-  const visibleNodes = isSearching ? filterNodes(nodes, searchTerm) : nodes
+  if (
+    noBookmarksState &&
+    !isLoading &&
+    collectBookmarkIds(nodes).length === 0
+  ) {
+    return noBookmarksState
+  }
 
   if (emptyState && isSearching && visibleNodes.length === 0) {
     return emptyState
   }
 
   return (
-    <div className={cn('flex-1 overflow-auto p-2', className)}>
-      <NodeList
-        nodes={visibleNodes}
-        level={0}
-        checkedState={checkedState}
-        expandedFolders={expandedFolders}
-        showBookmarkIcon={showBookmarkIcon}
-        searchTerm={searchTerm}
-        onToggleExpand={handleToggleExpand}
-        onCheckedChange={handleCheckedChange}
-      />
+    <div
+      ref={treeReference}
+      role="tree"
+      aria-label={i18n.t('exportPage_treeLabel')}
+      aria-multiselectable="true"
+      className={cn('flex-1 overflow-auto p-2', className)}
+    >
+      {rows.map((row) => (
+        <TreeRow
+          key={row.node.id}
+          row={row}
+          checked={
+            row.node.url
+              ? (checkedState.get(row.node.id) ?? false)
+              : determineCheckedState(row.node.children ?? [], checkedState)
+          }
+          isTabStop={row.node.id === activeId}
+          showBookmarkIcon={showBookmarkIcon}
+          onFocusRow={setFocusedId}
+          onToggleExpand={handleToggleExpand}
+          onToggleSelection={handleToggleSelection}
+          onKeyDown={handleRowKeyDown}
+        />
+      ))}
     </div>
   )
 })
 
-interface NodeListProperties {
-  nodes: BookmarkNode[]
-  level: number
-  checkedState: Map<string, boolean>
-  expandedFolders: Set<string>
+const BOOKMARK_CHANGE_DEBOUNCE_MS = 150
+
+interface TreeRowProperties {
+  row: FlatTreeRow
+  checked: CheckedState
+  isTabStop: boolean
   showBookmarkIcon: boolean
-  searchTerm: string
+  onFocusRow: (id: string) => void
   onToggleExpand: (id: string) => void
-  onCheckedChange: (node: BookmarkNode, value: CheckedState) => void
+  onToggleSelection: (node: BookmarkNode) => void
+  onKeyDown: (event: React.KeyboardEvent<HTMLElement>, row: FlatTreeRow) => void
 }
 
-function NodeList(properties: NodeListProperties) {
+function TreeRow({
+  row,
+  checked,
+  isTabStop,
+  showBookmarkIcon,
+  onFocusRow,
+  onToggleExpand,
+  onToggleSelection,
+  onKeyDown,
+}: TreeRowProperties) {
+  const { node, level, isFolder, isExpanded } = row
+
   return (
-    <>
-      {properties.nodes.map((node) => (
-        <NodeRow key={node.id} node={node} {...properties} />
-      ))}
-    </>
+    <div
+      role="treeitem"
+      aria-label={node.title}
+      aria-level={level}
+      aria-setsize={row.setSize}
+      aria-posinset={row.position}
+      aria-expanded={isFolder ? isExpanded : undefined}
+      aria-selected={checked === true}
+      aria-checked={checked === 'indeterminate' ? 'mixed' : undefined}
+      tabIndex={isTabStop ? 0 : -1}
+      data-node-id={node.id}
+      className="ml-(--tree-indent) flex h-7.5 cursor-pointer items-center gap-1.5 rounded px-1 outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring"
+      style={
+        { '--tree-indent': `${(level - 1) * 16}px` } as React.CSSProperties
+      }
+      onFocus={(event) => {
+        if (event.target === event.currentTarget) onFocusRow(node.id)
+      }}
+      onClick={() => {
+        if (isFolder) onToggleExpand(node.id)
+        else onToggleSelection(node)
+      }}
+      onKeyDown={(event) => onKeyDown(event, row)}
+    >
+      <TreeCheckMark
+        checked={checked}
+        onToggle={() => onToggleSelection(node)}
+      />
+
+      {node.url ? (
+        showBookmarkIcon ? (
+          <img
+            src={getFaviconUrl(node.url)}
+            alt=""
+            className="size-4 shrink-0"
+            aria-hidden="true"
+            onError={(event) => {
+              ;(event.target as HTMLImageElement).style.display = 'none'
+            }}
+          />
+        ) : (
+          <File
+            className="size-4 shrink-0 text-bookmark-file"
+            aria-hidden="true"
+          />
+        )
+      ) : (
+        <Folder
+          className="size-4 shrink-0 text-bookmark-folder"
+          fill="currentColor"
+          aria-hidden="true"
+        />
+      )}
+
+      <span className="min-w-0 flex-1 truncate text-sm">{node.title}</span>
+
+      {isFolder && (
+        <span
+          className="shrink-0 text-xs text-muted-foreground tabular-nums"
+          aria-hidden="true"
+        >
+          {collectBookmarkIds(node.children ?? []).length}
+        </span>
+      )}
+    </div>
   )
 }
 
-function NodeRow({
-  node,
-  level,
-  checkedState,
-  expandedFolders,
-  showBookmarkIcon,
-  searchTerm,
-  onToggleExpand,
-  onCheckedChange,
-}: NodeListProperties & { node: BookmarkNode }) {
-  const isExpanded = expandedFolders.has(node.id)
-  const checked = node.url
-    ? (checkedState.get(node.id) ?? false)
-    : determineCheckedState(node.children ?? [], checkedState)
-  const isFolder = !node.url
-
+function TreeCheckMark({
+  checked,
+  onToggle,
+}: {
+  checked: CheckedState
+  onToggle: () => void
+}) {
+  const state = checked === 'indeterminate' ? 'mixed' : String(checked)
   return (
-    <div>
-      <div
-        className="ml-(--tree-indent) flex h-7.5 items-center gap-1.5 rounded px-1 hover:bg-accent data-[folder=true]:cursor-pointer"
-        style={{ '--tree-indent': `${level * 16}px` } as React.CSSProperties}
-        data-folder={isFolder}
-        role={isFolder ? 'button' : undefined}
-        aria-expanded={isFolder ? isExpanded : undefined}
-        tabIndex={isFolder ? 0 : undefined}
-        onClick={() => {
-          if (isFolder) onToggleExpand(node.id)
-        }}
-        onKeyDown={(event) => {
-          if (!isFolder) return
-          if (event.key !== 'Enter' && event.key !== ' ') return
-          event.preventDefault()
-          onToggleExpand(node.id)
-        }}
-      >
-        <Checkbox
-          checked={checked}
-          onCheckedChange={(value) =>
-            onCheckedChange(node, value as CheckedState)
-          }
-          onClick={(event) => event.stopPropagation()}
-          aria-label={node.title}
-        />
-
-        {node.url ? (
-          showBookmarkIcon ? (
-            <img
-              src={getFaviconUrl(node.url)}
-              alt=""
-              className="size-4 shrink-0"
-              aria-hidden="true"
-              onError={(event) => {
-                ;(event.target as HTMLImageElement).style.display = 'none'
-              }}
-            />
-          ) : (
-            <File
-              className="size-4 shrink-0 text-bookmark-file"
-              aria-hidden="true"
-            />
-          )
-        ) : (
-          <Folder
-            className="size-4 shrink-0 text-bookmark-folder"
-            fill="currentColor"
-            aria-hidden="true"
-          />
-        )}
-
-        <span className="min-w-0 flex-1 truncate text-sm">{node.title}</span>
-
-        {isFolder && (
-          <span className="shrink-0 text-xs text-muted-foreground tabular-nums">
-            {collectBookmarkIds(node.children ?? []).length}
-          </span>
-        )}
-      </div>
-
-      {!node.url && isExpanded && node.children && (
-        <NodeList
-          nodes={node.children}
-          level={level + 1}
-          checkedState={checkedState}
-          expandedFolders={expandedFolders}
-          showBookmarkIcon={showBookmarkIcon}
-          searchTerm={searchTerm}
-          onToggleExpand={onToggleExpand}
-          onCheckedChange={onCheckedChange}
-        />
+    <span
+      aria-hidden="true"
+      data-checked={state}
+      className="flex size-4 shrink-0 items-center justify-center rounded-sm border border-input transition-colors data-[checked=mixed]:border-primary data-[checked=mixed]:bg-primary data-[checked=mixed]:text-primary-foreground data-[checked=true]:border-primary data-[checked=true]:bg-primary data-[checked=true]:text-primary-foreground dark:bg-input/30"
+      onClick={(event) => {
+        event.stopPropagation()
+        onToggle()
+      }}
+    >
+      {checked === 'indeterminate' ? (
+        <Minus className="size-3.5" />
+      ) : (
+        checked && <Check className="size-3.5" />
       )}
-    </div>
+    </span>
   )
 }
 

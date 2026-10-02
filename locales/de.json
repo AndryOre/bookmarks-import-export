@@ -811,6 +811,34 @@
     "message": "Suche löschen",
     "description": "Export page empty state button that clears the search"
   },
+  "exportPage_treeLabel": {
+    "message": "Lesezeichen",
+    "description": "Accessible label of the bookmark tree on the Export page"
+  },
+  "exportPage_emptyTitle": {
+    "message": "Noch keine Lesezeichen",
+    "description": "Export page empty state title when the profile has no bookmarks"
+  },
+  "exportPage_emptyDescription": {
+    "message": "Dein Browser hat keine Lesezeichen zum Exportieren. Importiere eine Datei, um zu starten.",
+    "description": "Export page empty state description when the profile has no bookmarks"
+  },
+  "exportPage_goToImport": {
+    "message": "Zum Import",
+    "description": "Export page empty state button that opens the Import page"
+  },
+  "exportPage_errorTitle": {
+    "message": "Lesezeichen konnten nicht geladen werden",
+    "description": "Export page error state title when bookmarks fail to load"
+  },
+  "exportPage_errorDescription": {
+    "message": "Beim Lesen deiner Lesezeichen ist etwas schiefgegangen.",
+    "description": "Export page error state description when bookmarks fail to load"
+  },
+  "exportPage_tryAgain": {
+    "message": "Erneut versuchen",
+    "description": "Export page error state button that reloads the bookmarks"
+  },
   "welcome_heroTitle": {
     "message": "Willkommen bei",
     "description": "Lead-in of the welcome page hero title; the Snug wordmark is rendered right after it"
