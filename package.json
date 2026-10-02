@@ -1,6 +1,6 @@
 {
   "name": "bookmarks-import-export",
-  "description": "Browser extension to import and export bookmarks as HTML, JSON or CSV, with selective export, restore and scheduled backups.",
+  "description": "Export, import, and schedule automatic backups for your bookmarks — HTML, JSON, or CSV, all on your device, no account, no cloud.",
   "keywords": [
     "browser-extension",
     "bookmarks",
