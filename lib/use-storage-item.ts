@@ -8,12 +8,16 @@ import { useEffect, useState } from 'react'
  * callback fires with `null` (the item was removed), the value falls back to
  * `item.fallback` again rather than staying stale or turning into `null`.
  * @param item The WXT storage item to subscribe to.
+ * @param initialValue Optional synchronous value for the first render (for
+ * example from a cache), used instead of `item.fallback` until the real read
+ * resolves.
  * @returns A `[value, setValue]` tuple mirroring `useState`'s shape.
  */
 export function useStorageItem<T>(
   item: WxtStorageItem<T, Record<string, unknown>>,
+  initialValue?: T,
 ): [T, (value: T) => Promise<void>] {
-  const [value, setValue] = useState<T>(item.fallback)
+  const [value, setValue] = useState<T>(initialValue ?? item.fallback)
 
   useEffect(() => {
     const loadValue = async () => {
