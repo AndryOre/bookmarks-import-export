@@ -25,7 +25,7 @@ export type SeedBookmark = {
 /**
  * The fixtures `e2e/fixtures.ts` adds on top of `@playwright/test`'s base
  * `test`, shared across every spec in this suite (the smoke spec here, and
- * the popup export / Advanced Import / Advanced Export specs other E2E
+ * the popup and app page specs other E2E
  * tickets add) so each one loads the same built extension the same way
  * instead of reimplementing `launchPersistentContext` setup.
  */

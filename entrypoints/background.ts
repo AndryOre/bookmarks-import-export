@@ -59,7 +59,7 @@ function isScheduleRelevantChange(
 
 /**
  * Runs a `manual`-triggered {@link runAutoExport} using `message`'s
- * on-screen `formats`/`path`, for the settings dialog's "Export now" button.
+ * on-screen `formats`/`path`, for the Auto-export page's "Export now" button.
  * Never touches {@link autoExportNextRunStore} or the `auto-export` alarm —
  * `runAutoExport` already skips both for a `manual` trigger — and never
  * throws: failure is reported back to the caller as `{ ok: false, error }`

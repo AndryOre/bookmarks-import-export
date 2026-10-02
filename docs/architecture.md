@@ -12,10 +12,10 @@ This is a Chrome MV3 extension for importing and exporting bookmarks in HTML
 the downloads folder. The extension has no backend and no network calls: every
 operation reads and writes the browser's own bookmarks tree through
 `chrome.bookmarks`, and files are parsed or generated entirely client-side. The
-UI is React, split across several small standalone pages (a popup and four
-full-tab pages) rather than one single-page app, because each of those surfaces
-is opened as its own browser tab or the toolbar popup and has no shared React
-tree with the others. See [`docs/security.md`](security.md) for the assurance
+UI is React, in two surfaces: a compact toolbar popup, and one hash-routed
+full-page App (`app.html`) holding every larger screen. They are separate
+entrypoints with no shared React tree; the popup links into the App for anything
+that needs more room. See [`docs/security.md`](security.md) for the assurance
 case behind the no-network/local-only claim above, the manifest permissions, and
 the threat model.
 
@@ -24,8 +24,8 @@ the threat model.
 ### Entrypoints (`entrypoints/`)
 
 - **`background.ts`** — the MV3 service worker. Registers
-  `browser.runtime.onInstalled` (opens the welcome or update page, and calls
-  `syncAlarm` for every reason so a catch-up run can be armed after an
+  `browser.runtime.onInstalled` (opens the App's Welcome or What's new route,
+  and calls `syncAlarm` for every reason so a catch-up run can be armed after an
   install/update), `browser.runtime.onStartup` (also calls `syncAlarm`) and a
   storage watcher on the auto-export config that calls `syncAlarm` only when the
   change affects scheduling (`enabled`/`interval`/`preferredTime`, or `formats`
@@ -34,17 +34,23 @@ the threat model.
   telling `runAutoExport` whether this is a `scheduled` or `catch-up` run by
   comparing the alarm's fire time to the stored next-run time). Has no DOM and
   renders nothing.
-- **`popup/`** — the toolbar popup. Two tabs (export / import) for the
-  common-case flows: pick a format and export the whole tree, or pick a file and
-  import it with default settings.
-- **`advanced-export/`** — a full tab for selective export: a searchable,
-  checkable bookmark tree plus a settings dialog for the options each exporter
-  accepts (icons, dates, hiding folders, filename template).
-- **`advanced-import/`** — a full tab for import with a preview step: drop a
-  file, see counts and whether it carries folder placement, choose an import
-  mode, then commit.
-- **`update/`** — shown after an extension update; renders the changelog.
-- **`welcome/`** — shown on first install; a short feature tour.
+- **`popup/`** — the toolbar popup: one compact screen with an export section
+  (format + "Export all"), an import section (Quick import with the default
+  mode), an auto-export status row and a footer that opens the App. It shares no
+  React tree with the App.
+- **`app/`** — the single full-page App (`app.html`, also the manifest's
+  `options_ui` page, opened in a tab). A hash-routed shell built on TanStack
+  Router (`router.tsx`, hash history, see
+  [ADR 0006](adr/0006-single-app-hash-routed-shell.md)) with a sidebar
+  (`app-shell.tsx`, `nav.ts`) and one route module per screen under `routes/`:
+  Export (searchable checkable bookmark tree plus the Export options panel),
+  Import (file, import mode, then a preview-first commit), Auto-export (status,
+  schedule, Export now), Settings (theme, tree display, default import mode),
+  What's new (changelog) and Welcome (first-install tour). Route paths live in
+  `lib/app-url.ts` (`APP_ROUTES`, `getAppUrl`) so the popup, background and
+  changelog deep-link with `app.html#/<route>`.
+- **`offscreen/`** — the hidden document used for blob downloads (see Runtime
+  contexts).
 
 ### `lib/`
 
@@ -60,17 +66,17 @@ the threat model.
 - **Exporters** (`lib/exporters/export-html.ts`, `export-json.ts`,
   `export-csv.ts`) — each turns a `chrome.bookmarks` subtree (or the whole tree)
   into a file's text content. All three accept a `selectedBookmarks` option (a
-  pruned subtree from the advanced-export tree, or `null` for "the whole tree").
+  pruned subtree from the Export page's tree, or `null` for "the whole tree").
 - **`detect-format.ts`** — sniffs a file's format from its MIME type plus a
   structural check (JSON parses, HTML starts with the Netscape doctype, CSV has
   `title`/`url`-ish headers), returning `'unknown'` on no match.
 - **`import-preview.ts`** — runs a file through the same parsing the real
   importer would use, without touching `chrome.bookmarks`, to produce counts and
-  an `hasLocationData` flag for the advanced-import preview panel.
+  an `hasLocationData` flag for the Import page's preview.
 - **`filename-template.ts`** — expands `%yyyy`/`%mm`/`%dd`/`%hh`/`%min`/ `%sec`
   placeholders against a `Date` and sanitizes the result for filesystem-unsafe
-  characters. Shared by every export path (popup, advanced-export, auto-export)
-  so all three name files the same way.
+  characters. Shared by every export path (popup, Export page, auto-export) so
+  all three name files the same way.
 - **`favicon.ts`** — fetches a page's favicon and returns it as base64, for the
   optional `iconData` export column/field.
 - **`auto-export.ts`** — owns the alarm lifecycle (`syncAlarm`, which keeps a
@@ -87,25 +93,27 @@ the threat model.
 - **`types.ts`** — the shared type vocabulary: `BookmarkNode`,
   `ExtendedBookmarkTreeNode`, `ParsedBookmark`, `BookmarkFormat`, `ImportMode`,
   `AutoExportConfig`, `ImportPreview`, `CheckedState`, and the component prop
-  interfaces for the advanced-export tree.
-- **`changelog.ts`** — the ordered list of release entries the update page
+  interfaces for the Export page's tree.
+- **`changelog.ts`** — the ordered list of release entries the What's new route
   renders, each pointing at i18n message keys rather than embedding text
   directly.
 
 ### Components (`components/`)
 
-- **`components/advanced-export/`** — `bookmark-tree.tsx` (the checkable tree,
-  exposing a `BookmarkTreeHandle` for select-all/deselect-all/refresh/
-  get-selected), plus its `header.tsx`, `search-bar.tsx`, and
-  `settings-dialog.tsx`.
-- **`components/advanced-import/`** — `file-drop-zone.tsx`,
-  `import-mode-selector.tsx`, `import-preview.tsx`, and `header.tsx`.
+- **`components/export/`** — the Export page's pieces: `bookmark-tree.tsx` (the
+  checkable tree, exposing a `BookmarkTreeHandle` for select-all/deselect-all/
+  refresh/get-selected), `export-toolbar.tsx`, `export-bar.tsx` and
+  `export-tree-states.tsx` (loading/empty/no-results).
+- **`components/import/`** — the Import page's steps: `import-file-step.tsx`,
+  `import-mode-step.tsx`, `import-preview-step.tsx` and the `import-step.tsx`
+  wrapper.
+- **`components/popup/`** — the popup's `export-section.tsx`,
+  `import-section.tsx`, `auto-export-status-item.tsx` and `footer.tsx`.
 - **`components/ui/`** — the shadcn/ui-generated primitives (`button.tsx`,
   `dialog.tsx`, `select.tsx`, etc.). Generated registry code; not hand-authored,
   not covered by the rest of this map's conventions.
-- Top-level: `advanced-export-button.tsx`, `advanced-import-button.tsx`,
-  `import-bookmarks-button.tsx`, `export-format-selector.tsx`,
-  `feature-card.tsx`, `theme-provider.tsx`.
+- Top-level: `export-options-panel.tsx` (the shared **Export options** panel),
+  `time-picker.tsx` (locale-aware) and `theme-provider.tsx`.
 
 ## Runtime contexts
 
@@ -116,8 +124,8 @@ API surface available differs between them:
   is torn down and restarted freely by Chrome between events. It can call
   `chrome.bookmarks`, `chrome.alarms`, `chrome.downloads`, and `chrome.storage`,
   but has no DOM.
-- **Extension pages** (popup, advanced-export, advanced-import, update, welcome)
-  are ordinary web pages with a full DOM, rendered as React trees.
+- **Extension pages** (the popup and the App) are ordinary web pages with a full
+  DOM, rendered as React trees.
 - **The offscreen document** (`entrypoints/offscreen`) is an unlisted, hidden
   page the service worker creates on demand via `chrome.offscreen`. It exists
   purely to provide a document context for `URL.createObjectURL`.
@@ -129,8 +137,8 @@ mechanism the pages use directly:
 - **`DOMParser`** (used by `parseHTML` in `import-html.ts`) needs a document
   context to parse HTML strings into a traversable tree. It does not exist in a
   service worker.
-- **`URL.createObjectURL`** (used by the popup and advanced-export pages to turn
-  an in-memory `Blob` into a downloadable `<a href>`) requires a `Blob`/URL
+- **`URL.createObjectURL`** (used by the popup and the Export page to turn an
+  in-memory `Blob` into a downloadable `<a href>`) requires a `Blob`/URL
   registry tied to a document; a service worker has neither. `runAutoExport` in
   `auto-export.ts` works around this via `downloadViaOffscreenDocument`
   (`lib/offscreen-download.ts`): it opens the offscreen document (reusing one
@@ -143,7 +151,15 @@ mechanism the pages use directly:
 
 ## Data flows
 
-**Import** (advanced-import page): a dropped file is read as text, then
+**Navigation** (popup, background, App): every deep link is
+`getAppUrl(APP_ROUTES.<route>)` (`lib/app-url.ts`), i.e. `app.html#/<route>`.
+The background opens `#/welcome` on install and `#/whats-new` on update; the
+popup footer opens the App. Inside the App, the sidebar and in-page links
+navigate through the hash router, and the shell scrolls its content area back to
+the top on each navigation. The manifest's options page opens `app.html` with no
+hash, so the router's index route redirects it to `#/export`.
+
+**Import** (Import page): a dropped file is read as text, then
 `getImportPreview` (detect format → attempt the real parse without writing
 anything) produces counts and a location-data flag for the preview panel. The
 user picks an `ImportMode`; `restore-replace` is gated behind a confirmation
@@ -152,11 +168,11 @@ runs again and the matching importer
 (`importFromHTML`/`importFromJSON`/`importFromCSV`) writes directly to
 `chrome.bookmarks`.
 
-**Export** (popup and advanced-export pages): the advanced-export page's
-bookmark tree produces a selection (or the popup exports the whole tree by
-passing `selectedBookmarks: null`); the chosen exporter turns that into a
-format's text content; the page wraps it in a `Blob`, turns that into an object
-URL, and triggers a browser download via a synthetic `<a>` click.
+**Export** (popup and Export page): the Export page's bookmark tree produces a
+selection (or the popup exports the whole tree by passing
+`selectedBookmarks: null`); the chosen exporter turns that into a format's text
+content; the page wraps it in a `Blob`, turns that into an object URL, and
+triggers a browser download via a synthetic `<a>` click.
 
 **Auto-export** (background service worker): the authoritative next due time
 lives in `autoExportNextRunStore` (epoch milliseconds, or `null` when disabled),

@@ -38,16 +38,9 @@ const JSX_NO_LITERALS_ALLOWED_STRINGS = [
  * - `Label`: the time-picker's Hours/Minutes/Period captions intentionally
  *   use a smaller, muted treatment instead of Label's default typography —
  *   there is no dedicated caption variant for this yet.
- * - `CardTitle`/`CardDescription`: `FeatureCard` renders a deliberately
- *   compact title/description scale (bolder + smaller than Card's own
- *   defaults) to fit four cards in the welcome page grid.
- * - `Tabs`/`TabsList`/`TabsTrigger`/`TabsContent`
- *   (`components/ui/tabs.tsx`): need consumer-provided layout/spacing
- *   classes (flex sizing, width, the `data-[state=inactive]:hidden`
- *   visibility hook used to keep every tab mounted, the settings-dialog's
- *   own vertical rhythm) to fill the popup's fixed viewport — there is no
- *   parent element to push them onto, since these primitives themselves
- *   define the flex/grid context their own layout classes participate in.
+ * - `CardTitle`/`CardDescription`: the settings and auto-export pages render a
+ *   deliberately compact title/description scale (bolder + smaller than
+ *   Card's own defaults).
  */
 const shadcnNoRestyleContracts = [
   {
@@ -65,10 +58,6 @@ const shadcnNoRestyleContracts = [
   {
     pattern: '^CardDescription$',
     allow: ['layout', 'text-xs'],
-  },
-  {
-    pattern: '^Tabs(List|Trigger|Content)?$',
-    allow: ['layout', 'spacing', 'space-y-4', 'pt-2'],
   },
 ]
 

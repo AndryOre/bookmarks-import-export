@@ -23,7 +23,7 @@ import type {
 import { useStorageItem } from '@/lib/use-storage-item'
 
 /**
- * Renders the checkbox tree of bookmarks used by the advanced export flow.
+ * Renders the checkbox tree of bookmarks used by the Export page.
  * Exposes an imperative handle (see {@link BookmarkTreeHandle}) so the
  * parent can drive selection and refreshes without lifting the
  * checked-state map into props.

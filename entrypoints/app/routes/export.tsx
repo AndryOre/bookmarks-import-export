@@ -2,8 +2,8 @@ import { i18n } from '#i18n'
 import { useNavigate, useSearch } from '@tanstack/react-router'
 import { useEffect, useRef, useState } from 'react'
 
-import { BookmarkTree } from '@/components/advanced-export/bookmark-tree'
 import { ExportOptionsPanel } from '@/components/export-options-panel'
+import { BookmarkTree } from '@/components/export/bookmark-tree'
 import { ExportBar } from '@/components/export/export-bar'
 import { ExportToolbar } from '@/components/export/export-toolbar'
 import {

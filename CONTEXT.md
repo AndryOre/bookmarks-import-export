@@ -4,6 +4,11 @@ Terms used consistently across this project's code, docs, and UI. This is a
 glossary of concepts, not an implementation reference — it defines what things
 mean, not how they're built.
 
+**App** The extension's single full-page UI (`app.html`, also the options page),
+hash-routed with a sidebar: Export, Import, Auto-export, Settings, What's new
+and Welcome. The popup is separate and compact; anything that needs more room
+opens the App. _Avoid_: dashboard, options page, advanced page, full page.
+
 **Bookmark node** A single entry in a bookmark tree: either a bookmark (has a
 title and a URL) or a folder (has a title and children, no URL). Trees are built
 from nodes nested inside other nodes. _Avoid_: bookmark item, entry, record.
@@ -28,23 +33,31 @@ add the imported bookmarks in their place). _Avoid_: import strategy, import
 type, merge mode.
 
 **Default import mode** The import mode the user has chosen to apply by default,
-remembered between sessions and shared by quick import and Advanced Import.
+remembered between sessions and shared by Quick import and the Import page.
 Formats without location data always import in Folder mode regardless. _Avoid_:
 preferred mode, saved mode.
 
 **Quick import** Importing a file directly from the popup in one step, using the
-default import mode, as opposed to the Advanced Import page's preview-first
-flow. _Avoid_: basic import, simple import, popup import.
+default import mode and committing immediately, as opposed to the Import page's
+preview-first flow, which shows the Import preview and lets the user choose a
+mode before anything changes. _Avoid_: basic import, simple import, popup
+import.
 
 **Import preview** A summary shown before committing an import: how many
 bookmarks were found, split by root folder, and whether the file carries
 location data at all. Lets the user judge a file before it changes anything.
 _Avoid_: import summary, pre-import check, dry run.
 
-**Advanced Export selection** The subset of bookmarks a user has explicitly
-checked in the advanced export view, as opposed to exporting the entire bookmark
+**Export selection** The subset of bookmarks a user has explicitly checked in
+the Export page's bookmark tree, as opposed to exporting the entire bookmark
 collection at once. A selection can mix individual bookmarks and whole folders.
-_Avoid_: export scope, checked bookmarks, chosen items.
+_Avoid_: Advanced Export selection, export scope, checked bookmarks, chosen
+items.
+
+**Export options** The per-export switches that shape a file's content: whether
+to include icons and which dates, whether to hide the "other bookmarks" and
+parent folders, and the filename template. They are shared by the Export page
+and the Auto-export page. _Avoid_: export settings, export preferences.
 
 **Auto-export** A recurring, unattended export that runs on a schedule the user
 configures (how often, and to which formats), saving files without any manual
