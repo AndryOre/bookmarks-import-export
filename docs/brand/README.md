@@ -1,0 +1,36 @@
+# Snug brand kit
+
+The source of truth for Snug's identity: decisions, voice, copy, tokens and logo
+files.
+
+## Documents
+
+- [`brief.md`](brief.md) — audience, pains, cultural position, visual world,
+  what to avoid, closed decisions.
+- [`naming.md`](naming.md) — how the name was chosen: scoring and rationale.
+- [`competitors.md`](competitors.md) — market research and positioning lessons.
+- [`copy.md`](copy.md) — listing and product copy (EN/ES).
+- [`voice.md`](voice.md) — brand voice guidelines: tone, vocabulary, do/don't.
+
+## Assets
+
+- [`tokens.css`](tokens.css) — design tokens (colors, type, radii).
+- [`logo/`](logo/) — SVG mark, variants and horizontal lockups; PNG marks at 16,
+  32, 48 and 128 px in [`logo/png/`](logo/png/).
+- [`og/`](og/) — social preview images (`og-en.png`, `og-es.png`).
+- [`brandbook/`](brandbook/index.html) — a standalone HTML brand book. Its fonts
+  live in [`brandbook/fonts/`](brandbook/fonts/) with their license in
+  [`OFL.md`](brandbook/fonts/OFL.md).
+
+## Assets that live elsewhere
+
+These are used by the repo directly, so they are not duplicated here:
+
+- README cover: [`docs/assets/readme-cover.png`](../assets/readme-cover.png)
+- Extension icon (the 512 px mark): [`assets/icon.png`](../../assets/icon.png)
+- Chrome Web Store tiles: [`docs/store/assets/`](../store/assets/)
+
+## Not versioned
+
+Store analytics exports contain private metrics and stay out of this public
+repository.

@@ -50,6 +50,17 @@ An index of every document in this repository.
 - [`docs/store/baseline-2026-09.md`](store/baseline-2026-09.md) — pre-rename
   store analytics, for comparison after the rename.
 
+## Brand
+
+- [`docs/brand/README.md`](brand/README.md) — the Snug brand kit: what each file
+  is and where shared assets live.
+- [`docs/brand/voice.md`](brand/voice.md) — brand voice guidelines.
+- [`docs/brand/brief.md`](brand/brief.md),
+  [`docs/brand/naming.md`](brand/naming.md),
+  [`docs/brand/competitors.md`](brand/competitors.md),
+  [`docs/brand/copy.md`](brand/copy.md) — the brief, naming rationale,
+  competitor research, and listing/product copy.
+
 ## Agent configuration
 
 - [`AGENTS.md`](../AGENTS.md) — instructions for coding agents: stack summary,
