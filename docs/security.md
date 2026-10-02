@@ -23,15 +23,16 @@ claim.
 **Manifest permissions**, as declared in `wxt.config.ts`, and why each one is
 needed:
 
-| Permission  | Why it's needed                                                                                                                                                                              |
-| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `bookmarks` | Core functionality: read the bookmark tree for export, and create/remove nodes in it for import.                                                                                             |
-| `favicon`   | Reads a bookmark's favicon through Chrome's internal `_favicon` API, which serves the browser's own cached icon for a page. This never makes a network request to the bookmarked site.       |
-| `storage`   | Persists settings (default import mode, auto-export config, last-run status) via `local:`-prefixed `storage.defineItem` keys — never `sync:`-scoped, so settings stay on-device.             |
-| `tabs`      | Opens the welcome page on install and the update/changelog page after an update (`browser.tabs.create`). Not used to read or query other tabs' content or URLs.                              |
-| `alarms`    | Schedules auto-export runs (a single one-shot `chrome.alarms` alarm, recomputed after each run) without needing the service worker to stay alive between them.                               |
-| `downloads` | Saves exported files (manual export and auto-export) to the browser's Downloads folder via `browser.downloads.download`.                                                                     |
-| `offscreen` | Creates a hidden, unlisted document so the service worker — which has no `document` or `Blob`/URL registry — can turn an in-memory export into a downloadable object URL during auto-export. |
+| Permission         | Why it's needed                                                                                                                                                                                         |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `bookmarks`        | Core functionality: read the bookmark tree for export, and create/remove nodes in it for import.                                                                                                        |
+| `favicon`          | Reads a bookmark's favicon through Chrome's internal `_favicon` API, which serves the browser's own cached icon for a page. This never makes a network request to the bookmarked site.                  |
+| `storage`          | Persists settings (default import mode, auto-export config, last-run status) via `local:`-prefixed `storage.defineItem` keys — never `sync:`-scoped, so settings stay on-device.                        |
+| `tabs`             | Opens the welcome page on install and the update/changelog page after an update (`browser.tabs.create`). Not used to read or query other tabs' content or URLs.                                         |
+| `alarms`           | Schedules auto-export runs (a single one-shot `chrome.alarms` alarm, recomputed after each run) without needing the service worker to stay alive between them.                                          |
+| `downloads`        | Saves exported files (manual export and auto-export) to the browser's Downloads folder via `browser.downloads.download`.                                                                                |
+| `unlimitedStorage` | Lifts the `storage.local` quota so the latest Safety snapshot (a copy of the bookmarks bar and other bookmarks, taken before every Restore-replace) fits even for very large libraries. On-device only. |
+| `offscreen`        | Creates a hidden, unlisted document so the service worker — which has no `document` or `Blob`/URL registry — can turn an in-memory export into a downloadable object URL during auto-export.            |
 
 No `host_permissions` are declared: the extension never injects into or reads
 content from other pages.

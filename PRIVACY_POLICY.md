@@ -51,20 +51,26 @@ data to external servers.
   display options, export options, the filename template, and your automatic
   export configuration — using the browser's local storage (`storage.local`).
   This data stays on your device and is never transmitted anywhere.
+- Before every "Restore — replace" import, Snug saves a safety snapshot of your
+  bookmarks bar and other bookmarks so the import can be undone. This stores
+  your bookmark content (titles, addresses and folder structure) locally in the
+  browser's local storage, keeping only the latest snapshot, and also saves it
+  as a file in your Downloads folder. It never leaves your device.
 
 ## Permissions
 
 Snug requests the following browser permissions, each used solely for the
 purpose described:
 
-| Permission  | Purpose                                                                                                                                       |
-| ----------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| `bookmarks` | Read and write your browser bookmarks to support import and export.                                                                           |
-| `favicon`   | Display site icons next to bookmarks via Chrome's built-in `_favicon` API.                                                                    |
-| `storage`   | Save your local preferences and settings on your device.                                                                                      |
-| `alarms`    | Schedule and trigger automatic bookmark exports at the configured interval.                                                                   |
-| `downloads` | Save exported bookmark files (manual and automatic) to your device.                                                                           |
-| `offscreen` | Create a short-lived hidden document so an automatic export can be turned into a downloadable file. It has no UI and loads no remote content. |
+| Permission         | Purpose                                                                                                                                       |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `bookmarks`        | Read and write your browser bookmarks to support import and export.                                                                           |
+| `favicon`          | Display site icons next to bookmarks via Chrome's built-in `_favicon` API.                                                                    |
+| `storage`          | Save your local preferences and settings on your device.                                                                                      |
+| `alarms`           | Schedule and trigger automatic bookmark exports at the configured interval.                                                                   |
+| `downloads`        | Save exported bookmark files (manual and automatic) to your device.                                                                           |
+| `unlimitedStorage` | Keep the latest safety snapshot of your bookmarks on your device, which can be large for big libraries.                                       |
+| `offscreen`        | Create a short-lived hidden document so an automatic export can be turned into a downloadable file. It has no UI and loads no remote content. |
 
 ## Third-Party Services
 
