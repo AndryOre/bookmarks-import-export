@@ -100,7 +100,7 @@
     "description": "Descripción del modo restaurar y reemplazar"
   },
   "importModeRestoreReplaceWarning": {
-    "message": "Esto eliminará permanentemente todos los marcadores actuales de tu Barra de marcadores y Otros marcadores",
+    "message": "Vacía primero tu barra de marcadores y Otros marcadores. Una instantánea de seguridad te permite deshacer la importación.",
     "description": "Aviso del modo restaurar y reemplazar"
   },
   "importPreview": {
@@ -121,7 +121,7 @@
     "description": "Título del diálogo de confirmación de reemplazo"
   },
   "replaceConfirmDescription": {
-    "message": "Todos los marcadores actuales de tu Barra de marcadores y Otros marcadores se eliminarán permanentemente antes de importar. Esta acción no se puede deshacer.",
+    "message": "Tu barra de marcadores y Otros marcadores actuales se vacían antes de importar. Primero se guarda una instantánea de seguridad, para que puedas deshacer la importación.",
     "description": "Cuerpo del diálogo de confirmación de reemplazo"
   },
   "replaceConfirmButton": {
@@ -836,5 +836,86 @@
         "content": "$1"
       }
     }
+  },
+  "import_replaceDiffTitle": {
+    "message": "Reemplazar eliminará $REMOVED$ marcadores y añadirá $ADDED$",
+    "description": "Replace diff alert title; $REMOVED$ and $ADDED$ are bookmark counts",
+    "placeholders": {
+      "removed": {
+        "content": "$1"
+      },
+      "added": {
+        "content": "$2"
+      }
+    }
+  },
+  "import_replaceDiffDescription": {
+    "message": "Primero se guarda una instantánea de seguridad de tus marcadores actuales, para que puedas deshacer la importación.",
+    "description": "Replace diff alert body"
+  },
+  "import_undo": {
+    "message": "Deshacer importación",
+    "description": "Button that undoes a replace import"
+  },
+  "import_undoing": {
+    "message": "Deshaciendo…",
+    "description": "Undo button label while restoring"
+  },
+  "import_undoneTitle": {
+    "message": "Importación deshecha",
+    "description": "Title shown after an import was undone"
+  },
+  "import_undoneDescription": {
+    "message": "Tus marcadores se restauraron desde la instantánea de seguridad.",
+    "description": "Body shown after an import was undone"
+  },
+  "import_undoFailedTitle": {
+    "message": "No se pudo deshacer la importación",
+    "description": "Error title when undoing an import fails"
+  },
+  "safetySnapshot_title": {
+    "message": "Instantánea de seguridad",
+    "description": "Settings card title"
+  },
+  "safetySnapshot_description": {
+    "message": "Se toma automáticamente antes de cada reemplazo. Solo se conserva la más reciente.",
+    "description": "Settings card description"
+  },
+  "safetySnapshot_fileNote": {
+    "message": "La misma copia se guarda como archivo en tu carpeta de Descargas.",
+    "description": "Note that the snapshot is also a file in Downloads"
+  },
+  "safetySnapshot_restore": {
+    "message": "Restaurar instantánea",
+    "description": "Button that restores the Safety snapshot"
+  },
+  "safetySnapshot_emptyTitle": {
+    "message": "Aún no hay instantánea",
+    "description": "Empty state title when no snapshot exists"
+  },
+  "safetySnapshot_emptyDescription": {
+    "message": "Se toma una automáticamente la primera vez que reemplaces tus marcadores.",
+    "description": "Empty state body when no snapshot exists"
+  },
+  "safetySnapshot_restoreTitle": {
+    "message": "¿Restaurar esta instantánea?",
+    "description": "Restore confirm dialog title"
+  },
+  "safetySnapshot_restoreDescription": {
+    "message": "Tu barra de marcadores y Otros marcadores se reemplazarán con la instantánea del $DATE$. Primero se guarda una nueva instantánea de tus marcadores actuales.",
+    "description": "Restore confirm dialog body; $DATE$ is when the snapshot was taken",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      }
+    }
+  },
+  "safetySnapshot_restoreConfirm": {
+    "message": "Sí, restaurar",
+    "description": "Confirm button in the restore dialog"
+  },
+  "safetySnapshot_restored": {
+    "message": "Instantánea restaurada.",
+    "description": "Shown after the snapshot was restored"
   }
 }

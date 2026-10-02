@@ -100,7 +100,7 @@
     "description": "Import mode: restore and replace description"
   },
   "importModeRestoreReplaceWarning": {
-    "message": "此操作将永久删除书签栏和其他书签中的所有现有书签",
+    "message": "先清空书签栏和其他书签。安全快照可让你撤销导入。",
     "description": "Warning shown for restore-replace mode"
   },
   "importPreview": {
@@ -121,7 +121,7 @@
     "description": "Title of the replace confirmation dialog"
   },
   "replaceConfirmDescription": {
-    "message": "导入前，书签栏和其他书签中的所有现有书签都将被永久删除。此操作无法撤销。",
+    "message": "导入前会先清空当前的书签栏和其他书签。会先保存安全快照，以便你撤销导入。",
     "description": "Body of the replace confirmation dialog"
   },
   "replaceConfirmButton": {
@@ -836,5 +836,86 @@
         "content": "$1"
       }
     }
+  },
+  "import_replaceDiffTitle": {
+    "message": "替换将删除 $REMOVED$ 个书签并添加 $ADDED$ 个",
+    "description": "Replace diff alert title; $REMOVED$ and $ADDED$ are bookmark counts",
+    "placeholders": {
+      "removed": {
+        "content": "$1"
+      },
+      "added": {
+        "content": "$2"
+      }
+    }
+  },
+  "import_replaceDiffDescription": {
+    "message": "会先保存当前书签的安全快照，以便你撤销导入。",
+    "description": "Replace diff alert body"
+  },
+  "import_undo": {
+    "message": "撤销导入",
+    "description": "Button that undoes a replace import"
+  },
+  "import_undoing": {
+    "message": "正在撤销…",
+    "description": "Undo button label while restoring"
+  },
+  "import_undoneTitle": {
+    "message": "导入已撤销",
+    "description": "Title shown after an import was undone"
+  },
+  "import_undoneDescription": {
+    "message": "已从安全快照恢复你的书签。",
+    "description": "Body shown after an import was undone"
+  },
+  "import_undoFailedTitle": {
+    "message": "无法撤销导入",
+    "description": "Error title when undoing an import fails"
+  },
+  "safetySnapshot_title": {
+    "message": "安全快照",
+    "description": "Settings card title"
+  },
+  "safetySnapshot_description": {
+    "message": "每次替换前自动创建，仅保留最新的一份。",
+    "description": "Settings card description"
+  },
+  "safetySnapshot_fileNote": {
+    "message": "同一份副本也会作为文件保存在“下载”文件夹中。",
+    "description": "Note that the snapshot is also a file in Downloads"
+  },
+  "safetySnapshot_restore": {
+    "message": "恢复快照",
+    "description": "Button that restores the Safety snapshot"
+  },
+  "safetySnapshot_emptyTitle": {
+    "message": "还没有快照",
+    "description": "Empty state title when no snapshot exists"
+  },
+  "safetySnapshot_emptyDescription": {
+    "message": "你第一次替换书签时会自动创建。",
+    "description": "Empty state body when no snapshot exists"
+  },
+  "safetySnapshot_restoreTitle": {
+    "message": "恢复此快照？",
+    "description": "Restore confirm dialog title"
+  },
+  "safetySnapshot_restoreDescription": {
+    "message": "书签栏和其他书签将被替换为 $DATE$ 的快照。会先保存当前书签的新快照。",
+    "description": "Restore confirm dialog body; $DATE$ is when the snapshot was taken",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      }
+    }
+  },
+  "safetySnapshot_restoreConfirm": {
+    "message": "是，恢复",
+    "description": "Confirm button in the restore dialog"
+  },
+  "safetySnapshot_restored": {
+    "message": "快照已恢复。",
+    "description": "Shown after the snapshot was restored"
   }
 }

@@ -100,7 +100,7 @@
     "description": "Import mode: restore and replace description"
   },
   "importModeRestoreReplaceWarning": {
-    "message": "Isso excluirá permanentemente todos os favoritos atuais da Barra de favoritos e de Outros favoritos",
+    "message": "Esvazia primeiro sua barra de favoritos e Outros favoritos. Um instantâneo de segurança permite desfazer a importação.",
     "description": "Warning shown for restore-replace mode"
   },
   "importPreview": {
@@ -121,7 +121,7 @@
     "description": "Title of the replace confirmation dialog"
   },
   "replaceConfirmDescription": {
-    "message": "Todos os favoritos que estão na Barra de favoritos e em Outros favoritos serão excluídos permanentemente antes da importação. Esta ação não pode ser desfeita.",
+    "message": "Sua barra de favoritos e Outros favoritos atuais são esvaziados antes de importar. Primeiro é salvo um instantâneo de segurança, para você poder desfazer a importação.",
     "description": "Body of the replace confirmation dialog"
   },
   "replaceConfirmButton": {
@@ -836,5 +836,86 @@
         "content": "$1"
       }
     }
+  },
+  "import_replaceDiffTitle": {
+    "message": "Substituir removerá $REMOVED$ favoritos e adicionará $ADDED$",
+    "description": "Replace diff alert title; $REMOVED$ and $ADDED$ are bookmark counts",
+    "placeholders": {
+      "removed": {
+        "content": "$1"
+      },
+      "added": {
+        "content": "$2"
+      }
+    }
+  },
+  "import_replaceDiffDescription": {
+    "message": "Primeiro é salvo um instantâneo de segurança dos seus favoritos atuais, para você poder desfazer a importação.",
+    "description": "Replace diff alert body"
+  },
+  "import_undo": {
+    "message": "Desfazer importação",
+    "description": "Button that undoes a replace import"
+  },
+  "import_undoing": {
+    "message": "Desfazendo…",
+    "description": "Undo button label while restoring"
+  },
+  "import_undoneTitle": {
+    "message": "Importação desfeita",
+    "description": "Title shown after an import was undone"
+  },
+  "import_undoneDescription": {
+    "message": "Seus favoritos foram restaurados a partir do instantâneo de segurança.",
+    "description": "Body shown after an import was undone"
+  },
+  "import_undoFailedTitle": {
+    "message": "Não foi possível desfazer a importação",
+    "description": "Error title when undoing an import fails"
+  },
+  "safetySnapshot_title": {
+    "message": "Instantâneo de segurança",
+    "description": "Settings card title"
+  },
+  "safetySnapshot_description": {
+    "message": "Criado automaticamente antes de cada substituição. Apenas o mais recente é mantido.",
+    "description": "Settings card description"
+  },
+  "safetySnapshot_fileNote": {
+    "message": "A mesma cópia é salva como arquivo na sua pasta Downloads.",
+    "description": "Note that the snapshot is also a file in Downloads"
+  },
+  "safetySnapshot_restore": {
+    "message": "Restaurar instantâneo",
+    "description": "Button that restores the Safety snapshot"
+  },
+  "safetySnapshot_emptyTitle": {
+    "message": "Nenhum instantâneo ainda",
+    "description": "Empty state title when no snapshot exists"
+  },
+  "safetySnapshot_emptyDescription": {
+    "message": "Um é criado automaticamente na primeira vez que você substituir seus favoritos.",
+    "description": "Empty state body when no snapshot exists"
+  },
+  "safetySnapshot_restoreTitle": {
+    "message": "Restaurar este instantâneo?",
+    "description": "Restore confirm dialog title"
+  },
+  "safetySnapshot_restoreDescription": {
+    "message": "Sua barra de favoritos e Outros favoritos serão substituídos pelo instantâneo de $DATE$. Primeiro é salvo um novo instantâneo dos seus favoritos atuais.",
+    "description": "Restore confirm dialog body; $DATE$ is when the snapshot was taken",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      }
+    }
+  },
+  "safetySnapshot_restoreConfirm": {
+    "message": "Sim, restaurar",
+    "description": "Confirm button in the restore dialog"
+  },
+  "safetySnapshot_restored": {
+    "message": "Instantâneo restaurado.",
+    "description": "Shown after the snapshot was restored"
   }
 }

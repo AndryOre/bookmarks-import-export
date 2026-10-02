@@ -100,7 +100,7 @@
     "description": "Import mode: restore and replace description"
   },
   "importModeRestoreReplaceWarning": {
-    "message": "This will permanently delete all current bookmarks in your Bookmarks Bar and Other Bookmarks",
+    "message": "Clears your Bookmarks Bar and Other Bookmarks first. A Safety snapshot lets you undo the import.",
     "description": "Warning shown for restore-replace mode"
   },
   "importPreview": {
@@ -121,7 +121,7 @@
     "description": "Title of the replace confirmation dialog"
   },
   "replaceConfirmDescription": {
-    "message": "All bookmarks currently in your Bookmarks Bar and Other Bookmarks will be permanently deleted before importing. This cannot be undone.",
+    "message": "Your current Bookmarks Bar and Other Bookmarks are cleared before importing. A Safety snapshot is saved first, so you can undo the import.",
     "description": "Body of the replace confirmation dialog"
   },
   "replaceConfirmButton": {
@@ -836,5 +836,86 @@
         "content": "$1"
       }
     }
+  },
+  "import_replaceDiffTitle": {
+    "message": "Replace will remove $REMOVED$ bookmarks and add $ADDED$",
+    "description": "Replace diff alert title; $REMOVED$ and $ADDED$ are bookmark counts",
+    "placeholders": {
+      "removed": {
+        "content": "$1"
+      },
+      "added": {
+        "content": "$2"
+      }
+    }
+  },
+  "import_replaceDiffDescription": {
+    "message": "A Safety snapshot of your current bookmarks is saved first, so you can undo the import.",
+    "description": "Replace diff alert body"
+  },
+  "import_undo": {
+    "message": "Undo import",
+    "description": "Button that undoes a replace import"
+  },
+  "import_undoing": {
+    "message": "Undoing…",
+    "description": "Undo button label while restoring"
+  },
+  "import_undoneTitle": {
+    "message": "Import undone",
+    "description": "Title shown after an import was undone"
+  },
+  "import_undoneDescription": {
+    "message": "Your bookmarks were restored from the Safety snapshot.",
+    "description": "Body shown after an import was undone"
+  },
+  "import_undoFailedTitle": {
+    "message": "Could not undo the import",
+    "description": "Error title when undoing an import fails"
+  },
+  "safetySnapshot_title": {
+    "message": "Safety snapshot",
+    "description": "Settings card title"
+  },
+  "safetySnapshot_description": {
+    "message": "Taken automatically before every replace. Only the latest one is kept.",
+    "description": "Settings card description"
+  },
+  "safetySnapshot_fileNote": {
+    "message": "The same copy is saved as a file in your Downloads folder.",
+    "description": "Note that the snapshot is also a file in Downloads"
+  },
+  "safetySnapshot_restore": {
+    "message": "Restore snapshot",
+    "description": "Button that restores the Safety snapshot"
+  },
+  "safetySnapshot_emptyTitle": {
+    "message": "No snapshot yet",
+    "description": "Empty state title when no snapshot exists"
+  },
+  "safetySnapshot_emptyDescription": {
+    "message": "One is taken automatically the first time you replace your bookmarks.",
+    "description": "Empty state body when no snapshot exists"
+  },
+  "safetySnapshot_restoreTitle": {
+    "message": "Restore this snapshot?",
+    "description": "Restore confirm dialog title"
+  },
+  "safetySnapshot_restoreDescription": {
+    "message": "Your Bookmarks Bar and Other Bookmarks will be replaced with the snapshot from $DATE$. A new snapshot of your current bookmarks is saved first.",
+    "description": "Restore confirm dialog body; $DATE$ is when the snapshot was taken",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      }
+    }
+  },
+  "safetySnapshot_restoreConfirm": {
+    "message": "Yes, restore",
+    "description": "Confirm button in the restore dialog"
+  },
+  "safetySnapshot_restored": {
+    "message": "Snapshot restored.",
+    "description": "Shown after the snapshot was restored"
   }
 }

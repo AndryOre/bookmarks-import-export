@@ -231,8 +231,9 @@ the next run that succeeds, on any trigger, clears it.
   "folder" mode for CSV files, never a restore mode.
 - `restore-replace` import mode is destructive: it calls
   `chrome.bookmarks.removeTree` on every existing bookmarks-bar and
-  other-bookmarks child before writing the imported tree in their place. There
-  is no undo.
+  other-bookmarks child before writing the imported tree in their place. A
+  Safety snapshot is taken first (`lib/safety-snapshot.ts`), and the Import
+  result's Undo import and the Settings Safety snapshot card restore it.
 - All persisted settings go through `storage.defineItem` with a
   `local:`-prefixed key (`lib/storage.ts`) — there is no `sync:`-scoped storage
   anywhere in this codebase.
