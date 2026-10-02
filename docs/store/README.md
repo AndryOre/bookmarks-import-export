@@ -19,8 +19,9 @@ Related files:
 
 ## Findings that need action
 
-1. Four permissions are new since v1.3.0 (`storage`, `alarms`, `downloads`,
-   `offscreen`) and each needs a justification on the Privacy tab.
+1. Five permissions are new since v1.3.0 (`storage`, `alarms`, `downloads`,
+   `offscreen`, `unlimitedStorage`) and each needs a justification on the
+   Privacy tab.
 2. The single-purpose text must now cover CSV and scheduled backups, not only
    JSON and HTML.
 3. Every URL moves to `AndryOre/snug`. The live listing still uses the old
@@ -216,12 +217,23 @@ resolves base64 data (`getFaviconBase64`); it is used by
 `storage` (251 chars):
 
 ```text
-Snug stores the user's own settings on their device: theme, export options, the filename template, the last export format, and the backup schedule with its last and next run times. Nothing is synced or sent anywhere, and no bookmark content is stored.
+Snug stores the user's own settings on their device: theme, export options, the filename template, the last export format, and the backup schedule with its last and next run times. Before a "Restore — replace" import it also keeps one safety snapshot of the bookmarks bar and other bookmarks, so the import can be undone. That is bookmark content, stored locally only. Nothing is synced or sent anywhere.
 ```
 
 Code: `lib/storage.ts` defines every setting with `storage.defineItem` under a
 `local:` key, which uses `chrome.storage.local`. The background worker watches
 `autoExportConfigStore` in `entrypoints/background.ts`.
+
+`unlimitedStorage`:
+
+```text
+Before a "Restore — replace" import, Snug saves one safety snapshot of the user's bookmarks bar and other bookmarks in extension storage, so the import can be undone. A large bookmark library can exceed the default storage quota, so this permission lifts it. Only the latest snapshot is kept, it stays on the device, and nothing is sent anywhere.
+```
+
+Code: `lib/safety-snapshot.ts` saves the snapshot with
+`storage.defineItem('local:safetySnapshot')`; `lib/run-import.ts` takes it
+before every Restore-replace. See
+[ADR 0008](../adr/0008-safety-snapshot-in-extension-storage.md).
 
 `alarms` (259 chars):
 

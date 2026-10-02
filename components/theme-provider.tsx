@@ -1,9 +1,13 @@
 import { createContext, useEffect } from 'react'
 
 import { themeStore } from '@/lib/storage'
+import {
+  applyResolvedTheme,
+  readCachedTheme,
+  type Theme,
+  writeCachedTheme,
+} from '@/lib/theme-cache'
 import { useStorageItem } from '@/lib/use-storage-item'
-
-type Theme = 'dark' | 'light' | 'system'
 
 interface ThemeProviderContextValue {
   theme: Theme
@@ -22,26 +26,27 @@ interface ThemeProviderProperties {
 /**
  * Applies the persisted theme preference to the document root and keeps it
  * in sync with the operating system's color scheme when the preference is
- * `"system"`.
+ * `"system"`. The first render starts from the synchronous theme cache so the
+ * saved theme is not replaced by the default while the async read resolves.
  * @param root0 This component's properties.
  * @param root0.children The subtree to provide the theme context to.
  * @returns The theme context provider wrapping `children`.
  */
 export function ThemeProvider({ children }: ThemeProviderProperties) {
-  const [theme, setThemeInStorage] = useStorageItem(themeStore)
+  const [theme, setThemeInStorage] = useStorageItem(
+    themeStore,
+    readCachedTheme(),
+  )
 
   useEffect(() => {
-    const root = document.documentElement
+    writeCachedTheme(theme)
+  }, [theme])
 
-    function applyTheme(resolvedTheme: 'dark' | 'light') {
-      root.classList.remove('light', 'dark')
-      root.classList.add(resolvedTheme)
-    }
-
+  useEffect(() => {
     if (theme === 'system') {
       const mql = globalThis.matchMedia('(prefers-color-scheme: dark)')
 
-      applyTheme(mql.matches ? 'dark' : 'light')
+      applyResolvedTheme(mql.matches ? 'dark' : 'light')
 
       /**
        * Reacts to OS-level color scheme changes while the preference is
@@ -50,13 +55,13 @@ export function ThemeProvider({ children }: ThemeProviderProperties) {
        * @param event The OS color-scheme change event.
        */
       const handleChange = (event: MediaQueryListEvent) => {
-        applyTheme(event.matches ? 'dark' : 'light')
+        applyResolvedTheme(event.matches ? 'dark' : 'light')
       }
 
       mql.addEventListener('change', handleChange)
       return () => mql.removeEventListener('change', handleChange)
     }
-    applyTheme(theme)
+    applyResolvedTheme(theme)
   }, [theme])
 
   const setTheme = async (newTheme: Theme) => {
