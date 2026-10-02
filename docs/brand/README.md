@@ -34,3 +34,12 @@ These are used by the repo directly, so they are not duplicated here:
 
 Store analytics exports contain private metrics and stay out of this public
 repository.
+
+## Regenerating assets
+
+The PNG marks, OG images, store tiles and README cover are derived from the SVGs
+in [`logo/`](logo/). After changing a source SVG, run `bun run brand:export`
+(needs Chromium: `bunx playwright install chromium`). The script embeds the
+fonts from [`brandbook/fonts/`](brandbook/fonts/), so output does not depend on
+fonts installed on the host. Its source is
+[`tools/export.mjs`](tools/export.mjs).

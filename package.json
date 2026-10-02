@@ -35,6 +35,7 @@
     "fix": "bun run format:write && bun run lint:fix && bun run typecheck",
     "ci:local": "bun install --frozen-lockfile && bun run check && bun run lint:docs && bun run test",
     "typecheck": "tsc --noEmit",
+    "brand:export": "bun docs/brand/tools/export.mjs",
     "knip": "bunx knip",
     "lint": "bunx eslint . --max-warnings=0 --cache --cache-strategy content",
     "lint:docs": "bun scripts/lint-docs.ts",
