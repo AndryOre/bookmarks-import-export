@@ -61,7 +61,7 @@ export function ImportRoute() {
 
   const handleFile = async (file: File) => {
     const text = await file.text()
-    const parsed = getImportPreview(text, file.type)
+    const parsed = getImportPreview(text, file.type, file.name)
 
     setChosen({ file, text, preview: parsed })
     setStatus(parsed.format === 'unknown' ? 'error' : 'idle')
@@ -77,7 +77,12 @@ export function ImportRoute() {
     setErrorMessage('')
 
     try {
-      await runImport(chosen.text, chosen.file.type, effectiveMode)
+      await runImport(
+        chosen.text,
+        chosen.file.type,
+        effectiveMode,
+        chosen.file.name,
+      )
       setStatus('success')
     } catch (error) {
       setStatus('error')

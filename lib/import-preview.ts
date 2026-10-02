@@ -26,13 +26,15 @@ function countBookmarks(nodes: ParsedBookmark[]): number {
  * `hasLocationData` is always `false` for the `'csv'` format.
  * @param text The raw file content to preview.
  * @param mimeType The file's MIME type, used to help detect its format.
+ * @param fileName The file's name, a fallback hint when the MIME type fails.
  * @returns A summary of the import this content would produce.
  */
 export function getImportPreview(
   text: string,
   mimeType: string,
+  fileName?: string,
 ): ImportPreview {
-  const format = detectFormat(text, mimeType)
+  const format = detectFormat(text, mimeType, fileName)
 
   try {
     if (format === 'html') {

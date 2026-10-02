@@ -114,11 +114,11 @@ export function ImportSection() {
     let prepared: PendingImport
     try {
       const text = await file.text()
-      const format = detectFormat(text, file.type)
+      const format = detectFormat(text, file.type, file.name)
       if (format === 'unknown') {
         throw new Error(i18n.t('unsupportedFileFormat'))
       }
-      const { hasLocationData } = getImportPreview(text, file.type)
+      const { hasLocationData } = getImportPreview(text, file.type, file.name)
       prepared = { format, text, mode: hasLocationData ? mode : 'folder' }
     } catch (error) {
       toast.add({
