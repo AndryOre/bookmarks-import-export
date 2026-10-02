@@ -16,35 +16,34 @@ CSV. Import back with a preview, then merge, replace, or drop everything into a
 new folder. Set a schedule once and Snug backs your bookmarks up to your
 Downloads folder on its own.
 
-No account, no cloud, no server to trust. See the
+Snug makes no network calls. Every operation reads and writes your browser's own
+bookmarks tree, locally — no account, no cloud, no server to trust. See the
 [Privacy Policy](PRIVACY_POLICY.md) for details.
 
-## Features 🌟
+## Features
 
-- ⬇️⬆️ Export and import bookmarks as HTML, JSON or CSV.
-- 🔍 Export page: selectively export bookmarks and folders.
-- ♻️ Import page: preview, then restore (merge or replace) or create a new
+- Export and import bookmarks as HTML, JSON, or CSV.
+- Export your whole tree or only the folders you pick.
+- Import with a preview first, then merge, replace, or add everything to a new
   folder.
-- 🔁 Scheduled automatic backups straight to your Downloads folder.
-- 🌙 Automatic theme and 🌍 language matching.
+- Scheduled automatic backups to your Downloads folder.
+- Follows your browser's theme and language.
 
-## Install 🔧
+## Install
 
 Install from the Chrome Web Store:
 
 [![Chrome Web Store][Chrome Web Store]][Chrome Web Store-url]
 
-While primarily listed on the Chrome Web Store, the extension is compatible with
-all Chromium-based browsers (Microsoft Edge, Opera, Brave, etc.) and can be
-installed from the same listing on those browsers.
+Snug works on Chrome and any other Chromium-based browser (Edge, Opera, Brave)
+from the same listing.
 
-## Privacy 🔒
+## Privacy
 
-Snug makes no network calls — every operation reads and writes your browser's
-own bookmarks tree, locally. See the [Privacy Policy](PRIVACY_POLICY.md) for
-details.
+The [Privacy Policy](PRIVACY_POLICY.md) covers the permissions Snug requests and
+why.
 
-## Documentation 📖
+## Documentation
 
 - [`docs/usage.md`](docs/usage.md) — exporting, importing, and automatic
   backups.
@@ -67,7 +66,7 @@ details.
 [![Shadcn/UI][Shadcn/UI]][Shadcn/UI-url] [![Lucide][Lucide]][Lucide-url]
 [![TypeScript][TypeScript]][TypeScript-url]
 
-## Local Development 🛠️
+## Local Development
 
 See [`docs/development.md`](docs/development.md) for the rest.
 
@@ -78,14 +77,14 @@ bun install
 bun run dev
 ```
 
-## Contributors 🤝
+## Contributors
 
-**We welcome your contributions!** See [`CONTRIBUTING.md`](CONTRIBUTING.md) for
-setup, branch naming, and commit/PR conventions.
+Contributions are welcome. See [`CONTRIBUTING.md`](CONTRIBUTING.md) for setup,
+branch naming, and commit/PR conventions.
 
 [![Contributors](https://contrib.rocks/image?repo=AndryOre/snug)](https://github.com/AndryOre/snug/graphs/contributors)
 
-## License 📄
+## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file
 for details.
