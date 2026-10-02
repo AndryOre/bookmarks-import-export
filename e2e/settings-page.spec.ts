@@ -32,6 +32,29 @@ test('theme choice applies live, persists across reloads and reaches the popup',
   await expect(html).toHaveClass(/light/)
 })
 
+test('saved dark theme is on the root at first paint, before React mounts', async ({
+  openExtensionPage,
+}) => {
+  const page = await openExtensionPage('app.html#/settings')
+  await page
+    .getByRole('button', { name: en.settingsPage_themeDark.message })
+    .click()
+  await expect(page.locator('html')).toHaveClass(/dark/)
+  await page.emulateMedia({ colorScheme: 'light' })
+
+  await page.addInitScript(() => {
+    const root = document.documentElement
+    new MutationObserver(() => {
+      root.dataset.themeLog = `${root.dataset.themeLog ?? ''}|${root.className}`
+    }).observe(root, { attributes: true, attributeFilter: ['class'] })
+  })
+  await page.reload()
+  await expect(page.locator('html')).toHaveClass(/dark/)
+
+  const classLog = await page.locator('html').getAttribute('data-theme-log')
+  expect(classLog ?? '').not.toContain('light')
+})
+
 test('display switches persist across reloads', async ({
   openExtensionPage,
 }) => {
