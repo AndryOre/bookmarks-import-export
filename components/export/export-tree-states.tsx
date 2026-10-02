@@ -2,7 +2,7 @@ import { i18n } from '#i18n'
 import { Link } from '@tanstack/react-router'
 import { BookmarkXIcon, SearchXIcon, TriangleAlertIcon } from 'lucide-react'
 
-import { Button } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
 import {
   Empty,
   EmptyContent,
@@ -132,14 +132,12 @@ export function ExportTreeNoBookmarks() {
         </EmptyDescription>
       </EmptyHeader>
       <EmptyContent>
-        <Button
-          variant="outline"
-          size="sm"
-          nativeButton={false}
-          render={<Link to={APP_ROUTES.import} />}
+        <Link
+          to={APP_ROUTES.import}
+          className={buttonVariants({ variant: 'outline', size: 'sm' })}
         >
           {i18n.t('exportPage_goToImport')}
-        </Button>
+        </Link>
       </EmptyContent>
     </Empty>
   )

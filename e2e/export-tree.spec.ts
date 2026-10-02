@@ -28,6 +28,7 @@ function rowOf(page: Page, name: string) {
 }
 
 async function openCollapsedTree(page: Page) {
+  await expect(treeOf(page)).toBeVisible()
   await page
     .getByRole('button', { name: en.exportPage_collapseAll.message })
     .click()
@@ -104,7 +105,7 @@ test('arrow keys, Home and End navigate; Right and Left expand, enter and collap
 
   await rows.first().focus()
   await page.keyboard.press('End')
-  const otherRoot = rows.last()
+  const otherRoot = rows.nth(1)
   await expect(otherRoot).toBeFocused()
   await page.keyboard.press('Home')
   await expect(rows.first()).toBeFocused()
@@ -165,7 +166,9 @@ test('Space toggles selection, including a folder and its mixed state', async ({
   await expect(work).toHaveAttribute('aria-selected', 'true')
   await page.keyboard.press('Space')
   await expect(work).toHaveAttribute('aria-selected', 'false')
-  await expect(page.getByText('0 of 4 selected')).toBeVisible()
+  await expect(
+    page.getByText(en.exportPage_nothingSelected.message),
+  ).toBeVisible()
 })
 
 test('shows an empty state with a link to Import when there are no bookmarks', async ({
