@@ -4,6 +4,16 @@ Terms used consistently across this project's code, docs, and UI. This is a
 glossary of concepts, not an implementation reference — it defines what things
 mean, not how they're built.
 
+**Snug** The product's name, shown as "Snug" in every locale and never
+translated. The repository slug, package name and Chrome Web Store extension ID
+keep the legacy `bookmarks-import-export` identity. _Avoid_: Bookmark
+Import/Export, Importar/Exportar Marcadores, BIE.
+
+**Wordmark** The product name rendered as brand text next to the mark: "Sn" in
+the amber brand text gradient, "ug" in the normal text color. Used only on the
+App sidebar header and the Welcome hero, never on controls. _Avoid_: logo text,
+title, brand text.
+
 **App** The extension's single full-page UI (`app.html`, also the options page),
 hash-routed with a sidebar: Export, Import, Auto-export, Settings, What's new
 and Welcome. The popup is separate and compact; anything that needs more room
