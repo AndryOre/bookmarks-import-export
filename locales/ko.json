@@ -1,0 +1,906 @@
+{
+  "extensionName": {
+    "message": "Snug",
+    "description": "Name of the extension."
+  },
+  "extensionDescription": {
+    "message": "북마크를 HTML, JSON, CSV로 내보내고 가져오며 자동 백업까지. 모든 작업은 기기 안에서만 처리되고 계정도 클라우드도 필요 없어요.",
+    "description": "Description of the extension"
+  },
+  "welcomeSubtitle": {
+    "message": "북마크를 내보내고, 가져오고, 백업하세요. 모든 작업은 기기 안에서만 이루어져요.",
+    "description": "Welcome page subtitle"
+  },
+  "settings": {
+    "message": "설정",
+    "description": "Settings"
+  },
+  "exportFormat": {
+    "message": "내보내기 형식",
+    "description": "Placeholder text for the export format selector"
+  },
+  "exportBookmarks": {
+    "message": "내보내기",
+    "description": "Export Bookmarks tab label in the popup"
+  },
+  "refresh": {
+    "message": "새로고침",
+    "description": "Refresh"
+  },
+  "selectAll": {
+    "message": "모두 선택",
+    "description": "Select All"
+  },
+  "deselectAll": {
+    "message": "모두 선택 해제",
+    "description": "Deselect All"
+  },
+  "selected": {
+    "message": "선택됨",
+    "description": "Selected"
+  },
+  "searchBookmarks": {
+    "message": "북마크 검색",
+    "description": "Search bookmarks"
+  },
+  "display": {
+    "message": "표시",
+    "description": "Display"
+  },
+  "export": {
+    "message": "내보내기",
+    "description": "Export"
+  },
+  "showBookmarkIcon": {
+    "message": "북마크 아이콘 표시",
+    "description": "Show bookmark icon"
+  },
+  "showBookmarkIconDescription": {
+    "message": "북마크 옆에 아이콘을 표시해요",
+    "description": "Show bookmark icon description"
+  },
+  "autoExpandFolders": {
+    "message": "폴더 자동 펼치기",
+    "description": "Auto expand folders"
+  },
+  "autoExpandFoldersDescription": {
+    "message": "북마크 트리의 폴더를 자동으로 펼쳐요",
+    "description": "Auto expand folders description"
+  },
+  "includeIconData": {
+    "message": "아이콘 데이터 포함",
+    "description": "Include icon data"
+  },
+  "includeDateAdded": {
+    "message": "생성 날짜 포함",
+    "description": "Include creation dates"
+  },
+  "includeDateLastUsed": {
+    "message": "마지막 사용 날짜 포함",
+    "description": "Include last used dates"
+  },
+  "includeDateGroupModified": {
+    "message": "폴더 수정 날짜 포함",
+    "description": "Include folder modification dates"
+  },
+  "hideOtherBookmarks": {
+    "message": "'기타 북마크' 폴더 숨기기",
+    "description": "Hide 'Other bookmarks' folder"
+  },
+  "hideParentFolder": {
+    "message": "상위 폴더 숨기기",
+    "description": "Hide parent folder"
+  },
+  "dropFileHere": {
+    "message": "북마크 파일을 여기에 놓으세요",
+    "description": "File drop zone prompt"
+  },
+  "orClickToSelect": {
+    "message": "또는 클릭해서 선택",
+    "description": "Secondary file drop zone prompt"
+  },
+  "supportedFormats": {
+    "message": "HTML, JSON, CSV 지원",
+    "description": "Supported import formats"
+  },
+  "changeFile": {
+    "message": "변경",
+    "description": "Button to change selected file"
+  },
+  "importMode": {
+    "message": "가져오기 방식",
+    "description": "Import mode section label"
+  },
+  "defaultImportMode": {
+    "message": "기본 가져오기 방식",
+    "description": "Label for the quick-import default mode select"
+  },
+  "importModeFolder": {
+    "message": "폴더 만들기",
+    "description": "Import mode: create folder"
+  },
+  "importModeFolderDescription": {
+    "message": "모든 북마크를 새 '가져온 북마크' 폴더에 추가해요",
+    "description": "Import mode: create folder description"
+  },
+  "importModeRestoreMerge": {
+    "message": "복원 — 병합",
+    "description": "Import mode: restore and merge"
+  },
+  "importModeRestoreMergeDescription": {
+    "message": "기존 북마크와 함께 원래 위치에 북마크를 배치해요",
+    "description": "Import mode: restore and merge description"
+  },
+  "importModeRestoreReplace": {
+    "message": "복원 — 교체",
+    "description": "Import mode: restore and replace"
+  },
+  "importModeRestoreReplaceDescription": {
+    "message": "기존 북마크를 먼저 삭제한 뒤 원래 위치로 복원해요",
+    "description": "Import mode: restore and replace description"
+  },
+  "importModeRestoreReplaceWarning": {
+    "message": "북마크바와 기타 북마크에 있는 현재 북마크가 모두 영구적으로 삭제돼요",
+    "description": "Warning shown for restore-replace mode"
+  },
+  "importPreview": {
+    "message": "미리보기",
+    "description": "Import preview section label"
+  },
+  "importPreviewCount": {
+    "message": "북마크 $COUNT$개",
+    "description": "Bookmark count in preview",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "replaceConfirmTitle": {
+    "message": "기존 북마크를 교체할까요?",
+    "description": "Title of the replace confirmation dialog"
+  },
+  "replaceConfirmDescription": {
+    "message": "가져오기 전에 북마크바와 기타 북마크에 있는 모든 북마크가 영구적으로 삭제돼요. 이 작업은 되돌릴 수 없어요.",
+    "description": "Body of the replace confirmation dialog"
+  },
+  "replaceConfirmButton": {
+    "message": "예, 교체합니다",
+    "description": "Confirm button in the replace dialog"
+  },
+  "cancel": {
+    "message": "취소",
+    "description": "Cancel button"
+  },
+  "unsupportedFileFormat": {
+    "message": "지원하지 않는 파일 형식이에요",
+    "description": "Unsupported file format"
+  },
+  "bookmarksImportedSuccessfully": {
+    "message": "북마크를 가져왔어요!",
+    "description": "Bookmarks imported successfully"
+  },
+  "import": {
+    "message": "가져오기",
+    "description": "Import"
+  },
+  "changelog_1_5_0_date": {
+    "message": "2025년 4월 29일",
+    "description": "Changelog 1.5.0 date"
+  },
+  "changelog_1_5_0_1": {
+    "message": "고급 가져오기를 추가했어요. 병합 또는 교체 옵션으로 북마크를 원래 위치(북마크바와 기타 북마크)에 복원할 수 있어요."
+  },
+  "changelog_1_5_0_1_link": {
+    "message": "고급 가져오기 사용해 보기"
+  },
+  "changelog_1_4_0_date": {
+    "message": "2025년 4월 29일",
+    "description": "Changelog 1.4.0 date"
+  },
+  "changelog_1_4_0_1": {
+    "message": "내보내기 파일 이름 템플릿을 직접 설정할 수 있어요. %yyyy, %mm, %dd 같은 날짜/시간 자리표시자를 쓰면 타임스탬프가 포함된 고유한 파일 이름이 자동으로 만들어져요."
+  },
+  "changelog_1_3_0_date": {
+    "message": "2025년 2월 16일",
+    "description": "Changelog 1.3.0 date"
+  },
+  "changelog_1_3_0_1": {
+    "message": "시스템 테마 설정에 자동으로 맞춰지는 다크 모드를 추가했어요."
+  },
+  "changelog_1_2_0_date": {
+    "message": "2025년 2월 14일",
+    "description": "Changelog 1.2.0 date"
+  },
+  "changelog_1_2_0_1": {
+    "message": "이제 브라우저 언어에 자동으로 맞춰져요! 영어와 스페인어를 지원해요."
+  },
+  "changelog_1_1_0_date": {
+    "message": "2025년 2월 13일",
+    "description": "Changelog 1.1.0 date"
+  },
+  "changelog_1_1_0_1": {
+    "message": "가져온 북마크는 기존 북마크와 섞이지 않도록 별도의 폴더에 저장돼요"
+  },
+  "changelog_1_1_0_2": {
+    "message": "내보내기에 포함할 날짜를 더 세밀하게 제어할 수 있어요"
+  },
+  "changelog_1_1_0_2_link": {
+    "message": "새 내보내기 옵션 사용해 보기"
+  },
+  "changelog_1_0_0_date": {
+    "message": "2024년 8월 5일",
+    "description": "Changelog 1.0.0 date"
+  },
+  "changelog_1_0_0_1": {
+    "message": "북마크를 더 세밀하게 다룰 수 있는 고급 내보내기 기능을 추가했어요."
+  },
+  "changelog_1_0_0_1_link": {
+    "message": "고급 내보내기 사용해 보기"
+  },
+  "changelog_1_0_0_2": {
+    "message": "새로운 기능을 알려 드리는 시작 페이지와 업데이트 페이지를 추가했어요."
+  },
+  "changelog_1_0_0_3": {
+    "message": "전반적인 성능을 개선해 더 부드럽게 사용할 수 있어요."
+  },
+  "changelog_0_1_1_date": {
+    "message": "2024년 8월 4일",
+    "description": "Changelog 0.1.1 date"
+  },
+  "changelog_0_1_1_1": {
+    "message": "영어가 아닌 브라우저 언어를 쓰는 사용자에게 영향을 주던 심각한 버그를 수정했어요."
+  },
+  "changelog_0_1_1_2": {
+    "message": "가져오기와 내보내기 기능의 안정성을 개선했어요."
+  },
+  "changelog_0_1_1_3": {
+    "message": "브라우저 도구 모음에 확장 프로그램 아이콘이 표시되지 않던 문제를 수정했어요."
+  },
+  "changelog_0_1_1_4": {
+    "message": "일부 브라우저에서 확장 프로그램이 작동하지 않던 문제를 수정했어요."
+  },
+  "changelog_0_1_0_date": {
+    "message": "2024년 8월 3일",
+    "description": "Changelog 0.1.0 date"
+  },
+  "changelog_0_1_0_1": {
+    "message": "북마크 가져오기/내보내기 확장 프로그램의 첫 출시예요."
+  },
+  "changelog_0_1_0_2": {
+    "message": "HTML 및 JSON 파일을 위한 간단한 가져오기 기능이에요."
+  },
+  "changelog_0_1_0_3": {
+    "message": "북마크를 HTML 및 JSON 형식으로 내보내는 기본 기능이에요."
+  },
+  "extensionInstalled": {
+    "message": "Snug가 설치되었어요",
+    "description": "Extension installed"
+  },
+  "extensionUpdated": {
+    "message": "Snug가 버전 $VERSION$(으)로 업데이트되었어요",
+    "description": "Extension updated",
+    "placeholders": {
+      "version": {
+        "content": "$1"
+      }
+    }
+  },
+  "exportFilenameTemplate": {
+    "message": "파일 이름 템플릿",
+    "description": "Label for the export filename template input"
+  },
+  "exportFilenameTemplatePreview": {
+    "message": "미리보기:",
+    "description": "Label shown before the live filename preview"
+  },
+  "faviconError": {
+    "message": "파비콘을 가져오는 중 오류가 발생했어요",
+    "description": "Error fetching favicon"
+  },
+  "importFromHTMLLoadError": {
+    "message": "HTML을 분석하지 못했어요: $ERROR$",
+    "description": "Failed to parse HTML",
+    "placeholders": {
+      "error": {
+        "content": "$1"
+      }
+    }
+  },
+  "importFromHTMLCreateError": {
+    "message": "HTML에서 북마크를 만들지 못했어요: $ERROR$",
+    "description": "Failed to create bookmarks from HTML",
+    "placeholders": {
+      "error": {
+        "content": "$1"
+      }
+    }
+  },
+  "importFromHTMLProcessError": {
+    "message": "북마크바 또는 기타 북마크 폴더를 찾을 수 없어요",
+    "description": "Could not find Bookmarks bar or Other bookmarks folder"
+  },
+  "bookmarksBar": {
+    "message": "북마크바",
+    "description": "Bookmarks bar"
+  },
+  "importedBookmarks": {
+    "message": "가져온 북마크",
+    "description": "Imported bookmarks"
+  },
+  "otherBookmarks": {
+    "message": "기타 북마크",
+    "description": "Other bookmarks"
+  },
+  "mobileBookmarks": {
+    "message": "모바일 북마크",
+    "description": "Mobile bookmarks"
+  },
+  "importFromJSONImportError": {
+    "message": "가져오기에 실패했어요: $ERROR$",
+    "description": "Import failed",
+    "placeholders": {
+      "error": {
+        "content": "$1"
+      }
+    }
+  },
+  "importFromJSONProcessError": {
+    "message": "북마크바 또는 기타 북마크 폴더를 찾을 수 없어요",
+    "description": "Error when JSON import cannot find required folders"
+  },
+  "importFromCSVImportError": {
+    "message": "CSV 파일을 가져오지 못했어요",
+    "description": "Error when CSV import fails"
+  },
+  "autoExport": {
+    "message": "자동 내보내기",
+    "description": "Auto-export settings tab label"
+  },
+  "autoExportNeverRun": {
+    "message": "아직 실행된 적 없음",
+    "description": "Status card value when auto-export has never run"
+  },
+  "exportNow": {
+    "message": "지금 내보내기",
+    "description": "Button label to run an on-demand export immediately"
+  },
+  "exportNowSuccess": {
+    "message": "내보내기를 완료했어요",
+    "description": "Inline message shown after Export now succeeds"
+  },
+  "exportNowFailed": {
+    "message": "내보내기에 실패했어요",
+    "description": "Inline message shown after Export now fails"
+  },
+  "enableAutoExport": {
+    "message": "자동 내보내기 사용",
+    "description": "Enable auto export toggle label"
+  },
+  "enableAutoExportDescription": {
+    "message": "북마크를 HTML, JSON, CSV 형식으로 자동으로 내보내요.",
+    "description": "Enable auto export toggle description"
+  },
+  "preferredExportTime": {
+    "message": "선호하는 내보내기 시간",
+    "description": "Preferred export time section title"
+  },
+  "timeSelectionUnavailable": {
+    "message": "시간 선택은 간격이 24시간 이상일 때만 사용할 수 있어요",
+    "description": "Note shown when 12h interval is selected"
+  },
+  "hoursLabel": {
+    "message": "시",
+    "description": "Hours input label in time picker"
+  },
+  "minutesLabel": {
+    "message": "분",
+    "description": "Minutes input label in time picker"
+  },
+  "periodLabel": {
+    "message": "오전/오후",
+    "description": "AM/PM selector label in time picker"
+  },
+  "exportPath": {
+    "message": "내보내기 경로",
+    "description": "Export path section title"
+  },
+  "autoExportFormats": {
+    "message": "내보내기 형식",
+    "description": "Export formats section title"
+  },
+  "changelog_2_0_0_date": {
+    "message": "2026년 10월 2일",
+    "description": "Changelog 2.0.0 date"
+  },
+  "changelog_2_0_0_1": {
+    "message": "이 확장 프로그램의 새 이름은 Snug예요. 확장 프로그램도, 모든 것을 기기 안에서만 처리한다는 약속도 그대로예요. 북마크를 내보내고, 가져오고, 예약 백업까지 하면서 어디로도 전송하지 않아요. 데이터와 설정은 그대로이고, 이름과 아이콘만 바뀌어요."
+  },
+  "changelog_2_0_0_2": {
+    "message": "이제 앱은 사이드바가 있는 하나의 페이지예요(내보내기, 가져오기, 자동 내보내기, 설정, 새로운 기능). 간결한 팝업과 새 Snug 아이콘, 새 색상도 함께 만나보세요."
+  },
+  "changelog_2_0_0_2_link": {
+    "message": "앱 열기"
+  },
+  "changelog_1_7_0_date": {
+    "message": "2026년 10월 1일",
+    "description": "Changelog 1.7.0 date"
+  },
+  "changelog_1_7_0_1": {
+    "message": "자동 내보내기 설정에 상태 카드와 지금 내보내기 버튼을 추가했어요. 팝업에는 자동 내보내기가 켜짐, 꺼짐, 실패 중 어떤 상태인지 보여 주는 상태 줄도 생겼어요."
+  },
+  "changelog_1_7_0_1_link": {
+    "message": "자동 내보내기 설정 열기"
+  },
+  "changelog_1_7_0_2": {
+    "message": "CSV, HTML, JSON 파일을 가져올 때 허용되지 않는 URL 스키마(예: javascript:)를 거부하도록 보안을 강화했어요."
+  },
+  "changelog_1_6_0_date": {
+    "message": "2026년 4월 29일",
+    "description": "Changelog 1.6.0 date"
+  },
+  "changelog_1_6_0_1": {
+    "message": "자동 내보내기를 추가했어요. 원하는 간격(12시간마다, 매일, 3일 또는 7일마다)으로 북마크를 선호하는 다운로드 폴더에 자동으로 저장해요."
+  },
+  "changelog_1_6_0_1_link": {
+    "message": "자동 내보내기 설정 열기"
+  },
+  "shell_navLabel": {
+    "message": "기본 탐색",
+    "description": "Accessible label of the App sidebar navigation"
+  },
+  "shell_navExport": {
+    "message": "내보내기",
+    "description": "App sidebar nav item and page title"
+  },
+  "shell_navImport": {
+    "message": "가져오기",
+    "description": "App sidebar nav item and page title"
+  },
+  "shell_navAutoExport": {
+    "message": "자동 내보내기",
+    "description": "App sidebar nav item and page title"
+  },
+  "shell_navSettings": {
+    "message": "설정",
+    "description": "App sidebar nav item and page title"
+  },
+  "shell_navWhatsNew": {
+    "message": "새로운 기능",
+    "description": "App sidebar nav item and page title"
+  },
+  "shell_titleWelcome": {
+    "message": "환영합니다",
+    "description": "App page title for the first-run welcome screen"
+  },
+  "shell_version": {
+    "message": "버전 $VERSION$",
+    "description": "Installed version shown under the product name in the App sidebar",
+    "placeholders": {
+      "version": {
+        "content": "$1"
+      }
+    }
+  },
+  "shell_autoExportOn": {
+    "message": "켜짐",
+    "description": "Accessible status of the Auto-export nav item when scheduled backups are enabled"
+  },
+  "shell_autoExportFailed": {
+    "message": "마지막 실행 실패",
+    "description": "Accessible status of the Auto-export nav item when the last run failed"
+  },
+  "shell_whatsNewUnseen": {
+    "message": "새 소식",
+    "description": "Accessible label of the unseen-update dot on the What's new nav item"
+  },
+  "shell_placeholder": {
+    "message": "이 화면은 곧 제공될 예정이에요.",
+    "description": "Placeholder text shown on App screens that are not built yet"
+  },
+  "shell_toggleSidebar": {
+    "message": "사이드바 전환",
+    "description": "Accessible label of the sidebar trigger in the App header"
+  },
+  "exportOptions_title": {
+    "message": "내보내기 옵션",
+    "description": "Export options panel: Export options"
+  },
+  "exportOptions_includeIcons": {
+    "message": "파비콘 포함",
+    "description": "Export options panel: Include favicons"
+  },
+  "exportOptions_dateAdded": {
+    "message": "추가한 날짜",
+    "description": "Export options panel: Date added"
+  },
+  "exportOptions_dateLastUsed": {
+    "message": "마지막 사용 날짜",
+    "description": "Export options panel: Date last used"
+  },
+  "exportOptions_folderDates": {
+    "message": "폴더 수정 날짜",
+    "description": "Export options panel: Folder modified dates"
+  },
+  "exportOptions_hideOther": {
+    "message": "기타 북마크 숨기기",
+    "description": "Export options panel: Hide other bookmarks"
+  },
+  "exportOptions_hideParent": {
+    "message": "상위 폴더 숨기기",
+    "description": "Export options panel: Hide parent folder"
+  },
+  "import_stepFile": {
+    "message": "파일",
+    "description": "Heading of step 1 of the import flow"
+  },
+  "import_stepDone": {
+    "message": "완료됨",
+    "description": "Screen reader text for a completed step"
+  },
+  "import_fileInputLabel": {
+    "message": "북마크 파일",
+    "description": "Accessible label of the file input"
+  },
+  "import_changeFile": {
+    "message": "파일 변경",
+    "description": "Button to pick a different file"
+  },
+  "import_restoreUnavailable": {
+    "message": "이 파일에는 위치 정보가 없어서 원래 폴더로 복원할 수 없어요.",
+    "description": "Reason shown on disabled restore mode cards"
+  },
+  "import_submit": {
+    "message": "북마크 $COUNT$개 가져오기",
+    "description": "Primary import button",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "import_importing": {
+    "message": "가져오는 중…",
+    "description": "Primary button label while importing"
+  },
+  "import_replaceTitle": {
+    "message": "기존 북마크를 교체할까요?",
+    "description": "Title of the replace confirmation dialog"
+  },
+  "import_replaceConfirm": {
+    "message": "교체하고 가져오기",
+    "description": "Destructive confirm button in the replace dialog"
+  },
+  "import_errorTitle": {
+    "message": "가져오기에 실패했어요",
+    "description": "Title of the import error alert"
+  },
+  "import_another": {
+    "message": "다른 파일 가져오기",
+    "description": "Button shown after a successful import"
+  },
+  "import_openManager": {
+    "message": "북마크 관리자 열기",
+    "description": "Button that opens chrome://bookmarks"
+  },
+  "autoExportPage_saved": {
+    "message": "저장했어요",
+    "description": "Toast shown after an Auto-export setting is saved"
+  },
+  "autoExportPage_succeeded": {
+    "message": "성공",
+    "description": "Last-run badge when the last auto-export succeeded"
+  },
+  "autoExportPage_failed": {
+    "message": "실패",
+    "description": "Last-run badge when the last auto-export failed"
+  },
+  "autoExportPage_statusTitle": {
+    "message": "상태",
+    "description": "Title of the Auto-export status card"
+  },
+  "autoExportPage_lastRun": {
+    "message": "마지막 실행",
+    "description": "Status card label for the last run"
+  },
+  "autoExportPage_nextRun": {
+    "message": "다음 실행",
+    "description": "Status card label for the next run"
+  },
+  "autoExportPage_off": {
+    "message": "자동 내보내기가 꺼져 있어요",
+    "description": "Status card next-run value when auto-export is off"
+  },
+  "autoExportPage_failureTitle": {
+    "message": "마지막 자동 내보내기에 실패했어요",
+    "description": "Title of the alert shown when the last run failed"
+  },
+  "autoExportPage_settingsTitle": {
+    "message": "설정",
+    "description": "Title of the Auto-export settings card"
+  },
+  "autoExportPage_settingsDescription": {
+    "message": "변경 사항은 자동으로 저장돼요.",
+    "description": "Description of the Auto-export settings card"
+  },
+  "autoExportPage_frequency": {
+    "message": "빈도",
+    "description": "Label of the frequency toggle group"
+  },
+  "autoExportPage_interval12h": {
+    "message": "12시간마다",
+    "description": "Frequency option: every 12 hours"
+  },
+  "autoExportPage_interval1d": {
+    "message": "매일",
+    "description": "Frequency option: daily"
+  },
+  "autoExportPage_interval3d": {
+    "message": "3일마다",
+    "description": "Frequency option: every 3 days"
+  },
+  "autoExportPage_interval7d": {
+    "message": "매주",
+    "description": "Frequency option: weekly"
+  },
+  "autoExportPage_folderDescription": {
+    "message": "백업을 저장할 다운로드 폴더 안의 폴더예요.",
+    "description": "Help text under the folder field"
+  },
+  "autoExportPage_formatsDescription": {
+    "message": "형식을 하나 이상 선택해야 해요.",
+    "description": "Help text under the formats toggle group"
+  },
+  "popup_exportAll": {
+    "message": "모두 내보내기",
+    "description": "Popup button that exports every bookmark in the remembered format"
+  },
+  "popup_exportFormatLabel": {
+    "message": "내보내기 형식",
+    "description": "Accessible label of the popup format toggle group"
+  },
+  "popup_exportSuccessTitle": {
+    "message": "북마크 $COUNT$개를 내보냈어요",
+    "description": "Popup toast title after a successful export",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "popup_exportFailedTitle": {
+    "message": "내보내기에 실패했어요",
+    "description": "Popup toast title when an export fails"
+  },
+  "popup_chooseFile": {
+    "message": "파일 선택…",
+    "description": "Popup button that opens the file picker to import bookmarks"
+  },
+  "popup_importing": {
+    "message": "가져오는 중…",
+    "description": "Popup import button label while an import is running"
+  },
+  "popup_importSuccessTitle": {
+    "message": "북마크를 가져왔어요",
+    "description": "Popup toast title after a successful import"
+  },
+  "popup_importFailedTitle": {
+    "message": "가져오기에 실패했어요",
+    "description": "Popup toast title when an import fails"
+  },
+  "popup_replaceAlertTitle": {
+    "message": "기존 북마크가 교체돼요",
+    "description": "Title of the popup alert shown when the default mode is Restore - replace"
+  },
+  "popup_statusNextRunTitle": {
+    "message": "다음 자동 내보내기",
+    "description": "Popup status item title when auto-export is scheduled"
+  },
+  "popup_statusOffTitle": {
+    "message": "예약 백업 설정하기",
+    "description": "Popup status item title when auto-export is off"
+  },
+  "popup_statusOffDescription": {
+    "message": "자동 내보내기가 꺼져 있어요",
+    "description": "Popup status item description when auto-export is off"
+  },
+  "popup_statusFailedTitle": {
+    "message": "마지막 자동 내보내기 실패",
+    "description": "Popup status item title when the last auto-export failed"
+  },
+  "popup_statusFailedDescription": {
+    "message": "자동 내보내기를 열어 확인하세요",
+    "description": "Popup status item description when the last auto-export failed"
+  },
+  "popup_openApp": {
+    "message": "앱 열기",
+    "description": "Popup footer button that opens the full-page app"
+  },
+  "popup_settings": {
+    "message": "설정",
+    "description": "Accessible label of the popup footer settings icon button"
+  },
+  "settingsPage_appearanceTitle": {
+    "message": "모양",
+    "description": "Settings page: appearanceTitle"
+  },
+  "settingsPage_theme": {
+    "message": "테마",
+    "description": "Settings page: theme"
+  },
+  "settingsPage_themeDescription": {
+    "message": "확장 프로그램의 모양을 선택하세요. 시스템은 운영체제 설정을 따라요.",
+    "description": "Settings page: themeDescription"
+  },
+  "settingsPage_themeSystem": {
+    "message": "시스템",
+    "description": "Settings page: themeSystem"
+  },
+  "settingsPage_themeLight": {
+    "message": "라이트",
+    "description": "Settings page: themeLight"
+  },
+  "settingsPage_themeDark": {
+    "message": "다크",
+    "description": "Settings page: themeDark"
+  },
+  "settingsPage_treeTitle": {
+    "message": "북마크 트리",
+    "description": "Settings page: treeTitle"
+  },
+  "settingsPage_importTitle": {
+    "message": "가져오기",
+    "description": "Settings page: importTitle"
+  },
+  "settingsPage_importDescription": {
+    "message": "북마크 가져오기의 기본값이에요.",
+    "description": "Settings page: importDescription"
+  },
+  "settingsPage_importModeHelp": {
+    "message": "팝업에서 사용되며 가져오기 페이지에서 미리 선택돼요.",
+    "description": "Settings page: importModeHelp"
+  },
+  "welcome_exportTitle": {
+    "message": "첫 백업 만들기",
+    "description": "Welcome page quick-start item title"
+  },
+  "welcome_exportDescription": {
+    "message": "10초면 북마크의 안전한 사본이 생겨요.",
+    "description": "Welcome page quick-start item description"
+  },
+  "welcome_exportAction": {
+    "message": "내보내기",
+    "description": "Welcome page quick-start item button"
+  },
+  "welcome_autoExportTitle": {
+    "message": "자동 내보내기 설정",
+    "description": "Welcome page quick-start item title"
+  },
+  "welcome_autoExportDescription": {
+    "message": "클릭 없이 일정에 맞춰 백업해요.",
+    "description": "Welcome page quick-start item description"
+  },
+  "welcome_autoExportAction": {
+    "message": "자동 내보내기",
+    "description": "Welcome page quick-start item button"
+  },
+  "welcome_importTitle": {
+    "message": "북마크 가져오기",
+    "description": "Welcome page quick-start item title"
+  },
+  "welcome_importDescription": {
+    "message": "다른 브라우저나 백업에서 북마크를 가져와요.",
+    "description": "Welcome page quick-start item description"
+  },
+  "welcome_importAction": {
+    "message": "가져오기",
+    "description": "Welcome page quick-start item button"
+  },
+  "whatsNew_current": {
+    "message": "현재",
+    "description": "What's new screen string"
+  },
+  "whatsNew_reviewTitle": {
+    "message": "확장 프로그램이 마음에 드시나요?",
+    "description": "What's new screen string"
+  },
+  "whatsNew_reviewDescription": {
+    "message": "간단한 평점이 다른 사람들이 찾는 데 도움이 돼요.",
+    "description": "What's new screen string"
+  },
+  "whatsNew_reviewAction": {
+    "message": "리뷰 남기기",
+    "description": "What's new screen string"
+  },
+  "exportPage_title": {
+    "message": "북마크 내보내기",
+    "description": "Export page heading"
+  },
+  "exportPage_description": {
+    "message": "포함할 항목을 고른 뒤 원하는 형식으로 다운로드하세요.",
+    "description": "Export page one-line description"
+  },
+  "exportPage_expandAll": {
+    "message": "모두 펼치기",
+    "description": "Export page toolbar button that expands every folder"
+  },
+  "exportPage_collapseAll": {
+    "message": "모두 접기",
+    "description": "Export page toolbar button that collapses every folder"
+  },
+  "exportPage_selectAllLabel": {
+    "message": "모든 북마크 선택",
+    "description": "Accessible label of the master checkbox on the Export page"
+  },
+  "exportPage_loading": {
+    "message": "북마크 불러오는 중",
+    "description": "Accessible label of the loading placeholder on the Export page"
+  },
+  "exportPage_selectionCount": {
+    "message": "$TOTAL$개 중 $SELECTED$개 선택됨",
+    "description": "Export page sticky bar selection count",
+    "placeholders": {
+      "selected": {
+        "content": "$1"
+      },
+      "total": {
+        "content": "$2"
+      }
+    }
+  },
+  "exportPage_nothingSelected": {
+    "message": "선택한 항목 없음",
+    "description": "Export page sticky bar text when no bookmark is selected"
+  },
+  "exportPage_formatLabel": {
+    "message": "내보내기 형식",
+    "description": "Accessible label of the Export page format toggle group"
+  },
+  "exportPage_exportButton": {
+    "message": "북마크 $COUNT$개 내보내기",
+    "description": "Export page primary button",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "exportPage_exporting": {
+    "message": "내보내는 중…",
+    "description": "Export page primary button label while exporting"
+  },
+  "exportPage_successTitle": {
+    "message": "북마크 $COUNT$개를 내보냈어요",
+    "description": "Export page toast title after a successful export",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "exportPage_failedTitle": {
+    "message": "내보내기에 실패했어요",
+    "description": "Export page toast title when an export fails"
+  },
+  "exportPage_noResultsTitle": {
+    "message": "\"$TERM$\"와(과) 일치하는 북마크가 없어요",
+    "description": "Export page empty state title when a search matches nothing",
+    "placeholders": {
+      "term": {
+        "content": "$1"
+      }
+    }
+  },
+  "exportPage_noResultsDescription": {
+    "message": "다른 검색어를 입력하거나 검색을 지워 모든 북마크를 확인해 보세요.",
+    "description": "Export page empty state description"
+  },
+  "exportPage_clearSearch": {
+    "message": "검색 지우기",
+    "description": "Export page empty state button that clears the search"
+  },
+  "welcome_heroTitle": {
+    "message": "환영합니다",
+    "description": "Lead-in of the welcome page hero title; the Snug wordmark is rendered right after it"
+  }
+}
