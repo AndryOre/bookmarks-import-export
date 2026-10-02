@@ -96,6 +96,7 @@ test('shows status dots for auto-export and unseen version', async ({
   seedStorage,
 }) => {
   await seedStorage({
+    lastSeenVersion: '0.0.0',
     autoExportConfig: {
       enabled: true,
       interval: '1d',

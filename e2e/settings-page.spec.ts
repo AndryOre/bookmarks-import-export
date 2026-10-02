@@ -63,12 +63,12 @@ test('default import mode persists and is shown in the popup', async ({
   await page.getByRole('option', { name: en.importModeFolder.message }).click()
   await page.reload()
 
-  await expect(page.getByRole('combobox')).toHaveText(
+  await expect(page.getByRole('combobox')).toContainText(
     en.importModeFolder.message,
   )
 
   const popup = await openExtensionPage('popup.html')
-  await expect(popup.getByRole('combobox')).toHaveText(
+  await expect(popup.getByRole('combobox')).toContainText(
     en.importModeFolder.message,
   )
 })

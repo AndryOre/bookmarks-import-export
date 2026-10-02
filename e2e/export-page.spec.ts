@@ -173,7 +173,7 @@ test('the master checkbox selects everything, and collapse all hides nested rows
 
   await page
     .getByRole('checkbox', { name: en.exportPage_selectAllLabel.message })
-    .check()
+    .click()
   await expect(page.getByText('6 of 6 selected')).toBeVisible()
 
   await page.getByRole('checkbox', { name: 'Old Report' }).uncheck()

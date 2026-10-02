@@ -37,7 +37,7 @@ test('Welcome quick-start actions open Export, Auto-export and Import', async ({
   for (const action of actions) {
     await page
       .getByRole('main')
-      .getByRole('link', { name: action.name })
+      .getByRole('link', { name: action.name, exact: true })
       .click()
     await expect(page).toHaveURL(action.url)
     await page.goBack()
