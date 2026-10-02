@@ -18,7 +18,7 @@ body:
       value: |
         Thanks for helping improve the project! Enhancements are improvements to something that already exists — if you have a brand-new idea, use the **Feature Request** template instead.
 
-        > Before submitting, please search [existing issues](https://github.com/AndryOre/bookmarks-import-export/issues) to avoid duplicates.
+        > Before submitting, please search [existing issues](https://github.com/AndryOre/snug/issues) to avoid duplicates.
 
   - type: textarea
     id: current

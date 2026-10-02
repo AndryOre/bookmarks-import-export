@@ -22,7 +22,7 @@ export const PRODUCT_NAME = 'Snug'
 /**
  * The project's GitHub repository URL.
  */
-export const GITHUB_URL = 'https://github.com/AndryOre/bookmarks-import-export'
+export const GITHUB_URL = 'https://github.com/AndryOre/snug'
 
 /**
  * The project's X (formerly Twitter) profile URL.

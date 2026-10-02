@@ -1,5 +1,5 @@
 {
-  "name": "bookmarks-import-export",
+  "name": "snug",
   "description": "Export, import, and schedule automatic backups for your bookmarks — HTML, JSON, or CSV, all on your device, no account, no cloud.",
   "keywords": [
     "browser-extension",
@@ -8,13 +8,13 @@
     "chrome",
     "wxt"
   ],
-  "homepage": "https://github.com/AndryOre/bookmarks-import-export",
+  "homepage": "https://github.com/AndryOre/snug",
   "bugs": {
-    "url": "https://github.com/AndryOre/bookmarks-import-export/issues"
+    "url": "https://github.com/AndryOre/snug/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AndryOre/bookmarks-import-export.git"
+    "url": "git+https://github.com/AndryOre/snug.git"
   },
   "license": "MIT",
   "author": "Andry Orellana <me@andryore.dev>",
