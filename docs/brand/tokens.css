@@ -1,0 +1,97 @@
+/**
+ * Snug design tokens (shadcn-style variables, oklch) — Nova style.
+ *
+ * Mirror of `:root` and `.dark` in the app's `entrypoints/popup/style.css`,
+ * which is the live source of truth since AO-1035 (synced 2026-10-02). Both
+ * the light and dark themes carry the Snug palette: amber accent
+ * (`--primary`) on warm-brown grounds in dark, warm paper grounds in light.
+ * Hex values in the original brief (`brief.md` "Palette decision
+ * (2026-10-01)"): background #17120A, card #231A10, foreground #F3EBDE,
+ * muted-foreground #B8A98E, primary #FFA230 (WCAG AA verified).
+ */
+
+:root {
+  --background: oklch(0.977 0.01 81.8);
+  --foreground: oklch(0.186 0.017 79.1);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.186 0.017 79.1);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.186 0.017 79.1);
+  --primary: oklch(0.528 0.131 54.6);
+  --primary-foreground: oklch(1 0 0);
+  --primary-text: var(--primary);
+  --brand-gradient: linear-gradient(135deg, #ffa230, #ffd37a);
+  --brand-text-gradient: linear-gradient(135deg, #9a4a00, #a35200);
+  --secondary: oklch(0.937 0.019 80.1);
+  --secondary-foreground: oklch(0.255 0.024 72);
+  --muted: oklch(0.937 0.019 80.1);
+  --muted-foreground: oklch(0.487 0.033 73.9);
+  --accent: oklch(0.937 0.019 80.1);
+  --accent-foreground: oklch(0.255 0.024 72);
+  --destructive: oklch(0.577 0.245 27.325);
+  --success: oklch(0.596 0.145 163.225);
+  --rating: oklch(0.852 0.199 91.936);
+  --border: oklch(0.186 0.017 79.1 / 12%);
+  --input: oklch(0.186 0.017 79.1 / 16%);
+  --ring: oklch(0.613 0.145 58.8);
+  --chart-1: oklch(0.905 0.182 98.111);
+  --chart-2: oklch(0.795 0.184 86.047);
+  --chart-3: oklch(0.681 0.162 75.834);
+  --chart-4: oklch(0.554 0.135 66.442);
+  --chart-5: oklch(0.476 0.114 61.907);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.951 0.018 81.3);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--accent);
+  --sidebar-accent-foreground: var(--accent-foreground);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
+  /* Bookmark tree icon colors — same fixed hue in both themes, matching
+     the OS file-manager convention (blue file, yellow folder) rather than
+     the semantic palette. */
+  --bookmark-file: oklch(0.623 0.214 259.815);
+  --bookmark-folder: oklch(0.795 0.184 86.047);
+}
+
+.dark {
+  --background: oklch(0.186 0.017 79.1);
+  --foreground: oklch(0.943 0.019 80.1);
+  --card: oklch(0.226 0.023 69.2);
+  --card-foreground: var(--foreground);
+  --popover: oklch(0.226 0.023 69.2);
+  --popover-foreground: var(--foreground);
+  --primary: oklch(0.789 0.161 65.7);
+  --primary-foreground: var(--background);
+  --primary-text: var(--primary);
+  --brand-gradient: linear-gradient(135deg, #ffa230, #ffd37a);
+  --brand-text-gradient: linear-gradient(135deg, #ffa230, #ffd37a);
+  --secondary: oklch(0.268 0.026 71.5);
+  --secondary-foreground: var(--foreground);
+  --muted: oklch(0.268 0.026 71.5);
+  --muted-foreground: oklch(0.74 0.041 82.3);
+  --accent: oklch(0.268 0.026 71.5);
+  --accent-foreground: var(--foreground);
+  --destructive: oklch(0.704 0.191 22.216);
+  --success: oklch(0.696 0.17 162.48);
+  --rating: oklch(0.852 0.199 91.936);
+  --border: oklch(0.943 0.019 80.1 / 12%);
+  --input: oklch(0.943 0.019 80.1 / 16%);
+  --ring: var(--primary);
+  --chart-1: oklch(0.905 0.182 98.111);
+  --chart-2: oklch(0.795 0.184 86.047);
+  --chart-3: oklch(0.681 0.162 75.834);
+  --chart-4: oklch(0.554 0.135 66.442);
+  --chart-5: oklch(0.476 0.114 61.907);
+  --sidebar: oklch(0.206 0.02 73.3);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--accent);
+  --sidebar-accent-foreground: var(--accent-foreground);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
+  --bookmark-file: oklch(0.623 0.214 259.815);
+  --bookmark-folder: oklch(0.795 0.184 86.047);
+}

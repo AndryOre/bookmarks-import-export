@@ -11,6 +11,9 @@
     // vendored agent skills (installed by `bunx skills`): their template
     // files are reference material, not part of this app's module graph.
     ".claude/skills/**",
+    // versioned brand kit (docs/brand): static CSS/HTML reference material
+    // consumed by the standalone brand book, not part of the app's module graph.
+    "docs/brand/**",
     // `readLockHolder` and `isLockStale` are part of this module's public
     // lock API (mirrored from its original e2e-queue.ts extraction) but are
     // only exercised directly by scripts/locks.test.ts today — no current
