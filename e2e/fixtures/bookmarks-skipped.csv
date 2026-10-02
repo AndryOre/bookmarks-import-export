@@ -1,0 +1,3 @@
+title,url,folder
+Good,https://good.example,
+Bad,javascript:alert(1),

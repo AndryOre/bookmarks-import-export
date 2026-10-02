@@ -945,5 +945,14 @@
   "safetySnapshot_restored": {
     "message": "Snapshot wiederhergestellt.",
     "description": "Shown after the snapshot was restored"
+  },
+  "import_skippedInvalidUrl": {
+    "message": "$COUNT$ übersprungen, weil ihre Adresse nicht unterstützt wird",
+    "description": "Import result note: how many bookmarks were skipped because their address is not supported",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
   }
 }

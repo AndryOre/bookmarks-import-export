@@ -50,6 +50,15 @@ export interface ParsedBookmark {
   parentId?: string
 }
 
+/**
+ * What an import reports back once it has finished writing bookmarks.
+ * `skippedInvalidUrl` counts bookmarks that were left out because their
+ * address is missing or not supported (anything outside http, https and ftp).
+ */
+export interface ImportResult {
+  skippedInvalidUrl: number
+}
+
 export type BookmarkFormat = 'json' | 'html' | 'csv' | 'unknown'
 
 export type ImportMode = 'folder' | 'restore-merge' | 'restore-replace'

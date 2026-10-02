@@ -64,10 +64,14 @@ export function ImportSection() {
   }: PendingImport) => {
     setIsImporting(true)
     try {
-      await runImport(text, mimeType, importMode, fileName)
+      const result = await runImport(text, mimeType, importMode, fileName)
       toast.add({
         type: 'success',
         title: i18n.t('popup_importSuccessTitle'),
+        description:
+          result.skippedInvalidUrl > 0
+            ? i18n.t('import_skippedInvalidUrl', [result.skippedInvalidUrl])
+            : undefined,
       })
     } catch (error) {
       toast.add({

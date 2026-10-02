@@ -208,7 +208,9 @@ describe('importFromJSON', () => {
       },
     ]
 
-    await importFromJSON(bookmarks, 'folder')
+    const result = await importFromJSON(bookmarks, 'folder')
+
+    expect(result).toEqual({ skippedInvalidUrl: 3 })
 
     const root = getFakeBookmarksRoot()
     const otherBookmarks = root.children?.find((n) => n.id === '2')
@@ -456,5 +458,26 @@ describe('importFromJSON', () => {
       (n) => n.title === 'Mobile bookmarks',
     )
     expect(importedMobile?.children?.[0]?.url).toBe('https://mobile.example')
+  })
+})
+
+describe('importFromJSON empty folders', () => {
+  it('creates a folder that has an empty children array', async () => {
+    const result = await importFromJSON(
+      [
+        {
+          id: '1',
+          title: 'Bookmarks bar',
+          isBookmarksBar: true,
+          dateAdded: 0,
+          children: [{ title: 'Empty', dateAdded: 0, children: [] }],
+        },
+      ],
+      'restore-merge',
+    )
+
+    expect(result).toEqual({ skippedInvalidUrl: 0 })
+    const bar = getFakeBookmarksRoot().children?.find((n) => n.id === '1')
+    expect(bar?.children?.map((n) => n.title)).toEqual(['Empty'])
   })
 })

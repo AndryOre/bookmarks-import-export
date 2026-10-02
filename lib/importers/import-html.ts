@@ -7,7 +7,7 @@ import {
 } from '@/lib/importers/resolve-roots'
 import type { ResolvedImportRootTitles } from '@/lib/importers/resolve-roots'
 import { isAllowedBookmarkUrl } from '@/lib/importers/url-validation'
-import type { ImportMode, ParsedBookmark } from '@/lib/types'
+import type { ImportMode, ImportResult, ParsedBookmark } from '@/lib/types'
 
 /**
  * Imports bookmarks from a Netscape-format bookmarks HTML export.
@@ -31,12 +31,13 @@ import type { ImportMode, ParsedBookmark } from '@/lib/types'
  * arbitrary `browser.bookmarks.create()` failure.
  * @param html The Netscape-format bookmarks HTML to import.
  * @param mode Where the parsed tree is written.
- * @returns Resolves once the import has finished.
+ * @returns The import result, including how many bookmarks were skipped
+ *   because their address is missing or not supported.
  */
 export async function importFromHTML(
   html: string,
   mode: ImportMode = 'folder',
-): Promise<void> {
+): Promise<ImportResult> {
   const tree = await browser.bookmarks.getTree()
   const liveRootTitles = resolveImportRootTitles(tree[0]?.children ?? [])
 
@@ -51,7 +52,7 @@ export async function importFromHTML(
   }
 
   try {
-    await processBookmarks(parsed, mode, tree)
+    return await processBookmarks(parsed, mode, tree)
   } catch (error) {
     if (error instanceof Error && error.message.startsWith('PROCESS_ERROR')) {
       throw error
@@ -229,10 +230,6 @@ function parseBookmarkElement(a: HTMLAnchorElement): ParsedBookmark {
   const dateAddedAttribute = a.getAttribute('add_date')
   const href = a.getAttribute('href') ?? undefined
 
-  if (href && !isAllowedBookmarkUrl(href)) {
-    console.warn('[importFromHTML] Invalid URL, skipping bookmark:', href)
-  }
-
   const url = isAllowedBookmarkUrl(href) ? href : undefined
 
   return {
@@ -307,13 +304,14 @@ function parseFolderElement(h3: HTMLElement, dt: Element): ParsedBookmark {
  * @param tree The tree snapshot `importFromHTML` already fetched (to resolve
  *   the live root titles for `parseHTML`) — reused here instead of
  *   re-fetching.
- * @returns Resolves once the tree has been written.
+ * @returns The import result with the skipped-bookmark count.
  */
 async function processBookmarks(
   parsed: ParsedBookmark[],
   mode: ImportMode,
   tree: Browser.bookmarks.BookmarkTreeNode[],
-): Promise<void> {
+): Promise<ImportResult> {
+  const result: ImportResult = { skippedInvalidUrl: 0 }
   const root = tree[0]
   const { bookmarksBarId, otherBookmarksId, mobileId } = resolveImportRoots(
     root?.children ?? [],
@@ -335,9 +333,17 @@ async function processBookmarks(
 
     for (const bookmark of parsed) {
       if (bookmark.isBookmarksBar) {
-        await createBookmarks(bookmark.children ?? [], importedBookmarksBar.id)
+        await createBookmarks(
+          bookmark.children ?? [],
+          importedBookmarksBar.id,
+          result,
+        )
       } else if (bookmark.isOtherBookmarks) {
-        await createBookmarks(bookmark.children ?? [], importedFolder.id)
+        await createBookmarks(
+          bookmark.children ?? [],
+          importedFolder.id,
+          result,
+        )
       } else if (
         bookmark.isMobileBookmarks &&
         bookmark.children &&
@@ -347,7 +353,7 @@ async function processBookmarks(
           parentId: importedFolder.id,
           title: i18n.t('mobileBookmarks'),
         })
-        await createBookmarks(bookmark.children, importedMobile.id)
+        await createBookmarks(bookmark.children, importedMobile.id, result)
       }
     }
   } else {
@@ -368,18 +374,21 @@ async function processBookmarks(
 
     for (const bookmark of parsed) {
       if (bookmark.isBookmarksBar) {
-        await createBookmarks(bookmark.children ?? [], bookmarksBarId)
+        await createBookmarks(bookmark.children ?? [], bookmarksBarId, result)
       } else if (bookmark.isOtherBookmarks) {
-        await createBookmarks(bookmark.children ?? [], otherBookmarksId)
+        await createBookmarks(bookmark.children ?? [], otherBookmarksId, result)
       } else if (bookmark.isMobileBookmarks) {
         await writeMobileBookmarks(
           bookmark.children ?? [],
           mobileId,
           otherBookmarksId,
+          result,
         )
       }
     }
   }
+
+  return result
 }
 
 /**
@@ -413,26 +422,42 @@ async function removeAllChildren(
  * @param nodes The Mobile bookmarks content to write.
  * @param mobileId The resolved Mobile root id, if any.
  * @param otherBookmarksId The "Other bookmarks" root id to fall back to.
+ * @param result The running import result, updated with skipped bookmarks.
  * @returns Resolves once the content has been written.
  */
 async function writeMobileBookmarks(
   nodes: ParsedBookmark[],
   mobileId: string | undefined,
   otherBookmarksId: string,
+  result: ImportResult,
 ): Promise<void> {
-  await createBookmarks(nodes, mobileId ?? otherBookmarksId)
+  await createBookmarks(nodes, mobileId ?? otherBookmarksId, result)
 }
 
+/**
+ * Recursively creates the tree under `parentId`. A node with a `children`
+ * array is a folder and is created even when that array is empty. A node
+ * with neither a usable `url` nor `children` is a bookmark whose address is
+ * missing or not supported; it is skipped and counted in
+ * `result.skippedInvalidUrl`.
+ * @param nodes The nodes to create.
+ * @param parentId The id of the folder to create them under.
+ * @param result The running import result, updated with skipped bookmarks.
+ * @returns Resolves once every node has been created.
+ */
 async function createBookmarks(
   nodes: ParsedBookmark[],
   parentId: string,
+  result: ImportResult,
 ): Promise<void> {
   for (const node of nodes) {
     if (node.url) {
       await createItem({ parentId, title: node.title, url: node.url })
-    } else if (node.children && node.children.length > 0) {
+    } else if (node.children) {
       const folder = await createItem({ parentId, title: node.title })
-      await createBookmarks(node.children, folder.id)
+      await createBookmarks(node.children, folder.id, result)
+    } else {
+      result.skippedInvalidUrl++
     }
   }
 }

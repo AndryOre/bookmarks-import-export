@@ -945,5 +945,14 @@
   "safetySnapshot_restored": {
     "message": "Снимок восстановлен.",
     "description": "Shown after the snapshot was restored"
+  },
+  "import_skippedInvalidUrl": {
+    "message": "Пропущено: $COUNT$ — адрес не поддерживается",
+    "description": "Import result note: how many bookmarks were skipped because their address is not supported",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
   }
 }

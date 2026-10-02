@@ -945,5 +945,14 @@
   "safetySnapshot_restored": {
     "message": "快照已恢复。",
     "description": "Shown after the snapshot was restored"
+  },
+  "import_skippedInvalidUrl": {
+    "message": "已跳过 $COUNT$ 个，因为其地址不受支持",
+    "description": "Import result note: how many bookmarks were skipped because their address is not supported",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
   }
 }

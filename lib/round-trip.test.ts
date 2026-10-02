@@ -164,6 +164,48 @@ describe('round trip: JSON', () => {
   })
 })
 
+function seedEmptyFolderTree(): void {
+  seedFakeBookmarksTree(
+    [
+      {
+        id: '10',
+        parentId: '1',
+        title: 'Nothing here',
+        syncing: false,
+        children: [],
+      },
+    ],
+    [],
+  )
+}
+
+describe('round trip: empty folders', () => {
+  it('JSON export -> import -> export keeps an empty folder', async () => {
+    seedEmptyFolderTree()
+    const exported = await exportToJSON(exportOptions)
+    const reparsed = structuredClone(exported) as unknown as ParsedBookmark[]
+
+    resetFakeBookmarks()
+    await importFromJSON(reparsed[0]?.children ?? [], 'restore-merge')
+
+    const bar = getFakeBookmarksRoot().children?.find((n) => n.id === '1')
+    expect(bar?.children?.map((n) => n.title)).toEqual(['Nothing here'])
+    expect(bar?.children?.[0]?.children).toEqual([])
+  })
+
+  it('HTML export -> import -> export keeps an empty folder', async () => {
+    seedEmptyFolderTree()
+    const html = await exportToHTML(exportOptions)
+
+    resetFakeBookmarks()
+    await importFromHTML(html, 'restore-merge')
+
+    const bar = getFakeBookmarksRoot().children?.find((n) => n.id === '1')
+    expect(bar?.children?.map((n) => n.title)).toEqual(['Nothing here'])
+    expect(bar?.children?.[0]?.children).toEqual([])
+  })
+})
+
 describe('round trip: HTML', () => {
   it('export -> import (restore-merge) reproduces the same bookmark URLs', async () => {
     seedSourceTree()
