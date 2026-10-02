@@ -42,6 +42,14 @@ An index of every document in this repository.
 - [`docs/how-to/cut-a-release.md`](how-to/cut-a-release.md) — steps to cut a new
   release.
 
+## Store
+
+- [`docs/store/README.md`](store/README.md) — the Chrome Web Store listing pack
+  for v2.0.0: listing copy (EN/ES), graphic assets, privacy-tab justifications,
+  distribution, and the pre-publish checklist.
+- [`docs/store/baseline-2026-09.md`](store/baseline-2026-09.md) — pre-rename
+  store analytics, for comparison after the rename.
+
 ## Agent configuration
 
 - [`AGENTS.md`](../AGENTS.md) — instructions for coding agents: stack summary,
