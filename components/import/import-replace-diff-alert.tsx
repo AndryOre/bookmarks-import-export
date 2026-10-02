@@ -2,6 +2,7 @@ import { i18n } from '#i18n'
 import { TriangleAlertIcon } from 'lucide-react'
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { formatCount } from '@/lib/format-count'
 import type { ReplaceDiff } from '@/lib/replace-diff'
 
 /**
@@ -17,9 +18,9 @@ export function ImportReplaceDiffAlert({ diff }: { diff: ReplaceDiff }) {
     <Alert variant="destructive">
       <TriangleAlertIcon />
       <AlertTitle>
-        {i18n.t('import_replaceDiffTitle', [
-          diff.removedCount.toString(),
-          diff.addedCount.toString(),
+        {i18n.t('import_replaceDiffTitle', diff.removedCount, [
+          formatCount(diff.removedCount),
+          formatCount(diff.addedCount),
         ])}
       </AlertTitle>
       <AlertDescription>

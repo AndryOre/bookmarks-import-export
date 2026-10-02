@@ -20,6 +20,7 @@ import {
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
+import { formatCount } from '@/lib/format-count'
 import { getImportPreview } from '@/lib/import-preview'
 import { getReplaceDiff } from '@/lib/replace-diff'
 import type { ReplaceDiff } from '@/lib/replace-diff'
@@ -258,7 +259,9 @@ export function ImportRoute() {
             {isImporting && <Spinner data-icon="inline-start" />}
             {isImporting
               ? i18n.t('import_importing')
-              : i18n.t('import_submit', [preview.totalCount.toString()])}
+              : i18n.t('import_submit', preview.totalCount, [
+                  formatCount(preview.totalCount),
+                ])}
           </Button>
           {isEmpty && (
             <p className="text-sm text-muted-foreground">

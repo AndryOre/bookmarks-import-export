@@ -16,6 +16,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { toast } from '@/components/ui/toast'
 import { APP_ROUTES } from '@/lib/app-url'
 import { exportBookmarks } from '@/lib/export-all-bookmarks'
+import { formatCount } from '@/lib/format-count'
 import { lastExportFormatStore } from '@/lib/storage'
 import type { BookmarkTreeHandle, CheckedState } from '@/lib/types'
 import { useStorageItem } from '@/lib/use-storage-item'
@@ -94,7 +95,7 @@ export function ExportRoute() {
       const { fileName, count } = await exportBookmarks(format, selected)
       toast.add({
         type: 'success',
-        title: i18n.t('exportPage_successTitle', [count.toString()]),
+        title: i18n.t('exportPage_successTitle', count, [formatCount(count)]),
         description: fileName,
       })
     } catch (error) {

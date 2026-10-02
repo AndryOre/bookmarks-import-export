@@ -1,12 +1,16 @@
 import { describe, expect, it } from 'vitest'
 
-interface LocaleEntry {
+interface MessageEntry {
   message: string
   description?: string
   placeholders?: Record<string, unknown>
 }
 
+type PluralEntry = Record<string, string>
+type LocaleEntry = MessageEntry | PluralEntry
 type LocaleMessages = Record<string, LocaleEntry>
+
+const PLURAL_FORM_KEYS = new Set(['0', '1', 'n'])
 
 const SOURCE_LOCALE = 'en'
 const MAX_DESCRIPTION_LENGTH = 132
@@ -25,15 +29,38 @@ function localeCode(path: string): string {
 }
 
 /**
+ * @param entry A single message entry.
+ * @returns Whether the entry is a plural message (`{ "1": ..., "n": ... }`)
+ * rather than a verbose `{ message, description, placeholders }` one.
+ */
+function isPluralEntry(entry: LocaleEntry): entry is PluralEntry {
+  return typeof entry.message !== 'string'
+}
+
+/**
+ * @param entry A plural message entry.
+ * @returns The sorted, de-duplicated `$1`-`$9` tokens used by any form.
+ */
+function substitutionTokens(entry: PluralEntry): string[] {
+  const tokens = Object.values(entry).flatMap(
+    (form) => form.match(/\$\d/g) ?? [],
+  )
+  return [...new Set(tokens)].toSorted((a, b) => a.localeCompare(b))
+}
+
+/**
  * `description` is a translator note, not shipped copy, so it is excluded from
- * the comparison.
+ * the comparison. Plural messages carry no named placeholders; their
+ * positional `$N` tokens are compared instead.
  * @param entry A single message entry.
  * @returns The sorted placeholder names, empty when there are none.
  */
 function placeholderNames(entry: LocaleEntry): string[] {
-  return Object.keys(entry.placeholders ?? {}).toSorted((a, b) =>
-    a.localeCompare(b),
-  )
+  return isPluralEntry(entry)
+    ? substitutionTokens(entry)
+    : Object.keys(entry.placeholders ?? {}).toSorted((a, b) =>
+        a.localeCompare(b),
+      )
 }
 
 /**
@@ -41,7 +68,7 @@ function placeholderNames(entry: LocaleEntry): string[] {
  * @returns The declared placeholder names whose `$NAME$` token is absent from
  * the message text (compared case-insensitively, as Chrome does).
  */
-function missingPlaceholderTokens(entry: LocaleEntry): string[] {
+function missingPlaceholderTokens(entry: MessageEntry): string[] {
   return Object.keys(entry.placeholders ?? {}).filter(
     (name) => !entry.message.toLowerCase().includes(`$${name.toLowerCase()}$`),
   )
@@ -52,12 +79,35 @@ function missingPlaceholderTokens(entry: LocaleEntry): string[] {
  * @returns Human-readable problems: empty messages and unused placeholders.
  */
 function findContentProblems(messages: LocaleMessages): string[] {
-  return Object.entries(messages).flatMap(([key, entry]) => [
-    ...(entry.message.trim() === '' ? [`${key}: empty message`] : []),
-    ...missingPlaceholderTokens(entry).map(
-      (name) => `${key}: placeholder $${name}$ missing from message`,
-    ),
-  ])
+  return Object.entries(messages).flatMap(([key, entry]) =>
+    isPluralEntry(entry)
+      ? findPluralProblems(key, entry)
+      : [
+          ...(entry.message.trim() === '' ? [`${key}: empty message`] : []),
+          ...missingPlaceholderTokens(entry).map(
+            (name) => `${key}: placeholder $${name}$ missing from message`,
+          ),
+        ],
+  )
+}
+
+/**
+ * @param key The message key.
+ * @param entry A plural message entry.
+ * @returns Problems with the entry: forms other than `0`, `1` and `n`, a
+ * missing `n` fallback, or an empty form.
+ */
+function findPluralProblems(key: string, entry: PluralEntry): string[] {
+  const forms = Object.entries(entry)
+  return [
+    ...forms
+      .filter(([form]) => !PLURAL_FORM_KEYS.has(form))
+      .map(([form]) => `${key}: unsupported plural form "${form}"`),
+    ...(Object.hasOwn(entry, 'n') ? [] : [`${key}: missing "n" plural form`]),
+    ...forms
+      .filter(([, text]) => text.trim() === '')
+      .map(([form]) => `${key}: empty plural form "${form}"`),
+  ]
 }
 
 const locales = new Map(
@@ -95,6 +145,21 @@ describe('locale parity', () => {
       ])
     })
 
+    it('accepts a well-formed plural message', () => {
+      expect(
+        findContentProblems({ a: { '1': '$1 item', n: '$1 items' } }),
+      ).toEqual([])
+    })
+
+    it('flags a plural message without an "n" form or with an odd form', () => {
+      expect(
+        findContentProblems({ a: { '1': '$1 item', few: '$1 items' } }),
+      ).toEqual([
+        'a: unsupported plural form "few"',
+        'a: missing "n" plural form',
+      ])
+    })
+
     it('accepts a placeholder token in any letter case', () => {
       const fixture = {
         a: {
@@ -127,6 +192,17 @@ describe('locale parity', () => {
       })
     })
 
+    it('uses a plural message exactly where en does', () => {
+      const mismatches = Object.entries(sourceMessages)
+        .filter(([key]) => Object.hasOwn(messages, key))
+        .filter(
+          ([key, entry]) =>
+            isPluralEntry(entry) !== isPluralEntry(messages[key] ?? {}),
+        )
+        .map(([key]) => ({ locale: code, key }))
+      expect(mismatches).toEqual([])
+    })
+
     it('has the same placeholder names per key', () => {
       const mismatches = Object.entries(sourceMessages)
         .filter(([key]) => Object.hasOwn(messages, key))
@@ -143,7 +219,11 @@ describe('locale parity', () => {
     })
 
     it(`keeps extensionDescription within ${MAX_DESCRIPTION_LENGTH} characters`, () => {
-      const length = messages.extensionDescription?.message.length ?? 0
+      const description = messages.extensionDescription
+      const length =
+        description && !isPluralEntry(description)
+          ? description.message.length
+          : 0
       expect(length, `${code} extensionDescription length`).toBeGreaterThan(0)
       expect(length, `${code} extensionDescription length`).toBeLessThanOrEqual(
         MAX_DESCRIPTION_LENGTH,

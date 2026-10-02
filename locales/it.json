@@ -108,13 +108,8 @@
     "description": "Import preview section label"
   },
   "importPreviewCount": {
-    "message": "Segnalibri: $COUNT$",
-    "description": "Bookmark count in preview",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "1": "$1 segnalibro",
+    "n": "$1 segnalibri"
   },
   "replaceConfirmTitle": {
     "message": "Sostituire i segnalibri esistenti?",
@@ -455,13 +450,8 @@
     "description": "Reason shown on disabled restore mode cards"
   },
   "import_submit": {
-    "message": "Importa segnalibri ($COUNT$)",
-    "description": "Primary import button",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "1": "Importa $1 segnalibro",
+    "n": "Importa $1 segnalibri"
   },
   "import_noBookmarks": {
     "message": "Nessun segnalibro trovato in questo file, quindi non c'è nulla da importare.",
@@ -572,13 +562,8 @@
     "description": "Accessible label of the popup format toggle group"
   },
   "popup_exportSuccessTitle": {
-    "message": "Segnalibri esportati: $COUNT$",
-    "description": "Popup toast title after a successful export",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "1": "$1 segnalibro esportato",
+    "n": "$1 segnalibri esportati"
   },
   "popup_exportFailedTitle": {
     "message": "Esportazione non riuscita",
@@ -749,16 +734,8 @@
     "description": "Accessible label of the loading placeholder on the Export page"
   },
   "exportPage_selectionCount": {
-    "message": "$SELECTED$ di $TOTAL$ selezionati",
-    "description": "Export page sticky bar selection count",
-    "placeholders": {
-      "selected": {
-        "content": "$1"
-      },
-      "total": {
-        "content": "$2"
-      }
-    }
+    "1": "$1 di $2 selezionato",
+    "n": "$1 di $2 selezionati"
   },
   "exportPage_nothingSelected": {
     "message": "Nessuna selezione",
@@ -769,26 +746,16 @@
     "description": "Accessible label of the Export page format toggle group"
   },
   "exportPage_exportButton": {
-    "message": "Esporta segnalibri ($COUNT$)",
-    "description": "Export page primary button",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "1": "Esporta $1 segnalibro",
+    "n": "Esporta $1 segnalibri"
   },
   "exportPage_exporting": {
     "message": "Esportazione in corso…",
     "description": "Export page primary button label while exporting"
   },
   "exportPage_successTitle": {
-    "message": "Segnalibri esportati: $COUNT$",
-    "description": "Export page toast title after a successful export",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "1": "$1 segnalibro esportato",
+    "n": "$1 segnalibri esportati"
   },
   "exportPage_failedTitle": {
     "message": "Esportazione non riuscita",
@@ -866,16 +833,8 @@
     }
   },
   "import_replaceDiffTitle": {
-    "message": "La sostituzione rimuoverà $REMOVED$ segnalibri e ne aggiungerà $ADDED$",
-    "description": "Replace diff alert title; $REMOVED$ and $ADDED$ are bookmark counts",
-    "placeholders": {
-      "removed": {
-        "content": "$1"
-      },
-      "added": {
-        "content": "$2"
-      }
-    }
+    "1": "La sostituzione rimuoverà $1 segnalibro e ne aggiungerà $2",
+    "n": "La sostituzione rimuoverà $1 segnalibri e ne aggiungerà $2"
   },
   "import_replaceDiffDescription": {
     "message": "Prima viene salvata un'istantanea di sicurezza dei segnalibri attuali, così puoi annullare l'importazione.",

@@ -108,13 +108,8 @@
     "description": "Etiqueta de la sección de vista previa"
   },
   "importPreviewCount": {
-    "message": "$COUNT$ marcadores",
-    "description": "Conteo de marcadores en la vista previa",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "1": "$1 marcador",
+    "n": "$1 marcadores"
   },
   "replaceConfirmTitle": {
     "message": "¿Reemplazar marcadores existentes?",
@@ -455,13 +450,8 @@
     "description": "Reason shown on disabled restore mode cards"
   },
   "import_submit": {
-    "message": "Importar $COUNT$ marcadores",
-    "description": "Primary import button",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "1": "Importar $1 marcador",
+    "n": "Importar $1 marcadores"
   },
   "import_noBookmarks": {
     "message": "No se encontraron marcadores en este archivo, así que no hay nada que importar.",
@@ -572,13 +562,8 @@
     "description": "Accessible label of the popup format toggle group"
   },
   "popup_exportSuccessTitle": {
-    "message": "Se exportaron $COUNT$ marcadores",
-    "description": "Popup toast title after a successful export",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "1": "Se exportó $1 marcador",
+    "n": "Se exportaron $1 marcadores"
   },
   "popup_exportFailedTitle": {
     "message": "Falló la exportación",
@@ -749,16 +734,8 @@
     "description": "Accessible label of the loading placeholder on the Export page"
   },
   "exportPage_selectionCount": {
-    "message": "$SELECTED$ de $TOTAL$ seleccionados",
-    "description": "Export page sticky bar selection count",
-    "placeholders": {
-      "selected": {
-        "content": "$1"
-      },
-      "total": {
-        "content": "$2"
-      }
-    }
+    "1": "$1 de $2 seleccionado",
+    "n": "$1 de $2 seleccionados"
   },
   "exportPage_nothingSelected": {
     "message": "Nada seleccionado",
@@ -769,26 +746,16 @@
     "description": "Accessible label of the Export page format toggle group"
   },
   "exportPage_exportButton": {
-    "message": "Exportar $COUNT$ marcadores",
-    "description": "Export page primary button",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "1": "Exportar $1 marcador",
+    "n": "Exportar $1 marcadores"
   },
   "exportPage_exporting": {
     "message": "Exportando…",
     "description": "Export page primary button label while exporting"
   },
   "exportPage_successTitle": {
-    "message": "Se exportaron $COUNT$ marcadores",
-    "description": "Export page toast title after a successful export",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "1": "Se exportó $1 marcador",
+    "n": "Se exportaron $1 marcadores"
   },
   "exportPage_failedTitle": {
     "message": "Falló la exportación",
@@ -866,16 +833,8 @@
     }
   },
   "import_replaceDiffTitle": {
-    "message": "Reemplazar eliminará $REMOVED$ marcadores y añadirá $ADDED$",
-    "description": "Replace diff alert title; $REMOVED$ and $ADDED$ are bookmark counts",
-    "placeholders": {
-      "removed": {
-        "content": "$1"
-      },
-      "added": {
-        "content": "$2"
-      }
-    }
+    "1": "Reemplazar eliminará $1 marcador y añadirá $2",
+    "n": "Reemplazar eliminará $1 marcadores y añadirá $2"
   },
   "import_replaceDiffDescription": {
     "message": "Primero se guarda una instantánea de seguridad de tus marcadores actuales, para que puedas deshacer la importación.",

@@ -10,6 +10,7 @@ import {
   ItemMedia,
   ItemTitle,
 } from '@/components/ui/item'
+import { formatCount } from '@/lib/format-count'
 import type { ImportPreview } from '@/lib/types'
 
 interface PreviewRowProperties {
@@ -27,7 +28,7 @@ function PreviewRow({ icon, label, count }: PreviewRowProperties) {
       </ItemContent>
       <ItemActions>
         <span className="text-muted-foreground tabular-nums">
-          {i18n.t('importPreviewCount', [count.toString()])}
+          {i18n.t('importPreviewCount', count, [formatCount(count)])}
         </span>
       </ItemActions>
     </Item>

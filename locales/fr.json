@@ -108,13 +108,9 @@
     "description": "Import preview section label"
   },
   "importPreviewCount": {
-    "message": "Favoris : $COUNT$",
-    "description": "Bookmark count in preview",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "0": "$1 favori",
+    "1": "$1 favori",
+    "n": "$1 favoris"
   },
   "replaceConfirmTitle": {
     "message": "Remplacer les favoris existants ?",
@@ -455,13 +451,9 @@
     "description": "Reason shown on disabled restore mode cards"
   },
   "import_submit": {
-    "message": "Importer les favoris ($COUNT$)",
-    "description": "Primary import button",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "0": "Importer $1 favori",
+    "1": "Importer $1 favori",
+    "n": "Importer $1 favoris"
   },
   "import_noBookmarks": {
     "message": "Aucun favori trouvé dans ce fichier, il n'y a donc rien à importer.",
@@ -572,13 +564,9 @@
     "description": "Accessible label of the popup format toggle group"
   },
   "popup_exportSuccessTitle": {
-    "message": "Favoris exportés : $COUNT$",
-    "description": "Popup toast title after a successful export",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "0": "$1 favori exporté",
+    "1": "$1 favori exporté",
+    "n": "$1 favoris exportés"
   },
   "popup_exportFailedTitle": {
     "message": "Échec de l'exportation",
@@ -749,16 +737,9 @@
     "description": "Accessible label of the loading placeholder on the Export page"
   },
   "exportPage_selectionCount": {
-    "message": "$SELECTED$ sur $TOTAL$ sélectionnés",
-    "description": "Export page sticky bar selection count",
-    "placeholders": {
-      "selected": {
-        "content": "$1"
-      },
-      "total": {
-        "content": "$2"
-      }
-    }
+    "0": "$1 sur $2 sélectionné",
+    "1": "$1 sur $2 sélectionné",
+    "n": "$1 sur $2 sélectionnés"
   },
   "exportPage_nothingSelected": {
     "message": "Aucune sélection",
@@ -769,26 +750,18 @@
     "description": "Accessible label of the Export page format toggle group"
   },
   "exportPage_exportButton": {
-    "message": "Exporter les favoris ($COUNT$)",
-    "description": "Export page primary button",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "0": "Exporter $1 favori",
+    "1": "Exporter $1 favori",
+    "n": "Exporter $1 favoris"
   },
   "exportPage_exporting": {
     "message": "Exportation…",
     "description": "Export page primary button label while exporting"
   },
   "exportPage_successTitle": {
-    "message": "Favoris exportés : $COUNT$",
-    "description": "Export page toast title after a successful export",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "0": "$1 favori exporté",
+    "1": "$1 favori exporté",
+    "n": "$1 favoris exportés"
   },
   "exportPage_failedTitle": {
     "message": "Échec de l'exportation",
@@ -866,16 +839,9 @@
     }
   },
   "import_replaceDiffTitle": {
-    "message": "Le remplacement supprimera $REMOVED$ favoris et en ajoutera $ADDED$",
-    "description": "Replace diff alert title; $REMOVED$ and $ADDED$ are bookmark counts",
-    "placeholders": {
-      "removed": {
-        "content": "$1"
-      },
-      "added": {
-        "content": "$2"
-      }
-    }
+    "0": "Le remplacement supprimera $1 favori et en ajoutera $2",
+    "1": "Le remplacement supprimera $1 favori et en ajoutera $2",
+    "n": "Le remplacement supprimera $1 favoris et en ajoutera $2"
   },
   "import_replaceDiffDescription": {
     "message": "Un instantané de sécurité de vos favoris actuels est enregistré d'abord, pour que vous puissiez annuler l'importation.",
