@@ -19,7 +19,7 @@
   "license": "MIT",
   "author": "Andry Orellana <me@andryore.dev>",
   "private": true,
-  "version": "1.7.0",
+  "version": "2.0.0",
   "type": "module",
   "packageManager": "bun@1.4.2",
   "engines": {
