@@ -78,3 +78,26 @@ test('App and popup pages are titled Snug', async ({ openExtensionPage }) => {
   const popupPage = await openExtensionPage('popup.html')
   await expect(popupPage).toHaveTitle(en.extensionName.message)
 })
+
+test('legacy v1 pages redirect to their App routes', async ({
+  openExtensionPage,
+}) => {
+  const legacyPages = [
+    { path: 'advanced-export.html', hash: '#/export' },
+    { path: 'advanced-import.html', hash: '#/import' },
+    { path: 'welcome.html', hash: '#/welcome' },
+    { path: 'update.html', hash: '#/whats-new' },
+    {
+      path: 'advanced-export.html?settings=auto-export',
+      hash: '#/auto-export',
+    },
+  ]
+
+  for (const legacyPage of legacyPages) {
+    const page = await openExtensionPage(legacyPage.path)
+    await expect(page).toHaveURL(
+      new RegExp(String.raw`/app\.html${legacyPage.hash}$`),
+    )
+    await page.close()
+  }
+})
