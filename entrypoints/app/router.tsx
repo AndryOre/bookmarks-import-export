@@ -33,6 +33,9 @@ const routeTree = rootRoute.addChildren([
     getParentRoute: () => rootRoute,
     path: APP_ROUTES.export,
     component: ExportRoute,
+    validateSearch: (search: Record<string, unknown>): { q?: string } => ({
+      q: typeof search.q === 'string' && search.q !== '' ? search.q : undefined,
+    }),
   }),
   createRoute({
     getParentRoute: () => rootRoute,

@@ -1,4 +1,5 @@
 import type { Browser } from '@wxt-dev/browser'
+import { cn } from 'cn'
 import { File, Folder } from 'lucide-react'
 import {
   forwardRef,
@@ -31,10 +32,18 @@ export const BookmarkTree = forwardRef<
   BookmarkTreeHandle,
   BookmarkTreeProperties
 >(function BookmarkTree(
-  { searchTerm, onSelectionChange, onTotalChange },
+  {
+    searchTerm,
+    onSelectionChange,
+    onTotalChange,
+    className,
+    loadingState,
+    emptyState,
+  },
   reference,
 ) {
   const [nodes, setNodes] = useState<BookmarkNode[]>([])
+  const [isLoading, setIsLoading] = useState(true)
   /**
    * Checked state for leaf (bookmark) nodes only, keyed by bookmark id.
    * Folder checked/indeterminate state is never stored here — it's derived
@@ -59,6 +68,7 @@ export const BookmarkTree = forwardRef<
     const rootNode = tree[0]
     const withParentId = addParentIds(rootNode?.children ?? [])
     setNodes(withParentId)
+    setIsLoading(false)
 
     if (!autoExpandFolders) return
 
@@ -81,6 +91,12 @@ export const BookmarkTree = forwardRef<
     },
     deselectAll: () => {
       setCheckedState(new Map())
+    },
+    expandAll: () => {
+      setExpandedFolders(new Set(collectFolderIds(nodes)))
+    },
+    collapseAll: () => {
+      setExpandedFolders(new Set())
     },
     refresh: async () => {
       await loadBookmarks()
@@ -163,12 +179,17 @@ export const BookmarkTree = forwardRef<
     })
   }
 
-  const visibleNodes = searchTerm.trim()
-    ? filterNodes(nodes, searchTerm)
-    : nodes
+  if (isLoading && loadingState) return loadingState
+
+  const isSearching = searchTerm.trim() !== ''
+  const visibleNodes = isSearching ? filterNodes(nodes, searchTerm) : nodes
+
+  if (emptyState && isSearching && visibleNodes.length === 0) {
+    return emptyState
+  }
 
   return (
-    <div className="flex-1 overflow-auto p-2">
+    <div className={cn('flex-1 overflow-auto p-2', className)}>
       <NodeList
         nodes={visibleNodes}
         level={0}
@@ -223,10 +244,11 @@ function NodeRow({
   return (
     <div>
       <div
-        className="ml-(--tree-indent) flex items-center gap-1.5 rounded py-0.5 hover:bg-accent data-[folder=true]:cursor-pointer"
+        className="ml-(--tree-indent) flex h-7.5 items-center gap-1.5 rounded px-1 hover:bg-accent data-[folder=true]:cursor-pointer"
         style={{ '--tree-indent': `${level * 16}px` } as React.CSSProperties}
         data-folder={isFolder}
         role={isFolder ? 'button' : undefined}
+        aria-expanded={isFolder ? isExpanded : undefined}
         tabIndex={isFolder ? 0 : undefined}
         onClick={() => {
           if (isFolder) onToggleExpand(node.id)
@@ -272,7 +294,13 @@ function NodeRow({
           />
         )}
 
-        <span className="truncate text-sm">{node.title}</span>
+        <span className="min-w-0 flex-1 truncate text-sm">{node.title}</span>
+
+        {isFolder && (
+          <span className="shrink-0 text-xs text-muted-foreground tabular-nums">
+            {collectBookmarkIds(node.children ?? []).length}
+          </span>
+        )}
       </div>
 
       {!node.url && isExpanded && node.children && (

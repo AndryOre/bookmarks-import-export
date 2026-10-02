@@ -1,6 +1,7 @@
 import { i18n } from '#i18n'
 import type { GeneratedI18nStructure } from '#i18n'
 import type { Browser } from '@wxt-dev/browser'
+import type { ReactNode } from 'react'
 
 /**
  * A valid `i18n.t()` message key.
@@ -139,6 +140,8 @@ export type CheckedState = boolean | 'indeterminate'
 export interface BookmarkTreeHandle {
   selectAll: () => void
   deselectAll: () => void
+  expandAll: () => void
+  collapseAll: () => void
   refresh: () => Promise<void>
   /**
    * Returns the selected bookmarks as an `ExtendedBookmarkTreeNode[]`, with
@@ -189,4 +192,16 @@ export interface BookmarkTreeProperties {
   searchTerm: string
   onSelectionChange: (count: number) => void
   onTotalChange: (count: number) => void
+  /**
+   * Extra classes merged onto the tree's scroll container.
+   */
+  className?: string
+  /**
+   * Rendered instead of the tree until the first load completes.
+   */
+  loadingState?: ReactNode
+  /**
+   * Rendered instead of the tree when an active search matches nothing.
+   */
+  emptyState?: ReactNode
 }
