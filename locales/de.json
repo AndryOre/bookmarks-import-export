@@ -140,7 +140,7 @@
     "description": "Import mode: restore and replace description"
   },
   "importModeRestoreReplaceWarning": {
-    "message": "Dadurch werden alle aktuellen Lesezeichen in deiner Lesezeichenleiste und unter „Weitere Lesezeichen“ dauerhaft gelöscht",
+    "message": "Leert zuerst Ihre Lesezeichenleiste und Andere Lesezeichen. Mit einem Sicherheits-Snapshot können Sie den Import rückgängig machen.",
     "description": "Warning shown for restore-replace mode"
   },
   "importPreview": {
@@ -161,7 +161,7 @@
     "description": "Title of the replace confirmation dialog"
   },
   "replaceConfirmDescription": {
-    "message": "Alle Lesezeichen in deiner Lesezeichenleiste und unter „Weitere Lesezeichen“ werden vor dem Import dauerhaft gelöscht. Das lässt sich nicht rückgängig machen.",
+    "message": "Ihre aktuelle Lesezeichenleiste und Andere Lesezeichen werden vor dem Import geleert. Zuerst wird ein Sicherheits-Snapshot gespeichert, damit Sie den Import rückgängig machen können.",
     "description": "Body of the replace confirmation dialog"
   },
   "replaceConfirmButton": {
@@ -928,5 +928,86 @@
         "content": "$1"
       }
     }
+  },
+  "import_replaceDiffTitle": {
+    "message": "Ersetzen entfernt $REMOVED$ Lesezeichen und fügt $ADDED$ hinzu",
+    "description": "Replace diff alert title; $REMOVED$ and $ADDED$ are bookmark counts",
+    "placeholders": {
+      "removed": {
+        "content": "$1"
+      },
+      "added": {
+        "content": "$2"
+      }
+    }
+  },
+  "import_replaceDiffDescription": {
+    "message": "Zuerst wird ein Sicherheits-Snapshot Ihrer aktuellen Lesezeichen gespeichert, damit Sie den Import rückgängig machen können.",
+    "description": "Replace diff alert body"
+  },
+  "import_undo": {
+    "message": "Import rückgängig machen",
+    "description": "Button that undoes a replace import"
+  },
+  "import_undoing": {
+    "message": "Wird rückgängig gemacht…",
+    "description": "Undo button label while restoring"
+  },
+  "import_undoneTitle": {
+    "message": "Import rückgängig gemacht",
+    "description": "Title shown after an import was undone"
+  },
+  "import_undoneDescription": {
+    "message": "Ihre Lesezeichen wurden aus dem Sicherheits-Snapshot wiederhergestellt.",
+    "description": "Body shown after an import was undone"
+  },
+  "import_undoFailedTitle": {
+    "message": "Der Import konnte nicht rückgängig gemacht werden",
+    "description": "Error title when undoing an import fails"
+  },
+  "safetySnapshot_title": {
+    "message": "Sicherheits-Snapshot",
+    "description": "Settings card title"
+  },
+  "safetySnapshot_description": {
+    "message": "Wird vor jedem Ersetzen automatisch erstellt. Nur der neueste wird aufbewahrt.",
+    "description": "Settings card description"
+  },
+  "safetySnapshot_fileNote": {
+    "message": "Dieselbe Kopie wird als Datei in Ihrem Download-Ordner gespeichert.",
+    "description": "Note that the snapshot is also a file in Downloads"
+  },
+  "safetySnapshot_restore": {
+    "message": "Snapshot wiederherstellen",
+    "description": "Button that restores the Safety snapshot"
+  },
+  "safetySnapshot_emptyTitle": {
+    "message": "Noch kein Snapshot",
+    "description": "Empty state title when no snapshot exists"
+  },
+  "safetySnapshot_emptyDescription": {
+    "message": "Beim ersten Ersetzen Ihrer Lesezeichen wird automatisch einer erstellt.",
+    "description": "Empty state body when no snapshot exists"
+  },
+  "safetySnapshot_restoreTitle": {
+    "message": "Diesen Snapshot wiederherstellen?",
+    "description": "Restore confirm dialog title"
+  },
+  "safetySnapshot_restoreDescription": {
+    "message": "Ihre Lesezeichenleiste und Andere Lesezeichen werden durch den Snapshot vom $DATE$ ersetzt. Zuerst wird ein neuer Snapshot Ihrer aktuellen Lesezeichen gespeichert.",
+    "description": "Restore confirm dialog body; $DATE$ is when the snapshot was taken",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      }
+    }
+  },
+  "safetySnapshot_restoreConfirm": {
+    "message": "Ja, wiederherstellen",
+    "description": "Confirm button in the restore dialog"
+  },
+  "safetySnapshot_restored": {
+    "message": "Snapshot wiederhergestellt.",
+    "description": "Shown after the snapshot was restored"
   }
 }

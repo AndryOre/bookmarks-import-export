@@ -140,7 +140,7 @@
     "description": "Import mode: restore and replace description"
   },
   "importModeRestoreReplaceWarning": {
-    "message": "Cette action supprimera définitivement tous les favoris actuels de votre barre de favoris et de vos autres favoris",
+    "message": "Vide d'abord votre barre de favoris et Autres favoris. Un instantané de sécurité permet d'annuler l'importation.",
     "description": "Warning shown for restore-replace mode"
   },
   "importPreview": {
@@ -161,7 +161,7 @@
     "description": "Title of the replace confirmation dialog"
   },
   "replaceConfirmDescription": {
-    "message": "Tous les favoris actuellement présents dans votre barre de favoris et vos autres favoris seront définitivement supprimés avant l'importation. Cette action est irréversible.",
+    "message": "Votre barre de favoris et Autres favoris actuels sont vidés avant l'importation. Un instantané de sécurité est enregistré d'abord, pour que vous puissiez annuler l'importation.",
     "description": "Body of the replace confirmation dialog"
   },
   "replaceConfirmButton": {
@@ -928,5 +928,86 @@
         "content": "$1"
       }
     }
+  },
+  "import_replaceDiffTitle": {
+    "message": "Le remplacement supprimera $REMOVED$ favoris et en ajoutera $ADDED$",
+    "description": "Replace diff alert title; $REMOVED$ and $ADDED$ are bookmark counts",
+    "placeholders": {
+      "removed": {
+        "content": "$1"
+      },
+      "added": {
+        "content": "$2"
+      }
+    }
+  },
+  "import_replaceDiffDescription": {
+    "message": "Un instantané de sécurité de vos favoris actuels est enregistré d'abord, pour que vous puissiez annuler l'importation.",
+    "description": "Replace diff alert body"
+  },
+  "import_undo": {
+    "message": "Annuler l'importation",
+    "description": "Button that undoes a replace import"
+  },
+  "import_undoing": {
+    "message": "Annulation…",
+    "description": "Undo button label while restoring"
+  },
+  "import_undoneTitle": {
+    "message": "Importation annulée",
+    "description": "Title shown after an import was undone"
+  },
+  "import_undoneDescription": {
+    "message": "Vos favoris ont été restaurés à partir de l'instantané de sécurité.",
+    "description": "Body shown after an import was undone"
+  },
+  "import_undoFailedTitle": {
+    "message": "Impossible d'annuler l'importation",
+    "description": "Error title when undoing an import fails"
+  },
+  "safetySnapshot_title": {
+    "message": "Instantané de sécurité",
+    "description": "Settings card title"
+  },
+  "safetySnapshot_description": {
+    "message": "Créé automatiquement avant chaque remplacement. Seul le plus récent est conservé.",
+    "description": "Settings card description"
+  },
+  "safetySnapshot_fileNote": {
+    "message": "La même copie est enregistrée sous forme de fichier dans votre dossier Téléchargements.",
+    "description": "Note that the snapshot is also a file in Downloads"
+  },
+  "safetySnapshot_restore": {
+    "message": "Restaurer l'instantané",
+    "description": "Button that restores the Safety snapshot"
+  },
+  "safetySnapshot_emptyTitle": {
+    "message": "Aucun instantané pour l'instant",
+    "description": "Empty state title when no snapshot exists"
+  },
+  "safetySnapshot_emptyDescription": {
+    "message": "Un instantané est créé automatiquement la première fois que vous remplacez vos favoris.",
+    "description": "Empty state body when no snapshot exists"
+  },
+  "safetySnapshot_restoreTitle": {
+    "message": "Restaurer cet instantané ?",
+    "description": "Restore confirm dialog title"
+  },
+  "safetySnapshot_restoreDescription": {
+    "message": "Votre barre de favoris et Autres favoris seront remplacés par l'instantané du $DATE$. Un nouvel instantané de vos favoris actuels est enregistré d'abord.",
+    "description": "Restore confirm dialog body; $DATE$ is when the snapshot was taken",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      }
+    }
+  },
+  "safetySnapshot_restoreConfirm": {
+    "message": "Oui, restaurer",
+    "description": "Confirm button in the restore dialog"
+  },
+  "safetySnapshot_restored": {
+    "message": "Instantané restauré.",
+    "description": "Shown after the snapshot was restored"
   }
 }

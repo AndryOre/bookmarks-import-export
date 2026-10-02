@@ -140,7 +140,7 @@
     "description": "Import mode: restore and replace description"
   },
   "importModeRestoreReplaceWarning": {
-    "message": "Все текущие закладки на панели закладок и в папке «Другие закладки» будут удалены без возможности восстановления",
+    "message": "Сначала очищает панель закладок и «Другие закладки». Страховой снимок позволяет отменить импорт.",
     "description": "Warning shown for restore-replace mode"
   },
   "importPreview": {
@@ -161,7 +161,7 @@
     "description": "Title of the replace confirmation dialog"
   },
   "replaceConfirmDescription": {
-    "message": "Перед импортом все закладки на панели закладок и в папке «Другие закладки» будут удалены без возможности восстановления. Это действие нельзя отменить.",
+    "message": "Текущие панель закладок и «Другие закладки» очищаются перед импортом. Сначала сохраняется страховой снимок, чтобы вы могли отменить импорт.",
     "description": "Body of the replace confirmation dialog"
   },
   "replaceConfirmButton": {
@@ -928,5 +928,86 @@
         "content": "$1"
       }
     }
+  },
+  "import_replaceDiffTitle": {
+    "message": "Замена удалит закладок: $REMOVED$ и добавит: $ADDED$",
+    "description": "Replace diff alert title; $REMOVED$ and $ADDED$ are bookmark counts",
+    "placeholders": {
+      "removed": {
+        "content": "$1"
+      },
+      "added": {
+        "content": "$2"
+      }
+    }
+  },
+  "import_replaceDiffDescription": {
+    "message": "Сначала сохраняется страховой снимок ваших текущих закладок, чтобы вы могли отменить импорт.",
+    "description": "Replace diff alert body"
+  },
+  "import_undo": {
+    "message": "Отменить импорт",
+    "description": "Button that undoes a replace import"
+  },
+  "import_undoing": {
+    "message": "Отмена…",
+    "description": "Undo button label while restoring"
+  },
+  "import_undoneTitle": {
+    "message": "Импорт отменён",
+    "description": "Title shown after an import was undone"
+  },
+  "import_undoneDescription": {
+    "message": "Закладки восстановлены из страхового снимка.",
+    "description": "Body shown after an import was undone"
+  },
+  "import_undoFailedTitle": {
+    "message": "Не удалось отменить импорт",
+    "description": "Error title when undoing an import fails"
+  },
+  "safetySnapshot_title": {
+    "message": "Страховой снимок",
+    "description": "Settings card title"
+  },
+  "safetySnapshot_description": {
+    "message": "Создаётся автоматически перед каждой заменой. Хранится только последний.",
+    "description": "Settings card description"
+  },
+  "safetySnapshot_fileNote": {
+    "message": "Та же копия сохраняется файлом в папке «Загрузки».",
+    "description": "Note that the snapshot is also a file in Downloads"
+  },
+  "safetySnapshot_restore": {
+    "message": "Восстановить снимок",
+    "description": "Button that restores the Safety snapshot"
+  },
+  "safetySnapshot_emptyTitle": {
+    "message": "Снимка пока нет",
+    "description": "Empty state title when no snapshot exists"
+  },
+  "safetySnapshot_emptyDescription": {
+    "message": "Он создаётся автоматически при первой замене закладок.",
+    "description": "Empty state body when no snapshot exists"
+  },
+  "safetySnapshot_restoreTitle": {
+    "message": "Восстановить этот снимок?",
+    "description": "Restore confirm dialog title"
+  },
+  "safetySnapshot_restoreDescription": {
+    "message": "Панель закладок и «Другие закладки» будут заменены снимком от $DATE$. Сначала сохраняется новый снимок ваших текущих закладок.",
+    "description": "Restore confirm dialog body; $DATE$ is when the snapshot was taken",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      }
+    }
+  },
+  "safetySnapshot_restoreConfirm": {
+    "message": "Да, восстановить",
+    "description": "Confirm button in the restore dialog"
+  },
+  "safetySnapshot_restored": {
+    "message": "Снимок восстановлен.",
+    "description": "Shown after the snapshot was restored"
   }
 }

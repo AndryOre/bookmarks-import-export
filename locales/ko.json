@@ -140,7 +140,7 @@
     "description": "Import mode: restore and replace description"
   },
   "importModeRestoreReplaceWarning": {
-    "message": "북마크바와 기타 북마크에 있는 현재 북마크가 모두 영구적으로 삭제돼요",
+    "message": "북마크바와 기타 북마크를 먼저 비웁니다. 안전 스냅샷으로 가져오기를 되돌릴 수 있습니다.",
     "description": "Warning shown for restore-replace mode"
   },
   "importPreview": {
@@ -161,7 +161,7 @@
     "description": "Title of the replace confirmation dialog"
   },
   "replaceConfirmDescription": {
-    "message": "가져오기 전에 북마크바와 기타 북마크에 있는 모든 북마크가 영구적으로 삭제돼요. 이 작업은 되돌릴 수 없어요.",
+    "message": "가져오기 전에 현재 북마크바와 기타 북마크가 비워집니다. 안전 스냅샷이 먼저 저장되므로 가져오기를 되돌릴 수 있습니다.",
     "description": "Body of the replace confirmation dialog"
   },
   "replaceConfirmButton": {
@@ -928,5 +928,86 @@
         "content": "$1"
       }
     }
+  },
+  "import_replaceDiffTitle": {
+    "message": "바꾸면 북마크 $REMOVED$개가 삭제되고 $ADDED$개가 추가됩니다",
+    "description": "Replace diff alert title; $REMOVED$ and $ADDED$ are bookmark counts",
+    "placeholders": {
+      "removed": {
+        "content": "$1"
+      },
+      "added": {
+        "content": "$2"
+      }
+    }
+  },
+  "import_replaceDiffDescription": {
+    "message": "현재 북마크의 안전 스냅샷이 먼저 저장되므로 가져오기를 되돌릴 수 있습니다.",
+    "description": "Replace diff alert body"
+  },
+  "import_undo": {
+    "message": "가져오기 되돌리기",
+    "description": "Button that undoes a replace import"
+  },
+  "import_undoing": {
+    "message": "되돌리는 중…",
+    "description": "Undo button label while restoring"
+  },
+  "import_undoneTitle": {
+    "message": "가져오기를 되돌렸습니다",
+    "description": "Title shown after an import was undone"
+  },
+  "import_undoneDescription": {
+    "message": "안전 스냅샷에서 북마크를 복원했습니다.",
+    "description": "Body shown after an import was undone"
+  },
+  "import_undoFailedTitle": {
+    "message": "가져오기를 되돌릴 수 없습니다",
+    "description": "Error title when undoing an import fails"
+  },
+  "safetySnapshot_title": {
+    "message": "안전 스냅샷",
+    "description": "Settings card title"
+  },
+  "safetySnapshot_description": {
+    "message": "바꾸기 전에 자동으로 만들어집니다. 가장 최근 것 하나만 보관됩니다.",
+    "description": "Settings card description"
+  },
+  "safetySnapshot_fileNote": {
+    "message": "같은 사본이 다운로드 폴더에 파일로 저장됩니다.",
+    "description": "Note that the snapshot is also a file in Downloads"
+  },
+  "safetySnapshot_restore": {
+    "message": "스냅샷 복원",
+    "description": "Button that restores the Safety snapshot"
+  },
+  "safetySnapshot_emptyTitle": {
+    "message": "아직 스냅샷이 없습니다",
+    "description": "Empty state title when no snapshot exists"
+  },
+  "safetySnapshot_emptyDescription": {
+    "message": "북마크를 처음 바꿀 때 자동으로 만들어집니다.",
+    "description": "Empty state body when no snapshot exists"
+  },
+  "safetySnapshot_restoreTitle": {
+    "message": "이 스냅샷을 복원할까요?",
+    "description": "Restore confirm dialog title"
+  },
+  "safetySnapshot_restoreDescription": {
+    "message": "북마크바와 기타 북마크가 $DATE$의 스냅샷으로 바뀝니다. 현재 북마크의 새 스냅샷이 먼저 저장됩니다.",
+    "description": "Restore confirm dialog body; $DATE$ is when the snapshot was taken",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      }
+    }
+  },
+  "safetySnapshot_restoreConfirm": {
+    "message": "예, 복원",
+    "description": "Confirm button in the restore dialog"
+  },
+  "safetySnapshot_restored": {
+    "message": "스냅샷을 복원했습니다.",
+    "description": "Shown after the snapshot was restored"
   }
 }

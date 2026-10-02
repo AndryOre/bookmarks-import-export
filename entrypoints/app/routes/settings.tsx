@@ -1,6 +1,7 @@
 import { i18n } from '#i18n'
 import { useId } from 'react'
 
+import { SafetySnapshotCard } from '@/components/safety-snapshot-card'
 import {
   Card,
   CardContent,
@@ -47,7 +48,7 @@ const THEME_OPTIONS: { value: ThemeChoice; label: string }[] = [
 
 /**
  * The Settings screen: theme, bookmark tree display and the default import
- * mode. Every control writes straight to its storage item on change; the
+ * mode, plus the Safety snapshot card. Every control writes straight to its storage item on change; the
  * `ThemeProvider` watches the theme store, so the choice applies live.
  * @returns The settings view.
  */
@@ -173,6 +174,8 @@ export function SettingsRoute() {
           </Field>
         </CardContent>
       </Card>
+
+      <SafetySnapshotCard />
     </div>
   )
 }
