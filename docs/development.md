@@ -99,29 +99,29 @@ To add a new contract:
 
 ## Brand tokens
 
-`entrypoints/popup/style.css` defines three brand-surface tokens in `:root` and
-`.dark`, exposed as Tailwind utilities via the `@theme inline` block. Today they
-all resolve to the flat `--primary` color — no brand kit exists yet — but they
-give a future rebrand a seam to land gradient/accent treatment without touching
-component code:
+`entrypoints/popup/style.css` defines the Snug palette in `:root` (warm cream
+light theme) and `.dark` (dark-first amber on a warm ground), plus three
+brand-surface tokens exposed as Tailwind utilities via the `@theme inline`
+block:
 
 - **`--primary-text`** (Tailwind `text-primary-text`): text color for brand
-  surfaces. Currently equals `--primary`.
+  surfaces. Equals `--primary` in both themes (`#A35200` in light, `#FFA230` in
+  dark), so it meets text contrast on the page background.
 - **`--brand-gradient`** (Tailwind `bg-brand-gradient`): background for the
-  logo, hero, and brand accents only — never for buttons or other controls.
-  Currently a flat two-stop gradient of `--primary` (so it renders identically
-  to a solid fill) rather than `--primary` itself, since it feeds a
-  `background-image` utility.
+  logo, hero, and brand accents only — never for buttons or other controls. It
+  is `linear-gradient(135deg, #FFA230, #FFD37A)` in both themes and is non-text
+  only.
 - **`--brand-text-gradient`** (Tailwind `bg-brand-text-gradient`, paired with
   the built-in `bg-clip-text text-transparent` utilities for gradient-clipped
-  text): same flat-gradient seam as `--brand-gradient`, for brand text/accents
-  that need the gradient clipped to glyph shapes.
+  text): for brand text/accents that need the gradient clipped to glyph shapes.
+  The gradient differs per theme so text stays legible: light uses a darker
+  `linear-gradient(135deg, #9A4A00, #A35200)` (at least 4.84:1 on the sidebar),
+  while dark reuses the amber `linear-gradient(135deg, #FFA230, #FFD37A)`.
 
-Rules carried over from the StreamBoss brand kit, to apply once real brand
-colors land:
+Rules for the brand tokens:
 
-- The gradient tokens are for the logo, hero, and accent surfaces only. Buttons
-  and other interactive controls always use the flat `--primary` color, never a
+- The gradient tokens are for the logo, hero, and accent text only. Buttons and
+  other interactive controls always use the flat `--primary` color, never a
   gradient.
 - `--destructive` (the error color) must stay visually distinct from `--primary`
   — never tune them to the same hue/lightness, even as brand colors change.
