@@ -115,7 +115,10 @@ test('composes the five store screenshots', async ({
   await exportPage
     .getByRole('button', { name: messages.exportPage_expandAll.message })
     .click()
-  await exportPage.getByRole('checkbox', { name: 'Development' }).check()
+  await exportPage
+    .getByRole('treeitem', { name: 'Development', exact: true })
+    .focus()
+  await exportPage.keyboard.press('Space')
   await expect(exportPage.locator('html.dark')).toHaveCount(1)
   const exportShot = await captureRaw(exportPage, 'body', '01-export.png')
   await composeUiSlide(
