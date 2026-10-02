@@ -72,8 +72,8 @@ details.
 See [`docs/development.md`](docs/development.md) for the rest.
 
 ```bash
-git clone https://github.com/AndryOre/bookmarks-import-export.git
-cd bookmarks-import-export
+git clone https://github.com/AndryOre/snug.git
+cd snug
 bun install
 bun run dev
 ```
@@ -83,7 +83,7 @@ bun run dev
 **We welcome your contributions!** See [`CONTRIBUTING.md`](CONTRIBUTING.md) for
 setup, branch naming, and commit/PR conventions.
 
-[![Contributors](https://contrib.rocks/image?repo=AndryOre/bookmarks-import-export)](https://github.com/AndryOre/bookmarks-import-export/graphs/contributors)
+[![Contributors](https://contrib.rocks/image?repo=AndryOre/snug)](https://github.com/AndryOre/snug/graphs/contributors)
 
 ## License 📄
 
@@ -99,16 +99,14 @@ for details.
 [Chrome Web Store-url]:
   https://chromewebstore.google.com/detail/gdhpeilfkeeajillmcncaelnppiakjhn
 [CI]:
-  https://img.shields.io/github/actions/workflow/status/AndryOre/bookmarks-import-export/ci.yml?branch=main&style=flat
-[CI-url]:
-  https://github.com/AndryOre/bookmarks-import-export/actions/workflows/ci.yml
-[License]:
-  https://img.shields.io/github/license/AndryOre/bookmarks-import-export?style=flat
+  https://img.shields.io/github/actions/workflow/status/AndryOre/snug/ci.yml?branch=main&style=flat
+[CI-url]: https://github.com/AndryOre/snug/actions/workflows/ci.yml
+[License]: https://img.shields.io/github/license/AndryOre/snug?style=flat
 [License-url]: LICENSE
 [OpenSSF Scorecard]:
-  https://api.securityscorecards.dev/projects/github.com/AndryOre/bookmarks-import-export/badge
+  https://api.securityscorecards.dev/projects/github.com/AndryOre/snug/badge
 [OpenSSF Scorecard-url]:
-  https://scorecard.dev/viewer/?uri=github.com/AndryOre/bookmarks-import-export
+  https://scorecard.dev/viewer/?uri=github.com/AndryOre/snug
 [OpenSSF Best Practices]: https://www.bestpractices.dev/projects/15093/badge
 [OpenSSF Best Practices-url]: https://www.bestpractices.dev/projects/15093
 [WXT]:

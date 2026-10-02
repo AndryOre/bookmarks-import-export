@@ -1,29 +1,29 @@
 # Issue tracker: Linear
 
-Issues and specs for bookmarks-import-export live in Linear. Every operation
-goes through the `mcp__linear-server__*` MCP tools — there is no CLI equivalent
-to `gh`/`glab` for Linear in this setup.
+Issues and specs for snug live in Linear. Every operation goes through the
+`mcp__linear-server__*` MCP tools — there is no CLI equivalent to `gh`/`glab`
+for Linear in this setup.
 
 - Team: `AndryOre` (key `AO`). Project: `Bookmarks Import/Export` (exists —
-  every `Spec:` issue must pass `project: "Bookmarks Import/Export"` explicitly
-  when created — an issue with `Auto-close stale issues` enabled and no active
-  cycle/project is only exempt from that auto-close while it belongs to one. A
-  `Spec:` can sit untouched for months while its tickets get worked, so without
-  `project` set it risks auto-closing out from under its own ticket cascade.
-  **Sub-issues do NOT reliably inherit the parent's project** — verified twice
-  in this workspace (AO-879..884 under AO-878, AO-1012..1018 under AO-1011):
-  every sub-issue came back with no `project` field and was invisible to a
-  project-filtered `list_issues`, despite the parent having one set. Always pass
-  `project` explicitly on every ticket, not just the spec.
+  every `Spec:` issue must pass `project: "Snug"` explicitly when created — an
+  issue with `Auto-close stale issues` enabled and no active cycle/project is
+  only exempt from that auto-close while it belongs to one. A `Spec:` can sit
+  untouched for months while its tickets get worked, so without `project` set it
+  risks auto-closing out from under its own ticket cascade. **Sub-issues do NOT
+  reliably inherit the parent's project** — verified twice in this workspace
+  (AO-879..884 under AO-878, AO-1012..1018 under AO-1011): every sub-issue came
+  back with no `project` field and was invisible to a project-filtered
+  `list_issues`, despite the parent having one set. Always pass `project`
+  explicitly on every ticket, not just the spec.
 
 ## Conventions
 
 - **Create the `Spec:` issue**:
-  `save_issue({ team: "AndryOre", project: "Bookmarks Import/Export", title: "Spec: <feature>", state: "Backlog", description: <spec template> })`.
+  `save_issue({ team: "AndryOre", project: "Snug", title: "Spec: <feature>", state: "Backlog", description: <spec template> })`.
   Lives in `Backlog`, not `Todo` — cascade auto-close moves it to `Done` once
   its last sub-issue closes. Never apply `ready-for-agent` to it.
 - **Create a ticket**:
-  `save_issue({ team: "AndryOre", project: "Bookmarks Import/Export", title: "...", parentId: <Spec: issue id>, state: "Todo", description: <issue template>, labels: ["ready-for-agent", ...] })`.
+  `save_issue({ team: "AndryOre", project: "Snug", title: "...", parentId: <Spec: issue id>, state: "Todo", description: <issue template>, labels: ["ready-for-agent", ...] })`.
   `state: "Todo"` must be passed explicitly — an issue created without an
   explicit `stateId` defaults to the team's first Backlog-category state.
   **Always pass `project` explicitly here too** — despite being a sub-issue, it

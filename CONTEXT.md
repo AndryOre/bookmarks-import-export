@@ -5,9 +5,9 @@ glossary of concepts, not an implementation reference — it defines what things
 mean, not how they're built.
 
 **Snug** The product's name, shown as "Snug" in every locale and never
-translated. The repository slug, package name and Chrome Web Store extension ID
-keep the legacy `bookmarks-import-export` identity. _Avoid_: Bookmark
-Import/Export, Importar/Exportar Marcadores, BIE.
+translated. The repository slug and package name are `snug`; only the Chrome Web
+Store extension ID keeps the legacy identity. _Avoid_: Bookmark Import/Export,
+Importar/Exportar Marcadores, BIE, `bookmarks-import-export`.
 
 **Wordmark** The product name rendered as brand text next to the mark: "Sn" in
 the amber brand text gradient, "ug" in the normal text color. Used only on the
