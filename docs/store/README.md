@@ -238,15 +238,17 @@ Code: `lib/auto-export.ts` creates and clears the `auto-export` alarm
 `browser.alarms.onAlarm` and also re-syncs the alarm on install, startup and
 config changes.
 
-`downloads` (232 chars):
+`downloads` (225 chars):
 
 ```text
-Snug saves the exported bookmark files, from manual exports and from scheduled backups, to the user's Downloads folder using the downloads API. It only downloads files that Snug generated on the device from the user's own bookmarks.
+Snug uses the downloads API to save scheduled backups and "Export now" runs to the user's Downloads folder, in a configurable subfolder. It only downloads files that Snug generated on the device from the user's own bookmarks.
 ```
 
 Code: `lib/offscreen-download.ts` calls `browser.downloads.download` and watches
 `browser.downloads.onChanged`; `lib/auto-export.ts` builds the filename and
-folder prefix passed to it.
+folder prefix passed to it. Exports started from the Export page and the popup
+do not use this permission: they save through an `<a download>` click in
+`triggerDownload` (`lib/export-all-bookmarks.ts`).
 
 `offscreen` (307 chars):
 
