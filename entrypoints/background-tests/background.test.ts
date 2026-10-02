@@ -71,13 +71,16 @@ function mockRuntimeOnMessage(): {
  * (including `chrome_update`/`shared_module_update`), which the fake browser
  * still dispatches correctly at runtime, so this widens the type for tests.
  * @param reason The `runtime.onInstalled` reason to dispatch.
+ * @param previousVersion The version being updated from, when applicable.
  * @returns The settled results of every registered `onInstalled` listener.
  */
 function triggerOnInstalled(
   reason: 'install' | 'update' | 'chrome_update' | 'shared_module_update',
+  previousVersion?: string,
 ): Promise<unknown> {
   return fakeBrowser.runtime.onInstalled.trigger({
     reason,
+    previousVersion,
     temporary: false,
   } as unknown as Parameters<typeof fakeBrowser.runtime.onInstalled.trigger>[0])
 }
@@ -157,7 +160,7 @@ describe('onInstalled', () => {
     }) as typeof fakeBrowser.runtime.getManifest
     await lastSeenVersionStore.setValue('1.7.0')
 
-    await triggerOnInstalled('update')
+    await triggerOnInstalled('update', '1.7.0')
 
     await vi.waitFor(() => {
       expect(syncAlarm).toHaveBeenCalledWith('update')
@@ -165,22 +168,72 @@ describe('onInstalled', () => {
     expect(await lastSeenVersionStore.getValue()).toBe('1.7.0')
   })
 
-  it('opens the App on the whats-new route and syncs the alarm on update', async () => {
+  it('opens whats-new and syncs the alarm on a major update (1.7.0 to 2.0.0)', async () => {
     fakeBrowser.runtime.getManifest = vi.fn().mockReturnValue({
-      version: '1.6.0',
+      version: '2.0.0',
     }) as typeof fakeBrowser.runtime.getManifest
 
-    await triggerOnInstalled('update')
+    await triggerOnInstalled('update', '1.7.0')
 
+    await vi.waitFor(() => {
+      expect(syncAlarm).toHaveBeenCalledWith('update')
+    })
     await vi.waitFor(async () => {
       const tabs = await fakeBrowser.tabs.query({})
       expect(tabs.map((tab) => tab.url)).toContain(
         getAppUrl(APP_ROUTES.whatsNew),
       )
     })
+  })
+
+  it('opens whats-new on a minor update (2.0.x to 2.1.0)', async () => {
+    fakeBrowser.runtime.getManifest = vi.fn().mockReturnValue({
+      version: '2.1.0',
+    }) as typeof fakeBrowser.runtime.getManifest
+
+    await triggerOnInstalled('update', '2.0.3')
+
     await vi.waitFor(() => {
       expect(syncAlarm).toHaveBeenCalledWith('update')
     })
+    await vi.waitFor(async () => {
+      const tabs = await fakeBrowser.tabs.query({})
+      expect(tabs.map((tab) => tab.url)).toContain(
+        getAppUrl(APP_ROUTES.whatsNew),
+      )
+    })
+  })
+
+  it('opens no whats-new but syncs the alarm on a patch update (2.0.0 to 2.0.1)', async () => {
+    fakeBrowser.runtime.getManifest = vi.fn().mockReturnValue({
+      version: '2.0.1',
+    }) as typeof fakeBrowser.runtime.getManifest
+
+    await triggerOnInstalled('update', '2.0.0')
+
+    await vi.waitFor(() => {
+      expect(syncAlarm).toHaveBeenCalledWith('update')
+    })
+    const tabs = await fakeBrowser.tabs.query({})
+    expect(tabs.map((tab) => tab.url)).not.toContain(
+      getAppUrl(APP_ROUTES.whatsNew),
+    )
+  })
+
+  it('opens no whats-new when previousVersion is missing', async () => {
+    fakeBrowser.runtime.getManifest = vi.fn().mockReturnValue({
+      version: '2.0.0',
+    }) as typeof fakeBrowser.runtime.getManifest
+
+    await triggerOnInstalled('update')
+
+    await vi.waitFor(() => {
+      expect(syncAlarm).toHaveBeenCalledWith('update')
+    })
+    const tabs = await fakeBrowser.tabs.query({})
+    expect(tabs.map((tab) => tab.url)).not.toContain(
+      getAppUrl(APP_ROUTES.whatsNew),
+    )
   })
 
   it('opens no tab but syncs the alarm on chrome_update', async () => {

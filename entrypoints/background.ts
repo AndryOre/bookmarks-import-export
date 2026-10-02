@@ -83,10 +83,31 @@ async function runManualExport(
 }
 
 /**
+ * Whether an update from `previousVersion` to `currentVersion` changed the
+ * major or minor number (patch-only bumps and unparseable or missing
+ * versions do not count).
+ * @param previousVersion The version before the update, if known.
+ * @param currentVersion The version after the update.
+ * @returns Whether What's new should open.
+ */
+function isMinorOrMajorUpdate(
+  previousVersion: string | undefined,
+  currentVersion: string,
+): boolean {
+  if (previousVersion === undefined) return false
+  const previousParts = previousVersion.split('.', 2)
+  const currentParts = currentVersion.split('.', 2)
+  return (
+    previousParts[0] !== currentParts[0] || previousParts[1] !== currentParts[1]
+  )
+}
+
+/**
  * Extension service worker entrypoint. On first install it opens the
- * App's Welcome route (and marks that version's changelog as seen); on every
- * subsequent update it opens the App's What's new route, leaving the version
- * unseen so the sidebar shows its dot until that route is visited. It also keeps the `auto-export` alarm
+ * App's Welcome route (and marks that version's changelog as seen); on a
+ * minor or major update it opens the App's What's new route (patch updates
+ * open nothing), leaving the version unseen so the sidebar shows its dot
+ * until that route is visited. It also keeps the `auto-export` alarm
  * and {@link autoExportNextRunStore} in sync via `syncAlarm`: once on
  * browser startup and on every `onInstalled` reason (both may need to arm a
  * catch-up run for a due time that passed while the browser/extension was
@@ -94,7 +115,7 @@ async function runManualExport(
  * that affects scheduling (see {@link isScheduleRelevantChange}).
  */
 export default defineBackground(() => {
-  browser.runtime.onInstalled.addListener(({ reason }) => {
+  browser.runtime.onInstalled.addListener(({ reason, previousVersion }) => {
     switch (reason) {
       case 'install': {
         console.log(i18n.t('extensionInstalled'))
@@ -109,7 +130,9 @@ export default defineBackground(() => {
       case 'update': {
         const version = browser.runtime.getManifest().version
         console.log(i18n.t('extensionUpdated', [version]))
-        void browser.tabs.create({ url: getAppUrl(APP_ROUTES.whatsNew) })
+        if (isMinorOrMajorUpdate(previousVersion, version)) {
+          void browser.tabs.create({ url: getAppUrl(APP_ROUTES.whatsNew) })
+        }
         void syncAlarmSafely('update')
         break
       }
