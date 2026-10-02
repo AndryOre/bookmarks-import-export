@@ -1,0 +1,906 @@
+{
+  "extensionName": {
+    "message": "Snug",
+    "description": "Name of the extension."
+  },
+  "extensionDescription": {
+    "message": "Lesezeichen exportieren, importieren und automatisch sichern – als HTML, JSON oder CSV, auf deinem Gerät, ohne Konto, ohne Cloud.",
+    "description": "Description of the extension"
+  },
+  "welcomeSubtitle": {
+    "message": "Lesezeichen exportieren, importieren und sichern – komplett auf deinem Gerät.",
+    "description": "Welcome page subtitle"
+  },
+  "settings": {
+    "message": "Einstellungen",
+    "description": "Settings"
+  },
+  "exportFormat": {
+    "message": "Exportformat",
+    "description": "Placeholder text for the export format selector"
+  },
+  "exportBookmarks": {
+    "message": "Exportieren",
+    "description": "Export Bookmarks tab label in the popup"
+  },
+  "refresh": {
+    "message": "Aktualisieren",
+    "description": "Refresh"
+  },
+  "selectAll": {
+    "message": "Alle auswählen",
+    "description": "Select All"
+  },
+  "deselectAll": {
+    "message": "Auswahl aufheben",
+    "description": "Deselect All"
+  },
+  "selected": {
+    "message": "Ausgewählt",
+    "description": "Selected"
+  },
+  "searchBookmarks": {
+    "message": "Lesezeichen durchsuchen",
+    "description": "Search bookmarks"
+  },
+  "display": {
+    "message": "Anzeige",
+    "description": "Display"
+  },
+  "export": {
+    "message": "Export",
+    "description": "Export"
+  },
+  "showBookmarkIcon": {
+    "message": "Lesezeichen-Symbol anzeigen",
+    "description": "Show bookmark icon"
+  },
+  "showBookmarkIconDescription": {
+    "message": "Symbole neben den Lesezeichen anzeigen",
+    "description": "Show bookmark icon description"
+  },
+  "autoExpandFolders": {
+    "message": "Ordner automatisch aufklappen",
+    "description": "Auto expand folders"
+  },
+  "autoExpandFoldersDescription": {
+    "message": "Ordner in der Lesezeichenstruktur automatisch aufklappen",
+    "description": "Auto expand folders description"
+  },
+  "includeIconData": {
+    "message": "Symboldaten einbeziehen",
+    "description": "Include icon data"
+  },
+  "includeDateAdded": {
+    "message": "Erstellungsdatum einbeziehen",
+    "description": "Include creation dates"
+  },
+  "includeDateLastUsed": {
+    "message": "Datum der letzten Nutzung einbeziehen",
+    "description": "Include last used dates"
+  },
+  "includeDateGroupModified": {
+    "message": "Änderungsdatum von Ordnern einbeziehen",
+    "description": "Include folder modification dates"
+  },
+  "hideOtherBookmarks": {
+    "message": "Ordner „Weitere Lesezeichen“ ausblenden",
+    "description": "Hide 'Other bookmarks' folder"
+  },
+  "hideParentFolder": {
+    "message": "Übergeordneten Ordner ausblenden",
+    "description": "Hide parent folder"
+  },
+  "dropFileHere": {
+    "message": "Lesezeichendatei hierher ziehen",
+    "description": "File drop zone prompt"
+  },
+  "orClickToSelect": {
+    "message": "oder zum Auswählen klicken",
+    "description": "Secondary file drop zone prompt"
+  },
+  "supportedFormats": {
+    "message": "Unterstützt HTML, JSON und CSV",
+    "description": "Supported import formats"
+  },
+  "changeFile": {
+    "message": "Ändern",
+    "description": "Button to change selected file"
+  },
+  "importMode": {
+    "message": "Importmodus",
+    "description": "Import mode section label"
+  },
+  "defaultImportMode": {
+    "message": "Standard-Importmodus",
+    "description": "Label for the quick-import default mode select"
+  },
+  "importModeFolder": {
+    "message": "Ordner erstellen",
+    "description": "Import mode: create folder"
+  },
+  "importModeFolderDescription": {
+    "message": "Alle Lesezeichen in einen neuen Ordner „Importierte Lesezeichen“ legen",
+    "description": "Import mode: create folder description"
+  },
+  "importModeRestoreMerge": {
+    "message": "Wiederherstellen – zusammenführen",
+    "description": "Import mode: restore and merge"
+  },
+  "importModeRestoreMergeDescription": {
+    "message": "Lesezeichen an ihren ursprünglichen Orten neben den vorhandenen ablegen",
+    "description": "Import mode: restore and merge description"
+  },
+  "importModeRestoreReplace": {
+    "message": "Wiederherstellen – ersetzen",
+    "description": "Import mode: restore and replace"
+  },
+  "importModeRestoreReplaceDescription": {
+    "message": "Vorhandene Lesezeichen zuerst löschen, dann an den ursprünglichen Orten wiederherstellen",
+    "description": "Import mode: restore and replace description"
+  },
+  "importModeRestoreReplaceWarning": {
+    "message": "Dadurch werden alle aktuellen Lesezeichen in deiner Lesezeichenleiste und unter „Weitere Lesezeichen“ dauerhaft gelöscht",
+    "description": "Warning shown for restore-replace mode"
+  },
+  "importPreview": {
+    "message": "Vorschau",
+    "description": "Import preview section label"
+  },
+  "importPreviewCount": {
+    "message": "$COUNT$ Lesezeichen",
+    "description": "Bookmark count in preview",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "replaceConfirmTitle": {
+    "message": "Vorhandene Lesezeichen ersetzen?",
+    "description": "Title of the replace confirmation dialog"
+  },
+  "replaceConfirmDescription": {
+    "message": "Alle Lesezeichen in deiner Lesezeichenleiste und unter „Weitere Lesezeichen“ werden vor dem Import dauerhaft gelöscht. Das lässt sich nicht rückgängig machen.",
+    "description": "Body of the replace confirmation dialog"
+  },
+  "replaceConfirmButton": {
+    "message": "Ja, ersetzen",
+    "description": "Confirm button in the replace dialog"
+  },
+  "cancel": {
+    "message": "Abbrechen",
+    "description": "Cancel button"
+  },
+  "unsupportedFileFormat": {
+    "message": "Dateiformat wird nicht unterstützt",
+    "description": "Unsupported file format"
+  },
+  "bookmarksImportedSuccessfully": {
+    "message": "Lesezeichen erfolgreich importiert!",
+    "description": "Bookmarks imported successfully"
+  },
+  "import": {
+    "message": "Import",
+    "description": "Import"
+  },
+  "changelog_1_5_0_date": {
+    "message": "29. April 2025",
+    "description": "Changelog 1.5.0 date"
+  },
+  "changelog_1_5_0_1": {
+    "message": "Erweiterter Import hinzugefügt – stelle Lesezeichen an ihren ursprünglichen Orten (Lesezeichenleiste und Weitere Lesezeichen) wieder her, wahlweise zusammenführend oder ersetzend."
+  },
+  "changelog_1_5_0_1_link": {
+    "message": "Erweiterten Import ausprobieren"
+  },
+  "changelog_1_4_0_date": {
+    "message": "29. April 2025",
+    "description": "Changelog 1.4.0 date"
+  },
+  "changelog_1_4_0_1": {
+    "message": "Anpassbare Dateinamenvorlagen für Exporte hinzugefügt – mit Datums- und Uhrzeit-Platzhaltern wie %yyyy, %mm, %dd entstehen automatisch eindeutige Dateinamen mit Zeitstempel."
+  },
+  "changelog_1_3_0_date": {
+    "message": "16. Februar 2025",
+    "description": "Changelog 1.3.0 date"
+  },
+  "changelog_1_3_0_1": {
+    "message": "Dunkelmodus hinzugefügt, der sich automatisch an das Design deines Systems anpasst."
+  },
+  "changelog_1_2_0_date": {
+    "message": "14. Februar 2025",
+    "description": "Changelog 1.2.0 date"
+  },
+  "changelog_1_2_0_1": {
+    "message": "Passt sich jetzt automatisch der Sprache deines Browsers an! Verfügbar auf Englisch und Spanisch."
+  },
+  "changelog_1_1_0_date": {
+    "message": "13. Februar 2025",
+    "description": "Changelog 1.1.0 date"
+  },
+  "changelog_1_1_0_1": {
+    "message": "Importierte Lesezeichen landen jetzt in einem eigenen Ordner und vermischen sich nicht mit deinen vorhandenen Lesezeichen"
+  },
+  "changelog_1_1_0_2": {
+    "message": "Genauere Kontrolle darüber, welche Datumsangaben in deinen Exporten enthalten sind"
+  },
+  "changelog_1_1_0_2_link": {
+    "message": "Neue Exportoptionen ausprobieren"
+  },
+  "changelog_1_0_0_date": {
+    "message": "5. August 2024",
+    "description": "Changelog 1.0.0 date"
+  },
+  "changelog_1_0_0_1": {
+    "message": "Neue Funktion „Erweiterter Export“ für mehr Kontrolle über deine Lesezeichen hinzugefügt."
+  },
+  "changelog_1_0_0_1_link": {
+    "message": "Erweiterten Export ausprobieren"
+  },
+  "changelog_1_0_0_2": {
+    "message": "Willkommens- und Update-Seiten eingeführt, damit du über neue Funktionen auf dem Laufenden bleibst."
+  },
+  "changelog_1_0_0_3": {
+    "message": "Gesamtleistung für ein flüssigeres Erlebnis verbessert."
+  },
+  "changelog_0_1_1_date": {
+    "message": "4. August 2024",
+    "description": "Changelog 0.1.1 date"
+  },
+  "changelog_0_1_1_1": {
+    "message": "Einen kritischen Fehler behoben, der Nutzer mit nicht englischen Browsersprachen betraf."
+  },
+  "changelog_0_1_1_2": {
+    "message": "Zuverlässigkeit von Import und Export verbessert."
+  },
+  "changelog_0_1_1_3": {
+    "message": "Ein Problem behoben, bei dem das Symbol der Erweiterung nicht in der Browser-Symbolleiste angezeigt wurde."
+  },
+  "changelog_0_1_1_4": {
+    "message": "Ein Problem behoben, bei dem die Erweiterung in einigen Browsern nicht funktionierte."
+  },
+  "changelog_0_1_0_date": {
+    "message": "3. August 2024",
+    "description": "Changelog 0.1.0 date"
+  },
+  "changelog_0_1_0_1": {
+    "message": "Erstveröffentlichung der Erweiterung „Bookmark Import/Export“."
+  },
+  "changelog_0_1_0_2": {
+    "message": "Einfache Importfunktion für HTML- und JSON-Dateien."
+  },
+  "changelog_0_1_0_3": {
+    "message": "Grundfunktionen zum Exportieren von Lesezeichen im HTML- und JSON-Format."
+  },
+  "extensionInstalled": {
+    "message": "Snug installiert",
+    "description": "Extension installed"
+  },
+  "extensionUpdated": {
+    "message": "Snug auf Version $VERSION$ aktualisiert",
+    "description": "Extension updated",
+    "placeholders": {
+      "version": {
+        "content": "$1"
+      }
+    }
+  },
+  "exportFilenameTemplate": {
+    "message": "Dateinamenvorlage",
+    "description": "Label for the export filename template input"
+  },
+  "exportFilenameTemplatePreview": {
+    "message": "Vorschau:",
+    "description": "Label shown before the live filename preview"
+  },
+  "faviconError": {
+    "message": "Favicon konnte nicht abgerufen werden",
+    "description": "Error fetching favicon"
+  },
+  "importFromHTMLLoadError": {
+    "message": "HTML konnte nicht gelesen werden: $ERROR$",
+    "description": "Failed to parse HTML",
+    "placeholders": {
+      "error": {
+        "content": "$1"
+      }
+    }
+  },
+  "importFromHTMLCreateError": {
+    "message": "Lesezeichen konnten nicht aus HTML erstellt werden: $ERROR$",
+    "description": "Failed to create bookmarks from HTML",
+    "placeholders": {
+      "error": {
+        "content": "$1"
+      }
+    }
+  },
+  "importFromHTMLProcessError": {
+    "message": "Ordner „Lesezeichenleiste“ oder „Weitere Lesezeichen“ nicht gefunden",
+    "description": "Could not find Bookmarks bar or Other bookmarks folder"
+  },
+  "bookmarksBar": {
+    "message": "Lesezeichenleiste",
+    "description": "Bookmarks bar"
+  },
+  "importedBookmarks": {
+    "message": "Importierte Lesezeichen",
+    "description": "Imported bookmarks"
+  },
+  "otherBookmarks": {
+    "message": "Weitere Lesezeichen",
+    "description": "Other bookmarks"
+  },
+  "mobileBookmarks": {
+    "message": "Lesezeichen auf Mobilgeräten",
+    "description": "Mobile bookmarks"
+  },
+  "importFromJSONImportError": {
+    "message": "Import fehlgeschlagen: $ERROR$",
+    "description": "Import failed",
+    "placeholders": {
+      "error": {
+        "content": "$1"
+      }
+    }
+  },
+  "importFromJSONProcessError": {
+    "message": "Ordner „Lesezeichenleiste“ oder „Weitere Lesezeichen“ nicht gefunden",
+    "description": "Error when JSON import cannot find required folders"
+  },
+  "importFromCSVImportError": {
+    "message": "CSV-Datei konnte nicht importiert werden",
+    "description": "Error when CSV import fails"
+  },
+  "autoExport": {
+    "message": "Auto-Export",
+    "description": "Auto-export settings tab label"
+  },
+  "autoExportNeverRun": {
+    "message": "Noch nie ausgeführt",
+    "description": "Status card value when auto-export has never run"
+  },
+  "exportNow": {
+    "message": "Jetzt exportieren",
+    "description": "Button label to run an on-demand export immediately"
+  },
+  "exportNowSuccess": {
+    "message": "Export abgeschlossen",
+    "description": "Inline message shown after Export now succeeds"
+  },
+  "exportNowFailed": {
+    "message": "Export fehlgeschlagen",
+    "description": "Inline message shown after Export now fails"
+  },
+  "enableAutoExport": {
+    "message": "Auto-Export aktivieren",
+    "description": "Enable auto export toggle label"
+  },
+  "enableAutoExportDescription": {
+    "message": "Deine Lesezeichen automatisch als HTML, JSON und CSV exportieren.",
+    "description": "Enable auto export toggle description"
+  },
+  "preferredExportTime": {
+    "message": "Bevorzugte Exportzeit",
+    "description": "Preferred export time section title"
+  },
+  "timeSelectionUnavailable": {
+    "message": "Die Zeitauswahl ist nur bei Intervallen ab 24 Stunden verfügbar",
+    "description": "Note shown when 12h interval is selected"
+  },
+  "hoursLabel": {
+    "message": "Stunden",
+    "description": "Hours input label in time picker"
+  },
+  "minutesLabel": {
+    "message": "Minuten",
+    "description": "Minutes input label in time picker"
+  },
+  "periodLabel": {
+    "message": "Zeitraum",
+    "description": "AM/PM selector label in time picker"
+  },
+  "exportPath": {
+    "message": "Exportpfad",
+    "description": "Export path section title"
+  },
+  "autoExportFormats": {
+    "message": "Exportformate",
+    "description": "Export formats section title"
+  },
+  "changelog_2_0_0_date": {
+    "message": "2. Oktober 2026",
+    "description": "Changelog 2.0.0 date"
+  },
+  "changelog_2_0_0_1": {
+    "message": "Diese Erweiterung hat einen neuen Namen: Snug. Dieselbe Erweiterung, dasselbe Versprechen, alles lokal zu halten – Export, Import und geplante Sicherungen für deine Lesezeichen, ohne dass je etwas irgendwohin gesendet wird. An deinen Daten und Einstellungen ändert sich nichts; nur Name und Symbol sind neu."
+  },
+  "changelog_2_0_0_2": {
+    "message": "Die App ist jetzt eine einzelne Seite mit Seitenleiste (Export, Import, Auto-Export, Einstellungen, Neuigkeiten), dazu ein kompaktes Popup sowie das neue Snug-Symbol und die neue Farbpalette."
+  },
+  "changelog_2_0_0_2_link": {
+    "message": "App öffnen"
+  },
+  "changelog_1_7_0_date": {
+    "message": "1. Oktober 2026",
+    "description": "Changelog 1.7.0 date"
+  },
+  "changelog_1_7_0_1": {
+    "message": "Statuskarte und Schaltfläche „Jetzt exportieren“ in den Auto-Export-Einstellungen hinzugefügt, dazu eine Statuszeile im Popup, die zeigt, ob der Auto-Export an, aus oder fehlgeschlagen ist."
+  },
+  "changelog_1_7_0_1_link": {
+    "message": "Auto-Export-Einstellungen öffnen"
+  },
+  "changelog_1_7_0_2": {
+    "message": "Lesezeichen-Importe gehärtet: Nicht zulässige URL-Schemata (z. B. javascript:) in CSV-, HTML- und JSON-Dateien werden jetzt abgelehnt."
+  },
+  "changelog_1_6_0_date": {
+    "message": "29. April 2026",
+    "description": "Changelog 1.6.0 date"
+  },
+  "changelog_1_6_0_1": {
+    "message": "Auto-Export hinzugefügt – speichere deine Lesezeichen automatisch in individuellen Intervallen (alle 12 Stunden, täglich, alle 3 oder 7 Tage) in deinem bevorzugten Download-Ordner."
+  },
+  "changelog_1_6_0_1_link": {
+    "message": "Auto-Export-Einstellungen öffnen"
+  },
+  "shell_navLabel": {
+    "message": "Hauptnavigation",
+    "description": "Accessible label of the App sidebar navigation"
+  },
+  "shell_navExport": {
+    "message": "Export",
+    "description": "App sidebar nav item and page title"
+  },
+  "shell_navImport": {
+    "message": "Import",
+    "description": "App sidebar nav item and page title"
+  },
+  "shell_navAutoExport": {
+    "message": "Auto-Export",
+    "description": "App sidebar nav item and page title"
+  },
+  "shell_navSettings": {
+    "message": "Einstellungen",
+    "description": "App sidebar nav item and page title"
+  },
+  "shell_navWhatsNew": {
+    "message": "Neuigkeiten",
+    "description": "App sidebar nav item and page title"
+  },
+  "shell_titleWelcome": {
+    "message": "Willkommen",
+    "description": "App page title for the first-run welcome screen"
+  },
+  "shell_version": {
+    "message": "Version $VERSION$",
+    "description": "Installed version shown under the product name in the App sidebar",
+    "placeholders": {
+      "version": {
+        "content": "$1"
+      }
+    }
+  },
+  "shell_autoExportOn": {
+    "message": "An",
+    "description": "Accessible status of the Auto-export nav item when scheduled backups are enabled"
+  },
+  "shell_autoExportFailed": {
+    "message": "Letzter Lauf fehlgeschlagen",
+    "description": "Accessible status of the Auto-export nav item when the last run failed"
+  },
+  "shell_whatsNewUnseen": {
+    "message": "Neu",
+    "description": "Accessible label of the unseen-update dot on the What's new nav item"
+  },
+  "shell_placeholder": {
+    "message": "Dieser Bereich kommt bald.",
+    "description": "Placeholder text shown on App screens that are not built yet"
+  },
+  "shell_toggleSidebar": {
+    "message": "Seitenleiste ein-/ausblenden",
+    "description": "Accessible label of the sidebar trigger in the App header"
+  },
+  "exportOptions_title": {
+    "message": "Exportoptionen",
+    "description": "Export options panel: Export options"
+  },
+  "exportOptions_includeIcons": {
+    "message": "Favicons einbeziehen",
+    "description": "Export options panel: Include favicons"
+  },
+  "exportOptions_dateAdded": {
+    "message": "Hinzugefügt am",
+    "description": "Export options panel: Date added"
+  },
+  "exportOptions_dateLastUsed": {
+    "message": "Zuletzt verwendet am",
+    "description": "Export options panel: Date last used"
+  },
+  "exportOptions_folderDates": {
+    "message": "Änderungsdatum von Ordnern",
+    "description": "Export options panel: Folder modified dates"
+  },
+  "exportOptions_hideOther": {
+    "message": "Weitere Lesezeichen ausblenden",
+    "description": "Export options panel: Hide other bookmarks"
+  },
+  "exportOptions_hideParent": {
+    "message": "Übergeordneten Ordner ausblenden",
+    "description": "Export options panel: Hide parent folder"
+  },
+  "import_stepFile": {
+    "message": "Datei",
+    "description": "Heading of step 1 of the import flow"
+  },
+  "import_stepDone": {
+    "message": "Fertig",
+    "description": "Screen reader text for a completed step"
+  },
+  "import_fileInputLabel": {
+    "message": "Lesezeichendatei",
+    "description": "Accessible label of the file input"
+  },
+  "import_changeFile": {
+    "message": "Datei ändern",
+    "description": "Button to pick a different file"
+  },
+  "import_restoreUnavailable": {
+    "message": "Diese Datei enthält keine Ortsangaben und kann daher nicht in ihren ursprünglichen Ordnern wiederhergestellt werden.",
+    "description": "Reason shown on disabled restore mode cards"
+  },
+  "import_submit": {
+    "message": "$COUNT$ Lesezeichen importieren",
+    "description": "Primary import button",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "import_importing": {
+    "message": "Import läuft …",
+    "description": "Primary button label while importing"
+  },
+  "import_replaceTitle": {
+    "message": "Vorhandene Lesezeichen ersetzen?",
+    "description": "Title of the replace confirmation dialog"
+  },
+  "import_replaceConfirm": {
+    "message": "Ersetzen und importieren",
+    "description": "Destructive confirm button in the replace dialog"
+  },
+  "import_errorTitle": {
+    "message": "Import fehlgeschlagen",
+    "description": "Title of the import error alert"
+  },
+  "import_another": {
+    "message": "Weitere Datei importieren",
+    "description": "Button shown after a successful import"
+  },
+  "import_openManager": {
+    "message": "Lesezeichen-Manager öffnen",
+    "description": "Button that opens chrome://bookmarks"
+  },
+  "autoExportPage_saved": {
+    "message": "Gespeichert",
+    "description": "Toast shown after an Auto-export setting is saved"
+  },
+  "autoExportPage_succeeded": {
+    "message": "Erfolgreich",
+    "description": "Last-run badge when the last auto-export succeeded"
+  },
+  "autoExportPage_failed": {
+    "message": "Fehlgeschlagen",
+    "description": "Last-run badge when the last auto-export failed"
+  },
+  "autoExportPage_statusTitle": {
+    "message": "Status",
+    "description": "Title of the Auto-export status card"
+  },
+  "autoExportPage_lastRun": {
+    "message": "Letzter Lauf",
+    "description": "Status card label for the last run"
+  },
+  "autoExportPage_nextRun": {
+    "message": "Nächster Lauf",
+    "description": "Status card label for the next run"
+  },
+  "autoExportPage_off": {
+    "message": "Auto-Export ist aus",
+    "description": "Status card next-run value when auto-export is off"
+  },
+  "autoExportPage_failureTitle": {
+    "message": "Der letzte Auto-Export ist fehlgeschlagen",
+    "description": "Title of the alert shown when the last run failed"
+  },
+  "autoExportPage_settingsTitle": {
+    "message": "Einstellungen",
+    "description": "Title of the Auto-export settings card"
+  },
+  "autoExportPage_settingsDescription": {
+    "message": "Änderungen werden automatisch gespeichert.",
+    "description": "Description of the Auto-export settings card"
+  },
+  "autoExportPage_frequency": {
+    "message": "Häufigkeit",
+    "description": "Label of the frequency toggle group"
+  },
+  "autoExportPage_interval12h": {
+    "message": "Alle 12 Stunden",
+    "description": "Frequency option: every 12 hours"
+  },
+  "autoExportPage_interval1d": {
+    "message": "Täglich",
+    "description": "Frequency option: daily"
+  },
+  "autoExportPage_interval3d": {
+    "message": "Alle 3 Tage",
+    "description": "Frequency option: every 3 days"
+  },
+  "autoExportPage_interval7d": {
+    "message": "Wöchentlich",
+    "description": "Frequency option: weekly"
+  },
+  "autoExportPage_folderDescription": {
+    "message": "Ordner innerhalb deines Download-Ordners, in dem die Sicherungen gespeichert werden.",
+    "description": "Help text under the folder field"
+  },
+  "autoExportPage_formatsDescription": {
+    "message": "Mindestens ein Format muss ausgewählt bleiben.",
+    "description": "Help text under the formats toggle group"
+  },
+  "popup_exportAll": {
+    "message": "Alle exportieren",
+    "description": "Popup button that exports every bookmark in the remembered format"
+  },
+  "popup_exportFormatLabel": {
+    "message": "Exportformat",
+    "description": "Accessible label of the popup format toggle group"
+  },
+  "popup_exportSuccessTitle": {
+    "message": "$COUNT$ Lesezeichen exportiert",
+    "description": "Popup toast title after a successful export",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "popup_exportFailedTitle": {
+    "message": "Export fehlgeschlagen",
+    "description": "Popup toast title when an export fails"
+  },
+  "popup_chooseFile": {
+    "message": "Datei wählen …",
+    "description": "Popup button that opens the file picker to import bookmarks"
+  },
+  "popup_importing": {
+    "message": "Import läuft …",
+    "description": "Popup import button label while an import is running"
+  },
+  "popup_importSuccessTitle": {
+    "message": "Lesezeichen importiert",
+    "description": "Popup toast title after a successful import"
+  },
+  "popup_importFailedTitle": {
+    "message": "Import fehlgeschlagen",
+    "description": "Popup toast title when an import fails"
+  },
+  "popup_replaceAlertTitle": {
+    "message": "Vorhandene Lesezeichen werden ersetzt",
+    "description": "Title of the popup alert shown when the default mode is Restore - replace"
+  },
+  "popup_statusNextRunTitle": {
+    "message": "Nächster Auto-Export",
+    "description": "Popup status item title when auto-export is scheduled"
+  },
+  "popup_statusOffTitle": {
+    "message": "Geplante Sicherungen einrichten",
+    "description": "Popup status item title when auto-export is off"
+  },
+  "popup_statusOffDescription": {
+    "message": "Auto-Export ist aus",
+    "description": "Popup status item description when auto-export is off"
+  },
+  "popup_statusFailedTitle": {
+    "message": "Letzter Auto-Export fehlgeschlagen",
+    "description": "Popup status item title when the last auto-export failed"
+  },
+  "popup_statusFailedDescription": {
+    "message": "Auto-Export öffnen und prüfen",
+    "description": "Popup status item description when the last auto-export failed"
+  },
+  "popup_openApp": {
+    "message": "App öffnen",
+    "description": "Popup footer button that opens the full-page app"
+  },
+  "popup_settings": {
+    "message": "Einstellungen",
+    "description": "Accessible label of the popup footer settings icon button"
+  },
+  "settingsPage_appearanceTitle": {
+    "message": "Darstellung",
+    "description": "Settings page: appearanceTitle"
+  },
+  "settingsPage_theme": {
+    "message": "Design",
+    "description": "Settings page: theme"
+  },
+  "settingsPage_themeDescription": {
+    "message": "Lege fest, wie die Erweiterung aussieht. „System“ folgt deinem Betriebssystem.",
+    "description": "Settings page: themeDescription"
+  },
+  "settingsPage_themeSystem": {
+    "message": "System",
+    "description": "Settings page: themeSystem"
+  },
+  "settingsPage_themeLight": {
+    "message": "Hell",
+    "description": "Settings page: themeLight"
+  },
+  "settingsPage_themeDark": {
+    "message": "Dunkel",
+    "description": "Settings page: themeDark"
+  },
+  "settingsPage_treeTitle": {
+    "message": "Lesezeichenstruktur",
+    "description": "Settings page: treeTitle"
+  },
+  "settingsPage_importTitle": {
+    "message": "Import",
+    "description": "Settings page: importTitle"
+  },
+  "settingsPage_importDescription": {
+    "message": "Standardwerte für den Import von Lesezeichen.",
+    "description": "Settings page: importDescription"
+  },
+  "settingsPage_importModeHelp": {
+    "message": "Wird vom Popup verwendet und auf der Import-Seite vorausgewählt.",
+    "description": "Settings page: importModeHelp"
+  },
+  "welcome_exportTitle": {
+    "message": "Erste Sicherung anlegen",
+    "description": "Welcome page quick-start item title"
+  },
+  "welcome_exportDescription": {
+    "message": "In zehn Sekunden zu einer sicheren Kopie deiner Lesezeichen.",
+    "description": "Welcome page quick-start item description"
+  },
+  "welcome_exportAction": {
+    "message": "Exportieren",
+    "description": "Welcome page quick-start item button"
+  },
+  "welcome_autoExportTitle": {
+    "message": "Auto-Export einrichten",
+    "description": "Welcome page quick-start item title"
+  },
+  "welcome_autoExportDescription": {
+    "message": "Nach Zeitplan sichern, ganz ohne Klicks.",
+    "description": "Welcome page quick-start item description"
+  },
+  "welcome_autoExportAction": {
+    "message": "Auto-Export",
+    "description": "Welcome page quick-start item button"
+  },
+  "welcome_importTitle": {
+    "message": "Lesezeichen importieren",
+    "description": "Welcome page quick-start item title"
+  },
+  "welcome_importDescription": {
+    "message": "Lesezeichen aus einem anderen Browser oder einer Sicherung übernehmen.",
+    "description": "Welcome page quick-start item description"
+  },
+  "welcome_importAction": {
+    "message": "Importieren",
+    "description": "Welcome page quick-start item button"
+  },
+  "whatsNew_current": {
+    "message": "Aktuell",
+    "description": "What's new screen string"
+  },
+  "whatsNew_reviewTitle": {
+    "message": "Gefällt dir die Erweiterung?",
+    "description": "What's new screen string"
+  },
+  "whatsNew_reviewDescription": {
+    "message": "Eine kurze Bewertung hilft anderen, sie zu finden.",
+    "description": "What's new screen string"
+  },
+  "whatsNew_reviewAction": {
+    "message": "Bewertung abgeben",
+    "description": "What's new screen string"
+  },
+  "exportPage_title": {
+    "message": "Lesezeichen exportieren",
+    "description": "Export page heading"
+  },
+  "exportPage_description": {
+    "message": "Wähle aus, was enthalten sein soll, und lade es im gewünschten Format herunter.",
+    "description": "Export page one-line description"
+  },
+  "exportPage_expandAll": {
+    "message": "Alle aufklappen",
+    "description": "Export page toolbar button that expands every folder"
+  },
+  "exportPage_collapseAll": {
+    "message": "Alle zuklappen",
+    "description": "Export page toolbar button that collapses every folder"
+  },
+  "exportPage_selectAllLabel": {
+    "message": "Alle Lesezeichen auswählen",
+    "description": "Accessible label of the master checkbox on the Export page"
+  },
+  "exportPage_loading": {
+    "message": "Lesezeichen werden geladen",
+    "description": "Accessible label of the loading placeholder on the Export page"
+  },
+  "exportPage_selectionCount": {
+    "message": "$SELECTED$ von $TOTAL$ ausgewählt",
+    "description": "Export page sticky bar selection count",
+    "placeholders": {
+      "selected": {
+        "content": "$1"
+      },
+      "total": {
+        "content": "$2"
+      }
+    }
+  },
+  "exportPage_nothingSelected": {
+    "message": "Nichts ausgewählt",
+    "description": "Export page sticky bar text when no bookmark is selected"
+  },
+  "exportPage_formatLabel": {
+    "message": "Exportformat",
+    "description": "Accessible label of the Export page format toggle group"
+  },
+  "exportPage_exportButton": {
+    "message": "$COUNT$ Lesezeichen exportieren",
+    "description": "Export page primary button",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "exportPage_exporting": {
+    "message": "Export läuft …",
+    "description": "Export page primary button label while exporting"
+  },
+  "exportPage_successTitle": {
+    "message": "$COUNT$ Lesezeichen exportiert",
+    "description": "Export page toast title after a successful export",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "exportPage_failedTitle": {
+    "message": "Export fehlgeschlagen",
+    "description": "Export page toast title when an export fails"
+  },
+  "exportPage_noResultsTitle": {
+    "message": "Keine Lesezeichen passen zu „$TERM$“",
+    "description": "Export page empty state title when a search matches nothing",
+    "placeholders": {
+      "term": {
+        "content": "$1"
+      }
+    }
+  },
+  "exportPage_noResultsDescription": {
+    "message": "Versuche es mit einem anderen Wort oder lösche die Suche, um alle Lesezeichen zu sehen.",
+    "description": "Export page empty state description"
+  },
+  "exportPage_clearSearch": {
+    "message": "Suche löschen",
+    "description": "Export page empty state button that clears the search"
+  },
+  "welcome_heroTitle": {
+    "message": "Willkommen bei",
+    "description": "Lead-in of the welcome page hero title; the Snug wordmark is rendered right after it"
+  }
+}
