@@ -17,6 +17,7 @@ import {
   ItemMedia,
   ItemTitle,
 } from '@/components/ui/item'
+import { Wordmark } from '@/components/wordmark'
 import { APP_ROUTES } from '@/lib/app-url'
 
 interface QuickStartAction {
@@ -72,7 +73,7 @@ export function WelcomeRoute() {
           className="size-16"
         />
         <h2 className="font-heading text-2xl font-semibold">
-          {i18n.t('welcome_heroTitle')}
+          {i18n.t('welcome_heroTitle')} <Wordmark />
         </h2>
         <p className="text-muted-foreground">{i18n.t('welcomeSubtitle')}</p>
       </div>

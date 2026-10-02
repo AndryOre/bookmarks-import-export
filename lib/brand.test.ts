@@ -4,8 +4,26 @@ import {
   CHROME_WEB_STORE_EXTENSION_ID,
   CHROME_WEB_STORE_URL,
   GITHUB_URL,
+  PRODUCT_NAME,
   TWITTER_URL,
 } from './brand'
+
+const localeMessages = import.meta.glob<{
+  extensionName: { message: string }
+}>('../locales/*.json', { eager: true, import: 'default' })
+
+describe('PRODUCT_NAME', () => {
+  it('finds the locale files', () => {
+    expect(Object.keys(localeMessages).length).toBeGreaterThanOrEqual(2)
+  })
+
+  it.each(Object.entries(localeMessages))(
+    'equals extensionName in %s',
+    (_path, messages) => {
+      expect(messages.extensionName.message).toBe(PRODUCT_NAME)
+    },
+  )
+})
 
 describe('CHROME_WEB_STORE_URL', () => {
   it('contains the extension ID', () => {

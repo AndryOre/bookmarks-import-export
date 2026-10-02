@@ -17,6 +17,7 @@ import {
   SidebarRail,
   SidebarTrigger,
 } from '@/components/ui/sidebar'
+import { Wordmark } from '@/components/wordmark'
 import { APP_ROUTES } from '@/lib/app-url'
 import {
   autoExportConfigStore,
@@ -109,9 +110,7 @@ export function AppShell() {
                   className="aspect-square size-8 rounded-lg"
                 />
                 <div className="grid flex-1 text-left leading-tight">
-                  <span className="truncate font-heading font-semibold">
-                    {i18n.t('extensionName')}
-                  </span>
+                  <Wordmark className="truncate text-sm" />
                   <span className="truncate text-xs text-muted-foreground">
                     {i18n.t('shell_version', [
                       browser.runtime.getManifest().version,
