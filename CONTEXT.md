@@ -15,9 +15,10 @@ App sidebar header and the Welcome hero, never on controls. _Avoid_: logo text,
 title, brand text.
 
 **App** The extension's single full-page UI (`app.html`, also the options page),
-hash-routed with a sidebar: Export, Import, Auto-export, Settings, What's new
-and Welcome. The popup is separate and compact; anything that needs more room
-opens the App. _Avoid_: dashboard, options page, advanced page, full page.
+hash-routed with a sidebar: Export, Import, Duplicates, Auto-export, Settings,
+What's new and Welcome. The popup is separate and compact; anything that needs
+more room opens the App. _Avoid_: dashboard, options page, advanced page, full
+page.
 
 **Bookmark node** A single entry in a bookmark tree: either a bookmark (has a
 title and a URL) or a folder (has a title and children, no URL). Trees are built
@@ -69,9 +70,30 @@ to include icons and which dates, whether to hide the "other bookmarks" and
 parent folders, and the filename template. They are shared by the Export page
 and the Auto-export page. _Avoid_: export settings, export preferences.
 
+**Safety snapshot** A copy of the bookmarks bar and other-bookmarks roots that
+Snug takes automatically before every Restore-replace, kept both as a file in
+the user's downloads and inside the extension so the import can be undone. Only
+the latest one is kept. _Avoid_: backup, restore point, undo file.
+
+**Duplicate** Two or more bookmarks whose URLs are the same once normalized:
+scheme and host lowercased, `http` treated as `https`, a leading `www.`, a
+trailing slash and any `#fragment` ignored. Folders are never duplicates of each
+other. _Avoid_: dupe, repeated bookmark, copy.
+
+**Skip duplicates** An import option that leaves out any bookmark whose
+normalized URL already exists in the browser, reporting how many were skipped.
+On by default in Folder and Restore-merge. _Avoid_: dedupe on import, merge
+duplicates, ignore existing.
+
 **Auto-export** A recurring, unattended export that runs on a schedule the user
-configures (how often, and to which formats), saving files without any manual
-export action. _Avoid_: scheduled export, automatic backup, background export.
+configures (how often — hourly, every 12 hours, daily, every 3 days, every 7
+days, or weekly on a chosen day — and to which formats), saving files without
+any manual export action. _Avoid_: scheduled export, automatic backup,
+background export.
+
+**Retention** How many Auto-export files Snug keeps: after a successful run it
+deletes the oldest files it created itself beyond the user's limit, and never
+touches files it did not create. _Avoid_: cleanup, rotation, pruning.
 
 **Filename template** A user-configurable pattern for naming exported files,
 made of placeholders that get replaced with parts of the current date and time
@@ -85,3 +107,6 @@ status. _Avoid_: backup, job.
 **Catch-up run** An auto-export run performed shortly after the browser starts
 because its scheduled time passed while the browser was closed. _Avoid_: missed
 run, retry.
+
+**Failure notification** The system notification Snug shows when an Auto-export
+run fails; successful runs never notify. _Avoid_: alert, error toast, warning.
