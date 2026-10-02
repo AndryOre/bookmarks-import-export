@@ -1,14 +1,14 @@
 {
   "extensionName": {
-    "message": "Bookmark Import/Export",
+    "message": "Snug",
     "description": "Name of the extension."
   },
   "extensionDescription": {
-    "message": "Import and export your bookmarks easily",
+    "message": "Export, import, and schedule automatic backups for your bookmarks — HTML, JSON, or CSV, all on your device, no account, no cloud.",
     "description": "Description of the extension"
   },
   "welcomeSubtitle": {
-    "message": "Easily import and export your bookmarks across browsers",
+    "message": "Export, import, and back up your bookmarks — entirely on your device.",
     "description": "Welcome page subtitle"
   },
   "settings": {
@@ -278,11 +278,11 @@
     "message": "Basic functionality for exporting bookmarks to HTML and JSON formats."
   },
   "extensionInstalled": {
-    "message": "Bookmark Import/Export extension installed",
+    "message": "Snug installed",
     "description": "Extension installed"
   },
   "extensionUpdated": {
-    "message": "Bookmark Import/Export extension updated to version $VERSION$",
+    "message": "Snug updated to version $VERSION$",
     "description": "Extension updated",
     "placeholders": {
       "version": {
@@ -891,7 +891,7 @@
     "description": "Export page empty state button that clears the search"
   },
   "welcome_heroTitle": {
-    "message": "Welcome",
-    "description": "Welcome page hero title"
+    "message": "Welcome to",
+    "description": "Lead-in of the welcome page hero title; the Snug wordmark is rendered right after it"
   }
 }
