@@ -1,8 +1,7 @@
 # Governance
 
-This document describes how Bookmark Import/Export is governed today: who
-decides what, how changes get made, and what happens if the maintainer goes
-away.
+This document describes how Snug is governed today: who decides what, how
+changes get made, and what happens if the maintainer goes away.
 
 ## Model: BDFL
 
