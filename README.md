@@ -40,9 +40,8 @@ from the same listing.
 
 ## Privacy
 
-Snug requests only the permissions it needs to read and write bookmarks, run
-scheduled backups, and save files to Downloads — the
-[Privacy Policy](PRIVACY_POLICY.md) lists each one.
+The [Privacy Policy](PRIVACY_POLICY.md) covers the permissions Snug requests and
+why.
 
 ## Documentation
 
