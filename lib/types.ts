@@ -1,30 +1,5 @@
-import { i18n } from '#i18n'
-import type { GeneratedI18nStructure } from '#i18n'
 import type { Browser } from '@wxt-dev/browser'
 import type { ReactNode } from 'react'
-
-/**
- * A valid `i18n.t()` message key.
- */
-export type MessageKey = keyof GeneratedI18nStructure
-
-/**
- * Type-safe wrapper for a dynamic `i18n.t()` call (e.g. a message key
- * chosen from a component prop or a lookup table). `i18n.t` is generic and
- * overloaded per message's plural/substitution shape, so passing it an
- * already-widened `MessageKey` union does not type-check — none of the
- * overloads' filtered-by-shape parameter types accept a plain union that
- * isn't a "naked" generic parameter from `i18n.t`'s own perspective. Every
- * generated message this app has is non-plural, and this helper is only
- * for the ones with no substitutions, so the narrower internal signature
- * below is exactly the plain-string overload's real runtime behavior.
- * @param key The message key to translate.
- * @returns The translated string.
- */
-export function t<K extends MessageKey>(key: K): string {
-  const getMessage = i18n.t as (key: MessageKey) => string
-  return getMessage(key)
-}
 
 /**
  * Minimal bookmark node shape, independent of the `browser.bookmarks` API.
@@ -149,43 +124,6 @@ export interface BookmarkTreeHandle {
    * pruned). Folders left empty by the pruning are not included.
    */
   getSelectedBookmarks: () => Promise<ExtendedBookmarkTreeNode[]>
-}
-
-export interface SearchBarProperties {
-  value: string
-  onChange: (value: string) => void
-}
-
-/**
- * The three tabs {@link SettingsDialog} renders.
- */
-export type SettingsTab = 'display' | 'export' | 'auto-export'
-
-export interface SettingsDialogProperties {
-  /**
-   * Matches Radix/shadcn Dialog's controlled `open`/`onOpenChange` prop
-   * convention — renaming it would fight that API at every call site.
-   */
-  open: boolean
-  onOpenChange: (isOpen: boolean) => void
-  /**
-   * Which tab is active when the dialog renders. Defaults to `'display'`
-   * when omitted — callers only pass this to force a specific tab, such as
-   * the `advanced-export.html?settings=auto-export` deep link opening
-   * straight onto the Auto-export tab.
-   */
-  defaultTab?: SettingsTab
-}
-
-export interface HeaderProperties {
-  selectedCount: number
-  totalCount: number
-  searchTerm: string
-  onSearchChange: (value: string) => void
-  onRefresh: () => void
-  onSelectAll: () => void
-  onDeselectAll: () => void
-  onExport: (format: BookmarkFormat) => void
 }
 
 export interface BookmarkTreeProperties {

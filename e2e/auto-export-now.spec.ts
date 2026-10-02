@@ -190,13 +190,11 @@ test('Export now downloads an icon-data-heavy export and shows success', async (
     await warmupPage.goto(pageUrl, { waitUntil: 'load' })
     await warmupPage.close()
 
-    const page = await openExtensionPage('advanced-export.html')
+    const page = await openExtensionPage('app.html#/auto-export')
     await waitForFaviconCached(page, extensionId, pageUrl)
 
     await seedBookmarks(buildIconHeavyBookmarks(pageUrl))
 
-    await page.getByRole('button', { name: 'Settings' }).click()
-    await page.getByRole('tab', { name: 'Auto-export' }).click()
     await page.getByRole('button', { name: 'Export now' }).click()
 
     await expect(page.getByText('Export completed')).toBeVisible({

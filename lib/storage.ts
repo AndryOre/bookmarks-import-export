@@ -71,7 +71,7 @@ export const lastExportFormatStore = storage.defineItem<
   'csv' | 'html' | 'json'
 >('local:lastExportFormat', { fallback: 'html' })
 
-export const DEFAULT_AUTO_EXPORT_CONFIG: AutoExportConfig = {
+const DEFAULT_AUTO_EXPORT_CONFIG: AutoExportConfig = {
   enabled: false,
   interval: '1d',
   preferredTime: '00:00',

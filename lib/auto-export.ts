@@ -30,13 +30,13 @@ export const ALARM_NAME = 'auto-export'
 /**
  * `browser.runtime.sendMessage` type asking the background service worker to
  * run an "Export now" — a `manual`-triggered {@link runAutoExport} using the
- * on-screen draft formats/path from the settings dialog, regardless of
+ * on-screen draft formats/path from the Auto-export page, regardless of
  * whether auto-export is enabled or what's currently persisted.
  */
 export const RUN_MANUAL_EXPORT_MESSAGE_TYPE = 'auto-export-run-manual'
 
 /**
- * Sent by the settings dialog's "Export now" button to the background
+ * Sent by the Auto-export page's "Export now" button to the background
  * service worker.
  */
 export interface RunManualExportMessage {
@@ -286,7 +286,7 @@ async function setFailureBadge(): Promise<void> {
  * regardless of what time this run actually finished — and the alarm is
  * re-armed for it.
  *
- * `overrides` lets a `manual` run (the settings dialog's "Export now") use
+ * `overrides` lets a `manual` run (the Auto-export page's "Export now") use
  * the on-screen draft `formats`/`path` instead of what's persisted in
  * {@link autoExportConfigStore}, and bypasses the `enabled`/empty-`formats`
  * skip above — "Export now" works regardless of the Enable switch or of
