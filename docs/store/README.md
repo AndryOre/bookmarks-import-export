@@ -64,7 +64,8 @@ Summary, from `locales/en.json` `extensionDescription` (129 chars, limit 132):
 Export, import, and schedule automatic backups for your bookmarks — HTML, JSON, or CSV, all on your device, no account, no cloud.
 ```
 
-Detailed description, from `~/code/brand/snug/copy.md` section 1 (891 chars):
+Detailed description, from [`docs/brand/copy.md`](../brand/copy.md) section 1
+(891 chars):
 
 ```text
 Snug moves your bookmarks between browsers, exactly as you left them — nothing sent anywhere, no account required.
@@ -100,7 +101,8 @@ Programa respaldos automáticos de tus marcadores, exporta e importa en HTML, JS
 locale file is the source of truth and the 109-char string above is the one that
 ships. Do not use the `copy.md` variant.
 
-Detailed description, from `~/code/brand/snug/copy.md` section 1 (977 chars):
+Detailed description, from [`docs/brand/copy.md`](../brand/copy.md) section 1
+(977 chars):
 
 ```text
 Snug mueve tus marcadores entre navegadores, tal como los dejaste — no se envían a ningún lado, y no necesitas cuenta.
