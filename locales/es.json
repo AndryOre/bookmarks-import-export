@@ -901,5 +901,14 @@
   "welcome_heroTitle": {
     "message": "Te damos la bienvenida a",
     "description": "Parte inicial del título principal de la página de bienvenida; el logotipo de Snug se muestra justo después"
+  },
+  "downloadInterrupted": {
+    "message": "La descarga $ID$ se interrumpió.",
+    "description": "Last-run error when a download is interrupted; $ID$ is the download id",
+    "placeholders": {
+      "id": {
+        "content": "$1"
+      }
+    }
   }
 }

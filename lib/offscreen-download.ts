@@ -8,6 +8,12 @@ import type { Browser } from '@wxt-dev/browser'
 export const OFFSCREEN_DOCUMENT_PATH = '/offscreen.html'
 
 /**
+ * How long {@link downloadViaOffscreenDocument} waits for a download to reach
+ * `'complete'` or `'interrupted'` before giving up.
+ */
+export const DOWNLOAD_SETTLE_TIMEOUT_MS = 60_000
+
+/**
  * Message type asking the offscreen document to turn export content into a
  * `Blob` object URL.
  */
@@ -92,6 +98,27 @@ async function runLifecycleStep<T>(step: () => Promise<T>): Promise<T> {
 }
 
 /**
+ * Opens the offscreen document, reusing one Chrome still has open from a
+ * previous service worker lifetime (the in-memory state is lost when the
+ * worker is killed, but the document survives, and a second `createDocument`
+ * would reject).
+ * @returns Resolves once an offscreen document is open.
+ */
+async function openOffscreenDocument(): Promise<void> {
+  const existingContexts = await chrome.runtime.getContexts({
+    contextTypes: ['OFFSCREEN_DOCUMENT'],
+  })
+  if (existingContexts.length > 0) return
+
+  await chrome.offscreen.createDocument({
+    url: chrome.runtime.getURL(OFFSCREEN_DOCUMENT_PATH),
+    reasons: ['BLOBS'],
+    justification:
+      'Create Blob object URLs for exported bookmark files too large for a data URL.',
+  })
+}
+
+/**
  * Creates the offscreen document if one isn't already open, or awaits the
  * in-flight creation triggered by a previous, still-pending download in the
  * same run. Resets the cached promise on failure so a later call retries
@@ -103,12 +130,7 @@ async function runLifecycleStep<T>(step: () => Promise<T>): Promise<T> {
 async function ensureOffscreenDocument(): Promise<void> {
   await runLifecycleStep(async () => {
     if (!offscreenState.openDocumentPromise) {
-      offscreenState.openDocumentPromise = chrome.offscreen.createDocument({
-        url: chrome.runtime.getURL(OFFSCREEN_DOCUMENT_PATH),
-        reasons: ['BLOBS'],
-        justification:
-          'Create Blob object URLs for exported bookmark files too large for a data URL.',
-      })
+      offscreenState.openDocumentPromise = openOffscreenDocument()
     }
 
     try {
@@ -180,23 +202,34 @@ async function revokeBlobUrl(url: string): Promise<void> {
 
 /**
  * Resolves once `downloadId` reaches a terminal `browser.downloads.onChanged`
- * state, or rejects if it is interrupted.
+ * state, rejects if it is interrupted, or rejects after
+ * {@link DOWNLOAD_SETTLE_TIMEOUT_MS} if it never settles. Always removes its
+ * listener and timer when it settles.
  * @param downloadId The download to watch.
- * @returns Resolves on `'complete'`, rejects on `'interrupted'`.
+ * @returns Resolves on `'complete'`, rejects on `'interrupted'` or timeout.
  */
 function waitForDownloadSettled(downloadId: number): Promise<void> {
   return new Promise((resolve, reject) => {
+    const cleanup = (): void => {
+      clearTimeout(timeoutHandle)
+      browser.downloads.onChanged.removeListener(listener)
+    }
     const listener = (delta: Browser.downloads.DownloadDelta): void => {
       if (delta.id !== downloadId) return
       const state = delta.state?.current
       if (state === 'complete') {
-        browser.downloads.onChanged.removeListener(listener)
+        cleanup()
         resolve()
       } else if (state === 'interrupted') {
-        browser.downloads.onChanged.removeListener(listener)
-        reject(new Error(`Download ${downloadId} was interrupted.`))
+        cleanup()
+        const message = i18n.t('downloadInterrupted', [String(downloadId)])
+        reject(new Error(message))
       }
     }
+    const timeoutHandle = setTimeout(() => {
+      cleanup()
+      reject(new Error(`Download ${downloadId} timed out.`))
+    }, DOWNLOAD_SETTLE_TIMEOUT_MS)
     browser.downloads.onChanged.addListener(listener)
   })
 }

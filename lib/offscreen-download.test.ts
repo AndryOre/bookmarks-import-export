@@ -3,8 +3,11 @@ import type { Browser } from '@wxt-dev/browser'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { fakeBrowser } from 'wxt/testing/fake-browser'
 
+import { resetFakeI18n } from '@/lib/testing/fake-i18n'
+
 import {
   CREATE_BLOB_URL_MESSAGE_TYPE,
+  DOWNLOAD_SETTLE_TIMEOUT_MS,
   downloadViaOffscreenDocument,
   OFFSCREEN_DOCUMENT_PATH,
   REVOKE_BLOB_URL_MESSAGE_TYPE,
@@ -14,17 +17,21 @@ type OnChangedListener = (delta: Browser.downloads.DownloadDelta) => void
 
 /**
  * Replaces `chrome.offscreen` (unimplemented in `fakeBrowser`) with `vi.fn`
- * stubs for `createDocument`/`closeDocument`.
+ * stubs for `createDocument`/`closeDocument`, and `chrome.runtime.getContexts`.
+ * @param existingContexts What `getContexts` reports as already open.
  * @returns The installed mocks, for call-count/call-args assertions.
  */
-function mockOffscreenApi() {
+function mockOffscreenApi(existingContexts: unknown[] = []) {
   const createDocument = vi.fn(async () => {})
   const closeDocument = vi.fn(async () => {})
+  const getContexts = vi.fn(async () => existingContexts)
   chrome.offscreen = {
     createDocument,
     closeDocument,
   } as unknown as typeof chrome.offscreen
-  return { createDocument, closeDocument }
+  chrome.runtime.getContexts =
+    getContexts as unknown as typeof chrome.runtime.getContexts
+  return { createDocument, closeDocument, getContexts }
 }
 
 /**
@@ -91,7 +98,7 @@ function mockDownloadsApi() {
  * the point where they're waiting on an event this test must trigger.
  * @param times How many microtask ticks to flush.
  */
-async function flushMicrotasks(times = 10): Promise<void> {
+async function flushMicrotasks(times = 30): Promise<void> {
   for (let index = 0; index < times; index++) {
     await Promise.resolve()
   }
@@ -99,6 +106,7 @@ async function flushMicrotasks(times = 10): Promise<void> {
 
 beforeEach(() => {
   fakeBrowser.reset()
+  resetFakeI18n()
 })
 
 afterEach(() => {
@@ -106,6 +114,49 @@ afterEach(() => {
 })
 
 describe('downloadViaOffscreenDocument', () => {
+  it('reuses a leftover offscreen document found via getContexts instead of creating one', async () => {
+    const offscreen = mockOffscreenApi([{ contextType: 'OFFSCREEN_DOCUMENT' }])
+    mockRuntimeSendMessage()
+    const downloads = mockDownloadsApi()
+
+    const runPromise = downloadViaOffscreenDocument('c', 'text/plain', 'f.txt')
+    await flushMicrotasks()
+    downloads.fire(1, 'complete')
+    await runPromise
+
+    expect(offscreen.getContexts).toHaveBeenCalledWith({
+      contextTypes: ['OFFSCREEN_DOCUMENT'],
+    })
+    expect(offscreen.createDocument).not.toHaveBeenCalled()
+    expect(offscreen.closeDocument).toHaveBeenCalledTimes(1)
+  })
+
+  it('rejects after the timeout and removes its listener when the download never settles', async () => {
+    vi.useFakeTimers()
+    try {
+      mockOffscreenApi()
+      mockRuntimeSendMessage()
+      const downloads = mockDownloadsApi()
+
+      const runPromise = downloadViaOffscreenDocument(
+        'c',
+        'text/plain',
+        'f.txt',
+      )
+      const settled = Promise.allSettled([runPromise])
+      await vi.advanceTimersByTimeAsync(DOWNLOAD_SETTLE_TIMEOUT_MS)
+      const [outcome] = await settled
+      expect(outcome.status).toBe('rejected')
+      expect(String((outcome as PromiseRejectedResult).reason)).toMatch(
+        /timed out/i,
+      )
+
+      expect(downloads.removeListener).toHaveBeenCalledTimes(1)
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
   it('creates the offscreen document when none is open', async () => {
     const offscreen = mockOffscreenApi()
     mockRuntimeSendMessage()
@@ -222,6 +273,9 @@ describe('downloadViaOffscreenDocument', () => {
       createDocument,
       closeDocument,
     } as unknown as typeof chrome.offscreen
+    chrome.runtime.getContexts = vi.fn(
+      async () => [],
+    ) as unknown as typeof chrome.runtime.getContexts
     mockRuntimeSendMessage()
     mockDownloadsApi()
 

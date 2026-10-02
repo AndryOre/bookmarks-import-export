@@ -902,5 +902,14 @@
   "welcome_heroTitle": {
     "message": "Willkommen bei",
     "description": "Lead-in of the welcome page hero title; the Snug wordmark is rendered right after it"
+  },
+  "downloadInterrupted": {
+    "message": "Download $ID$ wurde unterbrochen.",
+    "description": "Last-run error when a download is interrupted; $ID$ is the download id",
+    "placeholders": {
+      "id": {
+        "content": "$1"
+      }
+    }
   }
 }

@@ -38,6 +38,9 @@ function mockOffscreenApi(): void {
     createDocument: vi.fn(async () => {}),
     closeDocument: vi.fn(async () => {}),
   } as unknown as typeof chrome.offscreen
+  chrome.runtime.getContexts = vi.fn(
+    async () => [],
+  ) as unknown as typeof chrome.runtime.getContexts
 }
 
 /**
