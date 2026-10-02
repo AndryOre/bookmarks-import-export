@@ -84,8 +84,7 @@ pre-selected on the Import page.
 
 ## Automatic backups
 
-Bookmark Import/Export can back up your bookmarks on a schedule, without any
-manual action:
+Snug can back up your bookmarks on a schedule, without any manual action:
 
 1. Open the app's **Auto-export** page.
 2. Enable automatic export, choose one or more formats (HTML, JSON, CSV), an

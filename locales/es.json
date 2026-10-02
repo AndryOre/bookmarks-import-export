@@ -1,14 +1,14 @@
 {
   "extensionName": {
-    "message": "Importar/Exportar Marcadores",
+    "message": "Snug",
     "description": "Nombre de la extensión."
   },
   "extensionDescription": {
-    "message": "Importa y exporta tus marcadores fácilmente",
+    "message": "Programa respaldos automáticos de tus marcadores, exporta e importa en HTML, JSON o CSV — sin cuenta ni nube.",
     "description": "Descripción de la extensión"
   },
   "welcomeSubtitle": {
-    "message": "Importa y exporta tus marcadores fácilmente en todos los navegadores",
+    "message": "Exporta, importa y respalda tus marcadores — todo en tu dispositivo.",
     "description": "Subtítulo de la página de bienvenida"
   },
   "settings": {
@@ -277,12 +277,12 @@
     "message": "Funcionalidad básica para exportar marcadores a formatos HTML y JSON."
   },
   "extensionInstalled": {
-    "message": "Importar/Exportar Marcadores ha sido instalado",
-    "description": "Importar/Exportar Marcadores instalado"
+    "message": "Snug ha sido instalado",
+    "description": "Snug instalado"
   },
   "extensionUpdated": {
-    "message": "Importar/Exportar Marcadores ha sido actualizado a la versión $VERSION$",
-    "description": "Importar/Exportar Marcadores actualizado",
+    "message": "Snug ha sido actualizado a la versión $VERSION$",
+    "description": "Snug actualizado",
     "placeholders": {
       "version": {
         "content": "$1"
@@ -890,7 +890,7 @@
     "description": "Export page empty state button that clears the search"
   },
   "welcome_heroTitle": {
-    "message": "Te damos la bienvenida",
-    "description": "Título principal de la página de bienvenida"
+    "message": "Te damos la bienvenida a",
+    "description": "Parte inicial del título principal de la página de bienvenida; el logotipo de Snug se muestra justo después"
   }
 }

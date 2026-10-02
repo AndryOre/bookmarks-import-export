@@ -1,18 +1,18 @@
-# Privacy Policy for Bookmark Import/Export
+# Privacy Policy for Snug
 
 Last updated: April 29, 2026
 
 ## Introduction
 
-Bookmark Import/Export is committed to protecting your privacy. This Privacy
-Policy explains our practices regarding the collection, use, and disclosure of
-information that we receive through our Chrome extension.
+Snug is committed to protecting your privacy. This Privacy Policy explains our
+practices regarding the collection, use, and disclosure of information that we
+receive through our Chrome extension.
 
 ## Information Collection and Use
 
-Bookmark Import/Export does not collect, store, or transmit any personal
-information about its users. Our extension operates entirely within your browser
-and does not send any data to external servers.
+Snug does not collect, store, or transmit any personal information about its
+users. Our extension operates entirely within your browser and does not send any
+data to external servers.
 
 ### Bookmarks Data
 
@@ -44,8 +44,7 @@ and does not send any data to external servers.
 
 ## Data Storage
 
-- Bookmark Import/Export does not store any user data, including bookmarks, on
-  external servers.
+- Snug does not store any user data, including bookmarks, on external servers.
 - Any files created during export (manual or automatic) are saved directly to
   your local device through your browser's download functionality.
 - The extension stores your local preferences and settings — such as theme,
@@ -55,8 +54,8 @@ and does not send any data to external servers.
 
 ## Permissions
 
-Bookmark Import/Export requests the following browser permissions, each used
-solely for the purpose described:
+Snug requests the following browser permissions, each used solely for the
+purpose described:
 
 | Permission  | Purpose                                                                     |
 | ----------- | --------------------------------------------------------------------------- |
@@ -88,5 +87,4 @@ If you have any questions about this Privacy Policy, please contact us:
 
 ## Consent
 
-By using Bookmark Import/Export, you hereby consent to our Privacy Policy and
-agree to its terms.
+By using Snug, you hereby consent to our Privacy Policy and agree to its terms.

@@ -1,6 +1,6 @@
-![Bookmark Import/Export](https://res.cloudinary.com/dhwxnbnaj/image/upload/v1722710029/Bookmark%20ImportExport/Cover_zvlu4x.png)
+![Snug](docs/assets/readme-cover.png)
 
-# Bookmark Import/Export
+# Snug
 
 [![Chrome Web Store Version][Chrome Web Store Version]][Chrome Web Store-url]
 [![Chrome Web Store Users][Chrome Web Store Users]][Chrome Web Store-url]
@@ -8,8 +8,16 @@
 [![OpenSSF Scorecard][OpenSSF Scorecard]][OpenSSF Scorecard-url]
 [![OpenSSF Best Practices][OpenSSF Best Practices]][OpenSSF Best Practices-url]
 
-A browser extension to import and export bookmarks as HTML, JSON or CSV, with
-selective export, restore and scheduled backups.
+Export, import, and back up your bookmarks — entirely on your device.
+
+Snug is a browser extension that moves your bookmarks between browsers, exactly
+as you left them. Export your whole tree or just a folder, as HTML, JSON, or
+CSV. Import back with a preview, then merge, replace, or drop everything into a
+new folder. Set a schedule once and Snug backs your bookmarks up to your
+Downloads folder on its own.
+
+No account, no cloud, no server to trust. See the
+[Privacy Policy](PRIVACY_POLICY.md) for details.
 
 ## Features 🌟
 
@@ -32,9 +40,9 @@ installed from the same listing on those browsers.
 
 ## Privacy 🔒
 
-Bookmark Import/Export makes no network calls — every operation reads and writes
-your browser's own bookmarks tree, locally. See the
-[Privacy Policy](PRIVACY_POLICY.md) for details.
+Snug makes no network calls — every operation reads and writes your browser's
+own bookmarks tree, locally. See the [Privacy Policy](PRIVACY_POLICY.md) for
+details.
 
 ## Documentation 📖
 
