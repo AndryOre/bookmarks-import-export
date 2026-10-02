@@ -909,5 +909,14 @@
   "extensionManifestName": {
     "message": "Snug: exporta, importa y respalda marcadores",
     "description": "Manifest-only extension name with a descriptor, shown as the Chrome Web Store title. Never rendered inside the extension."
+  },
+  "downloadInterrupted": {
+    "message": "La descarga $ID$ se interrumpió.",
+    "description": "Last-run error when a download is interrupted; $ID$ is the download id",
+    "placeholders": {
+      "id": {
+        "content": "$1"
+      }
+    }
   }
 }

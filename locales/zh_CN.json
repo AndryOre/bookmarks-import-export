@@ -910,5 +910,14 @@
   "extensionManifestName": {
     "message": "Snug：书签导出、导入与备份",
     "description": "Manifest-only extension name with a descriptor, shown as the Chrome Web Store title. Never rendered inside the extension."
+  },
+  "downloadInterrupted": {
+    "message": "下载 $ID$ 已中断。",
+    "description": "Last-run error when a download is interrupted; $ID$ is the download id",
+    "placeholders": {
+      "id": {
+        "content": "$1"
+      }
+    }
   }
 }

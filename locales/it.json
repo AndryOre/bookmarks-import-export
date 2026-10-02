@@ -910,5 +910,14 @@
   "extensionManifestName": {
     "message": "Snug: esporta e fai il backup dei segnalibri, in locale",
     "description": "Manifest-only extension name with a descriptor, shown as the Chrome Web Store title. Never rendered inside the extension."
+  },
+  "downloadInterrupted": {
+    "message": "Il download $ID$ è stato interrotto.",
+    "description": "Last-run error when a download is interrupted; $ID$ is the download id",
+    "placeholders": {
+      "id": {
+        "content": "$1"
+      }
+    }
   }
 }

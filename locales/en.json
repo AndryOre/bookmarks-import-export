@@ -910,5 +910,14 @@
   "extensionManifestName": {
     "message": "Snug: Bookmark Export, Import & Backup",
     "description": "Manifest-only extension name with a descriptor, shown as the Chrome Web Store title. Never rendered inside the extension."
+  },
+  "downloadInterrupted": {
+    "message": "Download $ID$ was interrupted.",
+    "description": "Last-run error when a download is interrupted; $ID$ is the download id",
+    "placeholders": {
+      "id": {
+        "content": "$1"
+      }
+    }
   }
 }

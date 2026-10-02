@@ -910,5 +910,14 @@
   "extensionManifestName": {
     "message": "Snug – Lesezeichen exportieren, importieren und sichern",
     "description": "Manifest-only extension name with a descriptor, shown as the Chrome Web Store title. Never rendered inside the extension."
+  },
+  "downloadInterrupted": {
+    "message": "Download $ID$ wurde unterbrochen.",
+    "description": "Last-run error when a download is interrupted; $ID$ is the download id",
+    "placeholders": {
+      "id": {
+        "content": "$1"
+      }
+    }
   }
 }
