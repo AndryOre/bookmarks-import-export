@@ -70,3 +70,11 @@ test('toolbar action title is localized', async ({ serviceWorker }) => {
 
   expect(manifest.action?.default_title).toBe(en.extensionName.message)
 })
+
+test('App and popup pages are titled Snug', async ({ openExtensionPage }) => {
+  const appPage = await openExtensionPage('app.html')
+  await expect(appPage).toHaveTitle(en.extensionName.message)
+
+  const popupPage = await openExtensionPage('popup.html')
+  await expect(popupPage).toHaveTitle(en.extensionName.message)
+})

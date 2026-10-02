@@ -901,5 +901,9 @@
   "welcome_heroTitle": {
     "message": "Te damos la bienvenida a",
     "description": "Parte inicial del título principal de la página de bienvenida; el logotipo de Snug se muestra justo después"
+  },
+  "extensionManifestName": {
+    "message": "Snug: exporta, importa y respalda marcadores",
+    "description": "Manifest-only extension name with a descriptor, shown as the Chrome Web Store title. Never rendered inside the extension."
   }
 }

@@ -902,5 +902,9 @@
   "welcome_heroTitle": {
     "message": "Benvenuto in",
     "description": "Lead-in of the welcome page hero title; the Snug wordmark is rendered right after it"
+  },
+  "extensionManifestName": {
+    "message": "Snug: esporta e fai il backup dei segnalibri, in locale",
+    "description": "Manifest-only extension name with a descriptor, shown as the Chrome Web Store title. Never rendered inside the extension."
   }
 }

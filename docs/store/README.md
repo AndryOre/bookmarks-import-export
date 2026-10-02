@@ -19,18 +19,14 @@ Related files:
 
 ## Findings that need action
 
-1. Five permissions are new since v1.3.0 (`storage`, `tabs`, `alarms`,
-   `downloads`, `offscreen`) and each needs a justification on the Privacy tab.
-2. `tabs` is almost certainly unnecessary and is a reviewer-flag risk. See
-   [Pre-publish checklist](#pre-publish-checklist).
-3. The single-purpose text must now cover CSV and scheduled backups, not only
+1. Four permissions are new since v1.3.0 (`storage`, `alarms`, `downloads`,
+   `offscreen`) and each needs a justification on the Privacy tab.
+2. The single-purpose text must now cover CSV and scheduled backups, not only
    JSON and HTML.
-4. Every URL moves to `AndryOre/snug`. The live listing still uses the old
+3. Every URL moves to `AndryOre/snug`. The live listing still uses the old
    repository slug in the homepage, support and privacy URLs.
-5. All old screenshots (global and localized EN/ES) must be removed in favor of
+4. All old screenshots (global and localized EN/ES) must be removed in favor of
    the 5 new global ones.
-6. The title needs a manifest-only name key to carry a descriptor. That is a
-   code change and is not part of this pack.
 
 ## Store listing
 
@@ -54,8 +50,8 @@ Title, current manifest value (4 chars):
 Snug
 ```
 
-Title, proposed with descriptor (38 chars, limit 75). Needs the manifest-only
-name key described in the checklist:
+Title, proposed with descriptor (38 chars, limit 75). Carried by the
+manifest-only name key described in the checklist:
 
 ```text
 Snug: Bookmark Export, Import & Backup
@@ -227,18 +223,6 @@ Code: `lib/storage.ts` defines every setting with `storage.defineItem` under a
 `local:` key, which uses `chrome.storage.local`. The background worker watches
 `autoExportConfigStore` in `entrypoints/background.ts`.
 
-`tabs` (188 chars). Recommended to remove before publishing; use this text only
-if the permission stays in the package:
-
-```text
-Snug opens its own app page in a new tab from the popup, and opens the browser's bookmark manager after an import. It does not read the URL, title, or content of any tab the user has open.
-```
-
-Code: `browser.tabs.create` in `entrypoints/background.ts` (welcome and what's
-new pages), `components/popup/footer.tsx` (open app, settings) and
-`entrypoints/app/routes/import.tsx` (open `chrome://bookmarks`). Nothing reads
-`tab.url`, `tab.title` or runs `tabs.query`. `tabs.create` needs no permission.
-
 `alarms` (259 chars):
 
 ```text
@@ -302,27 +286,14 @@ Unchanged from v1.3.0.
 
 ## Pre-publish checklist
 
-1. **Add a manifest-only name key.** The store title should carry the descriptor
-   while the UI keeps "Snug". Add a locale key such as `extensionManifestName`
-   to `locales/en.json` and `locales/es.json` with the two titles above, and
-   point `manifest.name` in `wxt.config.ts` at it
-   (`__MSG_extensionManifestName__`). UI strings keep using `extensionName`. Not
-   implemented in this pack.
-2. **Verify and remove the `tabs` permission.** Only `browser.tabs.create` is
-   used (`entrypoints/background.ts`, `components/popup/footer.tsx`,
-   `entrypoints/app/routes/import.tsx`) and it needs no permission. A broad
-   `tabs` permission with no `tab.url` use is a common reviewer flag and shows a
-   wider warning at install. Remove it from `wxt.config.ts`, run the tests, and
-   load the build to confirm the popup, welcome page and import flow still open
-   tabs. Then the `tabs` justification above is dropped from the form.
-3. **Know what the tag does.** Pushing the `v2.0.0` tag triggers `release.yml`,
+1. **Know what the tag does.** Pushing the `v2.0.0` tag triggers `release.yml`,
    which builds the zip, publishes the GitHub Release and runs `wxt submit`
    against the Chrome Web Store API (see
    [ADR 0005](../adr/0005-store-publishing-via-cws-api-v2.md)). The API only
    uploads and submits the package. Listing text, screenshots, tiles and privacy
    fields stay dashboard-managed. Finish the dashboard work first, or the
    submission goes for review with the old listing data.
-4. **Recommended order in the dashboard.**
+2. **Recommended order in the dashboard.**
    1. Land checklist items 1 and 2 on `main` and confirm `bun run check` and
       `bun run test` pass.
    2. Open the item's draft in the Developer Dashboard. Do not submit yet.
@@ -343,7 +314,7 @@ Unchanged from v1.3.0.
       `Snug: Bookmark Export, Import & Backup`.
    9. After publication, compare analytics against
       [`baseline-2026-09.md`](baseline-2026-09.md).
-5. **Rename announcement.** From `copy.md` section 2. Use it in the reviewer
+3. **Rename announcement.** From `copy.md` section 2. Use it in the reviewer
    notes and in any user communication.
 
    English:
