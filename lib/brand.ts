@@ -14,6 +14,12 @@ export const CHROME_WEB_STORE_EXTENSION_ID = 'gdhpeilfkeeajillmcncaelnppiakjhn'
 export const CHROME_WEB_STORE_URL = `https://chromewebstore.google.com/detail/${CHROME_WEB_STORE_EXTENSION_ID}`
 
 /**
+ * The product name. Never translated, so every locale's `extensionName`
+ * message must equal it.
+ */
+export const PRODUCT_NAME = 'Snug'
+
+/**
  * The project's GitHub repository URL.
  */
 export const GITHUB_URL = 'https://github.com/AndryOre/bookmarks-import-export'
