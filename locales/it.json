@@ -559,6 +559,10 @@
       }
     }
   },
+  "import_noBookmarks": {
+    "message": "Nessun segnalibro trovato in questo file, quindi non c'è nulla da importare.",
+    "description": "Shown when an import file contains no bookmarks; explains the disabled Import button and the popup error"
+  },
   "import_importing": {
     "message": "Importazione in corso…",
     "description": "Primary button label while importing"

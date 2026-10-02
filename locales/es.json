@@ -558,6 +558,10 @@
       }
     }
   },
+  "import_noBookmarks": {
+    "message": "No se encontraron marcadores en este archivo, así que no hay nada que importar.",
+    "description": "Shown when an import file contains no bookmarks; explains the disabled Import button and the popup error"
+  },
   "import_importing": {
     "message": "Importando…",
     "description": "Primary button label while importing"

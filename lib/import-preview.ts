@@ -2,7 +2,7 @@ import Papa from 'papaparse'
 
 import { detectFormat } from './detect-format'
 import { parseHTML } from './importers/import-html'
-import { preprocessBookmarks } from './importers/import-json'
+import { normalizeJsonRoot, preprocessBookmarks } from './importers/import-json'
 import type { ImportPreview, ParsedBookmark } from './types'
 
 function countBookmarks(nodes: ParsedBookmark[]): number {
@@ -57,9 +57,9 @@ export function getImportPreview(
     }
 
     if (format === 'json') {
-      const raw = JSON.parse(text)
-      const data: ParsedBookmark[] = Array.isArray(raw) ? raw : [raw]
-      const preprocessed = preprocessBookmarks(data)
+      const preprocessed = preprocessBookmarks(
+        normalizeJsonRoot(JSON.parse(text)),
+      )
       const barNode = preprocessed.find((n) => n.isBookmarksBar)
       const otherNode = preprocessed.find((n) => n.isOtherBookmarks)
       const mobileNode = preprocessed.find((n) => n.isMobileBookmarks)
