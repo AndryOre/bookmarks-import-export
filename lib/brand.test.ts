@@ -43,9 +43,7 @@ describe('CHROME_WEB_STORE_URL', () => {
 
 describe('GITHUB_URL', () => {
   it('points at the project repository', () => {
-    expect(GITHUB_URL).toBe(
-      'https://github.com/AndryOre/bookmarks-import-export',
-    )
+    expect(GITHUB_URL).toBe('https://github.com/AndryOre/snug')
   })
 })
 

@@ -50,9 +50,7 @@ type ExtensionFixtures = {
  */
 export const test = base.extend<ExtensionFixtures>({
   context: async ({}, use) => {
-    const userDataDirectory = await mkdtemp(
-      path.join(tmpdir(), 'bookmarks-import-export-e2e-'),
-    )
+    const userDataDirectory = await mkdtemp(path.join(tmpdir(), 'snug-e2e-'))
 
     const context = await chromium.launchPersistentContext(userDataDirectory, {
       channel: 'chromium',

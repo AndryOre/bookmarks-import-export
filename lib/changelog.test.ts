@@ -13,7 +13,7 @@ describe('getChangelog', () => {
     const entries = getChangelog()
 
     const versions = entries.map((entry) => entry.version)
-    expect(versions[0]).toBe('1.7.0')
+    expect(versions[0]).toBe('2.0.0')
     expect(versions.at(-1)).toBe('0.1.0')
     expect(versions).toEqual(
       versions.toSorted((a, b) => a.localeCompare(b)).toReversed(),
@@ -25,6 +25,11 @@ describe('getChangelog', () => {
     const linkFor = (version: string) =>
       entries.find((entry) => entry.version === version)?.items[0]?.linkUrl
 
+    expect(
+      getChangelog()
+        .find((entry) => entry.version === '2.0.0')
+        ?.items.find((item) => item.linkUrl)?.linkUrl,
+    ).toBe(getAppUrl(APP_ROUTES.export))
     expect(linkFor('1.7.0')).toBe(getAppUrl(APP_ROUTES.autoExport))
     expect(linkFor('1.6.0')).toBe(getAppUrl(APP_ROUTES.autoExport))
     expect(linkFor('1.5.0')).toBe(getAppUrl(APP_ROUTES.import))

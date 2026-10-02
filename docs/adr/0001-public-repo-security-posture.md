@@ -6,9 +6,9 @@ Accepted
 
 ## Context
 
-`bookmarks-import-export` is a public repository maintained by one person. It
-had no branch protection, no repository rulesets, and its security and community
-settings were close to GitHub's defaults. A survey of current (2025-2026) GitHub
+`snug` is a public repository maintained by one person. It had no branch
+protection, no repository rulesets, and its security and community settings were
+close to GitHub's defaults. A survey of current (2025-2026) GitHub
 documentation, the OpenSSF SCM best-practices guide and OpenSSF Scorecard's
 checks produced a set of settings to adopt, plus several that were deliberately
 rejected for this repository.
