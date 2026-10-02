@@ -4,6 +4,15 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [2.0.0] - 2026-10-02
+
+- The extension is now called **Snug**, with a new name and icon. Same
+  local-only promise: nothing about your data or settings changes.
+- Added a new App with a sidebar for export, import, auto-export, settings and
+  what's new.
+- Redesigned the popup to be more compact.
+- Applied the new Snug color palette across the extension.
+
 ## [1.7.0] - 2026-10-01
 
 - Added a status card and an Export now button to Auto-export settings, plus a
