@@ -1,5 +1,6 @@
 import { i18n } from '#i18n'
 
+import { APP_ROUTES, getAppUrl } from '@/lib/app-url'
 import {
   ALARM_NAME,
   RUN_MANUAL_EXPORT_MESSAGE_TYPE,
@@ -9,7 +10,11 @@ import {
   syncAlarm,
   type SyncAlarmTrigger,
 } from '@/lib/auto-export'
-import { autoExportConfigStore, autoExportNextRunStore } from '@/lib/storage'
+import {
+  autoExportConfigStore,
+  autoExportNextRunStore,
+  lastSeenVersionStore,
+} from '@/lib/storage'
 import type { AutoExportConfig } from '@/lib/types'
 
 /**
@@ -78,9 +83,10 @@ async function runManualExport(
 }
 
 /**
- * Extension service worker entrypoint. On first install it opens
- * `welcome.html`; on every subsequent update it opens `update.html` (which
- * reads the new version's changelog). It also keeps the `auto-export` alarm
+ * Extension service worker entrypoint. On first install it opens the
+ * App's Welcome route (and marks that version's changelog as seen); on every
+ * subsequent update it opens the App's What's new route, leaving the version
+ * unseen so the sidebar shows its dot until that route is visited. It also keeps the `auto-export` alarm
  * and {@link autoExportNextRunStore} in sync via `syncAlarm`: once on
  * browser startup and on every `onInstalled` reason (both may need to arm a
  * catch-up run for a due time that passed while the browser/extension was
@@ -92,9 +98,10 @@ export default defineBackground(() => {
     switch (reason) {
       case 'install': {
         console.log(i18n.t('extensionInstalled'))
-        void browser.tabs.create({
-          url: browser.runtime.getURL('/welcome.html'),
-        })
+        void browser.tabs.create({ url: getAppUrl(APP_ROUTES.welcome) })
+        void lastSeenVersionStore
+          .setValue(browser.runtime.getManifest().version)
+          .catch(console.error)
         void syncAlarmSafely('install')
         break
       }
@@ -102,9 +109,7 @@ export default defineBackground(() => {
       case 'update': {
         const version = browser.runtime.getManifest().version
         console.log(i18n.t('extensionUpdated', [version]))
-        void browser.tabs.create({
-          url: browser.runtime.getURL('/update.html'),
-        })
+        void browser.tabs.create({ url: getAppUrl(APP_ROUTES.whatsNew) })
         void syncAlarmSafely('update')
         break
       }

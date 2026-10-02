@@ -1015,5 +1015,57 @@
   "settingsPage_importModeHelp": {
     "message": "Se usa en el popup y viene preseleccionado en la página Importar.",
     "description": "Settings page: importModeHelp"
+  },
+  "welcome_exportTitle": {
+    "message": "Crea tu primera copia",
+    "description": "Welcome page quick-start item title"
+  },
+  "welcome_exportDescription": {
+    "message": "Una copia segura de tus marcadores en diez segundos.",
+    "description": "Welcome page quick-start item description"
+  },
+  "welcome_exportAction": {
+    "message": "Exportar",
+    "description": "Welcome page quick-start item button"
+  },
+  "welcome_autoExportTitle": {
+    "message": "Configura la exportación automática",
+    "description": "Welcome page quick-start item title"
+  },
+  "welcome_autoExportDescription": {
+    "message": "Haz copias de seguridad programadas, sin hacer clic.",
+    "description": "Welcome page quick-start item description"
+  },
+  "welcome_autoExportAction": {
+    "message": "Exportación automática",
+    "description": "Welcome page quick-start item button"
+  },
+  "welcome_importTitle": {
+    "message": "Importa marcadores",
+    "description": "Welcome page quick-start item title"
+  },
+  "welcome_importDescription": {
+    "message": "Trae marcadores desde otro navegador o una copia de seguridad.",
+    "description": "Welcome page quick-start item description"
+  },
+  "welcome_importAction": {
+    "message": "Importar",
+    "description": "Welcome page quick-start item button"
+  },
+  "whatsNew_current": {
+    "message": "Actual",
+    "description": "What's new screen string"
+  },
+  "whatsNew_reviewTitle": {
+    "message": "¿Te gusta la extensión?",
+    "description": "What's new screen string"
+  },
+  "whatsNew_reviewDescription": {
+    "message": "Una calificación rápida ayuda a que otras personas la encuentren.",
+    "description": "What's new screen string"
+  },
+  "whatsNew_reviewAction": {
+    "message": "Dejar una reseña",
+    "description": "What's new screen string"
   }
 }

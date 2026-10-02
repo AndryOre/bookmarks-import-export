@@ -1016,5 +1016,57 @@
   "settingsPage_importModeHelp": {
     "message": "Used by the popup and pre-selected on the Import page.",
     "description": "Settings page: importModeHelp"
+  },
+  "welcome_exportTitle": {
+    "message": "Make your first backup",
+    "description": "Welcome page quick-start item title"
+  },
+  "welcome_exportDescription": {
+    "message": "Ten seconds to a safe copy of your bookmarks.",
+    "description": "Welcome page quick-start item description"
+  },
+  "welcome_exportAction": {
+    "message": "Export",
+    "description": "Welcome page quick-start item button"
+  },
+  "welcome_autoExportTitle": {
+    "message": "Set up auto-export",
+    "description": "Welcome page quick-start item title"
+  },
+  "welcome_autoExportDescription": {
+    "message": "Back up on a schedule, with no clicks.",
+    "description": "Welcome page quick-start item description"
+  },
+  "welcome_autoExportAction": {
+    "message": "Auto-export",
+    "description": "Welcome page quick-start item button"
+  },
+  "welcome_importTitle": {
+    "message": "Import bookmarks",
+    "description": "Welcome page quick-start item title"
+  },
+  "welcome_importDescription": {
+    "message": "Bring in bookmarks from another browser or a backup.",
+    "description": "Welcome page quick-start item description"
+  },
+  "welcome_importAction": {
+    "message": "Import",
+    "description": "Welcome page quick-start item button"
+  },
+  "whatsNew_current": {
+    "message": "Current",
+    "description": "What's new screen string"
+  },
+  "whatsNew_reviewTitle": {
+    "message": "Enjoying the extension?",
+    "description": "What's new screen string"
+  },
+  "whatsNew_reviewDescription": {
+    "message": "A quick rating helps other people find it.",
+    "description": "What's new screen string"
+  },
+  "whatsNew_reviewAction": {
+    "message": "Leave a review",
+    "description": "What's new screen string"
   }
 }

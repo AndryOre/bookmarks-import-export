@@ -1,9 +1,105 @@
-import { RoutePlaceholder } from './route-placeholder'
+import { i18n } from '#i18n'
+
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemTitle,
+} from '@/components/ui/item'
+import { CHROME_WEB_STORE_URL } from '@/lib/brand'
+import { getChangelog } from '@/lib/changelog'
 
 /**
- * The WhatsNew screen. Placeholder until its screen ticket replaces this file.
- * @returns The placeholder view.
+ * The What's new screen: a changelog timeline (newest first, installed
+ * version flagged "Current") ending with a low-key review request. Opening it
+ * marks the installed version as seen — the app shell owns that, since it
+ * also drives the sidebar dot. The page `h1` is rendered by the shell.
+ * @returns The changelog view.
  */
 export function WhatsNewRoute() {
-  return <RoutePlaceholder />
+  const installedVersion = browser.runtime.getManifest().version
+  const changelog = getChangelog()
+
+  return (
+    <div className="mx-auto flex w-full max-w-2xl flex-col gap-6">
+      <ol className="flex flex-col">
+        {changelog.map(({ version, dateKey, items }, index) => {
+          const isLast = index === changelog.length - 1
+          return (
+            <li key={version} className="flex gap-4">
+              <div className="flex flex-col items-center">
+                <span
+                  aria-hidden="true"
+                  className="mt-2 size-2.5 shrink-0 rounded-full bg-primary"
+                />
+                {!isLast && (
+                  <span aria-hidden="true" className="w-px flex-1 bg-border" />
+                )}
+              </div>
+              <div className="flex flex-1 flex-col gap-2 pb-8">
+                <div className="flex flex-wrap items-center gap-2">
+                  <h2 className="font-heading text-base font-semibold">
+                    {version}
+                  </h2>
+                  {version === installedVersion && (
+                    <Badge>{i18n.t('whatsNew_current')}</Badge>
+                  )}
+                  <span className="text-sm text-muted-foreground">
+                    {i18n.t(dateKey)}
+                  </span>
+                </div>
+                <ul className="ml-4 flex list-outside list-disc flex-col gap-1">
+                  {items.map(({ textKey, linkKey, linkUrl }) => (
+                    <li key={textKey} className="text-sm text-muted-foreground">
+                      {i18n.t(textKey)}
+                      {linkKey && linkUrl && (
+                        <>
+                          {' '}
+                          <a
+                            href={linkUrl}
+                            className="text-foreground underline hover:no-underline"
+                          >
+                            {i18n.t(linkKey)}
+                          </a>
+                        </>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </li>
+          )
+        })}
+      </ol>
+
+      <Item variant="muted">
+        <ItemContent>
+          <ItemTitle>{i18n.t('whatsNew_reviewTitle')}</ItemTitle>
+          <ItemDescription>
+            {i18n.t('whatsNew_reviewDescription')}
+          </ItemDescription>
+        </ItemContent>
+        <ItemActions>
+          <Button
+            variant="ghost"
+            size="sm"
+            nativeButton={false}
+            render={
+              // eslint-disable-next-line jsx-a11y/anchor-has-content -- Button's render prop injects the children into this anchor
+              <a
+                href={CHROME_WEB_STORE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+              />
+            }
+          >
+            {i18n.t('whatsNew_reviewAction')}
+          </Button>
+        </ItemActions>
+      </Item>
+    </div>
+  )
 }
