@@ -475,6 +475,33 @@ async function writeMobileBookmarks(
 }
 
 /**
+ * Creates a folder node. In a trusted restore a failed create does not abort:
+ * every bookmark of the folder's subtree is counted in
+ * `result.skippedInvalidUrl` (at least 1) because none of it can be written.
+ * @param node The folder to create.
+ * @param parentId The id of the folder to create it under.
+ * @param result The running import result, updated when the create fails.
+ * @param writer The writer that creates and journals the node.
+ * @param isTrusted Whether a failed create is counted instead of thrown.
+ * @returns The created folder, or `undefined` when its subtree was skipped.
+ */
+async function createFolderOrSkipSubtree(
+  node: ParsedBookmark,
+  parentId: string,
+  result: ImportResult,
+  writer: ImportWriter,
+  isTrusted: boolean,
+) {
+  try {
+    return await writer.create({ parentId, title: node.title })
+  } catch (error) {
+    if (!isTrusted || error instanceof ImportCanceledError) throw error
+    result.skippedInvalidUrl += Math.max(1, countBookmarks(node.children ?? []))
+    return
+  }
+}
+
+/**
  * Recursively creates the tree under `parentId`. A node with a `children`
  * array is a folder and is created even when that array is empty. A node
  * that is neither an allowed bookmark nor a folder is skipped and counted in
@@ -504,7 +531,14 @@ async function createBookmarks(
       if (hasWritableUrl) {
         await writer.create({ parentId, title: node.title, url: node.url })
       } else if (node.children) {
-        const folder = await writer.create({ parentId, title: node.title })
+        const folder = await createFolderOrSkipSubtree(
+          node,
+          parentId,
+          result,
+          writer,
+          isTrusted,
+        )
+        if (!folder) continue
         await createBookmarks(
           node.children,
           folder.id,

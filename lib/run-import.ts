@@ -14,7 +14,11 @@ import {
 import { parseSafari } from './importers/import-safari'
 import { parseXBEL } from './importers/import-xbel'
 import { loadLiveRootTitles } from './importers/resolve-roots'
-import { type SafetySnapshot, takeSafetySnapshot } from './safety-snapshot'
+import {
+  hasRewrittenRootsFully,
+  type SafetySnapshot,
+  takeSafetySnapshot,
+} from './safety-snapshot'
 import type { ImportMode, ImportOptions, ImportResult } from './types'
 
 /**
@@ -100,10 +104,9 @@ async function restoreSnapshot(
   originalError: unknown,
 ): Promise<void> {
   try {
-    await importFromJSON(structuredClone(snapshot.roots), 'restore-replace', {
-      trusted: true,
-    })
-    markImportRestored(originalError)
+    if (await hasRewrittenRootsFully(snapshot.roots)) {
+      markImportRestored(originalError)
+    }
   } catch (restoreError) {
     console.error('Safety snapshot restore failed', restoreError)
   }

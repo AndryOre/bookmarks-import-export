@@ -2,6 +2,8 @@ import type { Browser } from '@wxt-dev/browser'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { fakeBrowser } from 'wxt/testing/fake-browser'
 
+import { wasImportRestored } from './import-control'
+import { ImportLockHeldError, withImportLock } from './import-lock'
 import { downloadViaOffscreenDocument } from './offscreen-download'
 import {
   captureSafetySnapshot,
@@ -231,7 +233,7 @@ describe('Mobile root and non-web URLs', () => {
     ])
   })
 
-  it('counts a failed create instead of aborting the restore', async () => {
+  it('reports an incomplete restore when a create fails', async () => {
     seedFakeBookmarksTree([
       bookmark('Bad', 'chrome://bad'),
       bookmark('Good', 'https://good.example/'),
@@ -245,10 +247,81 @@ describe('Mobile root and non-web URLs', () => {
       return realCreate(details)
     }) as typeof fakeBrowser.bookmarks.create
 
-    await restoreSafetySnapshot(snapshot)
+    await expect(restoreSafetySnapshot(snapshot)).rejects.toThrow()
 
     expect(rootOutline('1')).toEqual([
       { title: 'Good', url: 'https://good.example/' },
     ])
+  })
+})
+
+async function captureRejection(promise: Promise<unknown>): Promise<unknown> {
+  try {
+    await promise
+  } catch (error) {
+    return error
+  }
+  return undefined
+}
+
+describe('restoreSafetySnapshot rollback and lock', () => {
+  it('recovers the pre-restore state when removeTree fails partway', async () => {
+    seedSample()
+    const snapshot = await captureSafetySnapshot()
+    const barBefore = rootOutline('1')
+    const otherBefore = rootOutline('2')
+    const realRemoveTree = fakeBrowser.bookmarks.removeTree
+    let calls = 0
+    fakeBrowser.bookmarks.removeTree = (async (id: string) => {
+      calls++
+      if (calls === 2) throw new Error('remove failed')
+      return realRemoveTree(id)
+    }) as typeof fakeBrowser.bookmarks.removeTree
+
+    await expect(restoreSafetySnapshot(snapshot)).rejects.toThrow(
+      'remove failed',
+    )
+
+    expect(rootOutline('1')).toEqual(barBefore)
+    expect(rootOutline('2')).toEqual(otherBefore)
+  })
+
+  it('marks the error as restored after an automatic recovery', async () => {
+    seedSample()
+    const snapshot = await captureSafetySnapshot()
+    const realRemoveTree = fakeBrowser.bookmarks.removeTree
+    let calls = 0
+    fakeBrowser.bookmarks.removeTree = (async (id: string) => {
+      calls++
+      if (calls === 2) throw new Error('remove failed')
+      return realRemoveTree(id)
+    }) as typeof fakeBrowser.bookmarks.removeTree
+
+    const error = await captureRejection(restoreSafetySnapshot(snapshot))
+
+    expect(wasImportRestored(error)).toBe(true)
+  })
+
+  it('refuses to run while another import holds the lock', async () => {
+    seedSample()
+    const snapshot = await captureSafetySnapshot()
+    const before = rootOutline('1')
+    let outcome: unknown
+    await withImportLock(async () => {
+      outcome = await captureRejection(restoreSafetySnapshot(snapshot))
+    })
+
+    expect(outcome).toBeInstanceOf(ImportLockHeldError)
+    expect(rootOutline('1')).toEqual(before)
+    expect(downloadMock).not.toHaveBeenCalled()
+  })
+
+  it('releases the lock after finishing', async () => {
+    seedSample()
+    const snapshot = await captureSafetySnapshot()
+
+    await restoreSafetySnapshot(snapshot)
+
+    await expect(withImportLock(async () => 'free')).resolves.toBe('free')
   })
 })
