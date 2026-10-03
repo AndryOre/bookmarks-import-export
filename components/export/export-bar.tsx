@@ -4,16 +4,18 @@ import { DownloadIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
+import {
+  EXPORT_FORMAT_INFO,
+  EXPORT_FORMATS,
+  type ExportFormat,
+} from '@/lib/export-formats'
 import { formatCount } from '@/lib/format-count'
-import type { AutoExportFormat } from '@/lib/types'
-
-const FORMATS: AutoExportFormat[] = ['html', 'json', 'csv']
 
 interface ExportBarProperties {
   selectedCount: number
   totalCount: number
-  format: AutoExportFormat
-  onFormatChange: (format: AutoExportFormat) => void
+  format: ExportFormat
+  onFormatChange: (format: ExportFormat) => void
   isExporting: boolean
   onExport: () => void
 }
@@ -59,13 +61,13 @@ export function ExportBar({
         aria-label={i18n.t('exportPage_formatLabel')}
         value={[format]}
         onValueChange={(values) => {
-          const next = values[0] as AutoExportFormat | undefined
+          const next = values[0] as ExportFormat | undefined
           if (next) onFormatChange(next)
         }}
       >
-        {FORMATS.map((value) => (
+        {EXPORT_FORMATS.map((value) => (
           <ToggleGroupItem key={value} value={value}>
-            {value.toUpperCase()}
+            {EXPORT_FORMAT_INFO[value].label}
           </ToggleGroupItem>
         ))}
       </ToggleGroup>

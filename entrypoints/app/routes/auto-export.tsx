@@ -54,6 +54,11 @@ import {
   resolveFormats,
 } from '@/lib/auto-export-form'
 import {
+  EXPORT_FORMAT_INFO,
+  EXPORT_FORMATS,
+  type ExportFormat,
+} from '@/lib/export-formats'
+import {
   autoExportConfigStore,
   autoExportLastRunStore,
   autoExportNextRunStore,
@@ -61,7 +66,6 @@ import {
 } from '@/lib/storage'
 import type {
   AutoExportConfig,
-  AutoExportFormat,
   AutoExportInterval,
   AutoExportLastRun,
   DayOfWeek,
@@ -84,12 +88,6 @@ const DAY_OPTIONS: { value: DayOfWeek; label: string }[] = [
   { value: 5, label: 'autoExportPage_day5' },
   { value: 6, label: 'autoExportPage_day6' },
   { value: 0, label: 'autoExportPage_day0' },
-]
-
-const FORMAT_OPTIONS: { value: AutoExportFormat; label: string }[] = [
-  { value: 'html', label: 'HTML' },
-  { value: 'json', label: 'JSON' },
-  { value: 'csv', label: 'CSV' },
 ]
 
 /**
@@ -461,15 +459,15 @@ export function AutoExportRoute() {
                 onValueChange={(value) =>
                   void save({
                     formats: resolveFormats(
-                      value as AutoExportFormat[],
+                      value as ExportFormat[],
                       config.formats,
                     ),
                   })
                 }
               >
-                {FORMAT_OPTIONS.map(({ value, label }) => (
+                {EXPORT_FORMATS.map((value) => (
                   <ToggleGroupItem key={value} value={value}>
-                    {label}
+                    {EXPORT_FORMAT_INFO[value].label}
                   </ToggleGroupItem>
                 ))}
               </ToggleGroup>

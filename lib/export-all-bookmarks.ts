@@ -1,9 +1,8 @@
 import { countBookmarks } from '@/lib/count-bookmarks'
 import { ExportCanceledError, type ExportControl } from '@/lib/export-control'
-import { exportToCSV } from '@/lib/exporters/export-csv'
-import { exportToHTML } from '@/lib/exporters/export-html'
-import { exportToJSON } from '@/lib/exporters/export-json'
+import { EXPORT_FORMAT_INFO, type ExportFormat } from '@/lib/export-formats'
 import { formatFilenameTemplate } from '@/lib/filename-template'
+import { renderExport } from '@/lib/render-export'
 import {
   exportFilenameTemplateStore,
   hideOtherBookmarksStore,
@@ -13,21 +12,15 @@ import {
   includeDateLastUsedStore,
   includeIconDataStore,
 } from '@/lib/storage'
-import type { AutoExportFormat, ExtendedBookmarkTreeNode } from '@/lib/types'
+import type { ExtendedBookmarkTreeNode } from '@/lib/types'
 
 interface ExportAllResult {
   fileName: string
   count: number
 }
 
-const MIME_TYPES: Record<AutoExportFormat, string> = {
-  html: 'text/html',
-  json: 'application/json',
-  csv: 'text/csv',
-}
-
 async function buildContent(
-  format: AutoExportFormat,
+  format: ExportFormat,
   selectedBookmarks: ExtendedBookmarkTreeNode[] | null,
   control: ExportControl,
 ): Promise<string> {
@@ -47,7 +40,7 @@ async function buildContent(
     hideParentFolderStore.getValue(),
   ])
 
-  const baseOptions = {
+  return renderExport(format, {
     ...control,
     selectedBookmarks,
     includeIconData,
@@ -56,26 +49,7 @@ async function buildContent(
     includeDateGroupModified,
     hideOtherBookmarks,
     hideParentFolder,
-  }
-
-  switch (format) {
-    case 'html': {
-      return exportToHTML(baseOptions)
-    }
-    case 'json': {
-      return JSON.stringify(await exportToJSON(baseOptions), null, 2)
-    }
-    case 'csv': {
-      return exportToCSV({
-        ...control,
-        selectedBookmarks,
-        includeIconData,
-        includeDateAdded,
-        includeDateLastUsed,
-        hideParentFolder,
-      })
-    }
-  }
+  })
 }
 
 function triggerDownload(
@@ -105,7 +79,7 @@ function triggerDownload(
  *   downloaded.
  */
 export async function exportBookmarks(
-  format: AutoExportFormat,
+  format: ExportFormat,
   selectedBookmarks: ExtendedBookmarkTreeNode[] | null,
   control: ExportControl = {},
 ): Promise<ExportAllResult> {
@@ -114,8 +88,9 @@ export async function exportBookmarks(
   const baseName = formatFilenameTemplate(
     await exportFilenameTemplateStore.getValue(),
   )
-  const fileName = `${baseName}.${format}`
-  triggerDownload(content, MIME_TYPES[format], fileName)
+  const { extension, mimeType } = EXPORT_FORMAT_INFO[format]
+  const fileName = `${baseName}.${extension}`
+  triggerDownload(content, mimeType, fileName)
 
   const tree = selectedBookmarks ?? (await browser.bookmarks.getTree())
   return { fileName, count: countBookmarks(tree) }
@@ -129,7 +104,7 @@ export async function exportBookmarks(
  * @returns The saved file name and the number of bookmarks in the browser.
  */
 export function exportAllBookmarks(
-  format: AutoExportFormat,
+  format: ExportFormat,
   control: ExportControl = {},
 ): Promise<ExportAllResult> {
   return exportBookmarks(format, null, control)

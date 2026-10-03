@@ -84,6 +84,13 @@ test('every control persists on change and re-arms the alarm', async ({
   await page.getByRole('button', { name: 'JSON' }).click()
   await expect.poll(() => readField('formats')).toEqual(['html', 'json'])
 
+  for (const name of ['Markdown', 'OPML', 'XBEL']) {
+    await page.getByRole('button', { name, exact: true }).click()
+  }
+  await expect
+    .poll(() => readField('formats'))
+    .toEqual(['html', 'json', 'markdown', 'opml', 'xbel'])
+
   const folder = page.getByLabel(en.exportPath.message)
   await folder.fill('my-backups/')
   await folder.blur()
