@@ -110,17 +110,9 @@
   "importPreviewCount": {
     "n": "$1 Lesezeichen"
   },
-  "replaceConfirmTitle": {
-    "message": "Vorhandene Lesezeichen ersetzen?",
-    "description": "Title of the replace confirmation dialog"
-  },
   "replaceConfirmDescription": {
     "message": "Ihre aktuelle Lesezeichenleiste und Andere Lesezeichen werden vor dem Import geleert. Zuerst wird ein Sicherheits-Snapshot gespeichert, damit Sie den Import rückgängig machen können.",
     "description": "Body of the replace confirmation dialog"
-  },
-  "replaceConfirmButton": {
-    "message": "Ja, ersetzen",
-    "description": "Confirm button in the replace dialog"
   },
   "cancel": {
     "message": "Abbrechen",

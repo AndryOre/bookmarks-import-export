@@ -5,7 +5,7 @@ import {
   CircleSlashIcon,
   Undo2Icon,
 } from 'lucide-react'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import type { SubmitEvent } from 'react'
 
 import { ImportFileStep } from '@/components/import/import-file-step'
@@ -33,6 +33,7 @@ import { summarizeImportDuplicates } from '@/lib/import-duplicates'
 import type { ImportDuplicateSummary } from '@/lib/import-duplicates'
 import { getImportPreview } from '@/lib/import-preview'
 import { loadLiveRootTitles } from '@/lib/importers/resolve-roots'
+import { createLatestOnly } from '@/lib/latest-only'
 import { getReplaceDiff } from '@/lib/replace-diff'
 import type { ReplaceDiff } from '@/lib/replace-diff'
 import { runImport } from '@/lib/run-import'
@@ -68,6 +69,25 @@ interface ChosenFile {
   preview: ImportPreview
   replaceDiff: ReplaceDiff | null
   duplicates: ImportDuplicateSummary
+}
+
+async function analyzeFile(file: File) {
+  const text = await file.text()
+  const parsed = getImportPreview(
+    text,
+    file.type,
+    file.name,
+    await loadLiveRootTitles(),
+  )
+  const replaceDiff =
+    parsed.format !== 'unknown' && parsed.hasLocationData
+      ? await getReplaceDiff(parsed)
+      : null
+  const duplicates =
+    parsed.format === 'unknown'
+      ? { skippedDuplicates: 0, importableCount: 0 }
+      : await summarizeImportDuplicates(text, file.type, file.name)
+  return { text, parsed, replaceDiff, duplicates }
 }
 
 /**
@@ -106,26 +126,13 @@ export function ImportRoute() {
       ? chosen.duplicates.importableCount
       : (preview?.totalCount ?? 0)
 
+  const analyzeLatestFile = useRef(createLatestOnly(analyzeFile)).current
+
   const handleFile = async (file: File) => {
     try {
-      const text = await file.text()
-      const parsed = getImportPreview(
-        text,
-        file.type,
-        file.name,
-        await loadLiveRootTitles(),
-      )
-
-      const replaceDiff =
-        parsed.format !== 'unknown' && parsed.hasLocationData
-          ? await getReplaceDiff(parsed)
-          : null
-
-      const duplicates =
-        parsed.format === 'unknown'
-          ? { skippedDuplicates: 0, importableCount: 0 }
-          : await summarizeImportDuplicates(text, file.type, file.name)
-
+      const outcome = await analyzeLatestFile(file)
+      if (!outcome.isCurrent) return
+      const { parsed, text, replaceDiff, duplicates } = outcome.value
       setChosen({ file, text, preview: parsed, replaceDiff, duplicates })
       setStatus(parsed.format === 'unknown' ? 'error' : 'idle')
       setErrorMessage(

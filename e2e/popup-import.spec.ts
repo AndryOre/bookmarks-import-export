@@ -57,7 +57,8 @@ test('quick import merges into the real bookmarks bar with the default mode (fix
   )
 })
 
-test('restore-replace requires confirmation, and canceling imports nothing', async ({
+test('restore-replace in the popup opens the App Import page and imports nothing', async ({
+  context,
   openExtensionPage,
   seedBookmarks,
   readBookmarkTree,
@@ -77,57 +78,21 @@ test('restore-replace requires confirmation, and canceling imports nothing', asy
     ),
   ).toBeVisible()
 
+  const appPagePromise = context.waitForEvent('page')
   await uploadFixture(popup, 'bookmarks.html')
+  const appPage = await appPagePromise
 
-  await expect(popup.getByText('Replace existing bookmarks?')).toBeVisible()
-  await popup.getByRole('button', { name: 'Cancel' }).click()
-
-  await expect(popup.getByText('Replace existing bookmarks?')).not.toBeVisible()
-
-  const [root] = await readBookmarkTree()
-  const otherBookmarks = root?.children?.find((n) => n.id === '2')
-
-  expect(otherBookmarks?.children?.map((n) => n.url)).toEqual([
-    'https://existing-other.example/page',
-  ])
-})
-
-test('confirming restore-replace clears the existing roots before restoring', async ({
-  openExtensionPage,
-  seedBookmarks,
-  readBookmarkTree,
-}) => {
-  await seedBookmarks([
-    {
-      title: 'Existing other bookmark',
-      url: 'https://existing-other.example/page',
-    },
-  ])
-
-  const popup = await openExtensionPage('popup.html')
-  await selectDefaultMode(popup, 'Restore — replace')
-
-  await uploadFixture(popup, 'bookmarks.html')
-
-  await popup.getByRole('button', { name: 'Yes, replace' }).click()
-  await expectImportToast(popup)
+  await expect(appPage).toHaveURL(/app\.html#\/import$/)
+  await expect(popup.getByText('Bookmarks imported')).not.toBeVisible()
 
   const [root] = await readBookmarkTree()
   const bookmarksBar = root?.children?.find((n) => n.id === '1')
   const otherBookmarks = root?.children?.find((n) => n.id === '2')
 
-  expect(bookmarksBar?.children?.map((n) => n.url)).toEqual([
-    'https://html-bar-a.example/page',
-    'https://html-bar-b.example/page',
-  ])
+  expect(bookmarksBar?.children ?? []).toEqual([])
   expect(otherBookmarks?.children?.map((n) => n.url)).toEqual([
-    'https://html-other-a.example/page',
+    'https://existing-other.example/page',
   ])
-  expect(
-    otherBookmarks?.children?.some(
-      (n) => n.url === 'https://existing-other.example/page',
-    ),
-  ).toBe(false)
 })
 
 test('a CSV file imports into "Imported bookmarks" even when the stored default is a restore mode', async ({
@@ -213,34 +178,4 @@ test('a file with no bookmarks shows an error toast and imports nothing', async 
 
   await expect(popup.getByText('Import failed')).toBeVisible()
   await expect(popup.getByText('No bookmarks found in this file')).toBeVisible()
-})
-
-test('confirming restore-replace stores the previous roots as the latest Safety snapshot', async ({
-  openExtensionPage,
-  seedBookmarks,
-}) => {
-  await seedBookmarks([
-    {
-      title: 'Existing other bookmark',
-      url: 'https://existing-other.example/page',
-    },
-  ])
-
-  const popup = await openExtensionPage('popup.html')
-  await selectDefaultMode(popup, 'Restore — replace')
-  await uploadFixture(popup, 'bookmarks.html')
-  await popup.getByRole('button', { name: 'Yes, replace' }).click()
-  await expectImportToast(popup)
-
-  const stored = await popup.evaluate(async () => {
-    const result = await chrome.storage.local.get('safetySnapshot')
-    return result['safetySnapshot'] as {
-      roots: { id: string; children?: { url?: string }[] }[]
-    }
-  })
-  const otherRoot = stored.roots.find((root) => root.id === '2')
-
-  expect(otherRoot?.children?.map((node) => node.url)).toContain(
-    'https://existing-other.example/page',
-  )
 })

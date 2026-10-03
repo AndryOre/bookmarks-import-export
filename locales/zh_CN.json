@@ -110,17 +110,9 @@
   "importPreviewCount": {
     "n": "$1 个书签"
   },
-  "replaceConfirmTitle": {
-    "message": "要替换现有书签吗？",
-    "description": "Title of the replace confirmation dialog"
-  },
   "replaceConfirmDescription": {
     "message": "导入前会先清空当前的书签栏和其他书签。会先保存安全快照，以便你撤销导入。",
     "description": "Body of the replace confirmation dialog"
-  },
-  "replaceConfirmButton": {
-    "message": "是，替换",
-    "description": "Confirm button in the replace dialog"
   },
   "cancel": {
     "message": "取消",

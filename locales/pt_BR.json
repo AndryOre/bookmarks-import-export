@@ -112,17 +112,9 @@
     "1": "$1 favorito",
     "n": "$1 favoritos"
   },
-  "replaceConfirmTitle": {
-    "message": "Substituir os favoritos existentes?",
-    "description": "Title of the replace confirmation dialog"
-  },
   "replaceConfirmDescription": {
     "message": "Sua barra de favoritos e Outros favoritos atuais são esvaziados antes de importar. Primeiro é salvo um instantâneo de segurança, para você poder desfazer a importação.",
     "description": "Body of the replace confirmation dialog"
-  },
-  "replaceConfirmButton": {
-    "message": "Sim, substituir",
-    "description": "Confirm button in the replace dialog"
   },
   "cancel": {
     "message": "Cancelar",

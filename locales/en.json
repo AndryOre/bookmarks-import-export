@@ -111,17 +111,9 @@
     "1": "$1 bookmark",
     "n": "$1 bookmarks"
   },
-  "replaceConfirmTitle": {
-    "message": "Replace existing bookmarks?",
-    "description": "Title of the replace confirmation dialog"
-  },
   "replaceConfirmDescription": {
     "message": "Your current Bookmarks Bar and Other Bookmarks are cleared before importing. A Safety snapshot is saved first, so you can undo the import.",
     "description": "Body of the replace confirmation dialog"
-  },
-  "replaceConfirmButton": {
-    "message": "Yes, replace",
-    "description": "Confirm button in the replace dialog"
   },
   "cancel": {
     "message": "Cancel",
