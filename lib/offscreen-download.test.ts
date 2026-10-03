@@ -1,6 +1,14 @@
 // @vitest-environment jsdom
 import type { Browser } from '@wxt-dev/browser'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  onTestFinished,
+  vi,
+} from 'vitest'
 import { fakeBrowser } from 'wxt/testing/fake-browser'
 
 import { resetFakeI18n } from '@/lib/testing/fake-i18n'
@@ -129,6 +137,29 @@ describe('downloadViaOffscreenDocument', () => {
     })
     expect(offscreen.createDocument).not.toHaveBeenCalled()
     expect(offscreen.closeDocument).toHaveBeenCalledTimes(1)
+  })
+
+  it('resolves when the download already completed before the listener attached', async () => {
+    mockOffscreenApi()
+    mockRuntimeSendMessage()
+    const downloads = mockDownloadsApi()
+    const downloadsApi = browser.downloads as unknown as { search: unknown }
+    const originalSearch = downloadsApi.search
+    downloadsApi.search = vi.fn(() =>
+      Promise.resolve([{ id: 1, state: 'complete' }]),
+    )
+    onTestFinished(() => {
+      downloadsApi.search = originalSearch
+    })
+
+    const downloadId = await downloadViaOffscreenDocument(
+      'c',
+      'text/plain',
+      'f.txt',
+    )
+
+    expect(downloadId).toBe(1)
+    expect(downloads.removeListener).toHaveBeenCalledTimes(1)
   })
 
   it('rejects after the timeout and removes its listener when the download never settles', async () => {

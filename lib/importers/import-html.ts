@@ -222,6 +222,29 @@ function isKnownMobileTitle(
 }
 
 /**
+ * Classifies a top-level folder title as one of the three browser roots by a
+ * case-insensitive match against the current browser's own root titles, the
+ * localized i18n titles and the English defaults.
+ * @param title The top-level folder title to classify.
+ * @param liveRootTitles The current browser's own root titles, if available.
+ * @returns `'bar'`, `'other'` or `'mobile'`, or `undefined` when `title` is
+ *   not a root title.
+ */
+export function classifyRootTitle(
+  title: string,
+  liveRootTitles?: ResolvedImportRootTitles,
+): 'bar' | 'other' | 'mobile' | undefined {
+  const isBar = buildKnownTitleSet(
+    liveRootTitles?.bookmarksBarTitle,
+    i18n.t('bookmarksBar'),
+    'Bookmarks bar',
+  ).has(title.toLowerCase())
+  if (isBar) return 'bar'
+  if (isKnownOtherTitle(title, liveRootTitles)) return 'other'
+  return isKnownMobileTitle(title, liveRootTitles) ? 'mobile' : undefined
+}
+
+/**
  * Builds a lowercased set of the non-empty candidate titles, for a
  * case-insensitive `Set.has` lookup.
  * @param candidates The candidate titles, some possibly `undefined`.

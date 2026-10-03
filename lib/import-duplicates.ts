@@ -2,8 +2,11 @@ import Papa from 'papaparse'
 
 import { detectFormat } from './detect-format'
 import { processCSVData } from './importers/import-csv'
-import { parseHTML } from './importers/import-html'
-import { normalizeJsonRoot, preprocessBookmarks } from './importers/import-json'
+import { parseLocationAwareImport } from './importers/parse-import'
+import {
+  type ResolvedImportRootTitles,
+  resolveImportRootTitles,
+} from './importers/resolve-roots'
 import { isAllowedBookmarkUrl } from './importers/url-validation'
 import { collectExistingUrls, dropDuplicateBookmarks } from './skip-duplicates'
 import type { ParsedBookmark } from './types'
@@ -20,12 +23,11 @@ function parseImportTree(
   text: string,
   mimeType: string,
   fileName?: string,
+  liveRootTitles?: ResolvedImportRootTitles,
 ): ParsedBookmark[] {
   const format = detectFormat(text, mimeType, fileName)
-  if (format === 'html') return parseHTML(text)
-  if (format === 'json') {
-    return preprocessBookmarks(normalizeJsonRoot(JSON.parse(text)))
-  }
+  const parsed = parseLocationAwareImport(text, format, liveRootTitles)
+  if (parsed) return parsed.tree
   if (format === 'csv') {
     const parsed = Papa.parse<Record<string, string>>(text.trim(), {
       header: true,
@@ -62,8 +64,13 @@ export async function summarizeImportDuplicates(
   fileName?: string,
 ): Promise<ImportDuplicateSummary> {
   try {
-    const tree = parseImportTree(text, mimeType, fileName)
     const liveTree = await browser.bookmarks.getTree()
+    const tree = parseImportTree(
+      text,
+      mimeType,
+      fileName,
+      resolveImportRootTitles(liveTree[0]?.children ?? []),
+    )
     const { nodes, skippedDuplicates } = dropDuplicateBookmarks(
       tree,
       collectExistingUrls(liveTree),

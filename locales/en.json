@@ -64,7 +64,7 @@
     "description": "Secondary file drop zone prompt"
   },
   "supportedFormats": {
-    "message": "Supports HTML, JSON and CSV",
+    "message": "Supports HTML, JSON, CSV, XBEL, Chrome Bookmarks files and Safari exports",
     "description": "Supported import formats"
   },
   "importMode": {

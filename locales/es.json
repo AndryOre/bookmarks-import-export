@@ -64,7 +64,7 @@
     "description": "Texto secundario del área de soltar archivo"
   },
   "supportedFormats": {
-    "message": "Compatible con HTML, JSON y CSV",
+    "message": "Compatible con HTML, JSON, CSV, XBEL, archivos Bookmarks de Chrome y exportaciones de Safari",
     "description": "Formatos de importación admitidos"
   },
   "importMode": {

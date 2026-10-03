@@ -32,6 +32,7 @@ import { ImportCanceledError } from '@/lib/import-control'
 import { summarizeImportDuplicates } from '@/lib/import-duplicates'
 import type { ImportDuplicateSummary } from '@/lib/import-duplicates'
 import { getImportPreview } from '@/lib/import-preview'
+import { loadLiveRootTitles } from '@/lib/importers/resolve-roots'
 import { getReplaceDiff } from '@/lib/replace-diff'
 import type { ReplaceDiff } from '@/lib/replace-diff'
 import { runImport } from '@/lib/run-import'
@@ -107,7 +108,12 @@ export function ImportRoute() {
   const handleFile = async (file: File) => {
     try {
       const text = await file.text()
-      const parsed = getImportPreview(text, file.type, file.name)
+      const parsed = getImportPreview(
+        text,
+        file.type,
+        file.name,
+        await loadLiveRootTitles(),
+      )
 
       const replaceDiff =
         parsed.format !== 'unknown' && parsed.hasLocationData

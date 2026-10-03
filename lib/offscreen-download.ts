@@ -200,11 +200,23 @@ async function revokeBlobUrl(url: string): Promise<void> {
   await browser.runtime.sendMessage(message)
 }
 
+async function readDownloadState(
+  downloadId: number,
+): Promise<string | undefined> {
+  try {
+    const [item] = await browser.downloads.search({ id: downloadId })
+    return item?.state
+  } catch {
+    return
+  }
+}
+
 /**
  * Resolves once `downloadId` reaches a terminal `browser.downloads.onChanged`
  * state, rejects if it is interrupted, or rejects after
  * {@link DOWNLOAD_SETTLE_TIMEOUT_MS} if it never settles. Always removes its
- * listener and timer when it settles.
+ * listener and timer when it settles. A download that already settled before
+ * the listener attached is picked up by a one-off `downloads.search`.
  * @param downloadId The download to watch.
  * @returns Resolves on `'complete'`, rejects on `'interrupted'` or timeout.
  */
@@ -214,9 +226,7 @@ function waitForDownloadSettled(downloadId: number): Promise<void> {
       clearTimeout(timeoutHandle)
       browser.downloads.onChanged.removeListener(listener)
     }
-    const listener = (delta: Browser.downloads.DownloadDelta): void => {
-      if (delta.id !== downloadId) return
-      const state = delta.state?.current
+    const settle = (state: string | undefined): void => {
       if (state === 'complete') {
         cleanup()
         resolve()
@@ -226,11 +236,16 @@ function waitForDownloadSettled(downloadId: number): Promise<void> {
         reject(new Error(message))
       }
     }
+    const listener = (delta: Browser.downloads.DownloadDelta): void => {
+      if (delta.id !== downloadId) return
+      settle(delta.state?.current)
+    }
     const timeoutHandle = setTimeout(() => {
       cleanup()
       reject(new Error(`Download ${downloadId} timed out.`))
     }, DOWNLOAD_SETTLE_TIMEOUT_MS)
     browser.downloads.onChanged.addListener(listener)
+    void readDownloadState(downloadId).then(settle)
   })
 }
 

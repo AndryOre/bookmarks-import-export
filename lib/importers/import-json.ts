@@ -41,8 +41,29 @@ export async function importFromJSON(
   mode: ImportMode = 'folder',
   options: ImportOptions = {},
 ): Promise<ImportResult> {
+  return importParsedTree(
+    preprocessBookmarks(normalizeJsonRoot(bookmarks)),
+    mode,
+    options,
+  )
+}
+
+/**
+ * Writes an already-normalized root tree (`[ bar?, other?, mobile? ]` nodes
+ * flagged `isBookmarksBar`/`isOtherBookmarks`/`isMobileBookmarks`) into the
+ * browser. The shared write path for the Chrome `Bookmarks`, XBEL and Safari
+ * importers, which build that tree themselves.
+ * @param preprocessed The flagged root nodes to write.
+ * @param mode Where and how the tree is written.
+ * @param options Import options such as Skip duplicates.
+ * @returns The import result with the skipped-bookmark counts.
+ */
+export async function importParsedTree(
+  preprocessed: ParsedBookmark[],
+  mode: ImportMode = 'folder',
+  options: ImportOptions = {},
+): Promise<ImportResult> {
   try {
-    const preprocessed = preprocessBookmarks(normalizeJsonRoot(bookmarks))
     return await processBookmarks(
       preprocessed,
       mode,

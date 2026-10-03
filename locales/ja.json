@@ -64,7 +64,7 @@
     "description": "Secondary file drop zone prompt"
   },
   "supportedFormats": {
-    "message": "HTML、JSON、CSVに対応",
+    "message": "HTML、JSON、CSV、XBEL、ChromeのBookmarksファイル、Safariのエクスポートに対応",
     "description": "Supported import formats"
   },
   "importMode": {

@@ -1,0 +1,77 @@
+{
+  "checksum": "00000000000000000000000000000000",
+  "roots": {
+    "bookmark_bar": {
+      "children": [
+        {
+          "date_added": "13300000000000000",
+          "id": "5",
+          "name": "Chrome Bar A",
+          "type": "url",
+          "url": "https://chrome-bar-a.example/page"
+        },
+        {
+          "children": [
+            {
+              "date_added": "13300000000000000",
+              "id": "7",
+              "name": "Chrome Nested A",
+              "type": "url",
+              "url": "https://chrome-nested-a.example/page"
+            }
+          ],
+          "date_added": "13300000000000000",
+          "date_modified": "13300000000000000",
+          "id": "6",
+          "name": "Chrome Folder",
+          "type": "folder"
+        },
+        {
+          "date_added": "13300000000000000",
+          "id": "8",
+          "name": "Chrome Blocked",
+          "type": "url",
+          "url": "javascript:alert(1)"
+        }
+      ],
+      "date_added": "13300000000000000",
+      "date_modified": "13300000000000000",
+      "id": "1",
+      "name": "Bookmarks bar",
+      "type": "folder"
+    },
+    "other": {
+      "children": [
+        {
+          "date_added": "13300000000000000",
+          "id": "9",
+          "name": "Chrome Other A",
+          "type": "url",
+          "url": "https://chrome-other-a.example/page"
+        }
+      ],
+      "date_added": "13300000000000000",
+      "date_modified": "0",
+      "id": "2",
+      "name": "Other bookmarks",
+      "type": "folder"
+    },
+    "synced": {
+      "children": [
+        {
+          "date_added": "13300000000000000",
+          "id": "10",
+          "name": "Chrome Mobile A",
+          "type": "url",
+          "url": "https://chrome-mobile-a.example/page"
+        }
+      ],
+      "date_added": "13300000000000000",
+      "date_modified": "0",
+      "id": "3",
+      "name": "Mobile bookmarks",
+      "type": "folder"
+    }
+  },
+  "version": 1
+}

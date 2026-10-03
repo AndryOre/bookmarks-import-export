@@ -4,9 +4,11 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import { exportToCSV } from '@/lib/exporters/export-csv'
 import { exportToHTML } from '@/lib/exporters/export-html'
 import { exportToJSON } from '@/lib/exporters/export-json'
+import { exportToXBEL } from '@/lib/exporters/export-xbel'
 import { importFromCSV } from '@/lib/importers/import-csv'
 import { importFromHTML } from '@/lib/importers/import-html'
 import { importFromJSON } from '@/lib/importers/import-json'
+import { runImport } from '@/lib/run-import'
 import {
   getFakeBookmarksRoot,
   resetFakeBookmarks,
@@ -239,5 +241,77 @@ describe('round trip: CSV', () => {
 
     const importedUrls = collectUrls(getFakeBookmarksRoot())
     expect(importedUrls).toEqual(originalUrls)
+  })
+})
+
+describe('round trip: XBEL', () => {
+  it('export -> import (restore-merge) keeps bookmarks, nesting and order', async () => {
+    seedFakeBookmarksTree(
+      [
+        {
+          id: '10',
+          parentId: '1',
+          title: 'Dev',
+          syncing: false,
+          children: [
+            {
+              id: '11',
+              parentId: '10',
+              title: 'Repo',
+              url: 'https://github.example/repo',
+              syncing: false,
+            },
+            {
+              id: '12',
+              parentId: '10',
+              title: 'Deep',
+              syncing: false,
+              children: [
+                {
+                  id: '13',
+                  parentId: '12',
+                  title: 'Leaf',
+                  url: 'https://leaf.example',
+                  syncing: false,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          id: '14',
+          parentId: '1',
+          title: 'Second',
+          url: 'https://second.example',
+          syncing: false,
+        },
+      ],
+      [
+        {
+          id: '20',
+          parentId: '2',
+          title: 'Reading',
+          url: 'https://reading.example',
+          syncing: false,
+        },
+      ],
+    )
+    const xbel = await exportToXBEL(exportOptions)
+
+    resetFakeBookmarks()
+    await runImport(xbel, 'application/xml', 'restore-merge')
+
+    const root = getFakeBookmarksRoot()
+    const bar = root.children?.find((n) => n.id === '1')
+    const other = root.children?.find((n) => n.id === '2')
+    expect(bar?.children?.map((n) => n.title)).toEqual(['Dev', 'Second'])
+    const development = bar?.children?.[0]
+    expect(development?.children?.map((n) => n.title)).toEqual(['Repo', 'Deep'])
+    expect(development?.children?.[1]?.children?.map((n) => n.url)).toEqual([
+      'https://leaf.example',
+    ])
+    expect(collectUrls(other as ExtendedBookmarkTreeNode | undefined)).toEqual([
+      'https://reading.example',
+    ])
   })
 })
