@@ -2,27 +2,29 @@
 
 ## Scripts
 
-| Script                  | What it does                                                                                               |
-| ----------------------- | ---------------------------------------------------------------------------------------------------------- |
-| `bun run dev`           | Starts the WXT dev server (Chrome MV3).                                                                    |
-| `bun run build`         | Produces a production build (Chrome MV3).                                                                  |
-| `bun run zip`           | Builds and packages the extension into a distributable `.zip`.                                             |
-| `bun run check`         | Aggregate gate: `format:check` → `lint` → `typecheck` → `knip`. Run before opening a PR.                   |
-| `bun run fix`           | Aggregate autofix: `format:write` → `lint:fix` → `typecheck`.                                              |
-| `bun run knip`          | Finds unused files, exports, and dependencies (`bunx knip`).                                               |
-| `bun run ci:local`      | Reproduces CI locally: frozen-lockfile install → `check` → `lint:docs` → `test`.                           |
-| `bun run clean`         | Removes build output and `node_modules`.                                                                   |
-| `bun run cache:clear`   | Clears ESLint and `node_modules/.cache` caches.                                                            |
-| `bun run format:check`  | Checks formatting with Prettier (no writes).                                                               |
-| `bun run format:write`  | Formats the repo with Prettier.                                                                            |
-| `bun run lint`          | Runs ESLint (`--max-warnings=0`, cached).                                                                  |
-| `bun run lint:docs`     | Local `lychee` link check, matching `lint-docs.yml`'s markdown link gate.                                  |
-| `bun run lint:fix`      | Runs ESLint with `--fix` (`--max-warnings=0`, cached).                                                     |
-| `bun run typecheck`     | Runs `tsc --noEmit`.                                                                                       |
-| `bun run test`          | Runs the Vitest suite once.                                                                                |
-| `bun run test:coverage` | Runs the Vitest suite with coverage (`lib/**`, v8 provider, 80% lines/statements/functions, 50% branches). |
-| `bun run test:watch`    | Runs Vitest in watch mode.                                                                                 |
-| `bun run test:e2e`      | Builds the extension (`wxt build`), then runs the Playwright E2E suite (`e2e/**`).                         |
+| Script                      | What it does                                                                                               |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `bun run dev`               | Starts the WXT dev server (Chrome MV3).                                                                    |
+| `bun run build`             | Produces a production build (Chrome MV3).                                                                  |
+| `bun run zip`               | Builds and packages the extension into a distributable `.zip`.                                             |
+| `bun run check`             | Aggregate gate: `format:check` → `lint` → `typecheck` → `knip`. Run before opening a PR.                   |
+| `bun run fix`               | Aggregate autofix: `format:write` → `lint:fix` → `typecheck`.                                              |
+| `bun run knip`              | Finds unused files, exports, and dependencies (`bunx knip`).                                               |
+| `bun run ci:local`          | Reproduces CI locally: frozen-lockfile install → `check` → `lint:docs` → `test`.                           |
+| `bun run clean`             | Removes build output and `node_modules`.                                                                   |
+| `bun run cache:clear`       | Clears ESLint and `node_modules/.cache` caches.                                                            |
+| `bun run format:check`      | Checks formatting with Prettier (no writes).                                                               |
+| `bun run format:write`      | Formats the repo with Prettier.                                                                            |
+| `bun run lint`              | Runs ESLint (`--max-warnings=0`, cached).                                                                  |
+| `bun run lint:docs`         | Local `lychee` link check, matching `lint-docs.yml`'s markdown link gate.                                  |
+| `bun run lint:fix`          | Runs ESLint with `--fix` (`--max-warnings=0`, cached).                                                     |
+| `bun run typecheck`         | Runs `tsc --noEmit`.                                                                                       |
+| `bun run test`              | Runs the Vitest suite once.                                                                                |
+| `bun run test:coverage`     | Runs the Vitest suite with coverage (`lib/**`, v8 provider, 80% lines/statements/functions, 50% branches). |
+| `bun run test:watch`        | Runs Vitest in watch mode.                                                                                 |
+| `bun run test:e2e`          | Builds the extension (`wxt build`), then runs the Playwright E2E suite (`e2e/**`).                         |
+| `bun run store:screenshots` | Builds the extension, then composes the localized store screenshots (`e2e-store/**`).                      |
+| `bun run brand:export`      | Exports the brand tiles and icons from `docs/brand`.                                                       |
 
 ## Git hooks
 
