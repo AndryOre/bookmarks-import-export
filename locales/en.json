@@ -941,20 +941,15 @@
     "description": "Shown after the snapshot was restored"
   },
   "import_skippedInvalidUrl": {
-    "message": "$COUNT$ skipped because their address is not supported",
-    "description": "Import result note: how many bookmarks were skipped because their address is not supported",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "1": "$1 skipped because its address is not supported",
+    "n": "$1 skipped because their address is not supported"
   },
   "shell_navDuplicates": {
     "message": "Duplicates",
     "description": "App sidebar nav item and page title"
   },
   "duplicates_summary": {
-    "message": "$GROUPS$ groups · $COPIES$ extra copies",
+    "message": "Groups: $GROUPS$ · Extra copies: $COPIES$",
     "description": "Summary of the Duplicate scan result",
     "placeholders": {
       "groups": {
@@ -1001,35 +996,20 @@
     }
   },
   "duplicates_deleteButton": {
-    "message": "Delete $COUNT$ extra copies",
-    "description": "Destructive button that deletes the extra copies",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "1": "Delete $1 extra copy",
+    "n": "Delete $1 extra copies"
   },
   "duplicates_confirmTitle": {
-    "message": "Delete $COUNT$ extra copies?",
-    "description": "Confirm dialog title for deleting extra copies",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "1": "Delete $1 extra copy?",
+    "n": "Delete $1 extra copies?"
   },
   "duplicates_confirmDescription": {
     "message": "Only the copies marked Delete are removed from your bookmarks. The copies you keep and all folders stay. This cannot be undone.",
     "description": "Confirm dialog body; folders are never deleted"
   },
   "duplicates_deleted": {
-    "message": "Deleted $COUNT$ extra copies",
-    "description": "Toast after the extra copies were deleted",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "1": "Deleted $1 extra copy",
+    "n": "Deleted $1 extra copies"
   },
   "duplicates_deleteFailed": {
     "message": "Could not delete the copies",

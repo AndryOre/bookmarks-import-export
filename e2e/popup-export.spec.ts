@@ -47,7 +47,7 @@ for (const { format, extension } of cases) {
     expect(content).toContain('Popup Export Bookmark')
     expect(content).toContain('https://popup-export.example.com/')
 
-    await expect(popup.getByText(/Exported \d+ bookmarks/)).toBeVisible()
+    await expect(popup.getByText(/Exported \d+ bookmarks?/)).toBeVisible()
     await expect(popup.getByText(extension, { exact: false })).toBeVisible()
   })
 }

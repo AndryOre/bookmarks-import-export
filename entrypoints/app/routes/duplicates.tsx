@@ -32,6 +32,7 @@ import {
 import type { KeptCopyIds } from '@/lib/duplicate-selection'
 import { findDuplicateGroups } from '@/lib/duplicates'
 import type { DuplicateGroup } from '@/lib/duplicates'
+import { formatCount } from '@/lib/format-count'
 
 function DuplicatesSkeleton() {
   return (
@@ -113,15 +114,23 @@ export function DuplicatesRoute() {
   }
 
   const idsToDelete = getCopyIdsToDelete(groups, keptCopyIds)
-  const countText = idsToDelete.length.toString()
+  const copyCount = idsToDelete.length
+  const copyCountText = formatCount(copyCount)
 
   const handleConfirm = async () => {
     setIsDeleting(true)
     try {
-      const deletedCount = await deleteBookmarksById(idsToDelete)
+      const currentGroups = findDuplicateGroups(
+        await browser.bookmarks.getTree(),
+      )
+      const deletedCount = await deleteBookmarksById(
+        getCopyIdsToDelete(currentGroups, keptCopyIds),
+      )
       toast.add({
         type: 'success',
-        title: i18n.t('duplicates_deleted', [deletedCount.toString()]),
+        title: i18n.t('duplicates_deleted', deletedCount, [
+          formatCount(deletedCount),
+        ]),
       })
     } catch (error) {
       toast.add({
@@ -142,14 +151,14 @@ export function DuplicatesRoute() {
         <ItemContent>
           <ItemTitle>
             {i18n.t('duplicates_summary', [
-              groups.length.toString(),
-              countText,
+              formatCount(groups.length),
+              copyCountText,
             ])}
           </ItemTitle>
         </ItemContent>
         <ItemActions>
           <Button variant="destructive" onClick={() => setIsConfirmOpen(true)}>
-            {i18n.t('duplicates_deleteButton', [countText])}
+            {i18n.t('duplicates_deleteButton', copyCount, [copyCountText])}
           </Button>
         </ItemActions>
       </Item>
@@ -172,7 +181,7 @@ export function DuplicatesRoute() {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              {i18n.t('duplicates_confirmTitle', [countText])}
+              {i18n.t('duplicates_confirmTitle', copyCount, [copyCountText])}
             </AlertDialogTitle>
             <AlertDialogDescription>
               {i18n.t('duplicates_confirmDescription')}
@@ -188,7 +197,7 @@ export function DuplicatesRoute() {
               onClick={() => void handleConfirm()}
             >
               {isDeleting && <Spinner data-icon="inline-start" />}
-              {i18n.t('duplicates_deleteButton', [countText])}
+              {i18n.t('duplicates_deleteButton', copyCount, [copyCountText])}
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

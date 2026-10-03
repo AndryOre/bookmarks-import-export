@@ -935,13 +935,7 @@
     "description": "Shown after the snapshot was restored"
   },
   "import_skippedInvalidUrl": {
-    "message": "已跳过 $COUNT$ 个，因为其地址不受支持",
-    "description": "Import result note: how many bookmarks were skipped because their address is not supported",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "n": "已跳过 $1 个，因为其地址不受支持"
   },
   "shell_navDuplicates": {
     "message": "重复项",
@@ -995,35 +989,17 @@
     }
   },
   "duplicates_deleteButton": {
-    "message": "删除 $COUNT$ 个多余副本",
-    "description": "Destructive button that deletes the extra copies",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "n": "删除 $1 个多余副本"
   },
   "duplicates_confirmTitle": {
-    "message": "删除 $COUNT$ 个多余副本？",
-    "description": "Confirm dialog title for deleting extra copies",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "n": "删除 $1 个多余副本？"
   },
   "duplicates_confirmDescription": {
     "message": "只会从书签中移除标记为“删除”的副本。保留的副本和所有文件夹都不会受影响。此操作无法撤销。",
     "description": "Confirm dialog body; folders are never deleted"
   },
   "duplicates_deleted": {
-    "message": "已删除 $COUNT$ 个多余副本",
-    "description": "Toast after the extra copies were deleted",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "n": "已删除 $1 个多余副本"
   },
   "duplicates_deleteFailed": {
     "message": "无法删除这些副本",

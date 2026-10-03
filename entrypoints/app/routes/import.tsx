@@ -189,7 +189,9 @@ export function ImportRoute() {
           <AlertTitle>{i18n.t('bookmarksImportedSuccessfully')}</AlertTitle>
           {skippedCount > 0 && (
             <AlertDescription>
-              {i18n.t('import_skippedInvalidUrl', [skippedCount])}
+              {i18n.t('import_skippedInvalidUrl', skippedCount, [
+                formatCount(skippedCount),
+              ])}
             </AlertDescription>
           )}
         </Alert>

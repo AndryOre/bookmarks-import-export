@@ -57,7 +57,7 @@ test.describe('Import page', () => {
     await expect(page.getByText('Bookmarks bar')).toBeVisible()
     await expect(page.getByText('2 bookmarks')).toBeVisible()
     await expect(page.getByText('Other bookmarks')).toBeVisible()
-    await expect(page.getByText('1 bookmarks')).toBeVisible()
+    await expect(page.getByText('1 bookmark', { exact: true })).toBeVisible()
     await expect(
       page.getByRole('radio', { name: /^Restore — merge/ }),
     ).toBeEnabled()
@@ -179,7 +179,7 @@ test.describe('Import page', () => {
     await selectMode(page, 'Restore — replace')
 
     await expect(
-      page.getByText('Replace will remove 1 bookmarks and add 3'),
+      page.getByText('Replace will remove 1 bookmark and add 3'),
     ).toBeVisible()
     await submitImport(page, 3)
     await expect(page.getByText(/cannot be undone/i)).toHaveCount(0)
@@ -223,7 +223,7 @@ test.describe('Import page', () => {
 
     await expectSuccess(page)
     await expect(
-      page.getByText('1 skipped because their address is not supported'),
+      page.getByText('1 skipped because its address is not supported'),
     ).toBeVisible()
   })
 

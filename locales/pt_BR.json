@@ -949,20 +949,16 @@
     "description": "Shown after the snapshot was restored"
   },
   "import_skippedInvalidUrl": {
-    "message": "$COUNT$ ignorados porque o endereço não é compatível",
-    "description": "Import result note: how many bookmarks were skipped because their address is not supported",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "0": "$1 ignorado porque o endereço não é compatível",
+    "1": "$1 ignorado porque o endereço não é compatível",
+    "n": "$1 ignorados porque o endereço não é compatível"
   },
   "shell_navDuplicates": {
     "message": "Duplicados",
     "description": "App sidebar nav item and page title"
   },
   "duplicates_summary": {
-    "message": "$GROUPS$ grupos · $COPIES$ cópias extras",
+    "message": "Grupos: $GROUPS$ · Cópias extras: $COPIES$",
     "description": "Summary of the Duplicate scan result",
     "placeholders": {
       "groups": {
@@ -1009,35 +1005,23 @@
     }
   },
   "duplicates_deleteButton": {
-    "message": "Excluir $COUNT$ cópias extras",
-    "description": "Destructive button that deletes the extra copies",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "0": "Excluir $1 cópia extra",
+    "1": "Excluir $1 cópia extra",
+    "n": "Excluir $1 cópias extras"
   },
   "duplicates_confirmTitle": {
-    "message": "Excluir $COUNT$ cópias extras?",
-    "description": "Confirm dialog title for deleting extra copies",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "0": "Excluir $1 cópia extra?",
+    "1": "Excluir $1 cópia extra?",
+    "n": "Excluir $1 cópias extras?"
   },
   "duplicates_confirmDescription": {
     "message": "Somente as cópias marcadas como Excluir são removidas dos seus favoritos. As cópias mantidas e todas as pastas permanecem. Esta ação não pode ser desfeita.",
     "description": "Confirm dialog body; folders are never deleted"
   },
   "duplicates_deleted": {
-    "message": "$COUNT$ cópias extras excluídas",
-    "description": "Toast after the extra copies were deleted",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "0": "$1 cópia extra excluída",
+    "1": "$1 cópia extra excluída",
+    "n": "$1 cópias extras excluídas"
   },
   "duplicates_deleteFailed": {
     "message": "Não foi possível excluir as cópias",

@@ -38,10 +38,10 @@ test.describe('Duplicates page', () => {
     await seedBookmarks(SEED_TREE)
     const page = await openDuplicatesPage(openExtensionPage)
 
-    await expect(page.getByText('1 groups · 2 extra copies')).toBeVisible()
+    await expect(page.getByText('Groups: 1 · Extra copies: 2')).toBeVisible()
     await expect(
       page.getByRole('button', {
-        name: en.duplicates_deleteButton.message.replace('$COUNT$', '2'),
+        name: en.duplicates_deleteButton.n.replace('$1', '2'),
       }),
     ).toBeVisible()
     await expect(page.getByRole('radio', { name: 'First copy' })).toBeChecked()
@@ -59,7 +59,7 @@ test.describe('Duplicates page', () => {
     const page = await openDuplicatesPage(openExtensionPage)
 
     await page.getByRole('radio', { name: 'Third copy' }).click()
-    await expect(page.getByText('1 groups · 2 extra copies')).toBeVisible()
+    await expect(page.getByText('Groups: 1 · Extra copies: 2')).toBeVisible()
 
     await page.getByRole('button', { name: 'Delete 2 extra copies' }).click()
     const dialog = page.getByRole('alertdialog')

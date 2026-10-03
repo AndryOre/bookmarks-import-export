@@ -935,13 +935,7 @@
     "description": "Shown after the snapshot was restored"
   },
   "import_skippedInvalidUrl": {
-    "message": "$COUNT$개를 건너뛰었습니다. 주소가 지원되지 않습니다",
-    "description": "Import result note: how many bookmarks were skipped because their address is not supported",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "n": "$1개를 건너뛰었습니다. 주소가 지원되지 않습니다"
   },
   "shell_navDuplicates": {
     "message": "중복",
@@ -995,35 +989,17 @@
     }
   },
   "duplicates_deleteButton": {
-    "message": "추가 사본 $COUNT$개 삭제",
-    "description": "Destructive button that deletes the extra copies",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "n": "추가 사본 $1개 삭제"
   },
   "duplicates_confirmTitle": {
-    "message": "추가 사본 $COUNT$개를 삭제할까요?",
-    "description": "Confirm dialog title for deleting extra copies",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "n": "추가 사본 $1개를 삭제할까요?"
   },
   "duplicates_confirmDescription": {
     "message": "삭제로 표시된 사본만 북마크에서 제거됩니다. 유지하는 사본과 모든 폴더는 그대로 남습니다. 이 작업은 되돌릴 수 없습니다.",
     "description": "Confirm dialog body; folders are never deleted"
   },
   "duplicates_deleted": {
-    "message": "추가 사본 $COUNT$개를 삭제했습니다",
-    "description": "Toast after the extra copies were deleted",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "n": "추가 사본 $1개를 삭제했습니다"
   },
   "duplicates_deleteFailed": {
     "message": "사본을 삭제하지 못했습니다",

@@ -942,20 +942,15 @@
     "description": "Shown after the snapshot was restored"
   },
   "import_skippedInvalidUrl": {
-    "message": "$COUNT$ saltati perché il loro indirizzo non è supportato",
-    "description": "Import result note: how many bookmarks were skipped because their address is not supported",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "1": "$1 saltato perché il suo indirizzo non è supportato",
+    "n": "$1 saltati perché il loro indirizzo non è supportato"
   },
   "shell_navDuplicates": {
     "message": "Duplicati",
     "description": "App sidebar nav item and page title"
   },
   "duplicates_summary": {
-    "message": "$GROUPS$ gruppi · $COPIES$ copie in più",
+    "message": "Gruppi: $GROUPS$ · Copie in più: $COPIES$",
     "description": "Summary of the Duplicate scan result",
     "placeholders": {
       "groups": {
@@ -1002,35 +997,20 @@
     }
   },
   "duplicates_deleteButton": {
-    "message": "Elimina $COUNT$ copie in più",
-    "description": "Destructive button that deletes the extra copies",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "1": "Elimina $1 copia in più",
+    "n": "Elimina $1 copie in più"
   },
   "duplicates_confirmTitle": {
-    "message": "Eliminare $COUNT$ copie in più?",
-    "description": "Confirm dialog title for deleting extra copies",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "1": "Eliminare $1 copia in più?",
+    "n": "Eliminare $1 copie in più?"
   },
   "duplicates_confirmDescription": {
     "message": "Solo le copie contrassegnate come Elimina vengono rimosse dai tuoi segnalibri. Le copie mantenute e tutte le cartelle restano. Questa azione non può essere annullata.",
     "description": "Confirm dialog body; folders are never deleted"
   },
   "duplicates_deleted": {
-    "message": "$COUNT$ copie in più eliminate",
-    "description": "Toast after the extra copies were deleted",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "1": "$1 copia in più eliminata",
+    "n": "$1 copie in più eliminate"
   },
   "duplicates_deleteFailed": {
     "message": "Impossibile eliminare le copie",

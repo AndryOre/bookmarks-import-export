@@ -935,13 +935,7 @@
     "description": "Shown after the snapshot was restored"
   },
   "import_skippedInvalidUrl": {
-    "message": "$COUNT$ 件をスキップしました（アドレスが未対応のため）",
-    "description": "Import result note: how many bookmarks were skipped because their address is not supported",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "n": "$1 件をスキップしました（アドレスが未対応のため）"
   },
   "shell_navDuplicates": {
     "message": "重複",
@@ -995,35 +989,17 @@
     }
   },
   "duplicates_deleteButton": {
-    "message": "余分なコピー $COUNT$ 件を削除",
-    "description": "Destructive button that deletes the extra copies",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "n": "余分なコピー $1 件を削除"
   },
   "duplicates_confirmTitle": {
-    "message": "余分なコピー $COUNT$ 件を削除しますか？",
-    "description": "Confirm dialog title for deleting extra copies",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "n": "余分なコピー $1 件を削除しますか？"
   },
   "duplicates_confirmDescription": {
     "message": "「削除」にしたコピーだけがブックマークから削除されます。残すコピーとすべてのフォルダはそのままです。この操作は元に戻せません。",
     "description": "Confirm dialog body; folders are never deleted"
   },
   "duplicates_deleted": {
-    "message": "余分なコピー $COUNT$ 件を削除しました",
-    "description": "Toast after the extra copies were deleted",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "n": "余分なコピー $1 件を削除しました"
   },
   "duplicates_deleteFailed": {
     "message": "コピーを削除できませんでした",
