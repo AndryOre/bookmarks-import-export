@@ -1052,5 +1052,26 @@
   "duplicates_scanning": {
     "message": "Deine Lesezeichen werden gescannt",
     "description": "Accessible label while scanning bookmarks"
+  },
+  "autoExportFailureNotification_title": {
+    "message": "Snug · Automatischer Export fehlgeschlagen",
+    "description": "Title of the system notification shown when an Auto-export run fails"
+  },
+  "autoExportFailureNotification_message": {
+    "message": "Grund: $REASON$",
+    "description": "Body of the Failure notification; $1 is the failure reason",
+    "placeholders": {
+      "reason": {
+        "content": "$1"
+      }
+    }
+  },
+  "autoExportPage_notifyOnFailure": {
+    "message": "Benachrichtigen, wenn ein Export fehlschlägt",
+    "description": "Label of the switch that turns the Failure notification on or off"
+  },
+  "autoExportPage_notifyOnFailureDescription": {
+    "message": "Zeigt eine Benachrichtigung, wenn ein geplanter oder manueller automatischer Export fehlschlägt. Erfolgreiche Exporte lösen nie eine Benachrichtigung aus.",
+    "description": "Help text under the Failure notification switch"
   }
 }

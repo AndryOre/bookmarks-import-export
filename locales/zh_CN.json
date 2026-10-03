@@ -1046,5 +1046,26 @@
   "duplicates_scanning": {
     "message": "正在扫描书签",
     "description": "Accessible label while scanning bookmarks"
+  },
+  "autoExportFailureNotification_title": {
+    "message": "Snug · 自动导出失败",
+    "description": "Title of the system notification shown when an Auto-export run fails"
+  },
+  "autoExportFailureNotification_message": {
+    "message": "原因：$REASON$",
+    "description": "Body of the Failure notification; $1 is the failure reason",
+    "placeholders": {
+      "reason": {
+        "content": "$1"
+      }
+    }
+  },
+  "autoExportPage_notifyOnFailure": {
+    "message": "导出失败时通知我",
+    "description": "Label of the switch that turns the Failure notification on or off"
+  },
+  "autoExportPage_notifyOnFailureDescription": {
+    "message": "定时或手动的自动导出失败时显示通知。导出成功时不会通知。",
+    "description": "Help text under the Failure notification switch"
   }
 }
