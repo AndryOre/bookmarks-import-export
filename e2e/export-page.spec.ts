@@ -141,6 +141,28 @@ for (const { format, extension, shapes } of structuralFormats) {
   })
 }
 
+test('exports an icon-less bookmark as HTML without an ICON attribute', async ({
+  seedBookmarks,
+  openExtensionPage,
+}) => {
+  await seedBookmarks(seedTree)
+  const page = await openExtensionPage('app.html#/export')
+
+  await page
+    .getByRole('button', { name: en.exportPage_expandAll.message })
+    .click()
+  await selectRow(page, 'Standalone Link')
+  await page.getByRole('button', { name: 'HTML', exact: true }).click()
+
+  const downloadPromise = page.waitForEvent('download')
+  await page.getByRole('button', { name: 'Export 1 bookmark' }).click()
+  const download = await downloadPromise
+
+  const content = await readFile((await download.path()) as string, 'utf8')
+  expect(content).toContain('https://example.com/standalone-link')
+  expect(content).not.toContain('ICON=')
+})
+
 test('exports a selection made from the search-filtered tree', async ({
   seedBookmarks,
   openExtensionPage,
