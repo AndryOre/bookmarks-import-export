@@ -108,13 +108,7 @@
     "description": "Import preview section label"
   },
   "importPreviewCount": {
-    "message": "Закладок: $COUNT$",
-    "description": "Bookmark count in preview",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "n": "Закладок: $1"
   },
   "replaceConfirmTitle": {
     "message": "Заменить существующие закладки?",
@@ -455,13 +449,7 @@
     "description": "Reason shown on disabled restore mode cards"
   },
   "import_submit": {
-    "message": "Импортировать закладки: $COUNT$",
-    "description": "Primary import button",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "n": "Импортировать закладки: $1"
   },
   "import_noBookmarks": {
     "message": "В этом файле не найдено закладок, поэтому импортировать нечего.",
@@ -535,6 +523,10 @@
     "message": "Периодичность",
     "description": "Label of the frequency toggle group"
   },
+  "autoExportPage_interval1h": {
+    "message": "Каждый час",
+    "description": "Frequency option: hourly"
+  },
   "autoExportPage_interval12h": {
     "message": "Каждые 12 часов",
     "description": "Frequency option: every 12 hours"
@@ -550,6 +542,38 @@
   "autoExportPage_interval7d": {
     "message": "Еженедельно",
     "description": "Frequency option: weekly"
+  },
+  "autoExportPage_dayOfWeek": {
+    "message": "День",
+    "description": "Label of the weekday select shown for the weekly frequency"
+  },
+  "autoExportPage_day0": {
+    "message": "Воскресенье",
+    "description": "Weekday name (day 0, 0 is Sunday)"
+  },
+  "autoExportPage_day1": {
+    "message": "Понедельник",
+    "description": "Weekday name (day 1, 0 is Sunday)"
+  },
+  "autoExportPage_day2": {
+    "message": "Вторник",
+    "description": "Weekday name (day 2, 0 is Sunday)"
+  },
+  "autoExportPage_day3": {
+    "message": "Среда",
+    "description": "Weekday name (day 3, 0 is Sunday)"
+  },
+  "autoExportPage_day4": {
+    "message": "Четверг",
+    "description": "Weekday name (day 4, 0 is Sunday)"
+  },
+  "autoExportPage_day5": {
+    "message": "Пятница",
+    "description": "Weekday name (day 5, 0 is Sunday)"
+  },
+  "autoExportPage_day6": {
+    "message": "Суббота",
+    "description": "Weekday name (day 6, 0 is Sunday)"
   },
   "autoExportPage_folderDescription": {
     "message": "Папка внутри «Скачанных файлов», куда сохраняются копии.",
@@ -572,13 +596,7 @@
     "description": "Accessible label of the popup format toggle group"
   },
   "popup_exportSuccessTitle": {
-    "message": "Экспортировано закладок: $COUNT$",
-    "description": "Popup toast title after a successful export",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "n": "Экспортировано закладок: $1"
   },
   "popup_exportFailedTitle": {
     "message": "Не удалось выполнить экспорт",
@@ -749,16 +767,7 @@
     "description": "Accessible label of the loading placeholder on the Export page"
   },
   "exportPage_selectionCount": {
-    "message": "Выбрано: $SELECTED$ из $TOTAL$",
-    "description": "Export page sticky bar selection count",
-    "placeholders": {
-      "selected": {
-        "content": "$1"
-      },
-      "total": {
-        "content": "$2"
-      }
-    }
+    "n": "Выбрано: $1 из $2"
   },
   "exportPage_nothingSelected": {
     "message": "Ничего не выбрано",
@@ -769,26 +778,14 @@
     "description": "Accessible label of the Export page format toggle group"
   },
   "exportPage_exportButton": {
-    "message": "Экспортировать закладки: $COUNT$",
-    "description": "Export page primary button",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "n": "Экспортировать закладки: $1"
   },
   "exportPage_exporting": {
     "message": "Экспортируем…",
     "description": "Export page primary button label while exporting"
   },
   "exportPage_successTitle": {
-    "message": "Экспортировано закладок: $COUNT$",
-    "description": "Export page toast title after a successful export",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "n": "Экспортировано закладок: $1"
   },
   "exportPage_failedTitle": {
     "message": "Не удалось выполнить экспорт",
@@ -866,16 +863,7 @@
     }
   },
   "import_replaceDiffTitle": {
-    "message": "Замена удалит закладок: $REMOVED$ и добавит: $ADDED$",
-    "description": "Replace diff alert title; $REMOVED$ and $ADDED$ are bookmark counts",
-    "placeholders": {
-      "removed": {
-        "content": "$1"
-      },
-      "added": {
-        "content": "$2"
-      }
-    }
+    "n": "Замена удалит закладок: $1 и добавит: $2"
   },
   "import_replaceDiffDescription": {
     "message": "Сначала сохраняется страховой снимок ваших текущих закладок, чтобы вы могли отменить импорт.",
@@ -945,5 +933,92 @@
   "safetySnapshot_restored": {
     "message": "Снимок восстановлен.",
     "description": "Shown after the snapshot was restored"
+  },
+  "import_skippedInvalidUrl": {
+    "n": "Пропущено: $1 — адрес не поддерживается"
+  },
+  "shell_navDuplicates": {
+    "message": "Дубликаты",
+    "description": "App sidebar nav item and page title"
+  },
+  "duplicates_summary": {
+    "message": "Групп: $GROUPS$ · лишних копий: $COPIES$",
+    "description": "Summary of the Duplicate scan result",
+    "placeholders": {
+      "groups": {
+        "content": "$1"
+      },
+      "copies": {
+        "content": "$2"
+      }
+    }
+  },
+  "duplicates_copiesBadge": {
+    "message": "Копий: $COUNT$",
+    "description": "Badge with the number of copies in a Duplicate group",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_groupLabel": {
+    "message": "Копии $URL$",
+    "description": "Accessible label of the radio group choosing which copy to keep",
+    "placeholders": {
+      "url": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_keep": {
+    "message": "Оставить",
+    "description": "Status of the copy that will be kept"
+  },
+  "duplicates_delete": {
+    "message": "Удалить",
+    "description": "Status of a copy that will be deleted"
+  },
+  "duplicates_added": {
+    "message": "Добавлено $DATE$",
+    "description": "Date a bookmark was added",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_deleteButton": {
+    "n": "Удалить лишние копии: $1"
+  },
+  "duplicates_confirmTitle": {
+    "n": "Удалить лишние копии: $1?"
+  },
+  "duplicates_confirmDescription": {
+    "message": "Из закладок будут удалены только копии с пометкой «Удалить». Оставленные копии и все папки сохранятся. Это действие нельзя отменить.",
+    "description": "Confirm dialog body; folders are never deleted"
+  },
+  "duplicates_deleted": {
+    "n": "Удалено лишних копий: $1"
+  },
+  "duplicates_deleteFailed": {
+    "message": "Не удалось удалить копии",
+    "description": "Toast when deleting copies failed"
+  },
+  "duplicates_emptyTitle": {
+    "message": "Дубликатов нет",
+    "description": "Empty state title when no Duplicates exist"
+  },
+  "duplicates_emptyDescription": {
+    "message": "У каждой закладки свой адрес.",
+    "description": "Empty state description when no Duplicates exist"
+  },
+  "duplicates_scanAgain": {
+    "message": "Проверить снова",
+    "description": "Button that scans the bookmarks again"
+  },
+  "duplicates_scanning": {
+    "message": "Проверка закладок",
+    "description": "Accessible label while scanning bookmarks"
   }
 }

@@ -20,6 +20,7 @@ import {
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
+import { formatCount } from '@/lib/format-count'
 import { getImportPreview } from '@/lib/import-preview'
 import { getReplaceDiff } from '@/lib/replace-diff'
 import type { ReplaceDiff } from '@/lib/replace-diff'
@@ -63,6 +64,7 @@ export function ImportRoute() {
   const [errorMessage, setErrorMessage] = useState('')
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
   const [undoSnapshot, setUndoSnapshot] = useState<SafetySnapshot | null>(null)
+  const [skippedCount, setSkippedCount] = useState(0)
 
   const preview = chosen?.preview ?? null
   const isSupported = preview !== null && preview.format !== 'unknown'
@@ -99,9 +101,10 @@ export function ImportRoute() {
     setStatus('importing')
     setErrorMessage('')
     setUndoSnapshot(null)
+    setSkippedCount(0)
 
     try {
-      await runImport(
+      const result = await runImport(
         chosen.text,
         chosen.file.type,
         effectiveMode,
@@ -110,6 +113,7 @@ export function ImportRoute() {
       if (effectiveMode === 'restore-replace') {
         setUndoSnapshot(await readLatestSafetySnapshot())
       }
+      setSkippedCount(result.skippedInvalidUrl)
       setStatus('success')
     } catch (error) {
       setStatus('error')
@@ -183,6 +187,13 @@ export function ImportRoute() {
         <Alert>
           <CircleCheckIcon />
           <AlertTitle>{i18n.t('bookmarksImportedSuccessfully')}</AlertTitle>
+          {skippedCount > 0 && (
+            <AlertDescription>
+              {i18n.t('import_skippedInvalidUrl', skippedCount, [
+                formatCount(skippedCount),
+              ])}
+            </AlertDescription>
+          )}
         </Alert>
         {errorMessage && (
           <Alert variant="destructive">
@@ -258,7 +269,9 @@ export function ImportRoute() {
             {isImporting && <Spinner data-icon="inline-start" />}
             {isImporting
               ? i18n.t('import_importing')
-              : i18n.t('import_submit', [preview.totalCount.toString()])}
+              : i18n.t('import_submit', preview.totalCount, [
+                  formatCount(preview.totalCount),
+                ])}
           </Button>
           {isEmpty && (
             <p className="text-sm text-muted-foreground">

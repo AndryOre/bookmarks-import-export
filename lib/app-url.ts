@@ -5,6 +5,7 @@
 export const APP_ROUTES = {
   export: '/export',
   import: '/import',
+  duplicates: '/duplicates',
   autoExport: '/auto-export',
   settings: '/settings',
   whatsNew: '/whats-new',

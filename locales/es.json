@@ -108,13 +108,8 @@
     "description": "Etiqueta de la sección de vista previa"
   },
   "importPreviewCount": {
-    "message": "$COUNT$ marcadores",
-    "description": "Conteo de marcadores en la vista previa",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "1": "$1 marcador",
+    "n": "$1 marcadores"
   },
   "replaceConfirmTitle": {
     "message": "¿Reemplazar marcadores existentes?",
@@ -455,13 +450,8 @@
     "description": "Reason shown on disabled restore mode cards"
   },
   "import_submit": {
-    "message": "Importar $COUNT$ marcadores",
-    "description": "Primary import button",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "1": "Importar $1 marcador",
+    "n": "Importar $1 marcadores"
   },
   "import_noBookmarks": {
     "message": "No se encontraron marcadores en este archivo, así que no hay nada que importar.",
@@ -535,6 +525,10 @@
     "message": "Frecuencia",
     "description": "Etiqueta del grupo de frecuencia"
   },
+  "autoExportPage_interval1h": {
+    "message": "Cada hora",
+    "description": "Frequency option: hourly"
+  },
   "autoExportPage_interval12h": {
     "message": "Cada 12 horas",
     "description": "Opción de frecuencia: cada 12 horas"
@@ -550,6 +544,38 @@
   "autoExportPage_interval7d": {
     "message": "Semanal",
     "description": "Opción de frecuencia: semanal"
+  },
+  "autoExportPage_dayOfWeek": {
+    "message": "Día",
+    "description": "Label of the weekday select shown for the weekly frequency"
+  },
+  "autoExportPage_day0": {
+    "message": "Domingo",
+    "description": "Weekday name (day 0, 0 is Sunday)"
+  },
+  "autoExportPage_day1": {
+    "message": "Lunes",
+    "description": "Weekday name (day 1, 0 is Sunday)"
+  },
+  "autoExportPage_day2": {
+    "message": "Martes",
+    "description": "Weekday name (day 2, 0 is Sunday)"
+  },
+  "autoExportPage_day3": {
+    "message": "Miércoles",
+    "description": "Weekday name (day 3, 0 is Sunday)"
+  },
+  "autoExportPage_day4": {
+    "message": "Jueves",
+    "description": "Weekday name (day 4, 0 is Sunday)"
+  },
+  "autoExportPage_day5": {
+    "message": "Viernes",
+    "description": "Weekday name (day 5, 0 is Sunday)"
+  },
+  "autoExportPage_day6": {
+    "message": "Sábado",
+    "description": "Weekday name (day 6, 0 is Sunday)"
   },
   "autoExportPage_folderDescription": {
     "message": "Carpeta dentro de Descargas donde se guardan las copias.",
@@ -572,13 +598,8 @@
     "description": "Accessible label of the popup format toggle group"
   },
   "popup_exportSuccessTitle": {
-    "message": "Se exportaron $COUNT$ marcadores",
-    "description": "Popup toast title after a successful export",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "1": "Se exportó $1 marcador",
+    "n": "Se exportaron $1 marcadores"
   },
   "popup_exportFailedTitle": {
     "message": "Falló la exportación",
@@ -749,16 +770,8 @@
     "description": "Accessible label of the loading placeholder on the Export page"
   },
   "exportPage_selectionCount": {
-    "message": "$SELECTED$ de $TOTAL$ seleccionados",
-    "description": "Export page sticky bar selection count",
-    "placeholders": {
-      "selected": {
-        "content": "$1"
-      },
-      "total": {
-        "content": "$2"
-      }
-    }
+    "1": "$1 de $2 seleccionado",
+    "n": "$1 de $2 seleccionados"
   },
   "exportPage_nothingSelected": {
     "message": "Nada seleccionado",
@@ -769,26 +782,16 @@
     "description": "Accessible label of the Export page format toggle group"
   },
   "exportPage_exportButton": {
-    "message": "Exportar $COUNT$ marcadores",
-    "description": "Export page primary button",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "1": "Exportar $1 marcador",
+    "n": "Exportar $1 marcadores"
   },
   "exportPage_exporting": {
     "message": "Exportando…",
     "description": "Export page primary button label while exporting"
   },
   "exportPage_successTitle": {
-    "message": "Se exportaron $COUNT$ marcadores",
-    "description": "Export page toast title after a successful export",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "1": "Se exportó $1 marcador",
+    "n": "Se exportaron $1 marcadores"
   },
   "exportPage_failedTitle": {
     "message": "Falló la exportación",
@@ -866,16 +869,8 @@
     }
   },
   "import_replaceDiffTitle": {
-    "message": "Reemplazar eliminará $REMOVED$ marcadores y añadirá $ADDED$",
-    "description": "Replace diff alert title; $REMOVED$ and $ADDED$ are bookmark counts",
-    "placeholders": {
-      "removed": {
-        "content": "$1"
-      },
-      "added": {
-        "content": "$2"
-      }
-    }
+    "1": "Reemplazar eliminará $1 marcador y añadirá $2",
+    "n": "Reemplazar eliminará $1 marcadores y añadirá $2"
   },
   "import_replaceDiffDescription": {
     "message": "Primero se guarda una instantánea de seguridad de tus marcadores actuales, para que puedas deshacer la importación.",
@@ -945,5 +940,96 @@
   "safetySnapshot_restored": {
     "message": "Instantánea restaurada.",
     "description": "Shown after the snapshot was restored"
+  },
+  "import_skippedInvalidUrl": {
+    "1": "$1 omitido porque su dirección no es compatible",
+    "n": "$1 omitidos porque su dirección no es compatible"
+  },
+  "shell_navDuplicates": {
+    "message": "Duplicados",
+    "description": "App sidebar nav item and page title"
+  },
+  "duplicates_summary": {
+    "message": "Grupos: $GROUPS$ · Copias extra: $COPIES$",
+    "description": "Summary of the Duplicate scan result",
+    "placeholders": {
+      "groups": {
+        "content": "$1"
+      },
+      "copies": {
+        "content": "$2"
+      }
+    }
+  },
+  "duplicates_copiesBadge": {
+    "message": "$COUNT$ copias",
+    "description": "Badge with the number of copies in a Duplicate group",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_groupLabel": {
+    "message": "Copias de $URL$",
+    "description": "Accessible label of the radio group choosing which copy to keep",
+    "placeholders": {
+      "url": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_keep": {
+    "message": "Conservar",
+    "description": "Status of the copy that will be kept"
+  },
+  "duplicates_delete": {
+    "message": "Eliminar",
+    "description": "Status of a copy that will be deleted"
+  },
+  "duplicates_added": {
+    "message": "Agregado el $DATE$",
+    "description": "Date a bookmark was added",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_deleteButton": {
+    "1": "Eliminar $1 copia extra",
+    "n": "Eliminar $1 copias extra"
+  },
+  "duplicates_confirmTitle": {
+    "1": "¿Eliminar $1 copia extra?",
+    "n": "¿Eliminar $1 copias extra?"
+  },
+  "duplicates_confirmDescription": {
+    "message": "Solo se eliminan de tus marcadores las copias marcadas como Eliminar. Las copias que conservas y todas las carpetas permanecen. Esta acción no se puede deshacer.",
+    "description": "Confirm dialog body; folders are never deleted"
+  },
+  "duplicates_deleted": {
+    "1": "Se eliminó $1 copia extra",
+    "n": "Se eliminaron $1 copias extra"
+  },
+  "duplicates_deleteFailed": {
+    "message": "No se pudieron eliminar las copias",
+    "description": "Toast when deleting copies failed"
+  },
+  "duplicates_emptyTitle": {
+    "message": "Sin duplicados",
+    "description": "Empty state title when no Duplicates exist"
+  },
+  "duplicates_emptyDescription": {
+    "message": "Cada marcador tiene su propia dirección.",
+    "description": "Empty state description when no Duplicates exist"
+  },
+  "duplicates_scanAgain": {
+    "message": "Escanear de nuevo",
+    "description": "Button that scans the bookmarks again"
+  },
+  "duplicates_scanning": {
+    "message": "Escaneando tus marcadores",
+    "description": "Accessible label while scanning bookmarks"
   }
 }

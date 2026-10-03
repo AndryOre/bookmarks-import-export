@@ -108,13 +108,8 @@
     "description": "Import preview section label"
   },
   "importPreviewCount": {
-    "message": "Segnalibri: $COUNT$",
-    "description": "Bookmark count in preview",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "1": "$1 segnalibro",
+    "n": "$1 segnalibri"
   },
   "replaceConfirmTitle": {
     "message": "Sostituire i segnalibri esistenti?",
@@ -455,13 +450,8 @@
     "description": "Reason shown on disabled restore mode cards"
   },
   "import_submit": {
-    "message": "Importa segnalibri ($COUNT$)",
-    "description": "Primary import button",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "1": "Importa $1 segnalibro",
+    "n": "Importa $1 segnalibri"
   },
   "import_noBookmarks": {
     "message": "Nessun segnalibro trovato in questo file, quindi non c'è nulla da importare.",
@@ -535,6 +525,10 @@
     "message": "Frequenza",
     "description": "Label of the frequency toggle group"
   },
+  "autoExportPage_interval1h": {
+    "message": "Ogni ora",
+    "description": "Frequency option: hourly"
+  },
   "autoExportPage_interval12h": {
     "message": "Ogni 12 ore",
     "description": "Frequency option: every 12 hours"
@@ -550,6 +544,38 @@
   "autoExportPage_interval7d": {
     "message": "Ogni settimana",
     "description": "Frequency option: weekly"
+  },
+  "autoExportPage_dayOfWeek": {
+    "message": "Giorno",
+    "description": "Label of the weekday select shown for the weekly frequency"
+  },
+  "autoExportPage_day0": {
+    "message": "Domenica",
+    "description": "Weekday name (day 0, 0 is Sunday)"
+  },
+  "autoExportPage_day1": {
+    "message": "Lunedì",
+    "description": "Weekday name (day 1, 0 is Sunday)"
+  },
+  "autoExportPage_day2": {
+    "message": "Martedì",
+    "description": "Weekday name (day 2, 0 is Sunday)"
+  },
+  "autoExportPage_day3": {
+    "message": "Mercoledì",
+    "description": "Weekday name (day 3, 0 is Sunday)"
+  },
+  "autoExportPage_day4": {
+    "message": "Giovedì",
+    "description": "Weekday name (day 4, 0 is Sunday)"
+  },
+  "autoExportPage_day5": {
+    "message": "Venerdì",
+    "description": "Weekday name (day 5, 0 is Sunday)"
+  },
+  "autoExportPage_day6": {
+    "message": "Sabato",
+    "description": "Weekday name (day 6, 0 is Sunday)"
   },
   "autoExportPage_folderDescription": {
     "message": "Cartella all'interno di Download in cui vengono salvati i backup.",
@@ -572,13 +598,8 @@
     "description": "Accessible label of the popup format toggle group"
   },
   "popup_exportSuccessTitle": {
-    "message": "Segnalibri esportati: $COUNT$",
-    "description": "Popup toast title after a successful export",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "1": "$1 segnalibro esportato",
+    "n": "$1 segnalibri esportati"
   },
   "popup_exportFailedTitle": {
     "message": "Esportazione non riuscita",
@@ -749,16 +770,8 @@
     "description": "Accessible label of the loading placeholder on the Export page"
   },
   "exportPage_selectionCount": {
-    "message": "$SELECTED$ di $TOTAL$ selezionati",
-    "description": "Export page sticky bar selection count",
-    "placeholders": {
-      "selected": {
-        "content": "$1"
-      },
-      "total": {
-        "content": "$2"
-      }
-    }
+    "1": "$1 di $2 selezionato",
+    "n": "$1 di $2 selezionati"
   },
   "exportPage_nothingSelected": {
     "message": "Nessuna selezione",
@@ -769,26 +782,16 @@
     "description": "Accessible label of the Export page format toggle group"
   },
   "exportPage_exportButton": {
-    "message": "Esporta segnalibri ($COUNT$)",
-    "description": "Export page primary button",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "1": "Esporta $1 segnalibro",
+    "n": "Esporta $1 segnalibri"
   },
   "exportPage_exporting": {
     "message": "Esportazione in corso…",
     "description": "Export page primary button label while exporting"
   },
   "exportPage_successTitle": {
-    "message": "Segnalibri esportati: $COUNT$",
-    "description": "Export page toast title after a successful export",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "1": "$1 segnalibro esportato",
+    "n": "$1 segnalibri esportati"
   },
   "exportPage_failedTitle": {
     "message": "Esportazione non riuscita",
@@ -866,16 +869,8 @@
     }
   },
   "import_replaceDiffTitle": {
-    "message": "La sostituzione rimuoverà $REMOVED$ segnalibri e ne aggiungerà $ADDED$",
-    "description": "Replace diff alert title; $REMOVED$ and $ADDED$ are bookmark counts",
-    "placeholders": {
-      "removed": {
-        "content": "$1"
-      },
-      "added": {
-        "content": "$2"
-      }
-    }
+    "1": "La sostituzione rimuoverà $1 segnalibro e ne aggiungerà $2",
+    "n": "La sostituzione rimuoverà $1 segnalibri e ne aggiungerà $2"
   },
   "import_replaceDiffDescription": {
     "message": "Prima viene salvata un'istantanea di sicurezza dei segnalibri attuali, così puoi annullare l'importazione.",
@@ -945,5 +940,96 @@
   "safetySnapshot_restored": {
     "message": "Istantanea ripristinata.",
     "description": "Shown after the snapshot was restored"
+  },
+  "import_skippedInvalidUrl": {
+    "1": "$1 saltato perché il suo indirizzo non è supportato",
+    "n": "$1 saltati perché il loro indirizzo non è supportato"
+  },
+  "shell_navDuplicates": {
+    "message": "Duplicati",
+    "description": "App sidebar nav item and page title"
+  },
+  "duplicates_summary": {
+    "message": "Gruppi: $GROUPS$ · Copie in più: $COPIES$",
+    "description": "Summary of the Duplicate scan result",
+    "placeholders": {
+      "groups": {
+        "content": "$1"
+      },
+      "copies": {
+        "content": "$2"
+      }
+    }
+  },
+  "duplicates_copiesBadge": {
+    "message": "$COUNT$ copie",
+    "description": "Badge with the number of copies in a Duplicate group",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_groupLabel": {
+    "message": "Copie di $URL$",
+    "description": "Accessible label of the radio group choosing which copy to keep",
+    "placeholders": {
+      "url": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_keep": {
+    "message": "Mantieni",
+    "description": "Status of the copy that will be kept"
+  },
+  "duplicates_delete": {
+    "message": "Elimina",
+    "description": "Status of a copy that will be deleted"
+  },
+  "duplicates_added": {
+    "message": "Aggiunto il $DATE$",
+    "description": "Date a bookmark was added",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_deleteButton": {
+    "1": "Elimina $1 copia in più",
+    "n": "Elimina $1 copie in più"
+  },
+  "duplicates_confirmTitle": {
+    "1": "Eliminare $1 copia in più?",
+    "n": "Eliminare $1 copie in più?"
+  },
+  "duplicates_confirmDescription": {
+    "message": "Solo le copie contrassegnate come Elimina vengono rimosse dai tuoi segnalibri. Le copie mantenute e tutte le cartelle restano. Questa azione non può essere annullata.",
+    "description": "Confirm dialog body; folders are never deleted"
+  },
+  "duplicates_deleted": {
+    "1": "$1 copia in più eliminata",
+    "n": "$1 copie in più eliminate"
+  },
+  "duplicates_deleteFailed": {
+    "message": "Impossibile eliminare le copie",
+    "description": "Toast when deleting copies failed"
+  },
+  "duplicates_emptyTitle": {
+    "message": "Nessun duplicato",
+    "description": "Empty state title when no Duplicates exist"
+  },
+  "duplicates_emptyDescription": {
+    "message": "Ogni segnalibro ha un indirizzo proprio.",
+    "description": "Empty state description when no Duplicates exist"
+  },
+  "duplicates_scanAgain": {
+    "message": "Scansiona di nuovo",
+    "description": "Button that scans the bookmarks again"
+  },
+  "duplicates_scanning": {
+    "message": "Scansione dei segnalibri in corso",
+    "description": "Accessible label while scanning bookmarks"
   }
 }

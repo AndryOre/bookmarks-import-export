@@ -108,13 +108,7 @@
     "description": "Import preview section label"
   },
   "importPreviewCount": {
-    "message": "$COUNT$ 个书签",
-    "description": "Bookmark count in preview",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "n": "$1 个书签"
   },
   "replaceConfirmTitle": {
     "message": "要替换现有书签吗？",
@@ -455,13 +449,7 @@
     "description": "Reason shown on disabled restore mode cards"
   },
   "import_submit": {
-    "message": "导入 $COUNT$ 个书签",
-    "description": "Primary import button",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "n": "导入 $1 个书签"
   },
   "import_noBookmarks": {
     "message": "此文件中未找到书签，因此没有可导入的内容。",
@@ -535,6 +523,10 @@
     "message": "频率",
     "description": "Label of the frequency toggle group"
   },
+  "autoExportPage_interval1h": {
+    "message": "每小时",
+    "description": "Frequency option: hourly"
+  },
   "autoExportPage_interval12h": {
     "message": "每 12 小时",
     "description": "Frequency option: every 12 hours"
@@ -550,6 +542,38 @@
   "autoExportPage_interval7d": {
     "message": "每周",
     "description": "Frequency option: weekly"
+  },
+  "autoExportPage_dayOfWeek": {
+    "message": "日期",
+    "description": "Label of the weekday select shown for the weekly frequency"
+  },
+  "autoExportPage_day0": {
+    "message": "星期日",
+    "description": "Weekday name (day 0, 0 is Sunday)"
+  },
+  "autoExportPage_day1": {
+    "message": "星期一",
+    "description": "Weekday name (day 1, 0 is Sunday)"
+  },
+  "autoExportPage_day2": {
+    "message": "星期二",
+    "description": "Weekday name (day 2, 0 is Sunday)"
+  },
+  "autoExportPage_day3": {
+    "message": "星期三",
+    "description": "Weekday name (day 3, 0 is Sunday)"
+  },
+  "autoExportPage_day4": {
+    "message": "星期四",
+    "description": "Weekday name (day 4, 0 is Sunday)"
+  },
+  "autoExportPage_day5": {
+    "message": "星期五",
+    "description": "Weekday name (day 5, 0 is Sunday)"
+  },
+  "autoExportPage_day6": {
+    "message": "星期六",
+    "description": "Weekday name (day 6, 0 is Sunday)"
   },
   "autoExportPage_folderDescription": {
     "message": "备份保存位置：“下载内容”文件夹中的子文件夹。",
@@ -572,13 +596,7 @@
     "description": "Accessible label of the popup format toggle group"
   },
   "popup_exportSuccessTitle": {
-    "message": "已导出 $COUNT$ 个书签",
-    "description": "Popup toast title after a successful export",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "n": "已导出 $1 个书签"
   },
   "popup_exportFailedTitle": {
     "message": "导出失败",
@@ -749,16 +767,7 @@
     "description": "Accessible label of the loading placeholder on the Export page"
   },
   "exportPage_selectionCount": {
-    "message": "已选 $SELECTED$ / 共 $TOTAL$",
-    "description": "Export page sticky bar selection count",
-    "placeholders": {
-      "selected": {
-        "content": "$1"
-      },
-      "total": {
-        "content": "$2"
-      }
-    }
+    "n": "已选 $1 / 共 $2"
   },
   "exportPage_nothingSelected": {
     "message": "未选择任何内容",
@@ -769,26 +778,14 @@
     "description": "Accessible label of the Export page format toggle group"
   },
   "exportPage_exportButton": {
-    "message": "导出 $COUNT$ 个书签",
-    "description": "Export page primary button",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "n": "导出 $1 个书签"
   },
   "exportPage_exporting": {
     "message": "正在导出…",
     "description": "Export page primary button label while exporting"
   },
   "exportPage_successTitle": {
-    "message": "已导出 $COUNT$ 个书签",
-    "description": "Export page toast title after a successful export",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "n": "已导出 $1 个书签"
   },
   "exportPage_failedTitle": {
     "message": "导出失败",
@@ -866,16 +863,7 @@
     }
   },
   "import_replaceDiffTitle": {
-    "message": "替换将删除 $REMOVED$ 个书签并添加 $ADDED$ 个",
-    "description": "Replace diff alert title; $REMOVED$ and $ADDED$ are bookmark counts",
-    "placeholders": {
-      "removed": {
-        "content": "$1"
-      },
-      "added": {
-        "content": "$2"
-      }
-    }
+    "n": "替换将删除 $1 个书签并添加 $2 个"
   },
   "import_replaceDiffDescription": {
     "message": "会先保存当前书签的安全快照，以便你撤销导入。",
@@ -945,5 +933,92 @@
   "safetySnapshot_restored": {
     "message": "快照已恢复。",
     "description": "Shown after the snapshot was restored"
+  },
+  "import_skippedInvalidUrl": {
+    "n": "已跳过 $1 个，因为其地址不受支持"
+  },
+  "shell_navDuplicates": {
+    "message": "重复项",
+    "description": "App sidebar nav item and page title"
+  },
+  "duplicates_summary": {
+    "message": "$GROUPS$ 组 · $COPIES$ 个多余副本",
+    "description": "Summary of the Duplicate scan result",
+    "placeholders": {
+      "groups": {
+        "content": "$1"
+      },
+      "copies": {
+        "content": "$2"
+      }
+    }
+  },
+  "duplicates_copiesBadge": {
+    "message": "$COUNT$ 个副本",
+    "description": "Badge with the number of copies in a Duplicate group",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_groupLabel": {
+    "message": "$URL$ 的副本",
+    "description": "Accessible label of the radio group choosing which copy to keep",
+    "placeholders": {
+      "url": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_keep": {
+    "message": "保留",
+    "description": "Status of the copy that will be kept"
+  },
+  "duplicates_delete": {
+    "message": "删除",
+    "description": "Status of a copy that will be deleted"
+  },
+  "duplicates_added": {
+    "message": "添加于 $DATE$",
+    "description": "Date a bookmark was added",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_deleteButton": {
+    "n": "删除 $1 个多余副本"
+  },
+  "duplicates_confirmTitle": {
+    "n": "删除 $1 个多余副本？"
+  },
+  "duplicates_confirmDescription": {
+    "message": "只会从书签中移除标记为“删除”的副本。保留的副本和所有文件夹都不会受影响。此操作无法撤销。",
+    "description": "Confirm dialog body; folders are never deleted"
+  },
+  "duplicates_deleted": {
+    "n": "已删除 $1 个多余副本"
+  },
+  "duplicates_deleteFailed": {
+    "message": "无法删除这些副本",
+    "description": "Toast when deleting copies failed"
+  },
+  "duplicates_emptyTitle": {
+    "message": "没有重复项",
+    "description": "Empty state title when no Duplicates exist"
+  },
+  "duplicates_emptyDescription": {
+    "message": "每个书签都有各自的地址。",
+    "description": "Empty state description when no Duplicates exist"
+  },
+  "duplicates_scanAgain": {
+    "message": "重新扫描",
+    "description": "Button that scans the bookmarks again"
+  },
+  "duplicates_scanning": {
+    "message": "正在扫描书签",
+    "description": "Accessible label while scanning bookmarks"
   }
 }

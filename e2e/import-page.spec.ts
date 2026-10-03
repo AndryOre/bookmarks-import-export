@@ -57,7 +57,7 @@ test.describe('Import page', () => {
     await expect(page.getByText('Bookmarks bar')).toBeVisible()
     await expect(page.getByText('2 bookmarks')).toBeVisible()
     await expect(page.getByText('Other bookmarks')).toBeVisible()
-    await expect(page.getByText('1 bookmarks')).toBeVisible()
+    await expect(page.getByText('1 bookmark', { exact: true })).toBeVisible()
     await expect(
       page.getByRole('radio', { name: /^Restore — merge/ }),
     ).toBeEnabled()
@@ -179,7 +179,7 @@ test.describe('Import page', () => {
     await selectMode(page, 'Restore — replace')
 
     await expect(
-      page.getByText('Replace will remove 1 bookmarks and add 3'),
+      page.getByText('Replace will remove 1 bookmark and add 3'),
     ).toBeVisible()
     await submitImport(page, 3)
     await expect(page.getByText(/cannot be undone/i)).toHaveCount(0)
@@ -212,6 +212,19 @@ test.describe('Import page', () => {
     expect(otherBookmarks?.children?.map((n) => n.url)).toEqual([
       'https://existing-other.example/page',
     ])
+  })
+
+  test('reports how many bookmarks were skipped for an unsupported address', async ({
+    openExtensionPage,
+  }) => {
+    const page = await openImportPage(openExtensionPage)
+    await chooseFile(page, 'bookmarks-skipped.csv')
+    await page.getByRole('button', { name: /^Import \d+ bookmark/ }).click()
+
+    await expectSuccess(page)
+    await expect(
+      page.getByText('1 skipped because its address is not supported'),
+    ).toBeVisible()
   })
 
   test('cancelling the replace confirmation writes nothing', async ({

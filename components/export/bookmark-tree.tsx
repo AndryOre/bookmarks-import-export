@@ -13,6 +13,7 @@ import {
 } from 'react'
 
 import { getFaviconUrl } from '@/lib/favicon'
+import { formatCount } from '@/lib/format-count'
 import { autoExpandFoldersStore, showBookmarkIconStore } from '@/lib/storage'
 import { flattenVisibleRows, resolveTreeKey } from '@/lib/tree-navigation'
 import type { FlatTreeRow } from '@/lib/tree-navigation'
@@ -428,7 +429,7 @@ function TreeRow({
           className="shrink-0 text-xs text-muted-foreground tabular-nums"
           aria-hidden="true"
         >
-          {collectBookmarkIds(node.children ?? []).length}
+          {formatCount(collectBookmarkIds(node.children ?? []).length)}
         </span>
       )}
     </div>

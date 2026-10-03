@@ -4,6 +4,7 @@ import { DownloadIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
+import { formatCount } from '@/lib/format-count'
 import type { AutoExportFormat } from '@/lib/types'
 
 const FORMATS: AutoExportFormat[] = ['html', 'json', 'csv']
@@ -47,9 +48,9 @@ export function ExportBar({
         aria-live="polite"
       >
         {hasSelection
-          ? i18n.t('exportPage_selectionCount', [
-              selectedCount.toString(),
-              totalCount.toString(),
+          ? i18n.t('exportPage_selectionCount', selectedCount, [
+              formatCount(selectedCount),
+              formatCount(totalCount),
             ])
           : i18n.t('exportPage_nothingSelected')}
       </p>
@@ -76,7 +77,9 @@ export function ExportBar({
         )}
         {isExporting
           ? i18n.t('exportPage_exporting')
-          : i18n.t('exportPage_exportButton', [selectedCount.toString()])}
+          : i18n.t('exportPage_exportButton', selectedCount, [
+              formatCount(selectedCount),
+            ])}
       </Button>
     </div>
   )

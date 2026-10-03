@@ -188,9 +188,9 @@ describe('importFromHTML', () => {
   })
 
   it('resolves without creating any bookmarks for HTML with no <dl>', async () => {
-    await expect(
-      importFromHTML('<html></html>', 'folder'),
-    ).resolves.toBeUndefined()
+    await expect(importFromHTML('<html></html>', 'folder')).resolves.toEqual({
+      skippedInvalidUrl: 0,
+    })
 
     const root = getFakeBookmarksRoot()
     const otherBookmarks = root.children?.find((n) => n.id === '2')
@@ -211,5 +211,29 @@ describe('importFromHTML', () => {
     const other = root.children?.find((n) => n.id === '2')
     expect(bar?.children?.[0]?.url).toBe('https://a.example')
     expect(other?.children?.[0]?.url).toBe('https://b.example')
+  })
+})
+
+describe('importFromHTML fidelity', () => {
+  it('creates empty folders and counts bookmarks with an unsupported address', async () => {
+    const html = `${HTML_HEADER}
+<DL><p>
+    <DT><H3 PERSONAL_TOOLBAR_FOLDER="true">Bookmarks bar</H3>
+    <DL><p>
+        <DT><H3>Empty</H3>
+        <DL><p>
+        </DL><p>
+        <DT><A HREF="javascript:alert(1)">Bad</A>
+        <DT><A HREF="chrome://settings">Settings</A>
+        <DT><A HREF="https://a.example">A</A>
+    </DL><p>
+</DL><p>`
+
+    const result = await importFromHTML(html, 'restore-merge')
+
+    expect(result).toEqual({ skippedInvalidUrl: 2 })
+    const bar = getFakeBookmarksRoot().children?.find((n) => n.id === '1')
+    expect(bar?.children?.map((n) => n.title)).toEqual(['Empty', 'A'])
+    expect(bar?.children?.[0]?.children).toEqual([])
   })
 })

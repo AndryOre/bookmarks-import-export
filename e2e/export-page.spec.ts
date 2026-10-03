@@ -104,7 +104,7 @@ test('exports a selection made from the search-filtered tree', async ({
   await page.getByRole('button', { name: 'JSON', exact: true }).click()
 
   const downloadPromise = page.waitForEvent('download')
-  await page.getByRole('button', { name: 'Export 1 bookmarks' }).click()
+  await page.getByRole('button', { name: 'Export 1 bookmark' }).click()
   const download = await downloadPromise
 
   const content = await readFile((await download.path()) as string, 'utf8')

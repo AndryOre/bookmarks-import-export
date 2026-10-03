@@ -108,13 +108,9 @@
     "description": "Import preview section label"
   },
   "importPreviewCount": {
-    "message": "Favoris : $COUNT$",
-    "description": "Bookmark count in preview",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "0": "$1 favori",
+    "1": "$1 favori",
+    "n": "$1 favoris"
   },
   "replaceConfirmTitle": {
     "message": "Remplacer les favoris existants ?",
@@ -455,13 +451,9 @@
     "description": "Reason shown on disabled restore mode cards"
   },
   "import_submit": {
-    "message": "Importer les favoris ($COUNT$)",
-    "description": "Primary import button",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "0": "Importer $1 favori",
+    "1": "Importer $1 favori",
+    "n": "Importer $1 favoris"
   },
   "import_noBookmarks": {
     "message": "Aucun favori trouvé dans ce fichier, il n'y a donc rien à importer.",
@@ -535,6 +527,10 @@
     "message": "Fréquence",
     "description": "Label of the frequency toggle group"
   },
+  "autoExportPage_interval1h": {
+    "message": "Toutes les heures",
+    "description": "Frequency option: hourly"
+  },
   "autoExportPage_interval12h": {
     "message": "Toutes les 12 heures",
     "description": "Frequency option: every 12 hours"
@@ -550,6 +546,38 @@
   "autoExportPage_interval7d": {
     "message": "Toutes les semaines",
     "description": "Frequency option: weekly"
+  },
+  "autoExportPage_dayOfWeek": {
+    "message": "Jour",
+    "description": "Label of the weekday select shown for the weekly frequency"
+  },
+  "autoExportPage_day0": {
+    "message": "Dimanche",
+    "description": "Weekday name (day 0, 0 is Sunday)"
+  },
+  "autoExportPage_day1": {
+    "message": "Lundi",
+    "description": "Weekday name (day 1, 0 is Sunday)"
+  },
+  "autoExportPage_day2": {
+    "message": "Mardi",
+    "description": "Weekday name (day 2, 0 is Sunday)"
+  },
+  "autoExportPage_day3": {
+    "message": "Mercredi",
+    "description": "Weekday name (day 3, 0 is Sunday)"
+  },
+  "autoExportPage_day4": {
+    "message": "Jeudi",
+    "description": "Weekday name (day 4, 0 is Sunday)"
+  },
+  "autoExportPage_day5": {
+    "message": "Vendredi",
+    "description": "Weekday name (day 5, 0 is Sunday)"
+  },
+  "autoExportPage_day6": {
+    "message": "Samedi",
+    "description": "Weekday name (day 6, 0 is Sunday)"
   },
   "autoExportPage_folderDescription": {
     "message": "Dossier, dans votre dossier Téléchargements, où sont enregistrées les sauvegardes.",
@@ -572,13 +600,9 @@
     "description": "Accessible label of the popup format toggle group"
   },
   "popup_exportSuccessTitle": {
-    "message": "Favoris exportés : $COUNT$",
-    "description": "Popup toast title after a successful export",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "0": "$1 favori exporté",
+    "1": "$1 favori exporté",
+    "n": "$1 favoris exportés"
   },
   "popup_exportFailedTitle": {
     "message": "Échec de l'exportation",
@@ -749,16 +773,9 @@
     "description": "Accessible label of the loading placeholder on the Export page"
   },
   "exportPage_selectionCount": {
-    "message": "$SELECTED$ sur $TOTAL$ sélectionnés",
-    "description": "Export page sticky bar selection count",
-    "placeholders": {
-      "selected": {
-        "content": "$1"
-      },
-      "total": {
-        "content": "$2"
-      }
-    }
+    "0": "$1 sur $2 sélectionné",
+    "1": "$1 sur $2 sélectionné",
+    "n": "$1 sur $2 sélectionnés"
   },
   "exportPage_nothingSelected": {
     "message": "Aucune sélection",
@@ -769,26 +786,18 @@
     "description": "Accessible label of the Export page format toggle group"
   },
   "exportPage_exportButton": {
-    "message": "Exporter les favoris ($COUNT$)",
-    "description": "Export page primary button",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "0": "Exporter $1 favori",
+    "1": "Exporter $1 favori",
+    "n": "Exporter $1 favoris"
   },
   "exportPage_exporting": {
     "message": "Exportation…",
     "description": "Export page primary button label while exporting"
   },
   "exportPage_successTitle": {
-    "message": "Favoris exportés : $COUNT$",
-    "description": "Export page toast title after a successful export",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "0": "$1 favori exporté",
+    "1": "$1 favori exporté",
+    "n": "$1 favoris exportés"
   },
   "exportPage_failedTitle": {
     "message": "Échec de l'exportation",
@@ -866,16 +875,9 @@
     }
   },
   "import_replaceDiffTitle": {
-    "message": "Le remplacement supprimera $REMOVED$ favoris et en ajoutera $ADDED$",
-    "description": "Replace diff alert title; $REMOVED$ and $ADDED$ are bookmark counts",
-    "placeholders": {
-      "removed": {
-        "content": "$1"
-      },
-      "added": {
-        "content": "$2"
-      }
-    }
+    "0": "Le remplacement supprimera $1 favori et en ajoutera $2",
+    "1": "Le remplacement supprimera $1 favori et en ajoutera $2",
+    "n": "Le remplacement supprimera $1 favoris et en ajoutera $2"
   },
   "import_replaceDiffDescription": {
     "message": "Un instantané de sécurité de vos favoris actuels est enregistré d'abord, pour que vous puissiez annuler l'importation.",
@@ -945,5 +947,100 @@
   "safetySnapshot_restored": {
     "message": "Instantané restauré.",
     "description": "Shown after the snapshot was restored"
+  },
+  "import_skippedInvalidUrl": {
+    "0": "$1 ignoré car son adresse n'est pas prise en charge",
+    "1": "$1 ignoré car son adresse n'est pas prise en charge",
+    "n": "$1 ignorés car leur adresse n'est pas prise en charge"
+  },
+  "shell_navDuplicates": {
+    "message": "Doublons",
+    "description": "App sidebar nav item and page title"
+  },
+  "duplicates_summary": {
+    "message": "Groupes : $GROUPS$ · Copies en trop : $COPIES$",
+    "description": "Summary of the Duplicate scan result",
+    "placeholders": {
+      "groups": {
+        "content": "$1"
+      },
+      "copies": {
+        "content": "$2"
+      }
+    }
+  },
+  "duplicates_copiesBadge": {
+    "message": "$COUNT$ copies",
+    "description": "Badge with the number of copies in a Duplicate group",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_groupLabel": {
+    "message": "Copies de $URL$",
+    "description": "Accessible label of the radio group choosing which copy to keep",
+    "placeholders": {
+      "url": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_keep": {
+    "message": "Conserver",
+    "description": "Status of the copy that will be kept"
+  },
+  "duplicates_delete": {
+    "message": "Supprimer",
+    "description": "Status of a copy that will be deleted"
+  },
+  "duplicates_added": {
+    "message": "Ajouté le $DATE$",
+    "description": "Date a bookmark was added",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_deleteButton": {
+    "0": "Supprimer $1 copie en trop",
+    "1": "Supprimer $1 copie en trop",
+    "n": "Supprimer $1 copies en trop"
+  },
+  "duplicates_confirmTitle": {
+    "0": "Supprimer $1 copie en trop ?",
+    "1": "Supprimer $1 copie en trop ?",
+    "n": "Supprimer $1 copies en trop ?"
+  },
+  "duplicates_confirmDescription": {
+    "message": "Seules les copies marquées Supprimer sont retirées de vos favoris. Les copies conservées et tous les dossiers restent. Cette action est irréversible.",
+    "description": "Confirm dialog body; folders are never deleted"
+  },
+  "duplicates_deleted": {
+    "0": "$1 copie en trop supprimée",
+    "1": "$1 copie en trop supprimée",
+    "n": "$1 copies en trop supprimées"
+  },
+  "duplicates_deleteFailed": {
+    "message": "Impossible de supprimer les copies",
+    "description": "Toast when deleting copies failed"
+  },
+  "duplicates_emptyTitle": {
+    "message": "Aucun doublon",
+    "description": "Empty state title when no Duplicates exist"
+  },
+  "duplicates_emptyDescription": {
+    "message": "Chaque favori a sa propre adresse.",
+    "description": "Empty state description when no Duplicates exist"
+  },
+  "duplicates_scanAgain": {
+    "message": "Analyser à nouveau",
+    "description": "Button that scans the bookmarks again"
+  },
+  "duplicates_scanning": {
+    "message": "Analyse de vos favoris",
+    "description": "Accessible label while scanning bookmarks"
   }
 }

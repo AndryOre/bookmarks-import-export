@@ -25,6 +25,7 @@ import {
 } from '@/components/ui/select'
 import { Spinner } from '@/components/ui/spinner'
 import { toast } from '@/components/ui/toast'
+import { formatCount } from '@/lib/format-count'
 import { getImportModeItems } from '@/lib/import-mode-items'
 import { getImportPreview } from '@/lib/import-preview'
 import { runImport } from '@/lib/run-import'
@@ -64,10 +65,16 @@ export function ImportSection() {
   }: PendingImport) => {
     setIsImporting(true)
     try {
-      await runImport(text, mimeType, importMode, fileName)
+      const result = await runImport(text, mimeType, importMode, fileName)
       toast.add({
         type: 'success',
         title: i18n.t('popup_importSuccessTitle'),
+        description:
+          result.skippedInvalidUrl > 0
+            ? i18n.t('import_skippedInvalidUrl', result.skippedInvalidUrl, [
+                formatCount(result.skippedInvalidUrl),
+              ])
+            : undefined,
       })
     } catch (error) {
       toast.add({

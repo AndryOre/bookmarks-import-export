@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { toast } from '@/components/ui/toast'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { exportAllBookmarks } from '@/lib/export-all-bookmarks'
+import { formatCount } from '@/lib/format-count'
 import { lastExportFormatStore } from '@/lib/storage'
 import type { AutoExportFormat } from '@/lib/types'
 import { useStorageItem } from '@/lib/use-storage-item'
@@ -28,7 +29,7 @@ export function ExportSection() {
       const { fileName, count } = await exportAllBookmarks(format)
       toast.add({
         type: 'success',
-        title: i18n.t('popup_exportSuccessTitle', [count]),
+        title: i18n.t('popup_exportSuccessTitle', count, [formatCount(count)]),
         description: fileName,
       })
     } catch (error) {

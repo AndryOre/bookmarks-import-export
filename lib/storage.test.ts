@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { fakeBrowser } from 'wxt/testing/fake-browser'
 
 import {
@@ -38,8 +38,33 @@ describe('storage items', () => {
       enabled: false,
       interval: '1d',
       preferredTime: '00:00',
+      dayOfWeek: 1,
       path: 'bookmarks-backup/',
       formats: ['html'],
+    })
+  })
+
+  it('migrates a stored config without dayOfWeek, keeping its settings', async () => {
+    await fakeBrowser.storage.local.set({
+      autoExportConfig: {
+        enabled: true,
+        interval: '7d',
+        preferredTime: '09:30',
+        path: 'backups/',
+        formats: ['json', 'csv'],
+      },
+    })
+
+    vi.resetModules()
+    const reloaded = await import('./storage')
+
+    expect(await reloaded.autoExportConfigStore.getValue()).toEqual({
+      enabled: true,
+      interval: '7d',
+      preferredTime: '09:30',
+      dayOfWeek: 1,
+      path: 'backups/',
+      formats: ['json', 'csv'],
     })
   })
 

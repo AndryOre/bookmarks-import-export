@@ -140,7 +140,7 @@ test('Restore snapshot asks for confirmation and restores the snapshot', async (
   })
   const page = await openExtensionPage('app.html#/settings')
 
-  await expect(page.getByText('1 bookmarks')).toBeVisible()
+  await expect(page.getByText('1 bookmark', { exact: true })).toBeVisible()
   await page
     .getByRole('button', { name: en.safetySnapshot_restore.message })
     .click()

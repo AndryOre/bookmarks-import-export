@@ -75,13 +75,23 @@ const DEFAULT_AUTO_EXPORT_CONFIG: AutoExportConfig = {
   enabled: false,
   interval: '1d',
   preferredTime: '00:00',
+  dayOfWeek: 1,
   path: 'bookmarks-backup/',
   formats: ['html'],
 }
 
 export const autoExportConfigStore = storage.defineItem<AutoExportConfig>(
   'local:autoExportConfig',
-  { fallback: DEFAULT_AUTO_EXPORT_CONFIG },
+  {
+    fallback: DEFAULT_AUTO_EXPORT_CONFIG,
+    version: 2,
+    migrations: {
+      2: (stored: Omit<AutoExportConfig, 'dayOfWeek'>): AutoExportConfig => ({
+        ...stored,
+        dayOfWeek: DEFAULT_AUTO_EXPORT_CONFIG.dayOfWeek,
+      }),
+    },
+  },
 )
 
 export const autoExportLastRunStore = storage.defineItem<

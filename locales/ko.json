@@ -108,13 +108,7 @@
     "description": "Import preview section label"
   },
   "importPreviewCount": {
-    "message": "북마크 $COUNT$개",
-    "description": "Bookmark count in preview",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "n": "북마크 $1개"
   },
   "replaceConfirmTitle": {
     "message": "기존 북마크를 교체할까요?",
@@ -455,13 +449,7 @@
     "description": "Reason shown on disabled restore mode cards"
   },
   "import_submit": {
-    "message": "북마크 $COUNT$개 가져오기",
-    "description": "Primary import button",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "n": "북마크 $1개 가져오기"
   },
   "import_noBookmarks": {
     "message": "이 파일에서 북마크를 찾을 수 없으므로 가져올 항목이 없습니다.",
@@ -535,6 +523,10 @@
     "message": "빈도",
     "description": "Label of the frequency toggle group"
   },
+  "autoExportPage_interval1h": {
+    "message": "매시간",
+    "description": "Frequency option: hourly"
+  },
   "autoExportPage_interval12h": {
     "message": "12시간마다",
     "description": "Frequency option: every 12 hours"
@@ -550,6 +542,38 @@
   "autoExportPage_interval7d": {
     "message": "매주",
     "description": "Frequency option: weekly"
+  },
+  "autoExportPage_dayOfWeek": {
+    "message": "요일",
+    "description": "Label of the weekday select shown for the weekly frequency"
+  },
+  "autoExportPage_day0": {
+    "message": "일요일",
+    "description": "Weekday name (day 0, 0 is Sunday)"
+  },
+  "autoExportPage_day1": {
+    "message": "월요일",
+    "description": "Weekday name (day 1, 0 is Sunday)"
+  },
+  "autoExportPage_day2": {
+    "message": "화요일",
+    "description": "Weekday name (day 2, 0 is Sunday)"
+  },
+  "autoExportPage_day3": {
+    "message": "수요일",
+    "description": "Weekday name (day 3, 0 is Sunday)"
+  },
+  "autoExportPage_day4": {
+    "message": "목요일",
+    "description": "Weekday name (day 4, 0 is Sunday)"
+  },
+  "autoExportPage_day5": {
+    "message": "금요일",
+    "description": "Weekday name (day 5, 0 is Sunday)"
+  },
+  "autoExportPage_day6": {
+    "message": "토요일",
+    "description": "Weekday name (day 6, 0 is Sunday)"
   },
   "autoExportPage_folderDescription": {
     "message": "백업을 저장할 다운로드 폴더 안의 폴더예요.",
@@ -572,13 +596,7 @@
     "description": "Accessible label of the popup format toggle group"
   },
   "popup_exportSuccessTitle": {
-    "message": "북마크 $COUNT$개를 내보냈어요",
-    "description": "Popup toast title after a successful export",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "n": "북마크 $1개를 내보냈어요"
   },
   "popup_exportFailedTitle": {
     "message": "내보내기에 실패했어요",
@@ -749,16 +767,7 @@
     "description": "Accessible label of the loading placeholder on the Export page"
   },
   "exportPage_selectionCount": {
-    "message": "$TOTAL$개 중 $SELECTED$개 선택됨",
-    "description": "Export page sticky bar selection count",
-    "placeholders": {
-      "selected": {
-        "content": "$1"
-      },
-      "total": {
-        "content": "$2"
-      }
-    }
+    "n": "$2개 중 $1개 선택됨"
   },
   "exportPage_nothingSelected": {
     "message": "선택한 항목 없음",
@@ -769,26 +778,14 @@
     "description": "Accessible label of the Export page format toggle group"
   },
   "exportPage_exportButton": {
-    "message": "북마크 $COUNT$개 내보내기",
-    "description": "Export page primary button",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "n": "북마크 $1개 내보내기"
   },
   "exportPage_exporting": {
     "message": "내보내는 중…",
     "description": "Export page primary button label while exporting"
   },
   "exportPage_successTitle": {
-    "message": "북마크 $COUNT$개를 내보냈어요",
-    "description": "Export page toast title after a successful export",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "n": "북마크 $1개를 내보냈어요"
   },
   "exportPage_failedTitle": {
     "message": "내보내기에 실패했어요",
@@ -866,16 +863,7 @@
     }
   },
   "import_replaceDiffTitle": {
-    "message": "바꾸면 북마크 $REMOVED$개가 삭제되고 $ADDED$개가 추가됩니다",
-    "description": "Replace diff alert title; $REMOVED$ and $ADDED$ are bookmark counts",
-    "placeholders": {
-      "removed": {
-        "content": "$1"
-      },
-      "added": {
-        "content": "$2"
-      }
-    }
+    "n": "바꾸면 북마크 $1개가 삭제되고 $2개가 추가됩니다"
   },
   "import_replaceDiffDescription": {
     "message": "현재 북마크의 안전 스냅샷이 먼저 저장되므로 가져오기를 되돌릴 수 있습니다.",
@@ -945,5 +933,92 @@
   "safetySnapshot_restored": {
     "message": "스냅샷을 복원했습니다.",
     "description": "Shown after the snapshot was restored"
+  },
+  "import_skippedInvalidUrl": {
+    "n": "$1개를 건너뛰었습니다. 주소가 지원되지 않습니다"
+  },
+  "shell_navDuplicates": {
+    "message": "중복",
+    "description": "App sidebar nav item and page title"
+  },
+  "duplicates_summary": {
+    "message": "그룹 $GROUPS$개 · 추가 사본 $COPIES$개",
+    "description": "Summary of the Duplicate scan result",
+    "placeholders": {
+      "groups": {
+        "content": "$1"
+      },
+      "copies": {
+        "content": "$2"
+      }
+    }
+  },
+  "duplicates_copiesBadge": {
+    "message": "사본 $COUNT$개",
+    "description": "Badge with the number of copies in a Duplicate group",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_groupLabel": {
+    "message": "$URL$의 사본",
+    "description": "Accessible label of the radio group choosing which copy to keep",
+    "placeholders": {
+      "url": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_keep": {
+    "message": "유지",
+    "description": "Status of the copy that will be kept"
+  },
+  "duplicates_delete": {
+    "message": "삭제",
+    "description": "Status of a copy that will be deleted"
+  },
+  "duplicates_added": {
+    "message": "추가일: $DATE$",
+    "description": "Date a bookmark was added",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_deleteButton": {
+    "n": "추가 사본 $1개 삭제"
+  },
+  "duplicates_confirmTitle": {
+    "n": "추가 사본 $1개를 삭제할까요?"
+  },
+  "duplicates_confirmDescription": {
+    "message": "삭제로 표시된 사본만 북마크에서 제거됩니다. 유지하는 사본과 모든 폴더는 그대로 남습니다. 이 작업은 되돌릴 수 없습니다.",
+    "description": "Confirm dialog body; folders are never deleted"
+  },
+  "duplicates_deleted": {
+    "n": "추가 사본 $1개를 삭제했습니다"
+  },
+  "duplicates_deleteFailed": {
+    "message": "사본을 삭제하지 못했습니다",
+    "description": "Toast when deleting copies failed"
+  },
+  "duplicates_emptyTitle": {
+    "message": "중복 없음",
+    "description": "Empty state title when no Duplicates exist"
+  },
+  "duplicates_emptyDescription": {
+    "message": "모든 북마크가 고유한 주소를 가지고 있습니다.",
+    "description": "Empty state description when no Duplicates exist"
+  },
+  "duplicates_scanAgain": {
+    "message": "다시 검색",
+    "description": "Button that scans the bookmarks again"
+  },
+  "duplicates_scanning": {
+    "message": "북마크를 검색하는 중",
+    "description": "Accessible label while scanning bookmarks"
   }
 }
