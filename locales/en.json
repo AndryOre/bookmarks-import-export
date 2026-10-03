@@ -268,6 +268,10 @@
     "message": "Never run yet",
     "description": "Status card value when auto-export has never run"
   },
+  "autoExportScheduling": {
+    "message": "Scheduling…",
+    "description": "Status card next run value while auto-export is enabled but not yet scheduled"
+  },
   "exportNow": {
     "message": "Export now",
     "description": "Button label to run an on-demand export immediately"
@@ -827,6 +831,10 @@
   "exportPage_failedTitle": {
     "message": "Export failed",
     "description": "Export page toast title when an export fails"
+  },
+  "exportSelectionGone": {
+    "message": "The selected bookmarks no longer exist. Select them again and retry.",
+    "description": "Export page toast description when every selected bookmark was deleted before the export started"
   },
   "exportPage_noResultsTitle": {
     "message": "No bookmarks match \"$TERM$\"",

@@ -267,6 +267,10 @@
     "message": "未実行",
     "description": "Status card value when auto-export has never run"
   },
+  "autoExportScheduling": {
+    "message": "スケジュール中…",
+    "description": "Status card next run value while auto-export is enabled but not yet scheduled"
+  },
   "exportNow": {
     "message": "今すぐ書き出す",
     "description": "Button label to run an on-demand export immediately"
@@ -822,6 +826,10 @@
   "exportPage_failedTitle": {
     "message": "書き出しに失敗しました",
     "description": "Export page toast title when an export fails"
+  },
+  "exportSelectionGone": {
+    "message": "選択したブックマークは存在しなくなりました。もう一度選択してやり直してください。",
+    "description": "Export page toast description when every selected bookmark was deleted before the export started"
   },
   "exportPage_noResultsTitle": {
     "message": "「$TERM$」に一致するブックマークはありません",

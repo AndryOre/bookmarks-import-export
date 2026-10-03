@@ -268,6 +268,10 @@
     "message": "Mai eseguita",
     "description": "Status card value when auto-export has never run"
   },
+  "autoExportScheduling": {
+    "message": "Pianificazione…",
+    "description": "Status card next run value while auto-export is enabled but not yet scheduled"
+  },
   "exportNow": {
     "message": "Esporta ora",
     "description": "Button label to run an on-demand export immediately"
@@ -828,6 +832,10 @@
   "exportPage_failedTitle": {
     "message": "Esportazione non riuscita",
     "description": "Export page toast title when an export fails"
+  },
+  "exportSelectionGone": {
+    "message": "I segnalibri selezionati non esistono più. Selezionali di nuovo e riprova.",
+    "description": "Export page toast description when every selected bookmark was deleted before the export started"
   },
   "exportPage_noResultsTitle": {
     "message": "Nessun segnalibro corrisponde a \"$TERM$\"",

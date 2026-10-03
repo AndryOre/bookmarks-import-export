@@ -267,6 +267,10 @@
     "message": "尚未运行",
     "description": "Status card value when auto-export has never run"
   },
+  "autoExportScheduling": {
+    "message": "正在安排…",
+    "description": "Status card next run value while auto-export is enabled but not yet scheduled"
+  },
   "exportNow": {
     "message": "立即导出",
     "description": "Button label to run an on-demand export immediately"
@@ -822,6 +826,10 @@
   "exportPage_failedTitle": {
     "message": "导出失败",
     "description": "Export page toast title when an export fails"
+  },
+  "exportSelectionGone": {
+    "message": "所选书签已不存在。请重新选择后再试。",
+    "description": "Export page toast description when every selected bookmark was deleted before the export started"
   },
   "exportPage_noResultsTitle": {
     "message": "没有与“$TERM$”匹配的书签",

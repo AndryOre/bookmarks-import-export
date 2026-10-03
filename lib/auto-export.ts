@@ -12,6 +12,7 @@ import {
   autoExportConfigStore,
   autoExportLastRunStore,
   autoExportNextRunStore,
+  autoExportRunInFlightStore,
   exportFilenameTemplateStore,
   hideOtherBookmarksStore,
   hideParentFolderStore,
@@ -73,6 +74,19 @@ const CATCH_UP_DELAY_MS = 60_000
  * literal color, not a CSS variable.
  */
 const FAILURE_BADGE_COLOR = '#DC2626'
+
+/**
+ * How long an in-flight run marker is trusted before it is considered left
+ * behind by a killed service worker.
+ */
+const RUN_IN_FLIGHT_TTL_MS = 10 * 60_000
+
+/**
+ * Delay of the safety retry alarm armed before a run starts. Longer than
+ * {@link RUN_IN_FLIGHT_TTL_MS} so that, if the run died, the marker is stale
+ * by the time the retry fires.
+ */
+const RETRY_DELAY_MS = RUN_IN_FLIGHT_TTL_MS + 60_000
 
 const HOUR_MS = 60 * 60 * 1000
 
@@ -164,6 +178,63 @@ export function computeNextRun(
 }
 
 /**
+ * Next due time anchored to the run's stored due time instead of its
+ * completion time: the first occurrence of the schedule strictly after both
+ * `dueTime` and `now`. A `1d` 23:00 run that fires late at 00:30 therefore
+ * schedules today's 23:00, not the day after. `1h`/`12h` have no wall-clock
+ * target and keep firing one interval after `now`. Built with local-time
+ * setters so DST transitions keep the wall-clock time.
+ * @param interval The configured auto-export interval.
+ * @param preferredTime `HH:mm` local time of day.
+ * @param dueTime The epoch milliseconds the finished run was due at.
+ * @param now The current epoch milliseconds.
+ * @param dayOfWeek The weekday for the `7d` interval; Monday by default.
+ * @returns The next due time, as epoch milliseconds.
+ */
+export function computeNextRunAfterDue(
+  interval: AutoExportInterval,
+  preferredTime: string,
+  dueTime: number,
+  now: number,
+  dayOfWeek: DayOfWeek = 1,
+): number {
+  if (interval === '1h' || interval === '12h') {
+    return computeNextRun(interval, preferredTime, now, true, dayOfWeek)
+  }
+
+  const [hoursRaw, minutesRaw] = preferredTime.split(':').map(Number)
+  const hours = hoursRaw ?? 0
+  const minutes = minutesRaw ?? 0
+  const stepDays = interval === '7d' ? 1 : DAY_INTERVALS[interval]
+  const next = new Date(dueTime)
+
+  do {
+    next.setDate(next.getDate() + stepDays)
+    next.setHours(hours, minutes, 0, 0)
+  } while (
+    next.getTime() <= now ||
+    next.getTime() <= dueTime ||
+    (interval === '7d' && next.getDay() !== dayOfWeek)
+  )
+  return next.getTime()
+}
+
+/**
+ * When the retry alarm of the run currently in flight fires, per
+ * {@link autoExportRunInFlightStore} and its TTL. Callers that skip work
+ * because a run is in flight re-arm the alarm at this time, so a run that
+ * dies mid-way never leaves the schedule without an alarm.
+ * @returns The epoch milliseconds to re-arm the alarm at, or `null` when no
+ *   non-stale in-flight marker exists.
+ */
+export async function getAutoExportInFlightRetryAt(): Promise<number | null> {
+  const startedAt = await autoExportRunInFlightStore.getValue()
+  const isInFlight =
+    startedAt !== null && Date.now() - startedAt < RUN_IN_FLIGHT_TTL_MS
+  return isInFlight ? startedAt + RETRY_DELAY_MS : null
+}
+
+/**
  * Arms {@link ALARM_NAME} as a one-shot alarm firing at `when` (clearing any
  * existing alarm first), clamped to at least a moment from now — a `when`
  * in the past or equal to `Date.now()` would make `browser.alarms.create`
@@ -231,7 +302,18 @@ export async function syncAlarm(trigger: SyncAlarmTrigger): Promise<void> {
     }
   }
 
-  await armAlarm(nextRun <= now ? now + CATCH_UP_DELAY_MS : nextRun)
+  if (nextRun <= now) {
+    if (trigger !== 'config-change') {
+      const retryAt = await getAutoExportInFlightRetryAt()
+      if (retryAt !== null) {
+        await armAlarm(retryAt)
+        return
+      }
+    }
+    await armAlarm(now + CATCH_UP_DELAY_MS)
+    return
+  }
+  await armAlarm(nextRun)
 }
 
 /**
@@ -366,6 +448,17 @@ export async function runAutoExport(
   const formats = overrides?.formats ?? config.formats
   const path = overrides?.path ?? config.path
 
+  const isTrackedRun = trigger !== 'manual'
+  if (isTrackedRun) {
+    const retryAt = await getAutoExportInFlightRetryAt()
+    if (retryAt !== null) {
+      await armAlarm(retryAt)
+      return
+    }
+    await autoExportRunInFlightStore.setValue(Date.now())
+    await armAlarm(Date.now() + RETRY_DELAY_MS)
+  }
+
   try {
     const [
       includeIconData,
@@ -420,16 +513,20 @@ export async function runAutoExport(
       trigger,
     })
     await notifyAutoExportFailure(message)
-    if (trigger !== 'manual') {
+    if (isTrackedRun) {
       await setFailureBadge()
       await rescheduleAfterRun()
+      await autoExportRunInFlightStore.setValue(null)
     }
     throw error
   }
 
-  if (trigger !== 'manual') {
-    await rescheduleAfterRun()
+  if (!isTrackedRun) {
+    return
   }
+
+  await rescheduleAfterRun()
+  await autoExportRunInFlightStore.setValue(null)
 }
 
 /**
@@ -450,13 +547,24 @@ async function rescheduleAfterRun(): Promise<void> {
     await syncAlarm('config-change')
     return
   }
-  const nextRun = computeNextRun(
-    config.interval,
-    config.preferredTime,
-    Date.now(),
-    true,
-    config.dayOfWeek,
-  )
+  const now = Date.now()
+  const dueTime = await autoExportNextRunStore.getValue()
+  const nextRun =
+    dueTime === null
+      ? computeNextRun(
+          config.interval,
+          config.preferredTime,
+          now,
+          true,
+          config.dayOfWeek,
+        )
+      : computeNextRunAfterDue(
+          config.interval,
+          config.preferredTime,
+          dueTime,
+          now,
+          config.dayOfWeek,
+        )
   await autoExportNextRunStore.setValue(nextRun)
   await armAlarm(nextRun)
 }

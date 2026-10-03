@@ -86,6 +86,27 @@ async function runManualExport(
 }
 
 /**
+ * Re-arms the `auto-export` alarm when auto-export is enabled but no alarm
+ * exists (e.g. the service worker was killed mid-run before the run could
+ * re-arm it). Runs on every service worker start; never throws.
+ * @returns Resolves once the check (and any re-arm) has settled.
+ */
+async function restoreMissingAlarm(): Promise<void> {
+  try {
+    const config = await autoExportConfigStore.getValue()
+    if (
+      !config.enabled ||
+      config.formats.length === 0 ||
+      (await browser.alarms.get(ALARM_NAME))
+    )
+      return
+    await syncAlarm('startup')
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+/**
  * Extension service worker entrypoint. On first install it opens the
  * App's Welcome route (and marks that version's changelog as seen); on a
  * minor or major update it opens the App's What's new route (patch updates
@@ -98,6 +119,8 @@ async function runManualExport(
  * that affects scheduling (see {@link isScheduleRelevantChange}).
  */
 export default defineBackground(() => {
+  void restoreMissingAlarm()
+
   browser.runtime.onInstalled.addListener(({ reason, previousVersion }) => {
     switch (reason) {
       case 'install': {

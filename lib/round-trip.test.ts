@@ -1,5 +1,6 @@
 // @vitest-environment jsdom
 import { beforeEach, describe, expect, it } from 'vitest'
+import { browser } from 'wxt/browser'
 
 import { exportToCSV } from '@/lib/exporters/export-csv'
 import { exportToHTML } from '@/lib/exporters/export-html'
@@ -106,6 +107,46 @@ describe('round trip: JSON', () => {
 
     const importedUrls = collectUrls(getFakeBookmarksRoot())
     expect(importedUrls).toEqual(originalUrls)
+  })
+
+  it('export (Hide Other off, Hide parent on) -> import loses nothing, Mobile included', async () => {
+    resetFakeBookmarks({ withMobileRoot: true })
+    await browser.bookmarks.create({
+      parentId: '1',
+      title: 'Bar item',
+      url: 'https://bar.example',
+    })
+    await browser.bookmarks.create({
+      parentId: '2',
+      title: 'Other item',
+      url: 'https://other.example',
+    })
+    const mobileFolder = await browser.bookmarks.create({
+      parentId: '3',
+      title: 'Phone folder',
+    })
+    await browser.bookmarks.create({
+      parentId: mobileFolder.id,
+      title: 'Mobile item',
+      url: 'https://mobile.example',
+    })
+    const originalUrls = collectUrls(getFakeBookmarksRoot())
+
+    const exported = await exportToJSON({
+      ...exportOptions,
+      hideOtherBookmarks: false,
+      hideParentFolder: true,
+    })
+    const reparsed = structuredClone(exported) as unknown as ParsedBookmark[]
+
+    resetFakeBookmarks({ withMobileRoot: true })
+    await importFromJSON(reparsed[0]?.children ?? reparsed, 'restore-merge')
+
+    expect(collectUrls(getFakeBookmarksRoot())).toEqual(originalUrls)
+    const mobile = getFakeBookmarksRoot().children?.find((n) => n.id === '3')
+    expect(collectUrls(mobile as ExtendedBookmarkTreeNode | undefined)).toEqual(
+      ['https://mobile.example'],
+    )
   })
 
   it('export (hideOtherBookmarks) -> import (restore-merge) restores each bookmark under its original root', async () => {

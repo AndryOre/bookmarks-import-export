@@ -269,6 +269,10 @@
     "message": "Nunca executada",
     "description": "Status card value when auto-export has never run"
   },
+  "autoExportScheduling": {
+    "message": "Agendando…",
+    "description": "Status card next run value while auto-export is enabled but not yet scheduled"
+  },
   "exportNow": {
     "message": "Exportar agora",
     "description": "Button label to run an on-demand export immediately"
@@ -834,6 +838,10 @@
   "exportPage_failedTitle": {
     "message": "Falha na exportação",
     "description": "Export page toast title when an export fails"
+  },
+  "exportSelectionGone": {
+    "message": "Os favoritos selecionados não existem mais. Selecione-os novamente e tente de novo.",
+    "description": "Export page toast description when every selected bookmark was deleted before the export started"
   },
   "exportPage_noResultsTitle": {
     "message": "Nenhum favorito corresponde a \"$TERM$\"",

@@ -199,6 +199,20 @@ function preprocessLevel(level: ParsedBookmark[]): PreprocessLevelResult {
 }
 
 /**
+ * Coerces every node title in `nodes` (recursively, in place) to a string, so
+ * a numeric or null `title` in a hand-edited file can't make the browser's
+ * argument validation reject the write.
+ * @param nodes The raw nodes to normalize.
+ */
+function coerceTitles(nodes: ParsedBookmark[]): void {
+  for (const node of nodes) {
+    const rawTitle: unknown = node.title
+    node.title = String(rawTitle ?? '')
+    if (node.children) coerceTitles(node.children as ParsedBookmark[])
+  }
+}
+
+/**
  * Normalizes the top-level array of an exported JSON tree down to
  * `[ bookmarksBar?, otherBookmarks?, mobileBookmarks? ]`. Handles three
  * shapes a JSON export can arrive in: a virtual root node with `id === '0'`
@@ -216,6 +230,7 @@ function preprocessLevel(level: ParsedBookmark[]): PreprocessLevelResult {
 export function preprocessBookmarks(
   bookmarks: ParsedBookmark[],
 ): ParsedBookmark[] {
+  coerceTitles(bookmarks)
   let currentLevel = bookmarks
 
   for (;;) {
@@ -227,7 +242,10 @@ export function preprocessBookmarks(
       continue
     }
 
-    if (orphans.length > 0 && result.every((b) => !b.isOtherBookmarks)) {
+    const existingOther = result.find((b) => b.isOtherBookmarks)
+    if (existingOther && orphans.length > 0) {
+      existingOther.children = [...(existingOther.children ?? []), ...orphans]
+    } else if (orphans.length > 0) {
       result.push({
         id: '2',
         isOtherBookmarks: true,

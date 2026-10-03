@@ -267,6 +267,10 @@
     "message": "Noch nie ausgeführt",
     "description": "Status card value when auto-export has never run"
   },
+  "autoExportScheduling": {
+    "message": "Wird geplant…",
+    "description": "Status card next run value while auto-export is enabled but not yet scheduled"
+  },
   "exportNow": {
     "message": "Jetzt exportieren",
     "description": "Button label to run an on-demand export immediately"
@@ -822,6 +826,10 @@
   "exportPage_failedTitle": {
     "message": "Export fehlgeschlagen",
     "description": "Export page toast title when an export fails"
+  },
+  "exportSelectionGone": {
+    "message": "Die ausgewählten Lesezeichen existieren nicht mehr. Wähle sie erneut aus und versuche es noch einmal.",
+    "description": "Export page toast description when every selected bookmark was deleted before the export started"
   },
   "exportPage_noResultsTitle": {
     "message": "Keine Lesezeichen passen zu „$TERM$“",

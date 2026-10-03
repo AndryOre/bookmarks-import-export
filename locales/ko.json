@@ -267,6 +267,10 @@
     "message": "아직 실행된 적 없음",
     "description": "Status card value when auto-export has never run"
   },
+  "autoExportScheduling": {
+    "message": "예약 중…",
+    "description": "Status card next run value while auto-export is enabled but not yet scheduled"
+  },
   "exportNow": {
     "message": "지금 내보내기",
     "description": "Button label to run an on-demand export immediately"
@@ -822,6 +826,10 @@
   "exportPage_failedTitle": {
     "message": "내보내기에 실패했어요",
     "description": "Export page toast title when an export fails"
+  },
+  "exportSelectionGone": {
+    "message": "선택한 북마크가 더 이상 존재하지 않습니다. 다시 선택한 후 다시 시도하세요.",
+    "description": "Export page toast description when every selected bookmark was deleted before the export started"
   },
   "exportPage_noResultsTitle": {
     "message": "\"$TERM$\"와(과) 일치하는 북마크가 없어요",

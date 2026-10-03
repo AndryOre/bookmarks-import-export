@@ -8,6 +8,7 @@ import {
   autoExportDownloadIdsStore,
   autoExportLastRunStore,
   autoExportNextRunStore,
+  autoExportRunInFlightStore,
   exportFilenameTemplateStore,
   hideOtherBookmarksStore,
   includeDateGroupModifiedStore,
@@ -21,6 +22,7 @@ import type { AutoExportConfig } from '@/lib/types'
 import {
   ALARM_NAME,
   computeNextRun,
+  computeNextRunAfterDue,
   readAutoExportLastRun,
   runAutoExport,
   syncAlarm,
@@ -1025,5 +1027,143 @@ describe('runAutoExport retention', () => {
     expect(removeFile).toHaveBeenCalledTimes(2)
     expect(await autoExportLastRunStore.getValue()).toMatchObject({ ok: true })
     expect(await autoExportDownloadIdsStore.getValue()).toEqual([1])
+  })
+})
+
+describe('computeNextRunAfterDue', () => {
+  it('schedules today at the preferred time for a 1d run that fires after midnight', () => {
+    const due = new Date(2024, 5, 1, 23, 0).getTime()
+    const now = new Date(2024, 5, 2, 0, 30).getTime()
+    expect(computeNextRunAfterDue('1d', '23:00', due, now)).toBe(
+      new Date(2024, 5, 2, 23, 0).getTime(),
+    )
+  })
+
+  it('schedules a full day out for an on-time 1d run', () => {
+    const due = new Date(2024, 5, 1, 23, 0).getTime()
+    expect(computeNextRunAfterDue('1d', '23:00', due, due + 500)).toBe(
+      new Date(2024, 5, 2, 23, 0).getTime(),
+    )
+  })
+
+  it('keeps a 3d run on its three-day cadence when it fires late', () => {
+    const due = new Date(2024, 5, 1, 23, 0).getTime()
+    const now = new Date(2024, 5, 2, 0, 30).getTime()
+    expect(computeNextRunAfterDue('3d', '23:00', due, now)).toBe(
+      new Date(2024, 5, 4, 23, 0).getTime(),
+    )
+  })
+
+  it('keeps a weekly run on its weekday when it fires late', () => {
+    const due = new Date(2024, 5, 3, 23, 0).getTime()
+    const now = new Date(2024, 5, 4, 0, 30).getTime()
+    expect(computeNextRunAfterDue('7d', '23:00', due, now, 1)).toBe(
+      new Date(2024, 5, 10, 23, 0).getTime(),
+    )
+  })
+
+  it('skips missed occurrences when the due time is far in the past', () => {
+    const due = new Date(2024, 5, 1, 23, 0).getTime()
+    const now = new Date(2024, 5, 9, 12, 0).getTime()
+    expect(computeNextRunAfterDue('1d', '23:00', due, now)).toBe(
+      new Date(2024, 5, 9, 23, 0).getTime(),
+    )
+  })
+
+  it('keeps the wall-clock time across a DST transition day', () => {
+    const due = new Date(2024, 2, 9, 23, 0).getTime()
+    const now = new Date(2024, 2, 10, 0, 30).getTime()
+    const next = new Date(computeNextRunAfterDue('1d', '23:00', due, now))
+    expect(next.getDate()).toBe(10)
+    expect(next.getHours()).toBe(23)
+    expect(next.getMinutes()).toBe(0)
+  })
+
+  it('keeps hourly intervals one interval after now', () => {
+    const now = new Date(2024, 5, 1, 8, 0).getTime()
+    expect(computeNextRunAfterDue('1h', '00:00', now - 5000, now)).toBe(
+      now + 60 * 60 * 1000,
+    )
+  })
+})
+
+describe('runAutoExport scheduling resilience', () => {
+  it('schedules the next 23:00 when a scheduled run fires late', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    const due = new Date(2024, 5, 1, 23, 0).getTime()
+    vi.setSystemTime(new Date(2024, 5, 2, 0, 30))
+    await autoExportConfigStore.setValue(
+      baseConfig({ formats: ['html'], interval: '1d', preferredTime: '23:00' }),
+    )
+    await autoExportNextRunStore.setValue(due)
+    const { mock: downloadSpy, completeAll } = mockDownload()
+    mockActionBadge()
+
+    await runAutoExportAndSettle(downloadSpy, completeAll, 1, 'scheduled')
+
+    expect(await autoExportNextRunStore.getValue()).toBe(
+      new Date(2024, 5, 2, 23, 0).getTime(),
+    )
+  })
+
+  it('leaves a retry alarm when a run is killed mid-flight', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    vi.setSystemTime(new Date(2024, 5, 1, 23, 0))
+    await autoExportConfigStore.setValue(baseConfig({ formats: ['html'] }))
+    const { mock: downloadSpy } = mockDownload()
+    mockActionBadge()
+
+    void runAutoExport('scheduled').catch(() => {})
+    await vi.waitFor(() => expect(downloadSpy).toHaveBeenCalled())
+
+    const alarm = await browser.alarms.get(ALARM_NAME)
+    expect(alarm).toBeDefined()
+    expect(alarm?.scheduledTime).toBeGreaterThan(Date.now())
+  })
+
+  it('skips a scheduled run while another run is in flight', async () => {
+    await autoExportConfigStore.setValue(baseConfig({ formats: ['html'] }))
+    await autoExportRunInFlightStore.setValue(Date.now())
+    const { mock: downloadSpy } = mockDownload()
+
+    await runAutoExport('catch-up')
+
+    expect(downloadSpy).not.toHaveBeenCalled()
+  })
+
+  it('ignores a stale in-flight marker', async () => {
+    await autoExportConfigStore.setValue(baseConfig({ formats: ['html'] }))
+    await autoExportRunInFlightStore.setValue(Date.now() - 60 * 60 * 1000)
+    const { mock: downloadSpy, completeAll } = mockDownload()
+    mockActionBadge()
+
+    await runAutoExportAndSettle(downloadSpy, completeAll, 1, 'scheduled')
+
+    expect(await autoExportRunInFlightStore.getValue()).toBeNull()
+  })
+
+  it('arms the retry alarm instead of a catch-up at startup while a run is in flight', async () => {
+    await autoExportConfigStore.setValue(baseConfig({ formats: ['html'] }))
+    await autoExportNextRunStore.setValue(Date.now() - 1000)
+    const startedAt = Date.now()
+    await autoExportRunInFlightStore.setValue(startedAt)
+
+    await syncAlarm('startup')
+
+    const alarm = await browser.alarms.get(ALARM_NAME)
+    expect(alarm?.scheduledTime).toBeGreaterThan(startedAt + 10 * 60_000)
+  })
+
+  it('keeps the retry alarm when a skipped run finds another one in flight', async () => {
+    await autoExportConfigStore.setValue(baseConfig({ formats: ['html'] }))
+    const startedAt = Date.now()
+    await autoExportRunInFlightStore.setValue(startedAt)
+    const { mock: downloadSpy } = mockDownload()
+
+    await runAutoExport('catch-up')
+
+    expect(downloadSpy).not.toHaveBeenCalled()
+    const alarm = await browser.alarms.get(ALARM_NAME)
+    expect(alarm?.scheduledTime).toBeGreaterThan(startedAt + 10 * 60_000)
   })
 })

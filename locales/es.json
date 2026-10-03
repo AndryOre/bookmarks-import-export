@@ -268,6 +268,10 @@
     "message": "Aún no se ha ejecutado",
     "description": "Valor mostrado cuando la exportación automática nunca se ha ejecutado"
   },
+  "autoExportScheduling": {
+    "message": "Programando…",
+    "description": "Status card next run value while auto-export is enabled but not yet scheduled"
+  },
   "exportNow": {
     "message": "Exportar ahora",
     "description": "Etiqueta del botón para ejecutar una exportación inmediata"
@@ -828,6 +832,10 @@
   "exportPage_failedTitle": {
     "message": "Falló la exportación",
     "description": "Export page toast title when an export fails"
+  },
+  "exportSelectionGone": {
+    "message": "Los marcadores seleccionados ya no existen. Selecciónalos de nuevo e inténtalo otra vez.",
+    "description": "Export page toast description when every selected bookmark was deleted before the export started"
   },
   "exportPage_noResultsTitle": {
     "message": "Ningún marcador coincide con \"$TERM$\"",

@@ -91,6 +91,22 @@ export async function exportToJSON(
 }
 
 /**
+ * Whether a node is the Mobile or Managed bookmarks root. Those roots must
+ * survive `hideParentFolder` as folders, otherwise their children land
+ * unclassified at the top level of the export and the importer cannot tell
+ * where they belong.
+ * @param node The node to test.
+ * @returns `true` for a Mobile or Managed root.
+ */
+function isPreservedRoot(node: ExtendedBookmarkTreeNode): boolean {
+  return (
+    node.folderType === 'mobile' ||
+    node.folderType === 'managed' ||
+    node.id === '3'
+  )
+}
+
+/**
  * Processes each of `nodes` via {@link processNode} and flattens the results
  * into a single array.
  * @param nodes The nodes to process.
@@ -151,7 +167,8 @@ async function processNode(
       options.hideParentFolder &&
       node.id !== '0' &&
       !isBookmarksBar(node) &&
-      !isOtherBookmarks(node)
+      !isOtherBookmarks(node) &&
+      !isPreservedRoot(node)
     ) {
       return processNodes(node.children as ExtendedBookmarkTreeNode[], options)
     }

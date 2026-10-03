@@ -36,6 +36,7 @@ interface TimePickerColumnProperties<Value extends number | string> {
   options: TimePickerOption<Value>[]
   selected: Value
   onSelect: (value: Value) => void
+  onCommit: () => void
 }
 
 function toNumberOptions(values: number[]): TimePickerOption<number>[] {
@@ -48,15 +49,15 @@ function toNumberOptions(values: number[]): TimePickerOption<number>[] {
 /**
  * One scrollable listbox column. Only the selected option is in the tab
  * order (roving tabindex), so Tab moves between columns while the arrow keys,
- * Home and End move within one. Moving focus also selects, which keeps the
- * emitted value in sync with what a keyboard user is looking at.
+ * Home and End move within one, and Enter commits. Moving focus also selects,
+ * which keeps the draft in sync with what a keyboard user is looking at.
  * @param properties The column's accessible name, options and selection.
  * @returns The scrollable listbox.
  */
 function TimePickerColumn<Value extends number | string>(
   properties: TimePickerColumnProperties<Value>,
 ) {
-  const { label, options, selected, onSelect } = properties
+  const { label, options, selected, onSelect, onCommit } = properties
   const listReference = useRef<HTMLDivElement>(null)
 
   useLayoutEffect(() => {
@@ -80,6 +81,11 @@ function TimePickerColumn<Value extends number | string>(
     event: React.KeyboardEvent<HTMLButtonElement>,
     index: number,
   ) {
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      onCommit()
+      return
+    }
     const targets: Record<string, number> = {
       ArrowDown: index + 1,
       ArrowUp: index - 1,
@@ -162,10 +168,12 @@ export interface TimePickerProperties {
 }
 
 /**
- * A controlled, locale-aware time picker: a select-styled trigger showing the
+ * A locale-aware time picker: a select-styled trigger showing the
  * formatted time, opening a popover with scrollable hour and minute columns
  * and, on 12-hour locales, an AM/PM column. The value in and out is always a
- * 24-hour `HH:MM` string.
+ * 24-hour `HH:MM` string. Selections edit a local draft while the popover is
+ * open; `onChange` fires once when it closes (Enter, Escape, outside click),
+ * and only if the draft differs from `value`.
  *
  * Keyboard: Tab reaches the trigger, Enter or Space opens it, Tab moves
  * between columns, the arrow keys, Home and End move within one, and Escape
@@ -185,17 +193,31 @@ export function TimePicker(properties: TimePickerProperties) {
     ...triggerProperties
   } = properties
   const [open, setOpen] = useState(false)
-  const { hour, minute } = parseTime24(value) ?? FALLBACK_TIME
+  const [draft, setDraft] = useState(value)
+  const { hour, minute } = parseTime24(open ? draft : value) ?? FALLBACK_TIME
   const is12Hour = is12HourLocale(locale)
   const twelveHour = to12Hour(hour)
   const dayPeriodLabels = getDayPeriodLabels(locale)
 
   function emit(nextHour: number, nextMinute: number) {
-    onChange(formatTime24(nextHour, nextMinute))
+    setDraft(formatTime24(nextHour, nextMinute))
+  }
+
+  function handleOpenChange(isOpening: boolean) {
+    if (isOpening) {
+      setDraft(value)
+    } else if (draft !== value) {
+      onChange(draft)
+    }
+    setOpen(isOpening)
+  }
+
+  function commit() {
+    handleOpenChange(false)
   }
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={handleOpenChange}>
       <PopoverTrigger
         render={
           <Button
@@ -224,6 +246,7 @@ export function TimePicker(properties: TimePickerProperties) {
               onSelect={(next) =>
                 emit(from12Hour(next, twelveHour.period), minute)
               }
+              onCommit={commit}
             />
           ) : (
             <TimePickerColumn
@@ -231,6 +254,7 @@ export function TimePicker(properties: TimePickerProperties) {
               options={toNumberOptions(HOURS_24)}
               selected={hour}
               onSelect={(next) => emit(next, minute)}
+              onCommit={commit}
             />
           )}
           <Separator orientation="vertical" />
@@ -239,6 +263,7 @@ export function TimePicker(properties: TimePickerProperties) {
             options={toNumberOptions(MINUTES)}
             selected={minute}
             onSelect={(next) => emit(hour, next)}
+            onCommit={commit}
           />
           {is12Hour ? (
             <>
@@ -253,6 +278,7 @@ export function TimePicker(properties: TimePickerProperties) {
                 onSelect={(next) =>
                   emit(from12Hour(twelveHour.hour, next), minute)
                 }
+                onCommit={commit}
               />
             </>
           ) : null}

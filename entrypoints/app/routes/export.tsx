@@ -84,8 +84,10 @@ export function ExportRoute() {
   }
 
   const handleMasterChange = () => {
-    if (selectedCount === totalCount) treeReference.current?.deselectAll()
-    else treeReference.current?.selectAll()
+    const tree = treeReference.current
+    if (!tree) return
+    if (tree.areAllVisibleSelected()) tree.deselectAll()
+    else tree.selectAll()
   }
 
   const handleExport = async () => {
@@ -96,6 +98,14 @@ export function ExportRoute() {
     const signal = progress.begin()
     try {
       const selected = await tree.getSelectedBookmarks()
+      if (selected.length === 0) {
+        toast.add({
+          type: 'error',
+          title: i18n.t('exportPage_failedTitle'),
+          description: i18n.t('exportSelectionGone'),
+        })
+        return
+      }
       const { fileName, count } = await exportBookmarks(format, selected, {
         signal,
         onProgress: progress.report,

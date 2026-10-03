@@ -136,6 +136,17 @@ export const autoExportNextRunStore = storage.defineItem<number | null>(
 )
 
 /**
+ * Epoch milliseconds at which a scheduled/catch-up auto-export run started,
+ * or `null` when none is in flight. Written by `runAutoExport` and treated
+ * as stale after `RUN_IN_FLIGHT_TTL_MS` so a service worker killed mid-run
+ * cannot block future runs forever.
+ */
+export const autoExportRunInFlightStore = storage.defineItem<number | null>(
+  'local:autoExportRunInFlight',
+  { fallback: null },
+)
+
+/**
  * The last extension version whose changelog the user has seen in the App.
  * `null` until the What's new screen is first visited; the sidebar shows an
  * unseen dot while this differs from the installed version.
