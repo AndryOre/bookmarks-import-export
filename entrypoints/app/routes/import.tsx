@@ -64,6 +64,7 @@ export function ImportRoute() {
   const [errorMessage, setErrorMessage] = useState('')
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
   const [undoSnapshot, setUndoSnapshot] = useState<SafetySnapshot | null>(null)
+  const [skippedCount, setSkippedCount] = useState(0)
 
   const preview = chosen?.preview ?? null
   const isSupported = preview !== null && preview.format !== 'unknown'
@@ -100,9 +101,10 @@ export function ImportRoute() {
     setStatus('importing')
     setErrorMessage('')
     setUndoSnapshot(null)
+    setSkippedCount(0)
 
     try {
-      await runImport(
+      const result = await runImport(
         chosen.text,
         chosen.file.type,
         effectiveMode,
@@ -111,6 +113,7 @@ export function ImportRoute() {
       if (effectiveMode === 'restore-replace') {
         setUndoSnapshot(await readLatestSafetySnapshot())
       }
+      setSkippedCount(result.skippedInvalidUrl)
       setStatus('success')
     } catch (error) {
       setStatus('error')
@@ -184,6 +187,11 @@ export function ImportRoute() {
         <Alert>
           <CircleCheckIcon />
           <AlertTitle>{i18n.t('bookmarksImportedSuccessfully')}</AlertTitle>
+          {skippedCount > 0 && (
+            <AlertDescription>
+              {i18n.t('import_skippedInvalidUrl', [skippedCount])}
+            </AlertDescription>
+          )}
         </Alert>
         {errorMessage && (
           <Alert variant="destructive">

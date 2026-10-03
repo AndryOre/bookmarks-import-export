@@ -12,6 +12,20 @@ beforeEach(() => {
 })
 
 describe('importFromCSV', () => {
+  it('returns how many rows were skipped for an unsupported address', async () => {
+    const csv = [
+      'title,url,folder',
+      'Bad,javascript:alert(1),',
+      'Local,file:///etc/passwd,',
+      'Good,https://good.example,',
+    ].join('\n')
+
+    await expect(importFromCSV(csv)).resolves.toEqual({ skippedInvalidUrl: 2 })
+    await expect(
+      importFromCSV('title,url,folder\nGood,https://good.example,'),
+    ).resolves.toEqual({ skippedInvalidUrl: 0 })
+  })
+
   it('creates a nested folder structure from the folder path column', async () => {
     const csv = [
       'title,url,folder',

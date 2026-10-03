@@ -3,7 +3,7 @@ import type { Browser } from '@wxt-dev/browser'
 import Papa from 'papaparse'
 
 import { isAllowedBookmarkUrl } from '@/lib/importers/url-validation'
-import type { ParsedBookmark } from '@/lib/types'
+import type { ImportResult, ParsedBookmark } from '@/lib/types'
 
 /**
  * Imports bookmarks from a CSV string with `title`, `url`, and `folder`
@@ -12,9 +12,10 @@ import type { ParsedBookmark } from '@/lib/types'
  * imports into a reused, localized "Imported bookmarks" folder — it never
  * writes into the browser's bookmarks bar or "Other bookmarks" roots.
  * @param csv The CSV text to import.
- * @returns Resolves once every valid row has been created.
+ * @returns The import result, including how many rows were skipped because
+ *   their address is not supported.
  */
-export async function importFromCSV(csv: string): Promise<void> {
+export async function importFromCSV(csv: string): Promise<ImportResult> {
   const parsed = Papa.parse<Record<string, string>>(csv.trim(), {
     header: true,
     skipEmptyLines: true,
@@ -25,22 +26,28 @@ export async function importFromCSV(csv: string): Promise<void> {
     throw new Error(parsed.errors.map((error) => error.message).join('; '))
   }
 
-  const tree = processCSVData(parsed.data)
+  const { tree, skippedInvalidUrl } = processCSVData(parsed.data)
   await createBookmarks(tree)
+  return { skippedInvalidUrl }
 }
 
 /**
  * Builds a folder tree from the flat CSV rows. Rows missing a `title` or
  * `url`, or whose `url` fails `isAllowedBookmarkUrl` validation, are
- * skipped without throwing or rejecting the import — an invalid URL only
- * logs a `console.warn`. Folder path segments (split on `/`) are memoized
+ * skipped without throwing or rejecting the import; rows skipped for an
+ * invalid URL are counted. Folder path segments (split on `/`) are memoized
  * by their full path so that rows sharing a folder path reuse the same
  * folder node instead of creating duplicates within this batch.
  * @param rows The parsed CSV rows.
- * @returns The resulting folder tree.
+ * @returns The resulting folder tree and the count of rows skipped because
+ *   their `url` is not allowed.
  */
-function processCSVData(rows: Record<string, string>[]): ParsedBookmark[] {
+function processCSVData(rows: Record<string, string>[]): {
+  tree: ParsedBookmark[]
+  skippedInvalidUrl: number
+} {
   const root: ParsedBookmark[] = []
+  let skippedInvalidUrl = 0
   const folderMemo: Record<string, ParsedBookmark> = {}
 
   for (const row of rows) {
@@ -50,7 +57,7 @@ function processCSVData(rows: Record<string, string>[]): ParsedBookmark[] {
     if (!title || !url) continue
 
     if (!isAllowedBookmarkUrl(url)) {
-      console.warn('[importFromCSV] Invalid URL, skipping row:', row)
+      skippedInvalidUrl++
       continue
     }
 
@@ -81,7 +88,7 @@ function processCSVData(rows: Record<string, string>[]): ParsedBookmark[] {
     currentLevel.push({ title, url, dateAdded: Date.now() })
   }
 
-  return root
+  return { tree: root, skippedInvalidUrl }
 }
 
 /**

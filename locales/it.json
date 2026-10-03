@@ -904,5 +904,14 @@
   "safetySnapshot_restored": {
     "message": "Istantanea ripristinata.",
     "description": "Shown after the snapshot was restored"
+  },
+  "import_skippedInvalidUrl": {
+    "message": "$COUNT$ saltati perché il loro indirizzo non è supportato",
+    "description": "Import result note: how many bookmarks were skipped because their address is not supported",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
   }
 }

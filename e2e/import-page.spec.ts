@@ -214,6 +214,19 @@ test.describe('Import page', () => {
     ])
   })
 
+  test('reports how many bookmarks were skipped for an unsupported address', async ({
+    openExtensionPage,
+  }) => {
+    const page = await openImportPage(openExtensionPage)
+    await chooseFile(page, 'bookmarks-skipped.csv')
+    await page.getByRole('button', { name: /^Import \d+ bookmark/ }).click()
+
+    await expectSuccess(page)
+    await expect(
+      page.getByText('1 skipped because their address is not supported'),
+    ).toBeVisible()
+  })
+
   test('cancelling the replace confirmation writes nothing', async ({
     openExtensionPage,
     seedBookmarks,

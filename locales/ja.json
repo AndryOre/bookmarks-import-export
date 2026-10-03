@@ -897,5 +897,14 @@
   "safetySnapshot_restored": {
     "message": "スナップショットを復元しました。",
     "description": "Shown after the snapshot was restored"
+  },
+  "import_skippedInvalidUrl": {
+    "message": "$COUNT$ 件をスキップしました（アドレスが未対応のため）",
+    "description": "Import result note: how many bookmarks were skipped because their address is not supported",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
   }
 }
