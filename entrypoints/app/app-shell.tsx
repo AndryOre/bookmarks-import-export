@@ -25,6 +25,7 @@ import {
   lastSeenVersionStore,
 } from '@/lib/storage'
 import { useStorageItem } from '@/lib/use-storage-item'
+import { isWhatsNewUnseen } from '@/lib/version'
 
 import { getTitleKey, NAV_ITEMS } from './nav'
 
@@ -56,21 +57,32 @@ function useAutoExportStatus(): { status: NavStatus; label?: string } {
  * Tracks whether the installed version's changelog is unseen, and marks it
  * as seen while the What's new screen is open.
  * @param pathname The current router pathname.
- * @returns `true` while the installed version differs from the last seen one.
+ * @returns `true` once storage has loaded and the installed version has an
+ * unseen major or minor changelog entry.
  */
 function useIsWhatsNewUnseen(pathname: string): boolean {
-  const [lastSeenVersion, setLastSeenVersion] =
+  const [lastSeenVersion, setLastSeenVersion, isLoaded] =
     useStorageItem(lastSeenVersionStore)
   const installedVersion = browser.runtime.getManifest().version
   const isOnWhatsNew = pathname === APP_ROUTES.whatsNew
 
   useEffect(() => {
-    if (isOnWhatsNew && lastSeenVersion !== installedVersion) {
+    if (isOnWhatsNew && isLoaded && lastSeenVersion !== installedVersion) {
       void setLastSeenVersion(installedVersion)
     }
-  }, [isOnWhatsNew, lastSeenVersion, installedVersion, setLastSeenVersion])
+  }, [
+    isOnWhatsNew,
+    isLoaded,
+    lastSeenVersion,
+    installedVersion,
+    setLastSeenVersion,
+  ])
 
-  return lastSeenVersion !== installedVersion && !isOnWhatsNew
+  return (
+    isLoaded &&
+    !isOnWhatsNew &&
+    isWhatsNewUnseen(lastSeenVersion, installedVersion)
+  )
 }
 
 /**
