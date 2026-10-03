@@ -823,6 +823,10 @@
     "message": "Export fehlgeschlagen",
     "description": "Export page toast title when an export fails"
   },
+  "exportSelectionGone": {
+    "message": "Die ausgewählten Lesezeichen existieren nicht mehr. Wähle sie erneut aus und versuche es noch einmal.",
+    "description": "Export page toast description when every selected bookmark was deleted before the export started"
+  },
   "exportPage_noResultsTitle": {
     "message": "Keine Lesezeichen passen zu „$TERM$“",
     "description": "Export page empty state title when a search matches nothing",

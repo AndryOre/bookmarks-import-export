@@ -823,6 +823,10 @@
     "message": "書き出しに失敗しました",
     "description": "Export page toast title when an export fails"
   },
+  "exportSelectionGone": {
+    "message": "選択したブックマークは存在しなくなりました。もう一度選択してやり直してください。",
+    "description": "Export page toast description when every selected bookmark was deleted before the export started"
+  },
   "exportPage_noResultsTitle": {
     "message": "「$TERM$」に一致するブックマークはありません",
     "description": "Export page empty state title when a search matches nothing",

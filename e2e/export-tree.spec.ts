@@ -53,7 +53,7 @@ test('exposes the WAI-ARIA tree roles and attributes', async ({
   await expect(work).toHaveAttribute('aria-setsize', '3')
   await expect(work).toHaveAttribute('aria-posinset', '1')
   await expect(work).toHaveAttribute('aria-expanded', 'true')
-  await expect(work).toHaveAttribute('aria-selected', 'false')
+  await expect(work).toHaveAttribute('aria-checked', 'false')
 
   const link = rowOf(page, 'Standalone Link')
   await expect(link).toHaveAttribute('aria-level', '2')
@@ -152,20 +152,20 @@ test('Space toggles selection, including a folder and its mixed state', async ({
 
   await work.focus()
   await page.keyboard.press('Space')
-  await expect(work).toHaveAttribute('aria-selected', 'true')
-  await expect(workDocument).toHaveAttribute('aria-selected', 'true')
+  await expect(work).toHaveAttribute('aria-checked', 'true')
+  await expect(workDocument).toHaveAttribute('aria-checked', 'true')
   await expect(page.getByText('2 of 4 selected')).toBeVisible()
 
   await workDocument.focus()
   await page.keyboard.press('Space')
-  await expect(workDocument).toHaveAttribute('aria-selected', 'false')
+  await expect(workDocument).toHaveAttribute('aria-checked', 'false')
   await expect(work).toHaveAttribute('aria-checked', 'mixed')
 
   await work.focus()
   await page.keyboard.press('Space')
-  await expect(work).toHaveAttribute('aria-selected', 'true')
+  await expect(work).toHaveAttribute('aria-checked', 'true')
   await page.keyboard.press('Space')
-  await expect(work).toHaveAttribute('aria-selected', 'false')
+  await expect(work).toHaveAttribute('aria-checked', 'false')
   await expect(
     page.getByText(en.exportPage_nothingSelected.message),
   ).toBeVisible()
@@ -309,4 +309,21 @@ test('virtualizes a 5,000-bookmark library and keyboard navigation reaches unren
   await expect(rows.first()).toBeFocused()
   await expect(rows.first()).toHaveAttribute('aria-posinset', '1')
   await expect(lastRow).toBeHidden()
+})
+
+test('searching a folder name shows all its children and ticking selects them', async ({
+  seedBookmarks,
+  openExtensionPage,
+}) => {
+  await seedBookmarks(seedTree)
+  const page = await openExtensionPage('app.html#/export')
+  await page.getByRole('searchbox').fill('Work Folder')
+
+  await expect(rowOf(page, 'Work Doc')).toBeVisible()
+  await expect(rowOf(page, 'Work Ticket')).toBeVisible()
+
+  await rowOf(page, 'Work Folder').focus()
+  await page.keyboard.press('Space')
+  await expect(rowOf(page, 'Work Doc')).toHaveAttribute('aria-checked', 'true')
+  await expect(page.getByText('2 of 4 selected')).toBeVisible()
 })

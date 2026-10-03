@@ -828,6 +828,10 @@
     "message": "Export failed",
     "description": "Export page toast title when an export fails"
   },
+  "exportSelectionGone": {
+    "message": "The selected bookmarks no longer exist. Select them again and retry.",
+    "description": "Export page toast description when every selected bookmark was deleted before the export started"
+  },
   "exportPage_noResultsTitle": {
     "message": "No bookmarks match \"$TERM$\"",
     "description": "Export page empty state title when a search matches nothing",
