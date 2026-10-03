@@ -108,13 +108,8 @@
     "description": "Import preview section label"
   },
   "importPreviewCount": {
-    "message": "$COUNT$ bookmarks",
-    "description": "Bookmark count in preview",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "1": "$1 bookmark",
+    "n": "$1 bookmarks"
   },
   "replaceConfirmTitle": {
     "message": "Replace existing bookmarks?",
@@ -455,13 +450,8 @@
     "description": "Reason shown on disabled restore mode cards"
   },
   "import_submit": {
-    "message": "Import $COUNT$ bookmarks",
-    "description": "Primary import button",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "1": "Import $1 bookmark",
+    "n": "Import $1 bookmarks"
   },
   "import_noBookmarks": {
     "message": "No bookmarks found in this file, so there is nothing to import.",
@@ -572,13 +562,8 @@
     "description": "Accessible label of the popup format toggle group"
   },
   "popup_exportSuccessTitle": {
-    "message": "Exported $COUNT$ bookmarks",
-    "description": "Popup toast title after a successful export",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "1": "Exported $1 bookmark",
+    "n": "Exported $1 bookmarks"
   },
   "popup_exportFailedTitle": {
     "message": "Export failed",
@@ -749,16 +734,7 @@
     "description": "Accessible label of the loading placeholder on the Export page"
   },
   "exportPage_selectionCount": {
-    "message": "$SELECTED$ of $TOTAL$ selected",
-    "description": "Export page sticky bar selection count",
-    "placeholders": {
-      "selected": {
-        "content": "$1"
-      },
-      "total": {
-        "content": "$2"
-      }
-    }
+    "n": "$1 of $2 selected"
   },
   "exportPage_nothingSelected": {
     "message": "Nothing selected",
@@ -769,26 +745,16 @@
     "description": "Accessible label of the Export page format toggle group"
   },
   "exportPage_exportButton": {
-    "message": "Export $COUNT$ bookmarks",
-    "description": "Export page primary button",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "1": "Export $1 bookmark",
+    "n": "Export $1 bookmarks"
   },
   "exportPage_exporting": {
     "message": "Exporting…",
     "description": "Export page primary button label while exporting"
   },
   "exportPage_successTitle": {
-    "message": "Exported $COUNT$ bookmarks",
-    "description": "Export page toast title after a successful export",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "1": "Exported $1 bookmark",
+    "n": "Exported $1 bookmarks"
   },
   "exportPage_failedTitle": {
     "message": "Export failed",
@@ -866,16 +832,8 @@
     }
   },
   "import_replaceDiffTitle": {
-    "message": "Replace will remove $REMOVED$ bookmarks and add $ADDED$",
-    "description": "Replace diff alert title; $REMOVED$ and $ADDED$ are bookmark counts",
-    "placeholders": {
-      "removed": {
-        "content": "$1"
-      },
-      "added": {
-        "content": "$2"
-      }
-    }
+    "1": "Replace will remove $1 bookmark and add $2",
+    "n": "Replace will remove $1 bookmarks and add $2"
   },
   "import_replaceDiffDescription": {
     "message": "A Safety snapshot of your current bookmarks is saved first, so you can undo the import.",

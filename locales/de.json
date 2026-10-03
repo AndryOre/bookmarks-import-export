@@ -108,13 +108,7 @@
     "description": "Import preview section label"
   },
   "importPreviewCount": {
-    "message": "$COUNT$ Lesezeichen",
-    "description": "Bookmark count in preview",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "n": "$1 Lesezeichen"
   },
   "replaceConfirmTitle": {
     "message": "Vorhandene Lesezeichen ersetzen?",
@@ -455,13 +449,7 @@
     "description": "Reason shown on disabled restore mode cards"
   },
   "import_submit": {
-    "message": "$COUNT$ Lesezeichen importieren",
-    "description": "Primary import button",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "n": "$1 Lesezeichen importieren"
   },
   "import_noBookmarks": {
     "message": "In dieser Datei wurden keine Lesezeichen gefunden, daher gibt es nichts zu importieren.",
@@ -572,13 +560,7 @@
     "description": "Accessible label of the popup format toggle group"
   },
   "popup_exportSuccessTitle": {
-    "message": "$COUNT$ Lesezeichen exportiert",
-    "description": "Popup toast title after a successful export",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "n": "$1 Lesezeichen exportiert"
   },
   "popup_exportFailedTitle": {
     "message": "Export fehlgeschlagen",
@@ -749,16 +731,7 @@
     "description": "Accessible label of the loading placeholder on the Export page"
   },
   "exportPage_selectionCount": {
-    "message": "$SELECTED$ von $TOTAL$ ausgewählt",
-    "description": "Export page sticky bar selection count",
-    "placeholders": {
-      "selected": {
-        "content": "$1"
-      },
-      "total": {
-        "content": "$2"
-      }
-    }
+    "n": "$1 von $2 ausgewählt"
   },
   "exportPage_nothingSelected": {
     "message": "Nichts ausgewählt",
@@ -769,26 +742,14 @@
     "description": "Accessible label of the Export page format toggle group"
   },
   "exportPage_exportButton": {
-    "message": "$COUNT$ Lesezeichen exportieren",
-    "description": "Export page primary button",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "n": "$1 Lesezeichen exportieren"
   },
   "exportPage_exporting": {
     "message": "Export läuft …",
     "description": "Export page primary button label while exporting"
   },
   "exportPage_successTitle": {
-    "message": "$COUNT$ Lesezeichen exportiert",
-    "description": "Export page toast title after a successful export",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "n": "$1 Lesezeichen exportiert"
   },
   "exportPage_failedTitle": {
     "message": "Export fehlgeschlagen",
@@ -866,16 +827,7 @@
     }
   },
   "import_replaceDiffTitle": {
-    "message": "Ersetzen entfernt $REMOVED$ Lesezeichen und fügt $ADDED$ hinzu",
-    "description": "Replace diff alert title; $REMOVED$ and $ADDED$ are bookmark counts",
-    "placeholders": {
-      "removed": {
-        "content": "$1"
-      },
-      "added": {
-        "content": "$2"
-      }
-    }
+    "n": "Ersetzen entfernt $1 Lesezeichen und fügt $2 hinzu"
   },
   "import_replaceDiffDescription": {
     "message": "Zuerst wird ein Sicherheits-Snapshot Ihrer aktuellen Lesezeichen gespeichert, damit Sie den Import rückgängig machen können.",

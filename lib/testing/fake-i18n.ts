@@ -1,7 +1,5 @@
 import { fakeBrowser } from 'wxt/testing/fake-browser'
 
-import enMessages from '@/locales/en.json'
-
 /**
  * `@webext-core/fake-browser` does not implement `browser.i18n.getMessage`
  * either (same "mock it yourself" story as bookmarks — see fake-bookmarks.ts).
@@ -13,7 +11,14 @@ import enMessages from '@/locales/en.json'
  * (`$PLACEHOLDER_NAME$` tokens resolved through each message's
  * `placeholders[name].content`, e.g. `"$1"`) to resolve `locales/en.json`
  * against the positional substitutions `i18n.t(key, [subs])` passes along.
+ *
+ * Plural messages (`{ "1": ..., "n": ... }` in `locales/*.json`) are flattened
+ * to the `a | b | c` string `@wxt-dev/i18n` generates for Chrome at build
+ * time, with bare `$1`-`$9` tokens resolved from the substitutions;
+ * `i18n.t(key, count, ...)` then picks the form itself.
  */
+
+const DEFAULT_LOCALE = 'en'
 
 interface MessageEntry {
   message: string
@@ -21,7 +26,34 @@ interface MessageEntry {
   placeholders?: Record<string, { content: string }>
 }
 
-const messages = enMessages as Record<string, MessageEntry>
+type PluralEntry = Record<string, string>
+type LocaleEntry = MessageEntry | PluralEntry
+
+const localeModules = import.meta.glob<Record<string, LocaleEntry>>(
+  '../../locales/*.json',
+  { eager: true, import: 'default' },
+)
+
+function isMessageEntry(entry: LocaleEntry): entry is MessageEntry {
+  return typeof entry.message === 'string'
+}
+
+function loadLocale(locale: string): Record<string, LocaleEntry> {
+  const match = Object.entries(localeModules).find(([path]) =>
+    path.endsWith(`/${locale}.json`),
+  )
+  if (!match) throw new Error(`Unknown locale: ${locale}`)
+  return match[1]
+}
+
+function resolvePlural(entry: PluralEntry, substitutions?: string[]): string {
+  return Object.values(entry)
+    .join(' | ')
+    .replaceAll(
+      /\$(\d)/g,
+      (_token, digit: string) => substitutions?.[Number(digit) - 1] ?? '',
+    )
+}
 
 function resolveMessage(entry: MessageEntry, substitutions?: string[]): string {
   let text = entry.message
@@ -39,9 +71,11 @@ function resolveMessage(entry: MessageEntry, substitutions?: string[]): string {
 }
 
 /**
- * Installs a `locales/en.json`-backed `browser.i18n.getMessage` fake.
+ * Installs a `locales/<locale>.json`-backed `browser.i18n.getMessage` fake.
+ * @param locale The locale file to serve, `en` by default.
  */
-export function resetFakeI18n(): void {
+export function resetFakeI18n(locale: string = DEFAULT_LOCALE): void {
+  const messages = loadLocale(locale)
   fakeBrowser.i18n.getMessage = ((
     messageName: string,
     substitutions?: string | string[],
@@ -53,6 +87,8 @@ export function resetFakeI18n(): void {
         ? substitutions
         : [substitutions]
       : undefined
-    return resolveMessage(entry, subs)
+    return isMessageEntry(entry)
+      ? resolveMessage(entry, subs)
+      : resolvePlural(entry, subs)
   }) as typeof fakeBrowser.i18n.getMessage
 }

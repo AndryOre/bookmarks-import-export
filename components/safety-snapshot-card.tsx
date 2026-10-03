@@ -37,6 +37,7 @@ import {
 } from '@/components/ui/item'
 import { Spinner } from '@/components/ui/spinner'
 import { countBookmarks } from '@/lib/count-bookmarks'
+import { formatCount } from '@/lib/format-count'
 import { formatSnapshotDate } from '@/lib/format-snapshot-date'
 import {
   restoreSafetySnapshot,
@@ -94,9 +95,11 @@ export function SafetySnapshotCard() {
                 <ItemTitle>{formatSnapshotDate(snapshot.takenAt)}</ItemTitle>
                 <ItemDescription>
                   <span className="block">
-                    {i18n.t('importPreviewCount', [
-                      countBookmarks(snapshot.roots).toString(),
-                    ])}
+                    {i18n.t(
+                      'importPreviewCount',
+                      countBookmarks(snapshot.roots),
+                      [formatCount(countBookmarks(snapshot.roots))],
+                    )}
                   </span>
                   <span className="block">
                     {i18n.t('safetySnapshot_fileNote')}

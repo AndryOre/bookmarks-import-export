@@ -108,13 +108,7 @@
     "description": "Import preview section label"
   },
   "importPreviewCount": {
-    "message": "$COUNT$件のブックマーク",
-    "description": "Bookmark count in preview",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "n": "$1件のブックマーク"
   },
   "replaceConfirmTitle": {
     "message": "既存のブックマークを置き換えますか？",
@@ -455,13 +449,7 @@
     "description": "Reason shown on disabled restore mode cards"
   },
   "import_submit": {
-    "message": "$COUNT$件のブックマークを読み込む",
-    "description": "Primary import button",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "n": "$1件のブックマークを読み込む"
   },
   "import_noBookmarks": {
     "message": "このファイルにブックマークが見つからないため、インポートできるものがありません。",
@@ -572,13 +560,7 @@
     "description": "Accessible label of the popup format toggle group"
   },
   "popup_exportSuccessTitle": {
-    "message": "$COUNT$件のブックマークを書き出しました",
-    "description": "Popup toast title after a successful export",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "n": "$1件のブックマークを書き出しました"
   },
   "popup_exportFailedTitle": {
     "message": "書き出しに失敗しました",
@@ -749,16 +731,7 @@
     "description": "Accessible label of the loading placeholder on the Export page"
   },
   "exportPage_selectionCount": {
-    "message": "$TOTAL$件中$SELECTED$件を選択",
-    "description": "Export page sticky bar selection count",
-    "placeholders": {
-      "selected": {
-        "content": "$1"
-      },
-      "total": {
-        "content": "$2"
-      }
-    }
+    "n": "$2件中$1件を選択"
   },
   "exportPage_nothingSelected": {
     "message": "何も選択されていません",
@@ -769,26 +742,14 @@
     "description": "Accessible label of the Export page format toggle group"
   },
   "exportPage_exportButton": {
-    "message": "$COUNT$件のブックマークを書き出す",
-    "description": "Export page primary button",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "n": "$1件のブックマークを書き出す"
   },
   "exportPage_exporting": {
     "message": "書き出し中…",
     "description": "Export page primary button label while exporting"
   },
   "exportPage_successTitle": {
-    "message": "$COUNT$件のブックマークを書き出しました",
-    "description": "Export page toast title after a successful export",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
+    "n": "$1件のブックマークを書き出しました"
   },
   "exportPage_failedTitle": {
     "message": "書き出しに失敗しました",
@@ -866,16 +827,7 @@
     }
   },
   "import_replaceDiffTitle": {
-    "message": "置き換えると、ブックマークが$REMOVED$件削除され、$ADDED$件追加されます",
-    "description": "Replace diff alert title; $REMOVED$ and $ADDED$ are bookmark counts",
-    "placeholders": {
-      "removed": {
-        "content": "$1"
-      },
-      "added": {
-        "content": "$2"
-      }
-    }
+    "n": "置き換えると、ブックマークが$1件削除され、$2件追加されます"
   },
   "import_replaceDiffDescription": {
     "message": "現在のブックマークの安全スナップショットが先に保存されるため、インポートを元に戻せます。",
