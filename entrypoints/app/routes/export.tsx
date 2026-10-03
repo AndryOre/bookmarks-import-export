@@ -84,8 +84,10 @@ export function ExportRoute() {
   }
 
   const handleMasterChange = () => {
-    if (selectedCount === totalCount) treeReference.current?.deselectAll()
-    else treeReference.current?.selectAll()
+    const tree = treeReference.current
+    if (!tree) return
+    if (tree.areAllVisibleSelected()) tree.deselectAll()
+    else tree.selectAll()
   }
 
   const handleExport = async () => {

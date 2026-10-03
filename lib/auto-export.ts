@@ -220,13 +220,18 @@ export function computeNextRunAfterDue(
 }
 
 /**
- * Whether a scheduled/catch-up run is currently in flight, per
- * {@link autoExportRunInFlightStore} and its TTL.
- * @returns `true` while a non-stale in-flight marker exists.
+ * When the retry alarm of the run currently in flight fires, per
+ * {@link autoExportRunInFlightStore} and its TTL. Callers that skip work
+ * because a run is in flight re-arm the alarm at this time, so a run that
+ * dies mid-way never leaves the schedule without an alarm.
+ * @returns The epoch milliseconds to re-arm the alarm at, or `null` when no
+ *   non-stale in-flight marker exists.
  */
-export async function isAutoExportRunInFlight(): Promise<boolean> {
+export async function getAutoExportInFlightRetryAt(): Promise<number | null> {
   const startedAt = await autoExportRunInFlightStore.getValue()
-  return startedAt !== null && Date.now() - startedAt < RUN_IN_FLIGHT_TTL_MS
+  const isInFlight =
+    startedAt !== null && Date.now() - startedAt < RUN_IN_FLIGHT_TTL_MS
+  return isInFlight ? startedAt + RETRY_DELAY_MS : null
 }
 
 /**
@@ -298,7 +303,13 @@ export async function syncAlarm(trigger: SyncAlarmTrigger): Promise<void> {
   }
 
   if (nextRun <= now) {
-    if (trigger !== 'config-change' && (await isAutoExportRunInFlight())) return
+    if (trigger !== 'config-change') {
+      const retryAt = await getAutoExportInFlightRetryAt()
+      if (retryAt !== null) {
+        await armAlarm(retryAt)
+        return
+      }
+    }
     await armAlarm(now + CATCH_UP_DELAY_MS)
     return
   }
@@ -439,7 +450,11 @@ export async function runAutoExport(
 
   const isTrackedRun = trigger !== 'manual'
   if (isTrackedRun) {
-    if (await isAutoExportRunInFlight()) return
+    const retryAt = await getAutoExportInFlightRetryAt()
+    if (retryAt !== null) {
+      await armAlarm(retryAt)
+      return
+    }
     await autoExportRunInFlightStore.setValue(Date.now())
     await armAlarm(Date.now() + RETRY_DELAY_MS)
   }

@@ -117,13 +117,31 @@ export const BookmarkTree = forwardRef<
    */
   useImperativeHandle(reference, () => ({
     selectAll: () => {
-      const allBookmarkIds = collectBookmarkIds(visibleNodes)
-      const newState = new Map<string, boolean>()
-      for (const id of allBookmarkIds) newState.set(id, true)
-      setCheckedState(newState)
+      const visibleBookmarkIds = collectBookmarkIds(visibleNodes)
+      setCheckedState((previous) => {
+        const next = new Map(previous)
+        for (const id of visibleBookmarkIds) next.set(id, true)
+        return next
+      })
     },
     deselectAll: () => {
-      setCheckedState(new Map())
+      if (!isSearching) {
+        setCheckedState(new Map())
+        return
+      }
+      const visibleBookmarkIds = collectBookmarkIds(visibleNodes)
+      setCheckedState((previous) => {
+        const next = new Map(previous)
+        for (const id of visibleBookmarkIds) next.delete(id)
+        return next
+      })
+    },
+    areAllVisibleSelected: () => {
+      const visibleBookmarkIds = collectBookmarkIds(visibleNodes)
+      return (
+        visibleBookmarkIds.length > 0 &&
+        visibleBookmarkIds.every((id) => checkedState.get(id) === true)
+      )
     },
     expandAll: () => {
       setExpandedFolders(new Set(collectFolderIds(nodes)))

@@ -106,6 +106,30 @@ describe('BookmarkTree', () => {
     expect(getSelectedCount()).toBe(1)
   })
 
+  it('keeps selections outside the search when select-all runs during a search', async () => {
+    const { reference, rerender, getSelectedCount } = await mountTree('')
+    await act(async () => reference.current?.selectAll())
+    await act(async () => reference.current?.deselectAll())
+    await rerender('recipe')
+    await act(async () => reference.current?.selectAll())
+    await rerender('doc')
+    await act(async () => reference.current?.selectAll())
+
+    expect(getSelectedCount()).toBe(2)
+  })
+
+  it('lets the master toggle clear only the visible bookmarks during a search', async () => {
+    const { reference, rerender, getSelectedCount } = await mountTree('')
+    await act(async () => reference.current?.selectAll())
+    await rerender('recipe')
+
+    expect(reference.current?.areAllVisibleSelected()).toBe(true)
+    await act(async () => reference.current?.deselectAll())
+
+    expect(getSelectedCount()).toBe(2)
+    expect(reference.current?.areAllVisibleSelected()).toBe(false)
+  })
+
   it('keeps every child of a folder whose own title matches', async () => {
     const { harness, reference, getSelectedCount } =
       await mountTree('work folder')

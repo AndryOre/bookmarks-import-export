@@ -1142,13 +1142,28 @@ describe('runAutoExport scheduling resilience', () => {
     expect(await autoExportRunInFlightStore.getValue()).toBeNull()
   })
 
-  it('does not arm a catch-up alarm at startup while a run is in flight', async () => {
+  it('arms the retry alarm instead of a catch-up at startup while a run is in flight', async () => {
     await autoExportConfigStore.setValue(baseConfig({ formats: ['html'] }))
     await autoExportNextRunStore.setValue(Date.now() - 1000)
-    await autoExportRunInFlightStore.setValue(Date.now())
+    const startedAt = Date.now()
+    await autoExportRunInFlightStore.setValue(startedAt)
 
     await syncAlarm('startup')
 
-    expect(await browser.alarms.get(ALARM_NAME)).toBeUndefined()
+    const alarm = await browser.alarms.get(ALARM_NAME)
+    expect(alarm?.scheduledTime).toBeGreaterThan(startedAt + 10 * 60_000)
+  })
+
+  it('keeps the retry alarm when a skipped run finds another one in flight', async () => {
+    await autoExportConfigStore.setValue(baseConfig({ formats: ['html'] }))
+    const startedAt = Date.now()
+    await autoExportRunInFlightStore.setValue(startedAt)
+    const { mock: downloadSpy } = mockDownload()
+
+    await runAutoExport('catch-up')
+
+    expect(downloadSpy).not.toHaveBeenCalled()
+    const alarm = await browser.alarms.get(ALARM_NAME)
+    expect(alarm?.scheduledTime).toBeGreaterThan(startedAt + 10 * 60_000)
   })
 })

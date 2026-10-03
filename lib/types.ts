@@ -156,8 +156,19 @@ export interface ImportPreview {
 export type CheckedState = boolean | 'indeterminate'
 
 export interface BookmarkTreeHandle {
+  /**
+   * Adds every currently visible bookmark to the selection.
+   */
   selectAll: () => void
+  /**
+   * Clears the selection. While a search is active, only the visible
+   * bookmarks are cleared so selections outside the search survive.
+   */
   deselectAll: () => void
+  /**
+   * Whether every currently visible bookmark is selected.
+   */
+  areAllVisibleSelected: () => boolean
   expandAll: () => void
   collapseAll: () => void
   refresh: () => Promise<void>
