@@ -91,3 +91,41 @@ describe('deleteBookmarksById', () => {
     expect(remove).toHaveBeenCalledTimes(3)
   })
 })
+
+describe('managed keeper default', () => {
+  it('keeps the oldest modifiable copy when the oldest is managed', () => {
+    const [group] = findDuplicateGroups([
+      {
+        id: 'm',
+        title: 'M',
+        url: 'https://x.com',
+        dateAdded: 1,
+        unmodifiable: 'managed',
+      },
+      { id: 'a', title: 'A', url: 'https://x.com', dateAdded: 2 },
+      { id: 'b', title: 'B', url: 'https://x.com', dateAdded: 3 },
+    ])
+    expect(getKeptCopyId(group!, {})).toBe('a')
+    expect(getCopyIdsToDelete([group!], {})).toEqual(['b'])
+  })
+
+  it('keeps the oldest copy when every copy is managed', () => {
+    const [group] = findDuplicateGroups([
+      {
+        id: 'm1',
+        title: 'M1',
+        url: 'https://x.com',
+        dateAdded: 1,
+        unmodifiable: 'managed',
+      },
+      {
+        id: 'm2',
+        title: 'M2',
+        url: 'https://x.com',
+        dateAdded: 2,
+        unmodifiable: 'managed',
+      },
+    ])
+    expect(getKeptCopyId(group!, {})).toBe('m1')
+  })
+})
