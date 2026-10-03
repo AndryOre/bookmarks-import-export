@@ -251,3 +251,16 @@ describe('runImport for the new sources', () => {
     ])
   })
 })
+
+describe('XBEL detection prolog', () => {
+  it('accepts comments and a doctype before the xbel element', () => {
+    const file =
+      '<?xml version="1.0"?><!-- a --><!DOCTYPE xbel><!-- b --><xbel version="1.0"></xbel>'
+    expect(detectFormat(file, '', 'a.txt')).toBe('xbel')
+  })
+
+  it('rejects an unterminated comment without hanging', () => {
+    const file = `<!--${'--><!--'.repeat(50_000)}`
+    expect(detectFormat(file, '', 'a.txt')).not.toBe('xbel')
+  })
+})

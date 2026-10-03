@@ -102,17 +102,50 @@ function isSniffable(
   return !isScalarJSON && isValidFor(format, content)
 }
 
-const XBEL_PROLOG =
-  /^\s*(?:<\?xml[^>]*\?>\s*)?(?:<!--[\s\S]*?-->\s*)*(?:<!DOCTYPE[^>]*>\s*)?(?:<!--[\s\S]*?-->\s*)*<xbel[\s>]/i
+function skipWhitespace(content: string, from: number): number {
+  let index = from
+  while (index < content.length && /\s/.test(content.charAt(index))) index++
+  return index
+}
+
+function skipXBELProlog(content: string): number {
+  let index = skipWhitespace(content, 0)
+  if (content.startsWith('<?xml', index)) {
+    const end = content.indexOf('?>', index)
+    if (end === -1) return -1
+    index = skipWhitespace(content, end + 2)
+  }
+  let hasDoctype = false
+  for (;;) {
+    if (content.startsWith('<!--', index)) {
+      const end = content.indexOf('-->', index + 4)
+      if (end === -1) return -1
+      index = skipWhitespace(content, end + 3)
+    } else if (
+      !hasDoctype &&
+      content.slice(index, index + 9).toUpperCase() === '<!DOCTYPE'
+    ) {
+      const end = content.indexOf('>', index)
+      if (end === -1) return -1
+      hasDoctype = true
+      index = skipWhitespace(content, end + 1)
+    } else {
+      return index
+    }
+  }
+}
 
 /**
  * Checks that the document element is `xbel`. Full XML validation is left to
- * the parser, so detection also works where `DOMParser` is unavailable.
+ * the parser, so detection also works where `DOMParser` is unavailable. The
+ * prolog is skipped with a linear scan rather than a regular expression, so
+ * hostile comment runs cannot cause backtracking.
  * @param content The raw file content to validate.
  * @returns Whether `content` starts like an XBEL document.
  */
 function isValidXBEL(content: string): boolean {
-  return XBEL_PROLOG.test(content)
+  const index = skipXBELProlog(content)
+  return index !== -1 && /^<xbel[\s>]/i.test(content.slice(index, index + 6))
 }
 
 function isValidJSON(content: string): boolean {
