@@ -29,3 +29,16 @@ export function resolveFolder(typed: string, previous: string): string {
   const trimmed = typed.trim()
   return trimmed === '' ? previous : trimmed
 }
+
+/**
+ * Parses the "Keep the last N files" field on the Auto-export page. Only a
+ * whole number of at least 0 is valid.
+ * @param typed The raw text in the retention field.
+ * @returns The parsed count, or `null` when the text is not a valid integer >= 0.
+ */
+export function parseKeepLast(typed: string): number | null {
+  const trimmed = typed.trim()
+  if (!/^\d+$/.test(trimmed)) return null
+  const value = Number(trimmed)
+  return Number.isSafeInteger(value) ? value : null
+}

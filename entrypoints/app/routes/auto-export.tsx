@@ -18,6 +18,7 @@ import {
   Field,
   FieldContent,
   FieldDescription,
+  FieldError,
   FieldGroup,
   FieldLabel,
   FieldLegend,
@@ -47,7 +48,11 @@ import {
   type RunManualExportMessage,
   type RunManualExportResponse,
 } from '@/lib/auto-export'
-import { resolveFolder, resolveFormats } from '@/lib/auto-export-form'
+import {
+  parseKeepLast,
+  resolveFolder,
+  resolveFormats,
+} from '@/lib/auto-export-form'
 import {
   autoExportConfigStore,
   autoExportLastRunStore,
@@ -282,7 +287,12 @@ export function AutoExportRoute() {
   const [config, setConfig] = useStorageItem(autoExportConfigStore)
   const [folderDraft, setFolderDraft] = useState<string | null>(null)
 
+  const [keepLastDraft, setKeepLastDraft] = useState<string | null>(null)
+
   const folder = folderDraft ?? config.path
+  const keepLast = config.keepLast ?? 10
+  const keepLastText = keepLastDraft ?? String(keepLast)
+  const isKeepLastInvalid = parseKeepLast(keepLastText) === null
   const isOff = !config.enabled
   const isTimeUnused = config.interval === '1h' || config.interval === '12h'
   const isWeekly = config.interval === '7d'
@@ -300,6 +310,13 @@ export function AutoExportRoute() {
     const next = resolveFolder(folder, config.path)
     setFolderDraft(null)
     if (next !== config.path) await save({ path: next })
+  }
+
+  const commitKeepLast = async () => {
+    const parsed = parseKeepLast(keepLastText)
+    if (parsed === null) return
+    setKeepLastDraft(null)
+    if (parsed !== keepLast) await save({ keepLast: parsed })
   }
 
   return (
@@ -456,6 +473,44 @@ export function AutoExportRoute() {
                 {i18n.t('autoExportPage_formatsDescription')}
               </FieldDescription>
             </FieldSet>
+
+            <Field
+              data-disabled={isOff || undefined}
+              data-invalid={isKeepLastInvalid || undefined}
+            >
+              <FieldLabel htmlFor="auto-export-keep-last">
+                {i18n.t('autoExportPage_keepLast')}
+              </FieldLabel>
+              <InputGroup>
+                <InputGroupInput
+                  id="auto-export-keep-last"
+                  type="number"
+                  inputMode="numeric"
+                  min={0}
+                  step={1}
+                  value={keepLastText}
+                  disabled={isOff}
+                  aria-invalid={isKeepLastInvalid}
+                  onChange={(event) => setKeepLastDraft(event.target.value)}
+                  onBlur={() => {
+                    if (isKeepLastInvalid) setKeepLastDraft(null)
+                    else void commitKeepLast()
+                  }}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') event.currentTarget.blur()
+                  }}
+                />
+              </InputGroup>
+              {isKeepLastInvalid ? (
+                <FieldError>
+                  {i18n.t('autoExportPage_keepLastInvalid')}
+                </FieldError>
+              ) : (
+                <FieldDescription>
+                  {i18n.t('autoExportPage_keepLastDescription')}
+                </FieldDescription>
+              )}
+            </Field>
           </FieldGroup>
         </CardContent>
       </Card>
