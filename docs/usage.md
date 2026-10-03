@@ -44,7 +44,8 @@ puts your previous bookmarks back from the Safety snapshot.
 
 ## Naming exported files
 
-By default, exported files are named "Bookmarks". To customize this:
+By default, exported files are named `Bookmarks_<date>_<time>` (for example
+`Bookmarks_2026-10-03_14-05-09`). To customize this:
 
 1. Open the app's **Export** page (the same panel appears on **Auto-export**).
 2. In **Export options**, edit "Filename template". A live preview shows the
@@ -179,10 +180,11 @@ already deleted or moved is simply skipped. A failed run deletes nothing. Set it
 to 0 to keep everything.
 
 **Notify me when an export fails** (on by default) shows a system notification,
-titled "Auto-export failed" with the reason, when a run fails. Clicking it opens
-the Auto-export page. Successful runs never notify, and repeated failures
-replace the previous notification instead of stacking. A failed scheduled or
-catch-up run also puts a "!" badge on the toolbar icon until a run succeeds.
+titled "Snug · Auto-export failed" with the reason, when a run fails. Clicking
+it opens the Auto-export page. Successful runs never notify, and repeated
+failures replace the previous notification instead of stacking. A failed
+scheduled or catch-up run also puts a "!" badge on the toolbar icon until a run
+succeeds.
 
 Changes on the **Auto-export** page are saved automatically. Its status card
 always shows the real schedule state, independently of any unsaved changes below
