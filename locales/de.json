@@ -915,6 +915,10 @@
       }
     }
   },
+  "safetySnapshotIncomplete": {
+    "message": "Die Wiederherstellung ist abgeschlossen, aber einige Lesezeichen konnten nicht geschrieben werden.",
+    "description": "Error when a Safety snapshot restore finished but dropped some bookmarks"
+  },
   "import_replaceDiffTitle": {
     "n": "Ersetzen entfernt $1 Lesezeichen und fügt $2 hinzu"
   },

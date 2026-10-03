@@ -1,6 +1,6 @@
 import { i18n } from '#i18n'
 import { ArchiveIcon, CircleAlertIcon } from 'lucide-react'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import {
@@ -60,10 +60,12 @@ export function SafetySnapshotCard() {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
   const [status, setStatus] = useState<RestoreStatus>('idle')
   const [errorMessage, setErrorMessage] = useState('')
+  const restoreGuard = useRef(false)
   const isRestoring = status === 'restoring'
 
   const handleRestore = async () => {
-    if (!snapshot) return
+    if (!snapshot || restoreGuard.current) return
+    restoreGuard.current = true
     setIsConfirmOpen(false)
     setStatus('restoring')
     setErrorMessage('')
@@ -73,6 +75,8 @@ export function SafetySnapshotCard() {
     } catch (error) {
       setStatus('error')
       setErrorMessage((error as Error).message)
+    } finally {
+      restoreGuard.current = false
     }
   }
 
@@ -161,7 +165,11 @@ export function SafetySnapshotCard() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>{i18n.t('cancel')}</AlertDialogCancel>
-            <Button variant="destructive" onClick={() => void handleRestore()}>
+            <Button
+              variant="destructive"
+              disabled={isRestoring}
+              onClick={() => void handleRestore()}
+            >
               {i18n.t('safetySnapshot_restoreConfirm')}
             </Button>
           </AlertDialogFooter>

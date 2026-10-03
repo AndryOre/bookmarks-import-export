@@ -1,6 +1,8 @@
 import { i18n } from '#i18n'
 import { storage } from '#imports'
 
+import { markImportRestored } from '@/lib/import-control'
+import { withImportLock } from '@/lib/import-lock'
 import { importFromJSON } from '@/lib/importers/import-json'
 import { resolveImportRoots } from '@/lib/importers/resolve-roots'
 import { downloadViaOffscreenDocument } from '@/lib/offscreen-download'
@@ -117,19 +119,69 @@ export function readLatestSafetySnapshot(): Promise<SafetySnapshot | null> {
 }
 
 /**
+ * Rewrites the roots from `roots` and reports whether every node was written.
+ * @param roots The snapshot roots to write.
+ * @param onClearingExisting Called right before existing content is deleted.
+ * @returns True when no node was dropped.
+ */
+export async function hasRewrittenRootsFully(
+  roots: ParsedBookmark[],
+  onClearingExisting?: () => void,
+): Promise<boolean> {
+  const result = await importFromJSON(
+    structuredClone(roots),
+    'restore-replace',
+    {
+      trusted: true,
+      onClearingExisting,
+    },
+  )
+  return result.skippedInvalidUrl === 0
+}
+
+/**
  * Restores a snapshot into the bookmarks bar, other bookmarks and, when the
  * snapshot has it, Mobile, replacing their current content. URLs are written
- * as-is, so bookmarklets and `chrome://` bookmarks survive. This is itself a Restore-replace, so a new Safety
- * snapshot of the current state is taken first, and nothing is deleted if that
- * fails.
+ * as-is, so bookmarklets and `chrome://` bookmarks survive. This is itself a
+ * Restore-replace, so it holds the shared import lock, and a new Safety
+ * snapshot of the current state is taken first; nothing is deleted if that
+ * fails. When the rewrite fails after existing content was cleared, the
+ * just-taken snapshot is restored and the original error is rethrown, marked
+ * with `markImportRestored` when the recovery was complete.
  * @param snapshot The snapshot to restore.
  * @returns Resolves once the roots have been rewritten.
+ * @throws {ImportLockHeldError} When another extension page is importing.
+ * @throws {Error} When the rewrite fails or drops nodes.
  */
-export async function restoreSafetySnapshot(
+export function restoreSafetySnapshot(snapshot: SafetySnapshot): Promise<void> {
+  return withImportLock(() => restoreSafetySnapshotUnlocked(snapshot))
+}
+
+async function restoreSafetySnapshotUnlocked(
   snapshot: SafetySnapshot,
 ): Promise<void> {
-  await takeSafetySnapshot()
-  await importFromJSON(structuredClone(snapshot.roots), 'restore-replace', {
-    trusted: true,
-  })
+  const taken = await takeSafetySnapshot()
+  let hasClearedExisting = false
+  try {
+    const isComplete = await hasRewrittenRootsFully(snapshot.roots, () => {
+      hasClearedExisting = true
+    })
+    if (!isComplete) throw new Error(i18n.t('safetySnapshotIncomplete'))
+  } catch (error) {
+    if (hasClearedExisting) await recoverFromSnapshot(taken, error)
+    throw error
+  }
+}
+
+async function recoverFromSnapshot(
+  taken: SafetySnapshot,
+  originalError: unknown,
+): Promise<void> {
+  try {
+    if (await hasRewrittenRootsFully(taken.roots)) {
+      markImportRestored(originalError)
+    }
+  } catch (recoveryError) {
+    console.error('Safety snapshot recovery failed', recoveryError)
+  }
 }

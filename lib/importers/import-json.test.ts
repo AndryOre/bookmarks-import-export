@@ -1,4 +1,6 @@
+import type { Browser } from '@wxt-dev/browser'
 import { beforeEach, describe, expect, it } from 'vitest'
+import { fakeBrowser } from 'wxt/testing/fake-browser'
 
 import {
   getFakeBookmarksRoot,
@@ -9,6 +11,7 @@ import type { ParsedBookmark } from '@/lib/types'
 import { importFromJSON, preprocessBookmarks } from './import-json'
 
 beforeEach(() => {
+  fakeBrowser.reset()
   resetFakeBookmarks()
 })
 
@@ -582,5 +585,51 @@ describe('importFromJSON empty folders', () => {
     expect(result).toEqual({ skippedInvalidUrl: 0, skippedDuplicates: 0 })
     const bar = getFakeBookmarksRoot().children?.find((n) => n.id === '1')
     expect(bar?.children?.map((n) => n.title)).toEqual(['Empty'])
+  })
+})
+
+describe('importFromJSON trusted restore with a failing folder create', () => {
+  const trustedTree: ParsedBookmark[] = [
+    {
+      id: '1',
+      title: 'Bookmarks bar',
+      isBookmarksBar: true,
+      dateAdded: 0,
+      children: [
+        {
+          title: 'Broken',
+          dateAdded: 0,
+          children: [
+            { title: 'A', url: 'https://a.example/', dateAdded: 0 },
+            {
+              title: 'Inner',
+              dateAdded: 0,
+              children: [
+                { title: 'B', url: 'https://b.example/', dateAdded: 0 },
+              ],
+            },
+          ],
+        },
+        { title: 'Fine', url: 'https://fine.example/', dateAdded: 0 },
+      ],
+    },
+  ]
+
+  it('counts every bookmark of the dropped subtree as skipped', async () => {
+    const realCreate = fakeBrowser.bookmarks.create
+    fakeBrowser.bookmarks.create = (async (
+      details: Browser.bookmarks.CreateDetails,
+    ) => {
+      if (details.title === 'Broken') throw new Error('create failed')
+      return realCreate(details)
+    }) as typeof fakeBrowser.bookmarks.create
+
+    const result = await importFromJSON(trustedTree, 'restore-merge', {
+      trusted: true,
+    })
+
+    expect(result.skippedInvalidUrl).toBe(2)
+    const bar = getFakeBookmarksRoot().children?.find((n) => n.id === '1')
+    expect(bar?.children?.map((n) => n.title)).toEqual(['Fine'])
   })
 })
