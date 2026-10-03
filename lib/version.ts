@@ -34,3 +34,17 @@ export function isWhatsNewUnseen(
     isMinorOrMajorUpdate(lastSeenVersion, installedVersion)
   )
 }
+
+/**
+ * Whether a changelog entry describes the installed release. Patch releases
+ * ship no changelog entry, so only major and minor are compared.
+ * @param entryVersion Version label of one changelog entry.
+ * @param installedVersion Version in the extension manifest.
+ * @returns `true` when the entry should be flagged "Current".
+ */
+export function isChangelogEntryCurrent(
+  entryVersion: string,
+  installedVersion: string,
+): boolean {
+  return !isMinorOrMajorUpdate(entryVersion, installedVersion)
+}

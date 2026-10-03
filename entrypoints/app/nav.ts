@@ -48,3 +48,16 @@ export function getTitleKey(pathname: string) {
     ? 'shell_titleWelcome'
     : 'shell_navExport'
 }
+
+/**
+ * Whether a pathname is a real App route. The empty index and unknown
+ * paths are not: the router only passes through them on its way to Export.
+ * @param pathname The router pathname to check.
+ * @returns `true` for a nav route or the Welcome route.
+ */
+export function isKnownRoute(pathname: string): boolean {
+  return (
+    pathname === APP_ROUTES.welcome ||
+    NAV_ITEMS.some((navItem) => navItem.route === pathname)
+  )
+}

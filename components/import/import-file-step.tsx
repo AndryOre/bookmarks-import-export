@@ -40,6 +40,15 @@ export function ImportFileStep({
   const inputId = useId()
   const inputReference = useRef<HTMLInputElement>(null)
   const [isDragging, setIsDragging] = useState(false)
+  const changeFocusRequest = useRef(false)
+  const changeButtonReference = useRef<HTMLButtonElement | null>(null)
+
+  const focusChangeButton = (element: HTMLButtonElement | null) => {
+    changeButtonReference.current = element
+    if (!element || element.disabled || !changeFocusRequest.current) return
+    changeFocusRequest.current = false
+    element.focus()
+  }
 
   const handleDragOver = (event: DragEvent) => {
     event.preventDefault()
@@ -60,7 +69,14 @@ export function ImportFileStep({
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const selected = event.target.files?.[0]
-    if (selected) onFile(selected)
+    if (selected) {
+      const activeElement = document.activeElement
+      changeFocusRequest.current =
+        activeElement === event.target ||
+        (activeElement !== null &&
+          activeElement === changeButtonReference.current)
+      onFile(selected)
+    }
     event.target.value = ''
   }
 
@@ -70,45 +86,41 @@ export function ImportFileStep({
       ref={inputReference}
       type="file"
       accept={ACCEPTED_FILE_TYPES}
-      className="sr-only"
+      className="peer sr-only"
       disabled={disabled}
       aria-label={i18n.t('import_fileInputLabel')}
       onChange={handleChange}
     />
   )
 
-  if (file) {
-    return (
-      <Item variant="outline">
-        <ItemMedia variant="icon">
-          <FileIcon />
-        </ItemMedia>
-        <ItemContent>
-          <ItemTitle className="break-all">{file.name}</ItemTitle>
-        </ItemContent>
-        <ItemActions>
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={disabled}
-            onClick={() => inputReference.current?.click()}
-          >
-            {i18n.t('import_changeFile')}
-          </Button>
-        </ItemActions>
-        {fileInput}
-      </Item>
-    )
-  }
-
-  return (
+  const body = file ? (
+    <Item variant="outline">
+      <ItemMedia variant="icon">
+        <FileIcon />
+      </ItemMedia>
+      <ItemContent>
+        <ItemTitle className="break-all">{file.name}</ItemTitle>
+      </ItemContent>
+      <ItemActions>
+        <Button
+          ref={focusChangeButton}
+          variant="outline"
+          size="sm"
+          disabled={disabled}
+          onClick={() => inputReference.current?.click()}
+        >
+          {i18n.t('import_changeFile')}
+        </Button>
+      </ItemActions>
+    </Item>
+  ) : (
     <label
       htmlFor={inputId}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
       className={cn(
-        'flex cursor-pointer flex-col items-center gap-2 rounded-lg border-2 border-dashed px-6 py-10 text-center transition-colors select-none hover:bg-muted/50 has-[:focus-visible]:border-ring has-[:focus-visible]:ring-3 has-[:focus-visible]:ring-ring/50',
+        'flex cursor-pointer flex-col items-center gap-2 rounded-lg border-2 border-dashed px-6 py-10 text-center transition-colors select-none peer-focus-visible:border-ring peer-focus-visible:ring-3 peer-focus-visible:ring-ring/50 hover:bg-muted/50',
         isDragging ? 'border-primary bg-primary/5' : 'border-border',
       )}
     >
@@ -120,7 +132,13 @@ export function ImportFileStep({
       <span className="text-xs text-muted-foreground">
         {i18n.t('supportedFormats')}
       </span>
-      {fileInput}
     </label>
+  )
+
+  return (
+    <>
+      {fileInput}
+      {body}
+    </>
   )
 }

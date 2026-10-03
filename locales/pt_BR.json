@@ -124,6 +124,10 @@
     "message": "Formato de arquivo não compatível",
     "description": "Unsupported file format"
   },
+  "importAnotherRunning": {
+    "message": "Outra importação já está em andamento. Aguarde a conclusão e tente novamente.",
+    "description": "Error shown when an import is started while another extension page is already importing"
+  },
   "bookmarksImportedSuccessfully": {
     "message": "Favoritos importados com sucesso!",
     "description": "Bookmarks imported successfully"
@@ -616,11 +620,11 @@
     "description": "Help text under the formats toggle group"
   },
   "autoExportPage_keepLast": {
-    "message": "Manter os últimos N arquivos",
+    "message": "Manter as últimas N execuções",
     "description": "Label of the retention number field on the Auto-export page"
   },
   "autoExportPage_keepLastDescription": {
-    "message": "Após cada exportação bem-sucedida, o Snug exclui os próprios arquivos exportados mais antigos além desse número. Somente arquivos salvos pelo Snug são removidos, nunca outros arquivos da pasta. Use 0 para manter tudo.",
+    "message": "Após cada exportação bem-sucedida, o Snug exclui os arquivos de suas execuções mais antigas além desse número, de modo que todos os formatos de uma execução mantida permanecem. Somente arquivos salvos pelo Snug são removidos, nunca outros arquivos da pasta. Use 0 para manter tudo.",
     "description": "Help text explaining the retention rule under the field"
   },
   "autoExportPage_keepLastInvalid": {
@@ -899,6 +903,15 @@
   "downloadInterrupted": {
     "message": "O download $ID$ foi interrompido.",
     "description": "Last-run error when a download is interrupted; $ID$ is the download id",
+    "placeholders": {
+      "id": {
+        "content": "$1"
+      }
+    }
+  },
+  "downloadTimedOut": {
+    "message": "O download $ID$ excedeu o tempo limite.",
+    "description": "Last-run error when a download is still running after the wait limit; $ID$ is the download id",
     "placeholders": {
       "id": {
         "content": "$1"

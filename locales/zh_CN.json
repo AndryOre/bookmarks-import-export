@@ -122,6 +122,10 @@
     "message": "不支持的文件格式",
     "description": "Unsupported file format"
   },
+  "importAnotherRunning": {
+    "message": "另一个导入正在进行中。请等待其完成后重试。",
+    "description": "Error shown when an import is started while another extension page is already importing"
+  },
   "bookmarksImportedSuccessfully": {
     "message": "书签导入成功！",
     "description": "Bookmarks imported successfully"
@@ -612,11 +616,11 @@
     "description": "Help text under the formats toggle group"
   },
   "autoExportPage_keepLast": {
-    "message": "保留最近 N 个文件",
+    "message": "保留最近 N 次导出",
     "description": "Label of the retention number field on the Auto-export page"
   },
   "autoExportPage_keepLastDescription": {
-    "message": "每次导出成功后，Snug 会删除超出此数量的最早导出文件。只会删除 Snug 保存的文件，绝不会删除文件夹中的其他文件。设为 0 则全部保留。",
+    "message": "每次导出成功后，Snug 会删除超出此次数的最早几次导出的文件，因此保留的每次导出的所有格式都会保留。只会删除 Snug 保存的文件，绝不会删除文件夹中的其他文件。设为 0 则全部保留。",
     "description": "Help text explaining the retention rule under the field"
   },
   "autoExportPage_keepLastInvalid": {
@@ -887,6 +891,15 @@
   "downloadInterrupted": {
     "message": "下载 $ID$ 已中断。",
     "description": "Last-run error when a download is interrupted; $ID$ is the download id",
+    "placeholders": {
+      "id": {
+        "content": "$1"
+      }
+    }
+  },
+  "downloadTimedOut": {
+    "message": "下载 $ID$ 已超时。",
+    "description": "Last-run error when a download is still running after the wait limit; $ID$ is the download id",
     "placeholders": {
       "id": {
         "content": "$1"

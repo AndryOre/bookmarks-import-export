@@ -122,6 +122,10 @@
     "message": "Неподдерживаемый формат файла",
     "description": "Unsupported file format"
   },
+  "importAnotherRunning": {
+    "message": "Другой импорт уже выполняется. Дождитесь его завершения и повторите попытку.",
+    "description": "Error shown when an import is started while another extension page is already importing"
+  },
   "bookmarksImportedSuccessfully": {
     "message": "Закладки импортированы!",
     "description": "Bookmarks imported successfully"
@@ -612,11 +616,11 @@
     "description": "Help text under the formats toggle group"
   },
   "autoExportPage_keepLast": {
-    "message": "Хранить последние N файлов",
+    "message": "Хранить последние N запусков",
     "description": "Label of the retention number field on the Auto-export page"
   },
   "autoExportPage_keepLastDescription": {
-    "message": "После каждого успешного экспорта Snug удаляет свои самые старые экспортированные файлы сверх этого числа. Удаляются только файлы, сохранённые Snug, но не другие файлы в папке. Укажите 0, чтобы хранить всё.",
+    "message": "После каждого успешного экспорта Snug удаляет файлы своих самых старых запусков сверх этого числа, поэтому все форматы сохраняемого запуска остаются. Удаляются только файлы, сохранённые Snug, но не другие файлы в папке. Укажите 0, чтобы хранить всё.",
     "description": "Help text explaining the retention rule under the field"
   },
   "autoExportPage_keepLastInvalid": {
@@ -887,6 +891,15 @@
   "downloadInterrupted": {
     "message": "Загрузка $ID$ была прервана.",
     "description": "Last-run error when a download is interrupted; $ID$ is the download id",
+    "placeholders": {
+      "id": {
+        "content": "$1"
+      }
+    }
+  },
+  "downloadTimedOut": {
+    "message": "Время ожидания загрузки $ID$ истекло.",
+    "description": "Last-run error when a download is still running after the wait limit; $ID$ is the download id",
     "placeholders": {
       "id": {
         "content": "$1"

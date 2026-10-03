@@ -123,6 +123,10 @@
     "message": "Formato de archivo no soportado",
     "description": "Formato de archivo no soportado"
   },
+  "importAnotherRunning": {
+    "message": "Ya hay otra importación en curso. Espera a que termine e inténtalo de nuevo.",
+    "description": "Error shown when an import is started while another extension page is already importing"
+  },
   "bookmarksImportedSuccessfully": {
     "message": "Marcadores importados correctamente!",
     "description": "Marcadores importados correctamente"
@@ -614,11 +618,11 @@
     "description": "Texto de ayuda bajo el grupo de formatos"
   },
   "autoExportPage_keepLast": {
-    "message": "Conservar los últimos N archivos",
+    "message": "Conservar las últimas N ejecuciones",
     "description": "Label of the retention number field on the Auto-export page"
   },
   "autoExportPage_keepLastDescription": {
-    "message": "Tras cada exportación correcta, Snug elimina sus propios archivos exportados más antiguos que superen este número. Solo se eliminan archivos guardados por Snug, nunca otros archivos de la carpeta. Usa 0 para conservarlo todo.",
+    "message": "Tras cada exportación correcta, Snug elimina los archivos de sus ejecuciones más antiguas que superen este número, de modo que se conservan todos los formatos de cada ejecución mantenida. Solo se eliminan archivos guardados por Snug, nunca otros archivos de la carpeta. Usa 0 para conservarlo todo.",
     "description": "Help text explaining the retention rule under the field"
   },
   "autoExportPage_keepLastInvalid": {
@@ -893,6 +897,15 @@
   "downloadInterrupted": {
     "message": "La descarga $ID$ se interrumpió.",
     "description": "Last-run error when a download is interrupted; $ID$ is the download id",
+    "placeholders": {
+      "id": {
+        "content": "$1"
+      }
+    }
+  },
+  "downloadTimedOut": {
+    "message": "La descarga $ID$ superó el tiempo de espera.",
+    "description": "Last-run error when a download is still running after the wait limit; $ID$ is the download id",
     "placeholders": {
       "id": {
         "content": "$1"

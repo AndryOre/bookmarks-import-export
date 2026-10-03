@@ -1,15 +1,20 @@
-import { autoExportDownloadIdsStore } from '@/lib/storage'
+import {
+  autoExportDownloadIdsStore,
+  type AutoExportDownloadRun,
+} from '@/lib/storage'
 
 const writeQueue: { tail: Promise<void> } = { tail: Promise.resolve() }
 
 /**
  * Serializes read-modify-write cycles on {@link autoExportDownloadIdsStore},
  * so concurrent per-format downloads can't overwrite each other's ids.
- * @param update Receives the current ids and returns the ids to persist.
+ * @param update Receives the current runs and returns the runs to persist.
  * @returns Resolves once the new ids are persisted.
  */
 async function updateDownloadIds(
-  update: (ids: number[]) => Promise<number[]> | number[],
+  update: (
+    runs: AutoExportDownloadRun[],
+  ) => Promise<AutoExportDownloadRun[]> | AutoExportDownloadRun[],
 ): Promise<void> {
   const previous = writeQueue.tail
   const { promise: gate, resolve: releaseGate } = Promise.withResolvers<void>()
@@ -17,8 +22,8 @@ async function updateDownloadIds(
 
   try {
     await previous
-    const ids = await autoExportDownloadIdsStore.getValue()
-    await autoExportDownloadIdsStore.setValue(await update(ids))
+    const runs = await autoExportDownloadIdsStore.getValue()
+    await autoExportDownloadIdsStore.setValue(await update(runs))
   } finally {
     releaseGate()
   }
@@ -29,10 +34,22 @@ async function updateDownloadIds(
  * {@link applyRetention} can later remove it — and only it — even after the
  * service worker restarts.
  * @param downloadId The id `browser.downloads.download` returned.
+ * @param runAt Start time of the run that saved it; ids sharing a `runAt` are
+ * grouped into one run.
  * @returns Resolves once the id is persisted.
  */
-export function recordSavedDownload(downloadId: number): Promise<void> {
-  return updateDownloadIds((ids) => [...ids, downloadId])
+export function recordSavedDownload(
+  downloadId: number,
+  runAt: number,
+): Promise<void> {
+  return updateDownloadIds((runs) => {
+    const runIndex = runs.findIndex((run) => run.runAt === runAt)
+    return runIndex === -1
+      ? [...runs, { runAt, ids: [downloadId] }]
+      : runs.map((run, index) =>
+          index === runIndex ? { runAt, ids: [...run.ids, downloadId] } : run,
+        )
+  })
 }
 
 /**
@@ -70,21 +87,21 @@ async function removeSavedDownload(downloadId: number): Promise<void> {
 }
 
 /**
- * Retention: keeps only the newest `keepLast` files Snug saved, removing the
- * oldest beyond that with `downloads.removeFile` and erasing their history
- * entries. Only ids recorded by {@link recordSavedDownload} are ever touched,
- * never other files in the folder. `0` keeps everything. Never throws for a
- * missing file; the rest are still cleaned up.
- * @param keepLast How many of the newest files to keep; `0` keeps all.
- * @returns Resolves once the excess files have been handled.
+ * Retention: keeps only the files of the newest `keepLast` runs Snug saved,
+ * removing every file of older runs with `downloads.removeFile` and erasing
+ * their history entries. Only ids recorded by {@link recordSavedDownload} are
+ * ever touched, never other files in the folder. `0` keeps everything. Never
+ * throws for a missing file; the rest are still cleaned up.
+ * @param keepLast How many of the newest runs to keep; `0` keeps all.
+ * @returns Resolves once the excess runs have been handled.
  */
 export async function applyRetention(keepLast: number): Promise<void> {
   if (keepLast <= 0) return
-  await updateDownloadIds(async (ids) => {
-    const excessCount = Math.max(0, ids.length - keepLast)
-    for (const downloadId of ids.slice(0, excessCount)) {
-      await removeSavedDownload(downloadId)
+  await updateDownloadIds(async (runs) => {
+    const excessCount = Math.max(0, runs.length - keepLast)
+    for (const run of runs.slice(0, excessCount)) {
+      for (const downloadId of run.ids) await removeSavedDownload(downloadId)
     }
-    return ids.slice(excessCount)
+    return runs.slice(excessCount)
   })
 }
