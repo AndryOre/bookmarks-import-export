@@ -201,19 +201,21 @@ Snug helps people keep their bookmarks portable and safe: export, import, back u
 One justification per permission declared in `wxt.config.ts`. Each is grounded
 in the code that uses it.
 
-`bookmarks` (503 chars):
+`bookmarks` (598 chars):
 
 ```text
-Snug reads the bookmarks tree to export it and to scan for duplicates, and creates bookmarks and folders when the user imports a file. It deletes bookmarks in two cases only: the duplicates the user picks on the Duplicates page, and the folders it created when the user cancels an import. This is the extension's core function: backing up, moving, restoring and cleaning up bookmarks. Bookmarks are only read or changed when the user starts an action, or when a backup schedule the user configured runs.
+Snug reads the bookmarks tree to export it and to scan for duplicates, and creates bookmarks and folders when the user imports a file. It deletes bookmarks in three cases only: the duplicates the user picks on the Duplicates page, the folders it created when the user cancels an import, and the existing bookmarks a Replace import (or Undo) overwrites, only when the user chooses it. This is the extension's core function: backing up, moving, restoring and cleaning up bookmarks. Bookmarks are only read or changed when the user starts an action, or when a backup schedule the user configured runs.
 ```
 
 Code: `lib/exporters/export-html.ts`, `lib/exporters/export-json.ts` and
 `lib/exporters/export-csv.ts` call `browser.bookmarks.getTree()`;
 `components/export/bookmark-tree.tsx` calls it to show the folder picker;
 `lib/export-all-bookmarks.ts` calls it for full exports;
-`lib/duplicate-selection.ts` calls `bookmarks.remove` for the picked duplicates
-and `lib/import-control.ts` calls `bookmarks.removeTree` to roll back a
-cancelled import.
+`lib/duplicate-selection.ts` calls `bookmarks.remove` for the picked duplicates;
+`lib/import-control.ts` calls `bookmarks.removeTree` to roll back a cancelled
+import; `lib/importers/import-html.ts` and `lib/importers/import-json.ts` call
+it to clear the roots a Replace import (and Undo, via `lib/safety-snapshot.ts`)
+overwrites.
 
 `favicon` (286 chars):
 
