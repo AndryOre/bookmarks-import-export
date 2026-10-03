@@ -4,7 +4,7 @@
     "description": "Name of the extension."
   },
   "extensionDescription": {
-    "message": "Exportez, importez et planifiez des sauvegardes de vos favoris — HTML, JSON ou CSV, sur votre appareil, sans compte ni cloud.",
+    "message": "Exportez vos favoris en HTML, JSON, CSV, Markdown, OPML ou XBEL, importez depuis Chrome ou Safari, sauvegardez. Tout en local.",
     "description": "Description of the extension"
   },
   "welcomeSubtitle": {
@@ -333,6 +333,30 @@
   },
   "changelog_2_0_0_2_link": {
     "message": "Ouvrir l'application"
+  },
+  "changelog_2_0_0_3": {
+    "message": "Snug parle désormais 10 langues : anglais, espagnol, allemand, français, italien, portugais du Brésil, russe, japonais, coréen et chinois simplifié."
+  },
+  "changelog_2_0_0_4": {
+    "message": "La restauration enregistre d'abord un instantané de sécurité de vos favoris, et vous pouvez annuler un remplacement depuis la page Importer."
+  },
+  "changelog_2_0_0_5": {
+    "message": "Nouvelle page Doublons pour repérer les favoris en double et supprimer uniquement ceux que vous choisissez. L'import peut aussi ignorer les doublons."
+  },
+  "changelog_2_0_0_5_link": {
+    "message": "Trouver les doublons"
+  },
+  "changelog_2_0_0_6": {
+    "message": "L'export automatique gagne des horaires toutes les heures et chaque semaine, la Rétention pour ne garder que les dernières sauvegardes et une notification en cas d'échec."
+  },
+  "changelog_2_0_0_6_link": {
+    "message": "Ouvrir l'export automatique"
+  },
+  "changelog_2_0_0_7": {
+    "message": "Export en Markdown, OPML et XBEL. Import du fichier Bookmarks d'un profil Chrome, de XBEL et des favoris Safari, avec progression et Annuler."
+  },
+  "changelog_2_0_0_8": {
+    "message": "L'arbre des favoris reste fluide sur de très grandes bibliothèques et s'utilise entièrement au clavier et avec un lecteur d'écran."
   },
   "changelog_1_7_0_1": {
     "message": "Ajout d'une carte d'état et d'un bouton Exporter maintenant dans les paramètres d'exportation automatique, ainsi que d'une ligne d'état dans la fenêtre contextuelle indiquant si l'exportation automatique est activée, désactivée ou en échec."
@@ -713,7 +737,7 @@
     "description": "Welcome page quick-start item title"
   },
   "welcome_exportDescription": {
-    "message": "Dix secondes pour obtenir une copie de sécurité de vos favoris.",
+    "message": "Dix secondes pour une copie sûre, en HTML, JSON, CSV, Markdown, OPML ou XBEL.",
     "description": "Welcome page quick-start item description"
   },
   "welcome_exportAction": {
@@ -737,7 +761,7 @@
     "description": "Welcome page quick-start item title"
   },
   "welcome_importDescription": {
-    "message": "Récupérez les favoris d'un autre navigateur ou d'une sauvegarde.",
+    "message": "Importez des favoris depuis Chrome, Safari, XBEL ou un fichier de sauvegarde.",
     "description": "Welcome page quick-start item description"
   },
   "welcome_importAction": {

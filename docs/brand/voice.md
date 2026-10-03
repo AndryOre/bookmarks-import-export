@@ -1,5 +1,10 @@
 # Snug Brand Voice Guidelines
 
+> **Status: closed as shipped in v2.0.0.** Everything below is the record of the
+> decisions that led to the shipped product. Where it disagrees with the shipped
+> copy, the shipped copy wins: see `docs/store/README.md` and the
+> `locales/*.json` files.
+
 ## Generation Metadata
 
 - Created: 2026-10-01
@@ -385,51 +390,30 @@ README.
 
 ## Open Questions for Team Discussion
 
-### High Priority (blocks guideline completion)
+### Resolved (as shipped in v2.0.0)
 
-_(none — naming and tone direction are both decided; nothing here blocks moving
-to copy)_
-
-### Medium Priority (improves quality)
-
-1. **How much of the name's "snug" metaphor should actually appear in copy,
-   given the mascot is deferred?**
-   - What was found: the name carries real warmth, but the current version has
-     no mascot to visually carry it, and `brief.md` explicitly warns against
-     "forced personality" standing in for one.
-   - Agent recommendation: use the metaphor sparingly (store descriptor, maybe a
-     changelog line) rather than threading it through every UI string — let
-     precision carry most of the voice, warmth show up at the edges.
-   - Need from you: confirm this balance once the actual CWS descriptor and
-     README are drafted (step 5).
-
-2. **Exact rename-announcement wording for the 2.0.0 "What's New" note.**
-   - What was found: `brief.md` requires this announcement but no exact copy
-     exists yet.
-   - Agent recommendation: the example in the Tone Matrix above ("This extension
-     has a new name — Snug...") as a starting draft.
-   - Need from you: approve or revise once step 5 (copy) runs.
-
-### Low Priority (nice to have)
-
-1. **Whether "tuck in" survives as a recurring verbal motif once the voice guide
-   gets used in practice**, or reads as trying too hard without the mascot to
-   back it up — worth revisiting after the first real batch of copy (step 5)
-   comes back from `brand-voice:brand-voice-enforcement` +
-   `marketing:brand-review`.
+1. **How much of the "snug" metaphor appears in copy.** Resolved: used
+   sparingly, once in the listing ("exactly as you left them") and not in UI
+   strings. Precision carries the voice.
+2. **Rename-announcement wording.** Resolved: the approved EN and ES text is in
+   `docs/store/README.md` and in the `changelog_2_0_0_1` locale key.
+3. **Whether "tuck in" survives as a motif.** Resolved: it did not. The shipped
+   copy does not use it.
 
 ---
 
 ## Data Gaps & Recommendations
 
-- [ ] No real user-facing copy exists yet to test this voice against — step 5
+- [x] Resolved: real copy now ships in 10 locales, so the voice has been tested.
+      No real user-facing copy existed yet to test this voice against — step 5
       (copy via `brand-voice:brand-voice-enforcement` then
       `marketing:brand-review`) is exactly that test; treat its output as the
       first real evidence, not just an application of this guide.
-- [ ] No transcripts/conversations in this voice (this is a solo-maintained OSS
-      extension, not a sales org) — the Tone Matrix and Language Patterns
-      sections will stay Low confidence until real copy exists; that's expected
-      for this kind of project, not a gap to chase down with more research.
+- [x] Accepted, not a gap: no transcripts/conversations in this voice (this is a
+      solo-maintained OSS extension, not a sales org) — the Tone Matrix and
+      Language Patterns sections will stay Low confidence until real copy
+      exists; that's expected for this kind of project, not a gap to chase down
+      with more research.
 
 ---
 

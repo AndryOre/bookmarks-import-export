@@ -1,4 +1,9 @@
-# Naming — bookmarks-import-export rebrand
+# Naming — Snug (historical record of the rebrand)
+
+> **Status: closed as shipped in v2.0.0.** Everything below is the record of the
+> decisions that led to the shipped product. Where it disagrees with the shipped
+> copy, the shipped copy wins: see `docs/store/README.md` and the
+> `locales/*.json` files.
 
 Fully independent brand (see `brief.md`'s closed decisions) — no AndryOre tie in
 the name itself. Constraint from the brief: not tied to "import/export"
@@ -46,7 +51,7 @@ moving a stack of things intact from one place to another), then filtered by:
   slightly more approachable, slightly less distinctive than Portage.
 - Keep as the fallback if Portage tests poorly in the logo/visual phase.
 
-## CWS listing (draft, pending final name choice)
+## CWS listing (historical draft; the name is decided: Snug)
 
 - **75-char store descriptor** (Portage):
   `Carry your entire bookmark tree between browsers, intact — no account, no cloud, no sync.`
@@ -313,4 +318,5 @@ section.
   `Tuck your bookmarks in and carry them anywhere — no account, no cloud.` (72
   chars)
 
-Folder renamed from `_draft/` to `snug/` for the rest of the brand kit.
+The shipped title is `Snug: Bookmark Export, Import & Backup` (the
+`extensionManifestName` key); the 75-character descriptors above are superseded.

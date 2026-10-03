@@ -1,25 +1,29 @@
 # Copy — Snug v2.0.0 rebrand
 
-Generated via `brand-voice:brand-voice-enforcement`, applying
-`.claude/brand-voice-guidelines.md`. All claims grounded in the live product
-(`docs/usage.md`, `CHANGELOG.md` in the main repo) — see the "Facts corrected
-before writing this" note at the bottom; two pains named in `brief.md` turned
-out to be stale (already shipped) and are reflected here as differentiators to
-surface, not gaps to promise fixing.
+> **Status: closed as shipped in v2.0.0.** Everything below is the record of the
+> decisions that led to the shipped product. Where it disagrees with the shipped
+> copy, the shipped copy wins: see `docs/store/README.md` and the
+> `locales/*.json` files.
+
+Generated via `brand-voice:brand-voice-enforcement`, applying `voice.md`. All
+claims grounded in the live product (`docs/usage.md`, `CHANGELOG.md` in the main
+repo) — see the "Facts corrected before writing this" note at the bottom; two
+pains named in `brief.md` turned out to be stale (already shipped) and are
+reflected here as differentiators to surface, not gaps to promise fixing.
 
 ## 1. Chrome Web Store listing
 
+The shipped listing text (EN and ES, plus the 8 other locales) is in
+`docs/store/README.md` and `docs/store/listings/`. The drafts below are the
+original v2.0.0 rebrand copy and name only HTML, JSON and CSV.
+
 ### Short summary (≤132 chars, CWS limit)
 
-**EN** (129 chars): "Export, import, and schedule automatic backups for your
-bookmarks — HTML, JSON, or CSV, all on your device, no account, no cloud."
+**EN** (shipped, 129 chars before the v2.0.0 copy pass; the shipped summary now
+names every format and lives in `locales/en.json` `extensionDescription`).
 
-**ES** (134 chars): "Programa respaldos automáticos de tus marcadores, exporta e
-importa en HTML, JSON o CSV — todo en tu dispositivo, sin cuenta ni nube."
-
-_(2026-10-01: "bookmarks" → "marcadores" para igualar el término que ya usa
-`locales/es.json` del repo — ahora 134 caracteres, por encima del límite de 132
-de la CWS; recortar antes de subir el listing, p. ej. quitando "todo".)_
+**ES** (shipped from `locales/es.json` `extensionDescription`). The earlier
+134-character Spanish draft was over the 132-character CWS limit and is retired.
 
 _(Revised 2026-10-01 after brand review — "automatically back up" alone implied
 an always-on default; the fix restores "scheduled," the term the product's own
@@ -128,7 +132,7 @@ README/docs already pair with "automatic" for this exact feature.)_
 Checked against the live repo (`docs/usage.md`, `CHANGELOG.md`) before writing
 any copy, per the "ground every claim, never invent a feature" instruction — two
 corrections came out of that check, now also fixed upstream in `brief.md` and
-`.claude/brand-voice-guidelines.md`:
+`voice.md`:
 
 1. **CSV was missing.** The brief said "HTML/JSON output"; the product ships
    HTML, JSON, _and_ CSV, for both export and import.
@@ -142,19 +146,16 @@ corrections came out of that check, now also fixed upstream in `brief.md` and
    date/time placeholders already shipped (`CHANGELOG.md`: "Added customizable
    filename templates for exports"). This copy mentions it as something Snug
    already does, not something it's fixing.
-4. **The "no completion feedback" pain is still real** — no toast/ confirmation
-   exists in the manual export flow (verified: no toast component in the
-   codebase). This copy doesn't claim it's fixed because it isn't; that stays a
-   real UX item for `apply-spec.md`/implementation, not something to word around
-   in marketing copy.
+4. **The "no completion feedback" pain was real at the time, and is now fixed.**
+   Exports and imports now confirm with a toast (`components/ui/toast.tsx`, used
+   by the popup and the App), and a failed scheduled backup raises a
+   notification. The original claim that no toast existed is historical.
 
-## Open items for review
+## Closed items (as shipped in v2.0.0)
 
-- The README closing line's tone (point above) — confirm it reads as
-  dev-literate rather than cute before it ships.
-- Exact placement of the CSV/backup corrections in `naming.md`'s Archiva
-  write-up wasn't rewritten (only flagged in `brief.md`) — low priority, doesn't
-  change the Snug decision, but worth a tidy-up pass later.
+- The README closing line's tone: reviewed and kept as shipped.
+- The CSV/backup corrections in `naming.md`'s Archiva write-up: left as
+  historical. The Snug decision never depended on them.
 
 ## Brand review (`marketing:brand-review`, 2026-10-01)
 

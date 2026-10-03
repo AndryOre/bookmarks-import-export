@@ -4,7 +4,7 @@
     "description": "Name of the extension."
   },
   "extensionDescription": {
-    "message": "Экспорт, импорт и резервное копирование закладок по расписанию — HTML, JSON или CSV, на вашем устройстве, без аккаунта и облака.",
+    "message": "Экспорт закладок в HTML, JSON, CSV, Markdown, OPML и XBEL, импорт из Chrome и Safari, бэкапы по расписанию. Всё локально.",
     "description": "Description of the extension"
   },
   "welcomeSubtitle": {
@@ -331,6 +331,30 @@
   },
   "changelog_2_0_0_2_link": {
     "message": "Открыть приложение"
+  },
+  "changelog_2_0_0_3": {
+    "message": "Snug теперь говорит на 10 языках: английском, испанском, немецком, французском, итальянском, бразильском португальском, русском, японском, корейском и упрощённом китайском."
+  },
+  "changelog_2_0_0_4": {
+    "message": "Перед восстановлением теперь сохраняется страховочный снимок закладок, а замену можно отменить на странице импорта."
+  },
+  "changelog_2_0_0_5": {
+    "message": "Новая страница «Дубликаты» помогает найти повторяющиеся закладки и удалить только выбранные. Импорт также умеет пропускать дубликаты."
+  },
+  "changelog_2_0_0_5_link": {
+    "message": "Найти дубликаты"
+  },
+  "changelog_2_0_0_6": {
+    "message": "В автоэкспорте появились почасовое и еженедельное расписания, хранение только последних копий и уведомление о сбое резервного копирования."
+  },
+  "changelog_2_0_0_6_link": {
+    "message": "Открыть автоэкспорт"
+  },
+  "changelog_2_0_0_7": {
+    "message": "Экспорт в Markdown, OPML и XBEL. Импорт из файла Bookmarks профиля Chrome, XBEL и закладок Safari, с индикатором прогресса и отменой."
+  },
+  "changelog_2_0_0_8": {
+    "message": "Дерево закладок теперь быстро работает с огромными коллекциями и полностью доступно с клавиатуры и для программ чтения с экрана."
   },
   "changelog_1_7_0_1": {
     "message": "В настройки автоэкспорта добавлены карточка состояния и кнопка «Экспортировать сейчас», а во всплывающем окне — строка состояния: автоэкспорт включён, выключен или завершился ошибкой."
@@ -707,7 +731,7 @@
     "description": "Welcome page quick-start item title"
   },
   "welcome_exportDescription": {
-    "message": "Десять секунд — и у вас есть надёжная копия закладок.",
+    "message": "Десять секунд до надёжной копии в HTML, JSON, CSV, Markdown, OPML или XBEL.",
     "description": "Welcome page quick-start item description"
   },
   "welcome_exportAction": {
@@ -731,7 +755,7 @@
     "description": "Welcome page quick-start item title"
   },
   "welcome_importDescription": {
-    "message": "Перенесите закладки из другого браузера или из копии.",
+    "message": "Переносите закладки из Chrome, Safari, XBEL или файла резервной копии.",
     "description": "Welcome page quick-start item description"
   },
   "welcome_importAction": {

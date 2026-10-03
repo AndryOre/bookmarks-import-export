@@ -4,7 +4,7 @@
     "description": "Name of the extension."
   },
   "extensionDescription": {
-    "message": "导出、导入书签，并定时自动备份——支持 HTML、JSON 或 CSV，全程在本机完成，无需账号，无需云端。",
+    "message": "将书签导出为 HTML、JSON、CSV、Markdown、OPML 或 XBEL，从 Chrome 或 Safari 导入，并定时备份。全程在本机完成。",
     "description": "Description of the extension"
   },
   "welcomeSubtitle": {
@@ -331,6 +331,30 @@
   },
   "changelog_2_0_0_2_link": {
     "message": "打开应用"
+  },
+  "changelog_2_0_0_3": {
+    "message": "Snug 现已支持 10 种语言：英语、西班牙语、德语、法语、意大利语、巴西葡萄牙语、俄语、日语、韩语和简体中文。"
+  },
+  "changelog_2_0_0_4": {
+    "message": "恢复前会先保存书签的安全快照，替换后可在导入页面撤销。"
+  },
+  "changelog_2_0_0_5": {
+    "message": "新增“重复项”页面，可查找重复书签并只删除你选中的。导入时也可以跳过重复项。"
+  },
+  "changelog_2_0_0_5_link": {
+    "message": "查找重复项"
+  },
+  "changelog_2_0_0_6": {
+    "message": "自动导出新增每小时和每周的计划、仅保留最新备份的保留设置，以及备份失败时的通知。"
+  },
+  "changelog_2_0_0_6_link": {
+    "message": "打开自动导出"
+  },
+  "changelog_2_0_0_7": {
+    "message": "支持导出为 Markdown、OPML 和 XBEL；可导入 Chrome 配置文件的 Bookmarks 文件、XBEL 和 Safari 书签，并显示进度、支持取消。"
+  },
+  "changelog_2_0_0_8": {
+    "message": "书签树在超大书签库中依然流畅，并可完全通过键盘和屏幕阅读器使用。"
   },
   "changelog_1_7_0_1": {
     "message": "自动导出设置新增状态卡片和“立即导出”按钮，弹出窗口也新增状态行，显示自动导出是已开启、已关闭还是失败。"
@@ -707,7 +731,7 @@
     "description": "Welcome page quick-start item title"
   },
   "welcome_exportDescription": {
-    "message": "十秒钟，就能得到书签的安全副本。",
+    "message": "十秒即可得到安全副本，支持 HTML、JSON、CSV、Markdown、OPML 和 XBEL。",
     "description": "Welcome page quick-start item description"
   },
   "welcome_exportAction": {
@@ -731,7 +755,7 @@
     "description": "Welcome page quick-start item title"
   },
   "welcome_importDescription": {
-    "message": "从其他浏览器或备份中导入书签。",
+    "message": "从 Chrome、Safari、XBEL 或备份文件导入书签。",
     "description": "Welcome page quick-start item description"
   },
   "welcome_importAction": {

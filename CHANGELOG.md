@@ -12,6 +12,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   what's new.
 - Redesigned the popup to be more compact.
 - Applied the new Snug color palette across the extension.
+- Added 8 new languages, for 10 locales in total: English, Spanish, German,
+  French, Italian, Brazilian Portuguese, Russian, Japanese, Korean and
+  Simplified Chinese.
+- Restore now saves a safety snapshot of your bookmarks first, and you can Undo
+  a replace from the Import page.
+- Added a Duplicates page to find repeated bookmarks and delete only the ones
+  you pick, plus a Skip duplicates option on import.
+- Auto-export gets hourly and weekly schedules, Retention to keep only the
+  latest backups, and a notification if a backup fails.
+- Added export to Markdown, OPML and XBEL, and import from a Chrome profile
+  Bookmarks file, XBEL and Safari bookmarks, with progress and Cancel.
+- Made the bookmark tree fast on huge libraries and fully usable with the
+  keyboard and screen readers.
 
 ## [1.7.0] - 2026-10-01
 

@@ -4,7 +4,7 @@
     "description": "Name of the extension."
   },
   "extensionDescription": {
-    "message": "북마크를 HTML, JSON, CSV로 내보내고 가져오며 자동 백업까지. 모든 작업은 기기 안에서만 처리되고 계정도 클라우드도 필요 없어요.",
+    "message": "북마크를 HTML, JSON, CSV, Markdown, OPML, XBEL로 내보내고 Chrome·Safari에서 가져오며 자동 백업까지. 모든 작업은 기기 안에서.",
     "description": "Description of the extension"
   },
   "welcomeSubtitle": {
@@ -331,6 +331,30 @@
   },
   "changelog_2_0_0_2_link": {
     "message": "앱 열기"
+  },
+  "changelog_2_0_0_3": {
+    "message": "Snug가 10개 언어를 지원해요: 영어, 스페인어, 독일어, 프랑스어, 이탈리아어, 브라질 포르투갈어, 러시아어, 일본어, 한국어, 중국어 간체."
+  },
+  "changelog_2_0_0_4": {
+    "message": "복원 전에 북마크의 안전 스냅샷을 먼저 저장하고, 교체한 내용은 가져오기 페이지에서 실행 취소할 수 있어요."
+  },
+  "changelog_2_0_0_5": {
+    "message": "새 중복 페이지에서 중복된 북마크를 찾아 선택한 것만 삭제할 수 있어요. 가져올 때 중복을 건너뛸 수도 있어요."
+  },
+  "changelog_2_0_0_5_link": {
+    "message": "중복 찾기"
+  },
+  "changelog_2_0_0_6": {
+    "message": "자동 내보내기에 매시간·매주 일정, 최신 백업만 남기는 보존 설정, 백업 실패 알림이 추가되었어요."
+  },
+  "changelog_2_0_0_6_link": {
+    "message": "자동 내보내기 열기"
+  },
+  "changelog_2_0_0_7": {
+    "message": "Markdown, OPML, XBEL로 내보내고, Chrome 프로필의 Bookmarks 파일, XBEL, Safari 북마크를 진행률 표시와 취소 기능과 함께 가져올 수 있어요."
+  },
+  "changelog_2_0_0_8": {
+    "message": "북마크 트리가 방대한 목록에서도 빠르고, 키보드와 화면 낭독기로 완전히 사용할 수 있어요."
   },
   "changelog_1_7_0_1": {
     "message": "자동 내보내기 설정에 상태 카드와 지금 내보내기 버튼을 추가했어요. 팝업에는 자동 내보내기가 켜짐, 꺼짐, 실패 중 어떤 상태인지 보여 주는 상태 줄도 생겼어요."
@@ -707,7 +731,7 @@
     "description": "Welcome page quick-start item title"
   },
   "welcome_exportDescription": {
-    "message": "10초면 북마크의 안전한 사본이 생겨요.",
+    "message": "10초면 안전한 사본이 완성돼요. HTML, JSON, CSV, Markdown, OPML, XBEL을 지원해요.",
     "description": "Welcome page quick-start item description"
   },
   "welcome_exportAction": {
@@ -731,7 +755,7 @@
     "description": "Welcome page quick-start item title"
   },
   "welcome_importDescription": {
-    "message": "다른 브라우저나 백업에서 북마크를 가져와요.",
+    "message": "Chrome, Safari, XBEL 또는 백업 파일에서 북마크를 가져오세요.",
     "description": "Welcome page quick-start item description"
   },
   "welcome_importAction": {

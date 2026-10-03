@@ -1,4 +1,9 @@
-# Brief — Snug (bookmarks-import-export rebrand)
+# Brief — Snug (historical record of the rebrand)
+
+> **Status: closed as shipped in v2.0.0.** Everything below is the record of the
+> decisions that led to the shipped product. Where it disagrees with the shipped
+> copy, the shipped copy wins: see `docs/store/README.md` and the
+> `locales/*.json` files.
 
 Draft v1 (2026-10-01). Name chosen 2026-10-01: **Snug** (see `naming.md`).
 Direction pivoted the same day from "precise/CLI-tool-adjacent" to warm,
@@ -52,7 +57,8 @@ more casual future audience would require a jarring restyle to welcome them in.
 
 1. **No confirmation anything happened.** Click export, nothing visibly changes
    — no toast, no indicator the file actually wrote. (Our own top review
-   complaint today.)
+   complaint at the time of the rebrand; fixed in v2.0.0, where exports and
+   imports confirm with a toast and failed backups notify.)
 2. **~~No way to tell exports apart later~~ — already fixed, just not known.**
    Correction (2026-10-01): this was true of old reviews, not the current
    product — customizable filename templates with date/time placeholders already
@@ -285,7 +291,7 @@ application pass.
   history) — never as brand furniture.
 - No domain purchase for this product at this stage.
 
-## Out of scope for branding (pending, not blocking)
+## Out of scope for branding (not pursued in v2.0.0)
 
 - Whether this becomes the first of a named suite (e.g. a shared landing page
   across AndryOre tools) — a later product decision, not a naming constraint

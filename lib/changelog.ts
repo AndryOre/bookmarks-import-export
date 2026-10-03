@@ -51,6 +51,7 @@ export function getChangelog(): ChangelogEntry[] {
   const exportUrl = getAppUrl(APP_ROUTES.export)
   const importUrl = getAppUrl(APP_ROUTES.import)
   const autoExportUrl = getAppUrl(APP_ROUTES.autoExport)
+  const duplicatesUrl = getAppUrl(APP_ROUTES.duplicates)
 
   return [
     {
@@ -65,6 +66,20 @@ export function getChangelog(): ChangelogEntry[] {
           linkKey: 'changelog_2_0_0_2_link',
           linkUrl: exportUrl,
         },
+        { textKey: 'changelog_2_0_0_3' },
+        { textKey: 'changelog_2_0_0_4' },
+        {
+          textKey: 'changelog_2_0_0_5',
+          linkKey: 'changelog_2_0_0_5_link',
+          linkUrl: duplicatesUrl,
+        },
+        {
+          textKey: 'changelog_2_0_0_6',
+          linkKey: 'changelog_2_0_0_6_link',
+          linkUrl: autoExportUrl,
+        },
+        { textKey: 'changelog_2_0_0_7' },
+        { textKey: 'changelog_2_0_0_8' },
       ],
     },
     {

@@ -4,7 +4,7 @@
     "description": "Name of the extension."
   },
   "extensionDescription": {
-    "message": "Exporte, importe e agende backups automáticos dos seus favoritos em HTML, JSON ou CSV — tudo no dispositivo, sem conta e sem nuvem.",
+    "message": "Exporte favoritos em HTML, JSON, CSV, Markdown, OPML ou XBEL, importe do Chrome ou Safari e agende backups. Tudo local.",
     "description": "Description of the extension"
   },
   "welcomeSubtitle": {
@@ -333,6 +333,30 @@
   },
   "changelog_2_0_0_2_link": {
     "message": "Abrir o app"
+  },
+  "changelog_2_0_0_3": {
+    "message": "O Snug agora fala 10 idiomas: inglês, espanhol, alemão, francês, italiano, português do Brasil, russo, japonês, coreano e chinês simplificado."
+  },
+  "changelog_2_0_0_4": {
+    "message": "Restaurar agora salva antes um instantâneo de segurança dos seus favoritos, e você pode desfazer uma substituição na página Importar."
+  },
+  "changelog_2_0_0_5": {
+    "message": "Nova página Duplicados para achar favoritos repetidos e excluir só os que você escolher. A importação também pode ignorar duplicados."
+  },
+  "changelog_2_0_0_5_link": {
+    "message": "Encontrar duplicados"
+  },
+  "changelog_2_0_0_6": {
+    "message": "A exportação automática ganha agendamentos por hora e por semana, Retenção para manter só os backups mais recentes e um aviso se um backup falhar."
+  },
+  "changelog_2_0_0_6_link": {
+    "message": "Abrir Exportação automática"
+  },
+  "changelog_2_0_0_7": {
+    "message": "Exporte para Markdown, OPML e XBEL. Importe o arquivo Bookmarks de um perfil do Chrome, XBEL e favoritos do Safari, com progresso e Cancelar."
+  },
+  "changelog_2_0_0_8": {
+    "message": "A árvore de favoritos agora é rápida em bibliotecas enormes e funciona totalmente com teclado e leitores de tela."
   },
   "changelog_1_7_0_1": {
     "message": "Adicionados um cartão de status e um botão Exportar agora às configurações de exportação automática, além de uma linha de status no pop-up que mostra se a exportação automática está ativada, desativada ou com falha."
@@ -713,7 +737,7 @@
     "description": "Welcome page quick-start item title"
   },
   "welcome_exportDescription": {
-    "message": "Dez segundos para ter uma cópia segura dos seus favoritos.",
+    "message": "Dez segundos para uma cópia segura, em HTML, JSON, CSV, Markdown, OPML ou XBEL.",
     "description": "Welcome page quick-start item description"
   },
   "welcome_exportAction": {
@@ -737,7 +761,7 @@
     "description": "Welcome page quick-start item title"
   },
   "welcome_importDescription": {
-    "message": "Traga favoritos de outro navegador ou de um backup.",
+    "message": "Traga favoritos do Chrome, do Safari, de XBEL ou de um arquivo de backup.",
     "description": "Welcome page quick-start item description"
   },
   "welcome_importAction": {

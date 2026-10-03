@@ -4,7 +4,7 @@
     "description": "Nombre de la extensión."
   },
   "extensionDescription": {
-    "message": "Programa respaldos automáticos de tus marcadores, exporta e importa en HTML, JSON o CSV — sin cuenta ni nube.",
+    "message": "Exporta marcadores a HTML, JSON, CSV, Markdown, OPML o XBEL, importa de Chrome o Safari y respalda con horario. Todo local.",
     "description": "Descripción de la extensión"
   },
   "welcomeSubtitle": {
@@ -332,6 +332,30 @@
   },
   "changelog_2_0_0_2_link": {
     "message": "Abrir la App"
+  },
+  "changelog_2_0_0_3": {
+    "message": "Snug ahora habla 10 idiomas: inglés, español, alemán, francés, italiano, portugués de Brasil, ruso, japonés, coreano y chino simplificado."
+  },
+  "changelog_2_0_0_4": {
+    "message": "Restaurar ahora guarda primero una copia de seguridad de tus marcadores, y puedes deshacer un reemplazo desde la página Importar."
+  },
+  "changelog_2_0_0_5": {
+    "message": "Nueva página Duplicados para encontrar marcadores repetidos y eliminar solo los que elijas. Importar también puede omitir duplicados."
+  },
+  "changelog_2_0_0_5_link": {
+    "message": "Buscar duplicados"
+  },
+  "changelog_2_0_0_6": {
+    "message": "Auto-exportar suma horarios por hora y por semana, Retención para conservar solo los últimos respaldos y un aviso si un respaldo falla."
+  },
+  "changelog_2_0_0_6_link": {
+    "message": "Abrir Auto-exportar"
+  },
+  "changelog_2_0_0_7": {
+    "message": "Exporta a Markdown, OPML y XBEL. Importa el archivo Bookmarks de un perfil de Chrome, XBEL y marcadores de Safari, con progreso y Cancelar."
+  },
+  "changelog_2_0_0_8": {
+    "message": "El árbol de marcadores ahora es rápido con bibliotecas enormes y funciona por completo con el teclado y lectores de pantalla."
   },
   "changelog_1_7_0_1": {
     "message": "Añadida una tarjeta de estado y un botón Exportar ahora en los ajustes de exportación automática, además de una línea de estado en el popup que muestra si la exportación automática está activada, desactivada o falló."
@@ -710,7 +734,7 @@
     "description": "Welcome page quick-start item title"
   },
   "welcome_exportDescription": {
-    "message": "Una copia segura de tus marcadores en diez segundos.",
+    "message": "Diez segundos para una copia segura, en HTML, JSON, CSV, Markdown, OPML o XBEL.",
     "description": "Welcome page quick-start item description"
   },
   "welcome_exportAction": {
@@ -734,7 +758,7 @@
     "description": "Welcome page quick-start item title"
   },
   "welcome_importDescription": {
-    "message": "Trae marcadores desde otro navegador o una copia de seguridad.",
+    "message": "Trae marcadores desde Chrome, Safari, XBEL o un archivo de respaldo.",
     "description": "Welcome page quick-start item description"
   },
   "welcome_importAction": {

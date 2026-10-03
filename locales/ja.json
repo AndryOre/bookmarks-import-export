@@ -4,7 +4,7 @@
     "description": "Name of the extension."
   },
   "extensionDescription": {
-    "message": "ブックマークをHTML・JSON・CSVで書き出し、読み込み、自動バックアップ。すべて端末内で完結し、アカウントもクラウドも不要です。",
+    "message": "ブックマークをHTML・JSON・CSV・Markdown・OPML・XBELで書き出し、ChromeやSafariから読み込み、自動バックアップ。すべて端末内。",
     "description": "Description of the extension"
   },
   "welcomeSubtitle": {
@@ -331,6 +331,30 @@
   },
   "changelog_2_0_0_2_link": {
     "message": "アプリを開く"
+  },
+  "changelog_2_0_0_3": {
+    "message": "Snugが10言語に対応しました。英語、スペイン語、ドイツ語、フランス語、イタリア語、ブラジルのポルトガル語、ロシア語、日本語、韓国語、簡体字中国語です。"
+  },
+  "changelog_2_0_0_4": {
+    "message": "復元の前にブックマークの安全スナップショットを保存するようになり、置き換えはインポートページで元に戻せます。"
+  },
+  "changelog_2_0_0_5": {
+    "message": "新しい「重複」ページで重複したブックマークを見つけ、選んだものだけを削除できます。インポート時に重複をスキップすることもできます。"
+  },
+  "changelog_2_0_0_5_link": {
+    "message": "重複を探す"
+  },
+  "changelog_2_0_0_6": {
+    "message": "自動エクスポートに毎時・毎週のスケジュール、最新のバックアップだけを残す保持設定、バックアップ失敗時の通知を追加しました。"
+  },
+  "changelog_2_0_0_6_link": {
+    "message": "自動エクスポートを開く"
+  },
+  "changelog_2_0_0_7": {
+    "message": "Markdown、OPML、XBELへの書き出しに対応。ChromeプロファイルのBookmarksファイル、XBEL、Safariのブックマークを、進行状況表示とキャンセル付きで読み込めます。"
+  },
+  "changelog_2_0_0_8": {
+    "message": "ブックマークツリーが大量のデータでも高速になり、キーボードとスクリーンリーダーで完全に操作できます。"
   },
   "changelog_1_7_0_1": {
     "message": "自動書き出しの設定にステータスカードと「今すぐ書き出す」ボタンを追加しました。ポップアップには、自動書き出しがオン、オフ、失敗のいずれかを示すステータス行も表示されます。"
@@ -707,7 +731,7 @@
     "description": "Welcome page quick-start item title"
   },
   "welcome_exportDescription": {
-    "message": "10秒で、ブックマークの安全なコピーができます。",
+    "message": "10秒で安全なコピーを作成。HTML、JSON、CSV、Markdown、OPML、XBELに対応。",
     "description": "Welcome page quick-start item description"
   },
   "welcome_exportAction": {
@@ -731,7 +755,7 @@
     "description": "Welcome page quick-start item title"
   },
   "welcome_importDescription": {
-    "message": "別のブラウザやバックアップからブックマークを取り込みます。",
+    "message": "Chrome、Safari、XBEL、バックアップファイルからブックマークを読み込みます。",
     "description": "Welcome page quick-start item description"
   },
   "welcome_importAction": {

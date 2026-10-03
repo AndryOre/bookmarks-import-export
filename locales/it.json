@@ -4,7 +4,7 @@
     "description": "Name of the extension."
   },
   "extensionDescription": {
-    "message": "Esporta, importa e pianifica backup automatici dei segnalibri — HTML, JSON o CSV, sul tuo dispositivo, senza account né cloud.",
+    "message": "Esporta i segnalibri in HTML, JSON, CSV, Markdown, OPML o XBEL, importa da Chrome o Safari e pianifica i backup. Tutto in locale.",
     "description": "Description of the extension"
   },
   "welcomeSubtitle": {
@@ -332,6 +332,30 @@
   },
   "changelog_2_0_0_2_link": {
     "message": "Apri l'app"
+  },
+  "changelog_2_0_0_3": {
+    "message": "Snug ora parla 10 lingue: inglese, spagnolo, tedesco, francese, italiano, portoghese brasiliano, russo, giapponese, coreano e cinese semplificato."
+  },
+  "changelog_2_0_0_4": {
+    "message": "Il ripristino ora salva prima un'istantanea di sicurezza dei segnalibri e puoi annullare una sostituzione dalla pagina Importa."
+  },
+  "changelog_2_0_0_5": {
+    "message": "Nuova pagina Duplicati per trovare i segnalibri ripetuti ed eliminare solo quelli che scegli. L'importazione può anche saltare i duplicati."
+  },
+  "changelog_2_0_0_5_link": {
+    "message": "Trova i duplicati"
+  },
+  "changelog_2_0_0_6": {
+    "message": "L'esportazione automatica aggiunge pianificazioni orarie e settimanali, la Conservazione per tenere solo gli ultimi backup e una notifica se un backup fallisce."
+  },
+  "changelog_2_0_0_6_link": {
+    "message": "Apri Esportazione automatica"
+  },
+  "changelog_2_0_0_7": {
+    "message": "Esporta in Markdown, OPML e XBEL. Importa il file Bookmarks di un profilo Chrome, XBEL e i segnalibri di Safari, con avanzamento e Annulla."
+  },
+  "changelog_2_0_0_8": {
+    "message": "L'albero dei segnalibri ora è veloce anche con raccolte enormi e si usa interamente da tastiera e con gli screen reader."
   },
   "changelog_1_7_0_1": {
     "message": "Aggiunti una scheda di stato e un pulsante Esporta ora alle impostazioni dell'esportazione automatica, più una riga di stato nel popup che indica se l'esportazione automatica è attiva, disattivata o non riuscita."
@@ -710,7 +734,7 @@
     "description": "Welcome page quick-start item title"
   },
   "welcome_exportDescription": {
-    "message": "Dieci secondi per avere una copia al sicuro dei tuoi segnalibri.",
+    "message": "Dieci secondi per una copia sicura, in HTML, JSON, CSV, Markdown, OPML o XBEL.",
     "description": "Welcome page quick-start item description"
   },
   "welcome_exportAction": {
@@ -734,7 +758,7 @@
     "description": "Welcome page quick-start item title"
   },
   "welcome_importDescription": {
-    "message": "Porta qui i segnalibri di un altro browser o di un backup.",
+    "message": "Porta i segnalibri da Chrome, Safari, XBEL o da un file di backup.",
     "description": "Welcome page quick-start item description"
   },
   "welcome_importAction": {
