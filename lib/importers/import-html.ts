@@ -121,14 +121,12 @@ export function parseHTML(
   const otherBookmarks: ParsedBookmark[] = []
   const mobileBookmarks: ParsedBookmark[] = []
 
-  const toolbarH3 = document.querySelector('h3[personal_toolbar_folder="true"]')
   const outerDl =
     document.querySelector('body > dl') ?? document.querySelector('dl')
   if (!outerDl) return result
 
-  const workingDl = toolbarH3?.closest('dl') ?? outerDl
-
-  const topLevelDts = workingDl.querySelectorAll(':scope > dt')
+  const nestedToolbarFolders: ParsedBookmark[] = []
+  const topLevelDts = outerDl.querySelectorAll(':scope > dt')
 
   topLevelDts.forEach((dt) => {
     const firstChild = dt.firstElementChild
@@ -145,7 +143,7 @@ export function parseHTML(
         h3.hasAttribute('unfiled_bookmarks_folder') &&
         h3.getAttribute('unfiled_bookmarks_folder') === 'true'
 
-      const folder = parseFolderElement(h3, dt)
+      const folder = parseFolderElement(h3, dt, nestedToolbarFolders)
 
       if (isBookmarksBar) {
         folder.isBookmarksBar = true
@@ -159,6 +157,11 @@ export function parseHTML(
       }
     }
   })
+
+  for (const folder of nestedToolbarFolders) {
+    folder.isBookmarksBar = true
+    result.unshift(folder)
+  }
 
   if (otherBookmarks.length > 0) {
     result.push({
@@ -287,15 +290,42 @@ function parseBookmarkElement(a: HTMLAnchorElement): ParsedBookmark {
 }
 
 /**
+ * Finds the `<DL>` holding a folder's children. The HTML parser closes the
+ * `<DT>` at a `<DD>` description, so the `<DL>` may sit inside the `<DT>`,
+ * right after it, or inside (or right after) a following `<DD>`.
+ * @param dt The `<DT>` element wrapping the folder heading.
+ * @returns The child `<DL>`, or `null` when the folder has none.
+ */
+function findChildDl(dt: Element): Element | null {
+  const inside = dt.querySelector(':scope > dl')
+  if (inside) return inside
+  const next = dt.nextElementSibling
+  if (next?.tagName === 'DL') return next
+  if (next?.tagName === 'DD') {
+    const insideDescription = next.querySelector(':scope > dl')
+    if (insideDescription) return insideDescription
+    const afterDescription = next.nextElementSibling
+    if (afterDescription?.tagName === 'DL') return afterDescription
+  }
+  return null
+}
+
+/**
  * Parses an `<H3>` folder heading and its sibling/nested `<DL>` into a
  * folder node, recursing into nested bookmarks and folders. Like
  * `parseBookmarkElement`, `add_date` and `last_modified` are Unix
  * timestamps in seconds and are converted to milliseconds.
  * @param h3 The folder heading element.
  * @param dt The `<DT>` element wrapping `h3` and its sibling/nested `<DL>`.
+ * @param hoistedToolbarFolders Collects any `PERSONAL_TOOLBAR_FOLDER` folder
+ *   found nested below this one, so it is lifted out instead of nested.
  * @returns The parsed folder node.
  */
-function parseFolderElement(h3: HTMLElement, dt: Element): ParsedBookmark {
+function parseFolderElement(
+  h3: HTMLElement,
+  dt: Element,
+  hoistedToolbarFolders?: ParsedBookmark[],
+): ParsedBookmark {
   const dateAddedAttribute = h3.getAttribute('add_date')
   const lastModifiedAttribute = h3.getAttribute('last_modified')
 
@@ -310,9 +340,7 @@ function parseFolderElement(h3: HTMLElement, dt: Element): ParsedBookmark {
     children: [],
   }
 
-  const childDl =
-    (dt.querySelector(':scope > dl') as Element | null) ??
-    (dt.nextElementSibling?.tagName === 'DL' ? dt.nextElementSibling : null)
+  const childDl = findChildDl(dt)
 
   if (childDl) {
     const childDts = childDl.querySelectorAll(':scope > dt')
@@ -325,9 +353,20 @@ function parseFolderElement(h3: HTMLElement, dt: Element): ParsedBookmark {
           parseBookmarkElement(firstChild as HTMLAnchorElement),
         )
       } else if (firstChild.tagName === 'H3') {
-        folder.children!.push(
-          parseFolderElement(firstChild as HTMLElement, childDt),
+        const childH3 = firstChild as HTMLElement
+        const childFolder = parseFolderElement(
+          childH3,
+          childDt,
+          hoistedToolbarFolders,
         )
+        if (
+          hoistedToolbarFolders &&
+          childH3.getAttribute('personal_toolbar_folder') === 'true'
+        ) {
+          hoistedToolbarFolders.push(childFolder)
+        } else {
+          folder.children!.push(childFolder)
+        }
       }
     })
   }
