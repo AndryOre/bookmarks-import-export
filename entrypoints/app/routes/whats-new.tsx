@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/item'
 import { CHROME_WEB_STORE_URL } from '@/lib/brand'
 import { formatChangelogDate, getChangelog } from '@/lib/changelog'
+import { isChangelogEntryCurrent } from '@/lib/version'
 
 /**
  * The What's new screen: a changelog timeline (newest first, installed
@@ -44,7 +45,7 @@ export function WhatsNewRoute() {
                   <h2 className="font-heading text-base font-semibold">
                     {version}
                   </h2>
-                  {version === installedVersion && (
+                  {isChangelogEntryCurrent(version, installedVersion) && (
                     <Badge>{i18n.t('whatsNew_current')}</Badge>
                   )}
                   <span className="text-sm text-muted-foreground">

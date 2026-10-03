@@ -1,6 +1,7 @@
 import { i18n } from '#i18n'
 import { Link, Outlet, useRouterState } from '@tanstack/react-router'
 import { cn } from 'cn'
+import type { LucideIcon } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 
 import {
@@ -16,6 +17,7 @@ import {
   SidebarProvider,
   SidebarRail,
   SidebarTrigger,
+  useSidebar,
 } from '@/components/ui/sidebar'
 import { Wordmark } from '@/components/wordmark'
 import { APP_ROUTES } from '@/lib/app-url'
@@ -27,7 +29,7 @@ import {
 import { useStorageItem } from '@/lib/use-storage-item'
 import { isWhatsNewUnseen } from '@/lib/version'
 
-import { getTitleKey, NAV_ITEMS } from './nav'
+import { getTitleKey, isKnownRoute, NAV_ITEMS } from './nav'
 
 type NavStatus = 'none' | 'success' | 'destructive' | 'primary'
 
@@ -88,8 +90,9 @@ function useIsWhatsNewUnseen(pathname: string): boolean {
 /**
  * Moves focus to the page heading and announces the new page title through a
  * polite live region whenever the pathname changes. The initial load is
- * skipped, and search or hash-param changes inside one route do not retrigger
- * because only the pathname is observed.
+ * skipped, including the redirect from an empty or unknown route to Export,
+ * and search or hash-param changes inside one route do not retrigger because
+ * only the pathname is observed.
  * @param pathname The current router pathname.
  * @param title The localized page title for that pathname.
  * @returns A ref for the page `h1` and the text to render in the live region.
@@ -100,13 +103,46 @@ function usePageChangeFocus(pathname: string, title: string) {
   const [announcement, setAnnouncement] = useState('')
 
   useEffect(() => {
-    if (previousPathname.current === pathname) return
+    const fromPathname = previousPathname.current
+    if (fromPathname === pathname) return
     previousPathname.current = pathname
+    if (!isKnownRoute(fromPathname)) return
     headingReference.current?.focus()
     setAnnouncement(title)
   }, [pathname, title])
 
   return { headingReference, announcement }
+}
+
+interface NavLinkButtonProperties {
+  route: string
+  title: string
+  isActive: boolean
+  icon: LucideIcon
+}
+
+/**
+ * A sidebar nav entry that also dismisses the modal sheet on narrow viewports,
+ * so the page the user picked is visible and the heading can take focus.
+ * @param properties The route, title, active state and icon of the entry.
+ * @returns The link button for the entry.
+ */
+function NavLinkButton(properties: NavLinkButtonProperties) {
+  const { route, title, isActive, icon: Icon } = properties
+  const { isMobile, setOpenMobile } = useSidebar()
+  return (
+    <SidebarMenuButton
+      tooltip={title}
+      isActive={isActive}
+      render={<Link to={route} />}
+      onClick={() => {
+        if (isMobile) setOpenMobile(false)
+      }}
+    >
+      <Icon />
+      <span>{title}</span>
+    </SidebarMenuButton>
+  )
 }
 
 /**
@@ -172,14 +208,12 @@ export function AppShell() {
                     const itemStatus = statusByRoute[item.route]
                     return (
                       <SidebarMenuItem key={item.route}>
-                        <SidebarMenuButton
-                          tooltip={title}
+                        <NavLinkButton
+                          route={item.route}
+                          title={title}
                           isActive={pathname === item.route}
-                          render={<Link to={item.route} />}
-                        >
-                          <item.icon />
-                          <span>{title}</span>
-                        </SidebarMenuButton>
+                          icon={item.icon}
+                        />
                         {itemStatus && itemStatus.status !== 'none' && (
                           <span
                             role="img"

@@ -13,6 +13,7 @@ const mountedHarnesses: DomHarness[] = []
 
 interface ProbeReport {
   observedThemes: Theme[]
+  errors: (Error | undefined)[]
   setters: ((value: Theme) => Promise<void>)[]
   loadedFlags: boolean[]
 }
@@ -21,6 +22,7 @@ async function mountProbe(initialValue?: Theme) {
   fakeBrowser.reset()
   const report: ProbeReport = {
     observedThemes: [],
+    errors: [],
     setters: [],
     loadedFlags: [],
   }
@@ -28,12 +30,16 @@ async function mountProbe(initialValue?: Theme) {
   mountedHarnesses.push(harness)
 
   function ThemeProbe() {
-    const [theme, setTheme, isLoaded] = useStorageItem(themeStore, initialValue)
+    const [theme, setTheme, isLoaded, loadError] = useStorageItem(
+      themeStore,
+      initialValue,
+    )
     useEffect(() => {
       report.loadedFlags.push(isLoaded)
       report.observedThemes.push(theme)
       report.setters.push(setTheme)
-    }, [theme, setTheme, isLoaded])
+      report.errors.push(loadError)
+    }, [theme, setTheme, isLoaded, loadError])
     return createElement('span', { 'data-testid': 'value' }, theme)
   }
 
@@ -50,6 +56,7 @@ describe('useStorageItem', () => {
   afterEach(() => {
     for (const harness of mountedHarnesses.splice(0)) harness.unmount()
     vi.unstubAllGlobals()
+    vi.restoreAllMocks()
   })
 
   it('renders the item fallback first, then the stored value', async () => {
@@ -135,5 +142,67 @@ describe('useStorageItem', () => {
 
     expect(probe.report.observedThemes.at(-1)).toBe('system')
     expect(probe.report.observedThemes).not.toContain('dark')
+  })
+
+  it('shows a written value before the storage write settles', async () => {
+    const probe = await mountProbe()
+    await probe.start()
+    const { promise: slowWrite, resolve: releaseWrite } =
+      Promise.withResolvers<void>()
+    vi.spyOn(themeStore, 'setValue').mockReturnValueOnce(slowWrite)
+
+    let pending: Promise<void> | undefined
+    await act(async () => {
+      pending = probe.report.setters.at(-1)?.('dark')
+    })
+
+    expect(probe.shownValue()).toBe('dark')
+    await act(async () => {
+      releaseWrite()
+      await pending
+    })
+  })
+
+  it('applies two rapid writes in order', async () => {
+    const probe = await mountProbe()
+    await probe.start()
+    const setTheme = probe.report.setters.at(-1)
+
+    await act(async () => {
+      const first = setTheme?.('dark')
+      const second = setTheme?.('light')
+      await Promise.all([first, second])
+    })
+
+    expect(await themeStore.getValue()).toBe('light')
+    expect(probe.shownValue()).toBe('light')
+  })
+
+  it('reverts the optimistic value when the write fails', async () => {
+    const probe = await mountProbe()
+    await themeStore.setValue('light')
+    await probe.start()
+    vi.spyOn(themeStore, 'setValue').mockRejectedValueOnce(new Error('quota'))
+
+    await act(async () => {
+      try {
+        await probe.report.setters.at(-1)?.('dark')
+      } catch {
+        return
+      }
+    })
+
+    expect(probe.shownValue()).toBe('light')
+  })
+
+  it('reaches the loaded state with an error when the read rejects', async () => {
+    const probe = await mountProbe()
+    vi.spyOn(themeStore, 'getValue').mockRejectedValueOnce(new Error('denied'))
+
+    await probe.start()
+
+    expect(probe.report.loadedFlags.at(-1)).toBe(true)
+    expect(probe.report.errors.at(-1)?.message).toBe('denied')
+    expect(probe.shownValue()).toBe('system')
   })
 })
