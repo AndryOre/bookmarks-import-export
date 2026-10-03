@@ -57,6 +57,7 @@ import {
   autoExportConfigStore,
   autoExportLastRunStore,
   autoExportNextRunStore,
+  autoExportNotifyOnFailureStore,
 } from '@/lib/storage'
 import type {
   AutoExportConfig,
@@ -285,6 +286,9 @@ function StatusCard({ config, folder }: StatusCardProperties) {
  */
 export function AutoExportRoute() {
   const [config, setConfig] = useStorageItem(autoExportConfigStore)
+  const [notifyOnFailure, setNotifyOnFailure] = useStorageItem(
+    autoExportNotifyOnFailureStore,
+  )
   const [folderDraft, setFolderDraft] = useState<string | null>(null)
 
   const [keepLastDraft, setKeepLastDraft] = useState<string | null>(null)
@@ -510,6 +514,25 @@ export function AutoExportRoute() {
                   {i18n.t('autoExportPage_keepLastDescription')}
                 </FieldDescription>
               )}
+            </Field>
+
+            <Field orientation="horizontal">
+              <FieldContent>
+                <FieldLabel htmlFor="auto-export-notify-on-failure">
+                  {i18n.t('autoExportPage_notifyOnFailure')}
+                </FieldLabel>
+                <FieldDescription>
+                  {i18n.t('autoExportPage_notifyOnFailureDescription')}
+                </FieldDescription>
+              </FieldContent>
+              <Switch
+                id="auto-export-notify-on-failure"
+                checked={notifyOnFailure}
+                onCheckedChange={async (next) => {
+                  await setNotifyOnFailure(next)
+                  notifySaved()
+                }}
+              />
             </Field>
           </FieldGroup>
         </CardContent>

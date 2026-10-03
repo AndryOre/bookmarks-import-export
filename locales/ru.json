@@ -1046,5 +1046,94 @@
   "duplicates_scanning": {
     "message": "Проверка закладок",
     "description": "Accessible label while scanning bookmarks"
+  },
+  "autoExportFailureNotification_title": {
+    "message": "Snug · Сбой автоэкспорта",
+    "description": "Title of the system notification shown when an Auto-export run fails"
+  },
+  "autoExportFailureNotification_message": {
+    "message": "Причина: $REASON$",
+    "description": "Body of the Failure notification; $1 is the failure reason",
+    "placeholders": {
+      "reason": {
+        "content": "$1"
+      }
+    }
+  },
+  "autoExportPage_notifyOnFailure": {
+    "message": "Уведомлять о сбое экспорта",
+    "description": "Label of the switch that turns the Failure notification on or off"
+  },
+  "autoExportPage_notifyOnFailureDescription": {
+    "message": "Показывать уведомление, если плановый или ручной автоэкспорт завершился сбоем. Об успешных экспортах уведомлений нет.",
+    "description": "Help text under the Failure notification switch"
+  },
+  "progress_importTitle": {
+    "message": "Импорт закладок",
+    "description": "Title of the progress card while importing"
+  },
+  "progress_exportTitle": {
+    "message": "Экспорт закладок",
+    "description": "Title of the progress card while exporting"
+  },
+  "progress_cancelingTitle": {
+    "message": "Отмена…",
+    "description": "Title of the progress card while a cancel is rolled back"
+  },
+  "progress_cancelingImportDescription": {
+    "message": "Закладки возвращаются в прежнее состояние.",
+    "description": "Progress card text while an import is rolled back"
+  },
+  "progress_cancelingExportDescription": {
+    "message": "Экспорт останавливается. Файл не будет скачан.",
+    "description": "Progress card text while an export is stopped"
+  },
+  "progress_importCount": {
+    "message": "Добавлено $DONE$ из $TOTAL$",
+    "description": "Import progress: bookmarks added so far out of the total",
+    "placeholders": {
+      "done": {
+        "content": "$1"
+      },
+      "total": {
+        "content": "$2"
+      }
+    }
+  },
+  "progress_exportCount": {
+    "message": "Экспортировано $DONE$ из $TOTAL$",
+    "description": "Export progress: bookmarks exported so far out of the total",
+    "placeholders": {
+      "done": {
+        "content": "$1"
+      },
+      "total": {
+        "content": "$2"
+      }
+    }
+  },
+  "progress_cancelImport": {
+    "message": "Отменить импорт",
+    "description": "Accessible label of the Cancel button during an import"
+  },
+  "progress_cancelExport": {
+    "message": "Отменить экспорт",
+    "description": "Accessible label of the Cancel button during an export"
+  },
+  "progress_importCanceledTitle": {
+    "message": "Импорт отменён",
+    "description": "Title shown after an import was canceled"
+  },
+  "progress_importCanceledDescription": {
+    "message": "Закладки вернулись в прежнее состояние.",
+    "description": "Text shown after an import was canceled and rolled back"
+  },
+  "progress_exportCanceledTitle": {
+    "message": "Экспорт отменён",
+    "description": "Title shown after an export was canceled"
+  },
+  "progress_exportCanceledDescription": {
+    "message": "Файл не был скачан.",
+    "description": "Text shown after an export was canceled"
   }
 }

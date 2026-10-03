@@ -1070,5 +1070,94 @@
   "duplicates_scanning": {
     "message": "Analyse de vos favoris",
     "description": "Accessible label while scanning bookmarks"
+  },
+  "autoExportFailureNotification_title": {
+    "message": "Snug · Échec de l'export automatique",
+    "description": "Title of the system notification shown when an Auto-export run fails"
+  },
+  "autoExportFailureNotification_message": {
+    "message": "Motif : $REASON$",
+    "description": "Body of the Failure notification; $1 is the failure reason",
+    "placeholders": {
+      "reason": {
+        "content": "$1"
+      }
+    }
+  },
+  "autoExportPage_notifyOnFailure": {
+    "message": "Me prévenir en cas d'échec d'un export",
+    "description": "Label of the switch that turns the Failure notification on or off"
+  },
+  "autoExportPage_notifyOnFailureDescription": {
+    "message": "Affiche une notification lorsqu'un export automatique, planifié ou manuel, échoue. Les exports réussis ne notifient jamais.",
+    "description": "Help text under the Failure notification switch"
+  },
+  "progress_importTitle": {
+    "message": "Importation des favoris",
+    "description": "Title of the progress card while importing"
+  },
+  "progress_exportTitle": {
+    "message": "Exportation des favoris",
+    "description": "Title of the progress card while exporting"
+  },
+  "progress_cancelingTitle": {
+    "message": "Annulation…",
+    "description": "Title of the progress card while a cancel is rolled back"
+  },
+  "progress_cancelingImportDescription": {
+    "message": "Vos favoris sont remis dans leur état initial.",
+    "description": "Progress card text while an import is rolled back"
+  },
+  "progress_cancelingExportDescription": {
+    "message": "Arrêt de l'exportation. Aucun fichier ne sera téléchargé.",
+    "description": "Progress card text while an export is stopped"
+  },
+  "progress_importCount": {
+    "message": "$DONE$ sur $TOTAL$ ajoutés",
+    "description": "Import progress: bookmarks added so far out of the total",
+    "placeholders": {
+      "done": {
+        "content": "$1"
+      },
+      "total": {
+        "content": "$2"
+      }
+    }
+  },
+  "progress_exportCount": {
+    "message": "$DONE$ sur $TOTAL$ exportés",
+    "description": "Export progress: bookmarks exported so far out of the total",
+    "placeholders": {
+      "done": {
+        "content": "$1"
+      },
+      "total": {
+        "content": "$2"
+      }
+    }
+  },
+  "progress_cancelImport": {
+    "message": "Annuler l'importation",
+    "description": "Accessible label of the Cancel button during an import"
+  },
+  "progress_cancelExport": {
+    "message": "Annuler l'exportation",
+    "description": "Accessible label of the Cancel button during an export"
+  },
+  "progress_importCanceledTitle": {
+    "message": "Importation annulée",
+    "description": "Title shown after an import was canceled"
+  },
+  "progress_importCanceledDescription": {
+    "message": "Vos favoris sont revenus à leur état initial.",
+    "description": "Text shown after an import was canceled and rolled back"
+  },
+  "progress_exportCanceledTitle": {
+    "message": "Exportation annulée",
+    "description": "Title shown after an export was canceled"
+  },
+  "progress_exportCanceledDescription": {
+    "message": "Aucun fichier n'a été téléchargé.",
+    "description": "Text shown after an export was canceled"
   }
 }

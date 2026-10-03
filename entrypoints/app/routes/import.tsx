@@ -1,5 +1,10 @@
 import { i18n } from '#i18n'
-import { CircleAlertIcon, CircleCheckIcon, Undo2Icon } from 'lucide-react'
+import {
+  CircleAlertIcon,
+  CircleCheckIcon,
+  CircleSlashIcon,
+  Undo2Icon,
+} from 'lucide-react'
 import { useState } from 'react'
 import type { SubmitEvent } from 'react'
 
@@ -9,6 +14,7 @@ import { ImportPreviewStep } from '@/components/import/import-preview-step'
 import { ImportReplaceDiffAlert } from '@/components/import/import-replace-diff-alert'
 import { ImportSkipDuplicates } from '@/components/import/import-skip-duplicates'
 import { ImportStep } from '@/components/import/import-step'
+import { OperationProgressCard } from '@/components/operation-progress-card'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import {
   AlertDialog,
@@ -22,6 +28,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
 import { formatCount } from '@/lib/format-count'
+import { ImportCanceledError } from '@/lib/import-control'
 import { summarizeImportDuplicates } from '@/lib/import-duplicates'
 import type { ImportDuplicateSummary } from '@/lib/import-duplicates'
 import { getImportPreview } from '@/lib/import-preview'
@@ -35,10 +42,11 @@ import {
 import type { SafetySnapshot } from '@/lib/safety-snapshot'
 import { defaultImportModeStore, skipDuplicatesStore } from '@/lib/storage'
 import type { ImportMode, ImportPreview } from '@/lib/types'
+import { useOperationProgress } from '@/lib/use-operation-progress'
 import { useStorageItem } from '@/lib/use-storage-item'
 
 type ImportStatus =
-  'idle' | 'importing' | 'success' | 'undoing' | 'undone' | 'error'
+  'idle' | 'importing' | 'canceled' | 'success' | 'undoing' | 'undone' | 'error'
 
 function openBookmarkManager() {
   void browser.tabs.create({ url: 'chrome://bookmarks' })
@@ -72,6 +80,7 @@ export function ImportRoute() {
   const [undoSnapshot, setUndoSnapshot] = useState<SafetySnapshot | null>(null)
   const [skippedCount, setSkippedCount] = useState(0)
   const [skippedDuplicatesCount, setSkippedDuplicatesCount] = useState(0)
+  const progress = useOperationProgress()
 
   const preview = chosen?.preview ?? null
   const isSupported = preview !== null && preview.format !== 'unknown'
@@ -121,6 +130,7 @@ export function ImportRoute() {
     setUndoSnapshot(null)
     setSkippedCount(0)
     setSkippedDuplicatesCount(0)
+    const signal = progress.begin()
 
     try {
       const result = await runImport(
@@ -128,7 +138,11 @@ export function ImportRoute() {
         chosen.file.type,
         effectiveMode,
         chosen.file.name,
-        { skipDuplicates: isSkippingDuplicates },
+        {
+          skipDuplicates: isSkippingDuplicates,
+          signal,
+          onProgress: progress.report,
+        },
       )
       if (effectiveMode === 'restore-replace') {
         setUndoSnapshot(await readLatestSafetySnapshot())
@@ -137,8 +151,14 @@ export function ImportRoute() {
       setSkippedDuplicatesCount(result.skippedDuplicates)
       setStatus('success')
     } catch (error) {
-      setStatus('error')
-      setErrorMessage((error as Error).message)
+      if (error instanceof ImportCanceledError) {
+        setStatus('canceled')
+      } else {
+        setStatus('error')
+        setErrorMessage((error as Error).message)
+      }
+    } finally {
+      progress.end()
     }
   }
 
@@ -314,12 +334,29 @@ export function ImportRoute() {
                   formatCount(importCount),
                 ])}
           </Button>
+          {progress.state.isCardVisible && (
+            <OperationProgressCard
+              kind="import"
+              state={progress.state}
+              onCancel={progress.requestCancel}
+            />
+          )}
           {isEmpty && (
             <p className="text-sm text-muted-foreground">
               {i18n.t('import_noBookmarks')}
             </p>
           )}
         </>
+      )}
+
+      {status === 'canceled' && (
+        <Alert>
+          <CircleSlashIcon />
+          <AlertTitle>{i18n.t('progress_importCanceledTitle')}</AlertTitle>
+          <AlertDescription>
+            {i18n.t('progress_importCanceledDescription')}
+          </AlertDescription>
+        </Alert>
       )}
 
       {status === 'error' && (

@@ -1,7 +1,8 @@
 import { i18n } from '#i18n'
-import type { Browser } from '@wxt-dev/browser'
 import Papa from 'papaparse'
 
+import { countBookmarks } from '@/lib/count-bookmarks'
+import { ImportWriter, withImportRollback } from '@/lib/import-control'
 import { isAllowedBookmarkUrl } from '@/lib/importers/url-validation'
 import { applySkipDuplicates } from '@/lib/skip-duplicates'
 import type { ImportOptions, ImportResult, ParsedBookmark } from '@/lib/types'
@@ -39,7 +40,13 @@ export async function importFromCSV(
     'folder',
     options.skipDuplicates ?? false,
   )
-  await createBookmarks(nodes)
+  const writer = new ImportWriter(
+    options,
+    countBookmarks(nodes),
+    skippedDuplicates,
+  )
+  await withImportRollback(writer, () => createBookmarks(nodes, writer))
+  writer.finish()
   return { skippedInvalidUrl, skippedDuplicates }
 }
 
@@ -109,9 +116,13 @@ export function processCSVData(rows: Record<string, string>[]): {
  * that a folder created under one locale is still found (and reused
  * rather than duplicated) after the browser's locale changes.
  * @param tree The folder tree to create.
+ * @param writer The writer that creates and journals the nodes.
  * @returns Resolves once the whole tree has been created.
  */
-async function createBookmarks(tree: ParsedBookmark[]): Promise<void> {
+async function createBookmarks(
+  tree: ParsedBookmark[],
+  writer: ImportWriter,
+): Promise<void> {
   const tree_chrome = await browser.bookmarks.getTree()
   const root = tree_chrome[0]
 
@@ -130,11 +141,11 @@ async function createBookmarks(tree: ParsedBookmark[]): Promise<void> {
   if (existingFolder) {
     importedFolderId = existingFolder.id
   } else {
-    const created = await createItem({ title: importedFolderTitle })
+    const created = await writer.create({ title: importedFolderTitle })
     importedFolderId = created.id
   }
 
-  await createBookmarksRecursive(tree, importedFolderId)
+  await createBookmarksRecursive(tree, importedFolderId, writer)
 }
 
 /**
@@ -145,15 +156,17 @@ async function createBookmarks(tree: ParsedBookmark[]): Promise<void> {
  * it instead of creating a duplicate.
  * @param nodes The nodes to create.
  * @param parentId The id of the folder to create them under.
+ * @param writer The writer that creates and journals the nodes.
  * @returns Resolves once every node has been created.
  */
 async function createBookmarksRecursive(
   nodes: ParsedBookmark[],
   parentId: string,
+  writer: ImportWriter,
 ): Promise<void> {
   for (const node of nodes) {
     if (node.url) {
-      await createItem({ parentId, title: node.title, url: node.url })
+      await writer.create({ parentId, title: node.title, url: node.url })
     } else if (node.children) {
       const existing = await browser.bookmarks.search({ title: node.title })
       const match = existing.find((r) => r.parentId === parentId && !r.url)
@@ -162,17 +175,11 @@ async function createBookmarksRecursive(
       if (match) {
         folderId = match.id
       } else {
-        const created = await createItem({ parentId, title: node.title })
+        const created = await writer.create({ parentId, title: node.title })
         folderId = created.id
       }
 
-      await createBookmarksRecursive(node.children, folderId)
+      await createBookmarksRecursive(node.children, folderId, writer)
     }
   }
-}
-
-function createItem(
-  details: Browser.bookmarks.CreateDetails,
-): Promise<Browser.bookmarks.BookmarkTreeNode> {
-  return browser.bookmarks.create(details)
 }

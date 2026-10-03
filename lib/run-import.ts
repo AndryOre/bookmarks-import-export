@@ -1,10 +1,11 @@
 import { i18n } from '#i18n'
 
 import { detectFormat } from './detect-format'
+import { ImportCanceledError } from './import-control'
 import { importFromCSV } from './importers/import-csv'
 import { importFromHTML } from './importers/import-html'
 import { importFromJSON, normalizeJsonRoot } from './importers/import-json'
-import { takeSafetySnapshot } from './safety-snapshot'
+import { type SafetySnapshot, takeSafetySnapshot } from './safety-snapshot'
 import type { ImportMode, ImportOptions, ImportResult } from './types'
 
 /**
@@ -18,7 +19,10 @@ import type { ImportMode, ImportOptions, ImportResult } from './types'
  * @param mode How the bookmarks are written into the existing tree.
  * @param fileName The file's name, a fallback hint when the MIME type fails.
  * @param options Import options; `skipDuplicates` is ignored in Restore-replace.
+ *   `signal` cancels the import and `onProgress` reports each batch.
  * @returns The import result, including the skipped-bookmark count.
+ * @throws {ImportCanceledError} After a cancel, once the bookmarks are back to
+ *   their previous state (Restore-replace restores the Safety snapshot).
  * @throws {Error} When the format is unsupported or the importer fails.
  */
 export async function runImport(
@@ -28,16 +32,53 @@ export async function runImport(
   fileName?: string,
   options: ImportOptions = {},
 ): Promise<ImportResult> {
+  let snapshot: SafetySnapshot | undefined
+  try {
+    return await importWithSnapshot(
+      text,
+      mimeType,
+      mode,
+      fileName,
+      options,
+      (taken) => {
+        snapshot = taken
+      },
+    )
+  } catch (error) {
+    if (
+      snapshot &&
+      error instanceof ImportCanceledError &&
+      error.hasClearedExisting
+    ) {
+      await importFromJSON(structuredClone(snapshot.roots), 'restore-replace')
+    }
+    throw error
+  }
+}
+
+async function importWithSnapshot(
+  text: string,
+  mimeType: string,
+  mode: ImportMode,
+  fileName: string | undefined,
+  options: ImportOptions,
+  onSnapshot: (snapshot: SafetySnapshot) => void,
+): Promise<ImportResult> {
   const format = detectFormat(text, mimeType, fileName)
+  const snapshotBeforeReplace = async (): Promise<void> => {
+    if (mode !== 'restore-replace') return
+    if (options.signal?.aborted) throw new ImportCanceledError(false)
+    onSnapshot(await takeSafetySnapshot())
+  }
 
   switch (format) {
     case 'html': {
-      if (mode === 'restore-replace') await takeSafetySnapshot()
+      await snapshotBeforeReplace()
       return importFromHTML(text, mode, options)
     }
     case 'json': {
       const roots = normalizeJsonRoot(JSON.parse(text))
-      if (mode === 'restore-replace') await takeSafetySnapshot()
+      await snapshotBeforeReplace()
       return importFromJSON(roots, mode, options)
     }
     case 'csv': {

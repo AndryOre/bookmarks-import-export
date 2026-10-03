@@ -10,6 +10,7 @@ import {
   syncAlarm,
   type SyncAlarmTrigger,
 } from '@/lib/auto-export'
+import { handleNotificationClick } from '@/lib/auto-export-notification'
 import {
   autoExportConfigStore,
   autoExportNextRunStore,
@@ -168,6 +169,10 @@ export default defineBackground(() => {
         console.error(error)
       }
     })()
+  })
+
+  browser.notifications.onClicked.addListener((notificationId) => {
+    void handleNotificationClick(notificationId).catch(console.error)
   })
 
   browser.runtime.onMessage.addListener((message, _sender, sendResponse) => {

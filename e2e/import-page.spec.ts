@@ -28,7 +28,11 @@ async function selectMode(page: Page, label: string): Promise<void> {
 }
 
 async function submitImport(page: Page, count: number): Promise<void> {
-  await page.getByRole('button', { name: `Import ${count} bookmarks` }).click()
+  await page
+    .getByRole('button', {
+      name: `Import ${count.toLocaleString('en-US')} bookmarks`,
+    })
+    .click()
 }
 
 async function expectSuccess(page: Page): Promise<void> {
@@ -164,6 +168,57 @@ test.describe('Import page', () => {
     expect(otherBookmarks?.children?.map((n) => n.url)).toEqual([
       'https://json-other-a.example/page',
       'https://json-other-b.example/page',
+    ])
+  })
+
+  test('canceling a long Restore-replace rolls back to the previous bookmarks', async ({
+    openExtensionPage,
+    seedBookmarks,
+    readBookmarkTree,
+  }) => {
+    await seedBookmarks([
+      { title: 'Existing', url: 'https://existing-other.example/page' },
+    ])
+    const page = await openImportPage(openExtensionPage)
+    const largeBackup = JSON.stringify([
+      {
+        id: '2',
+        title: 'Other bookmarks',
+        dateAdded: 0,
+        children: Array.from({ length: 4000 }, (_, index) => ({
+          title: `Large ${index}`,
+          url: `https://large.example/${index}`,
+          dateAdded: 0,
+        })),
+      },
+    ])
+    await page.getByLabel(en.import_fileInputLabel.message).setInputFiles({
+      name: 'large.json',
+      mimeType: 'application/json',
+      buffer: Buffer.from(largeBackup),
+    })
+    await selectMode(page, 'Restore — replace')
+    await submitImport(page, 4000)
+    await page
+      .getByRole('button', { name: en.import_replaceConfirm.message })
+      .click()
+
+    const progressBar = page.getByRole('progressbar', {
+      name: en.progress_importTitle.message,
+    })
+    await expect(progressBar).toBeVisible()
+    await page
+      .getByRole('button', { name: en.progress_cancelImport.message })
+      .click()
+
+    await expect(
+      page.getByText(en.progress_importCanceledTitle.message),
+    ).toBeVisible()
+
+    const [root] = await readBookmarkTree()
+    const otherBookmarks = root?.children?.find((n) => n.id === '2')
+    expect(otherBookmarks?.children?.map((n) => n.url)).toEqual([
+      'https://existing-other.example/page',
     ])
   })
 
