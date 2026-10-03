@@ -18,6 +18,7 @@ function previewOf(totalCount: number): ImportPreview {
     bookmarksBarCount: totalCount,
     otherBookmarksCount: 0,
     mobileBookmarksCount: 0,
+    clearsMobileRoot: false,
     totalCount,
     hasLocationData: true,
   }
@@ -57,5 +58,38 @@ describe('getReplaceDiff', () => {
       removedCount: 0,
       addedCount: 2,
     })
+  })
+
+  it('counts a Mobile root holding only folders as removed when the file clears Mobile', async () => {
+    resetFakeBookmarks({ withMobileRoot: true })
+    const folder = await browser.bookmarks.create({
+      parentId: '3',
+      title: 'Phone folder',
+    })
+    await browser.bookmarks.create({
+      parentId: folder.id,
+      title: 'M',
+      url: 'https://m.example/',
+    })
+
+    const diff = await getReplaceDiff({
+      ...previewOf(1),
+      clearsMobileRoot: true,
+    })
+
+    expect(diff.removedCount).toBe(1)
+  })
+
+  it('leaves the Mobile root out of the removed count when the file does not clear it', async () => {
+    resetFakeBookmarks({ withMobileRoot: true })
+    await browser.bookmarks.create({
+      parentId: '3',
+      title: 'M',
+      url: 'https://m.example/',
+    })
+
+    const diff = await getReplaceDiff(previewOf(1))
+
+    expect(diff.removedCount).toBe(0)
   })
 })

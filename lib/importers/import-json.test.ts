@@ -13,6 +13,44 @@ beforeEach(() => {
 })
 
 describe('preprocessBookmarks', () => {
+  it('keeps a lone top-level folder instead of unwrapping it as a virtual root', () => {
+    const input: ParsedBookmark[] = [
+      {
+        title: 'Work',
+        dateAdded: 0,
+        children: [{ title: 'A', url: 'https://a.example/', dateAdded: 0 }],
+      },
+    ]
+
+    const result = preprocessBookmarks(input)
+
+    expect(result).toHaveLength(1)
+    expect(result[0]?.isOtherBookmarks).toBe(true)
+    expect(result[0]?.children?.map((child) => child.title)).toEqual(['Work'])
+  })
+
+  it('unwraps a lone node whose children carry root folderTypes', () => {
+    const input = [
+      {
+        title: 'Root',
+        dateAdded: 0,
+        children: [
+          {
+            title: 'Bar',
+            folderType: 'bookmarks-bar',
+            dateAdded: 0,
+            children: [],
+          },
+        ],
+      },
+    ] as ParsedBookmark[]
+
+    const result = preprocessBookmarks(input)
+
+    expect(result).toHaveLength(1)
+    expect(result[0]?.isBookmarksBar).toBe(true)
+  })
+
   it('unwraps a virtual root node (id "0") to its children', () => {
     const input: ParsedBookmark[] = [
       {
@@ -91,9 +129,10 @@ describe('preprocessBookmarks', () => {
     ])
   })
 
-  it('unwraps a nested wrapper (sole node at each level) before classifying', () => {
+  it('unwraps a nested wrapper (id "0" root, then a wrapper of root nodes) before classifying', () => {
     const input: ParsedBookmark[] = [
       {
+        id: '0',
         title: 'Wrapper',
         dateAdded: 0,
         children: [

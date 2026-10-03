@@ -51,6 +51,7 @@ export interface ParsedBookmark {
   isMobileBookmarks?: boolean
   id?: string
   parentId?: string
+  folderType?: string
 }
 
 /**
@@ -137,6 +138,7 @@ export interface ImportPreview {
   bookmarksBarCount: number
   otherBookmarksCount: number
   mobileBookmarksCount: number
+  clearsMobileRoot: boolean
   totalCount: number
   hasLocationData: boolean
 }

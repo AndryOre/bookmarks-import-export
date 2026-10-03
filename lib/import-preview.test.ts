@@ -56,6 +56,49 @@ describe('getImportPreview', () => {
     expect(preview.totalCount).toBe(2)
   })
 
+  it('flags a Mobile root holding only folders as clearing Mobile', () => {
+    const json = JSON.stringify([
+      {
+        id: '3',
+        title: 'Mobile bookmarks',
+        dateAdded: 0,
+        children: [{ title: 'Empty folder', dateAdded: 0, children: [] }],
+      },
+    ])
+
+    const preview = getImportPreview(json, 'application/json')
+
+    expect(preview.mobileBookmarksCount).toBe(0)
+    expect(preview.clearsMobileRoot).toBe(true)
+  })
+
+  it('counts every Mobile root when account-storage roots share a folderType', () => {
+    const json = JSON.stringify([
+      {
+        id: '0',
+        title: '',
+        dateAdded: 0,
+        children: [
+          { id: '3', title: 'Mobile bookmarks', dateAdded: 0, children: [] },
+          {
+            id: 'account-mobile',
+            title: 'Mobile bookmarks',
+            folderType: 'mobile',
+            dateAdded: 0,
+            children: [
+              { title: 'Phone', url: 'https://phone.example', dateAdded: 0 },
+            ],
+          },
+        ],
+      },
+    ])
+
+    const preview = getImportPreview(json, 'application/json')
+
+    expect(preview.mobileBookmarksCount).toBe(1)
+    expect(preview.clearsMobileRoot).toBe(true)
+  })
+
   it('previews a JSON export produced by exportToJSON', () => {
     const json = JSON.stringify({
       id: '0',
