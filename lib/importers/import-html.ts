@@ -117,6 +117,23 @@ export function parseHTML(
   html: string,
   liveRootTitles?: ResolvedImportRootTitles,
 ): ParsedBookmark[] {
+  return parseHTMLWithLocation(html, liveRootTitles).tree
+}
+
+/**
+ * Like {@link parseHTML}, but also reports whether the document carried real
+ * location data: a toolbar, unfiled, known-Other or known-Mobile marker. A
+ * flat export (only top-level bookmarks and unrecognized folders) gets a
+ * synthetic Other root but reports `hasLocationData: false`.
+ * @param html The Netscape-format bookmarks HTML document to parse.
+ * @param liveRootTitles The current browser's own root titles, if available.
+ * @returns The parsed tree and whether a root marker was recognized.
+ */
+export function parseHTMLWithLocation(
+  html: string,
+  liveRootTitles?: ResolvedImportRootTitles,
+): { tree: ParsedBookmark[]; hasLocationData: boolean } {
+  let hasLocationData = false
   const document = new DOMParser().parseFromString(html, 'text/html')
   const result: ParsedBookmark[] = []
   const otherBookmarks: ParsedBookmark[] = []
@@ -124,7 +141,7 @@ export function parseHTML(
 
   const outerDl =
     document.querySelector('body > dl') ?? document.querySelector('dl')
-  if (!outerDl) return result
+  if (!outerDl) return { tree: result, hasLocationData }
 
   const nestedToolbarFolders: ParsedBookmark[] = []
   const topLevelDts = outerDl.querySelectorAll(':scope > dt')
@@ -147,11 +164,14 @@ export function parseHTML(
       const folder = parseFolderElement(h3, dt, nestedToolbarFolders)
 
       if (isBookmarksBar) {
+        hasLocationData = true
         folder.isBookmarksBar = true
         result.unshift(folder)
       } else if (isUnfiled || isKnownOtherTitle(folder.title, liveRootTitles)) {
+        hasLocationData = true
         otherBookmarks.push(...(folder.children ?? []))
       } else if (isKnownMobileTitle(folder.title, liveRootTitles)) {
+        hasLocationData = true
         mobileBookmarks.push(...(folder.children ?? []))
       } else {
         otherBookmarks.push(folder)
@@ -160,6 +180,7 @@ export function parseHTML(
   })
 
   for (const folder of nestedToolbarFolders) {
+    hasLocationData = true
     folder.isBookmarksBar = true
     result.unshift(folder)
   }
@@ -182,7 +203,7 @@ export function parseHTML(
     })
   }
 
-  return result
+  return { tree: result, hasLocationData }
 }
 
 /**
@@ -427,15 +448,18 @@ async function processBookmarks(
         title: i18n.t('importedBookmarks'),
       })
 
-      const importedBookmarksBar = await writer.create({
-        parentId: importedFolder.id,
-        title: i18n.t('bookmarksBar'),
-      })
-
       for (const bookmark of parsed) {
-        if (bookmark.isBookmarksBar) {
+        if (
+          bookmark.isBookmarksBar &&
+          bookmark.children &&
+          bookmark.children.length > 0
+        ) {
+          const importedBookmarksBar = await writer.create({
+            parentId: importedFolder.id,
+            title: i18n.t('bookmarksBar'),
+          })
           await createBookmarks(
-            bookmark.children ?? [],
+            bookmark.children,
             importedBookmarksBar.id,
             result,
             writer,

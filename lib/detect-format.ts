@@ -164,7 +164,7 @@ function isValidJSON(content: string): boolean {
  * @returns Whether `content` looks like a Netscape bookmarks HTML file.
  */
 function isValidHTML(content: string): boolean {
-  return content.trimStart().startsWith('<!DOCTYPE NETSCAPE-Bookmark-file-1>')
+  return /^<!doctype netscape-bookmark-file-1>/i.test(content.trimStart())
 }
 
 /**

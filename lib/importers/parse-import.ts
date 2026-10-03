@@ -1,5 +1,5 @@
 import { parseChromeBookmarks } from '@/lib/importers/import-chrome'
-import { parseHTML } from '@/lib/importers/import-html'
+import { parseHTMLWithLocation } from '@/lib/importers/import-html'
 import {
   normalizeJsonRoot,
   preprocessBookmarks,
@@ -48,7 +48,7 @@ export function parseLocationAwareImport(
 ): ParsedImport | undefined {
   switch (format) {
     case 'html': {
-      return withRootDetection(parseHTML(text, liveRootTitles))
+      return parseHTMLWithLocation(text, liveRootTitles)
     }
     case 'json': {
       const roots = normalizeJsonRoot(JSON.parse(text))
