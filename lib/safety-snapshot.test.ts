@@ -146,3 +146,109 @@ describe('restoreSafetySnapshot', () => {
     ])
   })
 })
+
+async function seedMobile(): Promise<void> {
+  await browser.bookmarks.create({
+    parentId: '3',
+    title: 'On phone',
+    url: 'https://phone.example/',
+  })
+}
+
+describe('Mobile root and non-web URLs', () => {
+  it('captures the Mobile root when the browser has one', async () => {
+    resetFakeBookmarks({ withMobileRoot: true })
+    seedSample()
+    await seedMobile()
+
+    const snapshot = await captureSafetySnapshot()
+
+    expect(snapshot.roots.map((root) => root.id)).toEqual(['1', '2', '3'])
+    expect(snapshot.roots[2]?.children?.[0]?.title).toBe('On phone')
+  })
+
+  it('captures only two roots when there is no Mobile root', async () => {
+    seedSample()
+
+    const snapshot = await captureSafetySnapshot()
+
+    expect(snapshot.roots.map((root) => root.id)).toEqual(['1', '2'])
+  })
+
+  it('restores Mobile content that a replace cleared', async () => {
+    resetFakeBookmarks({ withMobileRoot: true })
+    seedSample()
+    await seedMobile()
+    const snapshot = await captureSafetySnapshot()
+    const mobileNode = (getFakeBookmarksRoot().children ?? []).find(
+      (node) => node.id === '3',
+    )
+    const mobileChildren = mobileNode?.children ?? []
+    for (const child of mobileChildren) {
+      await browser.bookmarks.removeTree(child.id)
+    }
+    await browser.bookmarks.create({
+      parentId: '3',
+      title: 'Later',
+      url: 'https://later.example/',
+    })
+
+    await restoreSafetySnapshot(snapshot)
+
+    expect(rootOutline('3')).toEqual([
+      { title: 'On phone', url: 'https://phone.example/' },
+    ])
+  })
+
+  it('does not touch Mobile when the snapshot has no Mobile root', async () => {
+    seedSample()
+    const snapshot = await captureSafetySnapshot()
+    resetFakeBookmarks({ withMobileRoot: true })
+    await seedMobile()
+
+    await restoreSafetySnapshot(snapshot)
+
+    expect(rootOutline('3')).toEqual([
+      { title: 'On phone', url: 'https://phone.example/' },
+    ])
+  })
+
+  it('restores javascript: and chrome:// bookmarks', async () => {
+    seedFakeBookmarksTree([
+      bookmark('Tool', 'javascript:alert(1)'),
+      bookmark('Settings', 'chrome://settings'),
+      bookmark('Local', 'file:///tmp/a.html'),
+    ])
+    const snapshot = await captureSafetySnapshot()
+    seedFakeBookmarksTree([bookmark('Intruder', 'https://intruder.example/')])
+
+    await restoreSafetySnapshot(snapshot)
+
+    expect(rootOutline('1')).toEqual([
+      { title: 'Tool', url: 'javascript:alert(1)' },
+      { title: 'Settings', url: 'chrome://settings' },
+      { title: 'Local', url: 'file:///tmp/a.html' },
+    ])
+  })
+
+  it('counts a failed create instead of aborting the restore', async () => {
+    seedFakeBookmarksTree([
+      bookmark('Bad', 'chrome://bad'),
+      bookmark('Good', 'https://good.example/'),
+    ])
+    const snapshot = await captureSafetySnapshot()
+    const realCreate = fakeBrowser.bookmarks.create
+    fakeBrowser.bookmarks.create = (async (
+      details: Browser.bookmarks.CreateDetails,
+    ) => {
+      if (details.url === 'chrome://bad') throw new Error('rejected')
+      return realCreate(details)
+    }) as typeof fakeBrowser.bookmarks.create
+
+    await restoreSafetySnapshot(snapshot)
+
+    expect(rootOutline('1')).toEqual([
+      { title: 'Good', url: 'https://good.example/' },
+    ])
+  })
+})

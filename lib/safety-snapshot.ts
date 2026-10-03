@@ -7,10 +7,11 @@ import { downloadViaOffscreenDocument } from '@/lib/offscreen-download'
 import type { ParsedBookmark } from '@/lib/types'
 
 /**
- * The single latest Safety snapshot: the bookmarks-bar and other-bookmarks
- * roots as taken right before a Restore-replace. `roots` is a valid Snug JSON
- * export (roots carry the fixed ids `'1'` and `'2'`), so the downloaded file
- * can be imported again as-is.
+ * The single latest Safety snapshot: the bookmarks-bar, other-bookmarks and,
+ * when the browser has one, Mobile roots as taken right before a
+ * Restore-replace. `roots` is a valid Snug JSON export (roots carry the fixed
+ * ids `'1'`, `'2'` and `'3'`), so the downloaded file can be imported again
+ * as-is.
  */
 export interface SafetySnapshot {
   takenAt: number
@@ -45,7 +46,8 @@ function toParsedBookmark(node: LiveNode): ParsedBookmark {
 }
 
 /**
- * Captures the bookmarks-bar and other-bookmarks roots as they are now,
+ * Captures the bookmarks-bar, other-bookmarks and Mobile (when present) roots
+ * as they are now,
  * preserving folder nesting and order. Empty folders are kept in the capture,
  * but the importer skips them on restore.
  * @returns The capture, stamped with the current time.
@@ -54,18 +56,23 @@ function toParsedBookmark(node: LiveNode): ParsedBookmark {
 export async function captureSafetySnapshot(): Promise<SafetySnapshot> {
   const [treeRoot] = await browser.bookmarks.getTree()
   const rootChildren = treeRoot?.children ?? []
-  const { bookmarksBarId, otherBookmarksId } = resolveImportRoots(rootChildren)
+  const { bookmarksBarId, otherBookmarksId, mobileId } =
+    resolveImportRoots(rootChildren)
   const barNode = rootChildren.find((node) => node.id === bookmarksBarId)
   const otherNode = rootChildren.find((node) => node.id === otherBookmarksId)
   if (!barNode || !otherNode) {
     throw new Error(i18n.t('importFromJSONProcessError'))
   }
+  const mobileNode = mobileId
+    ? rootChildren.find((node) => node.id === mobileId)
+    : undefined
 
   return {
     takenAt: Date.now(),
     roots: [
       { ...toParsedBookmark(barNode), id: '1' },
       { ...toParsedBookmark(otherNode), id: '2' },
+      ...(mobileNode ? [{ ...toParsedBookmark(mobileNode), id: '3' }] : []),
     ],
   }
 }
@@ -110,8 +117,9 @@ export function readLatestSafetySnapshot(): Promise<SafetySnapshot | null> {
 }
 
 /**
- * Restores a snapshot into the bookmarks bar and other bookmarks, replacing
- * their current content. This is itself a Restore-replace, so a new Safety
+ * Restores a snapshot into the bookmarks bar, other bookmarks and, when the
+ * snapshot has it, Mobile, replacing their current content. URLs are written
+ * as-is, so bookmarklets and `chrome://` bookmarks survive. This is itself a Restore-replace, so a new Safety
  * snapshot of the current state is taken first, and nothing is deleted if that
  * fails.
  * @param snapshot The snapshot to restore.
@@ -121,5 +129,7 @@ export async function restoreSafetySnapshot(
   snapshot: SafetySnapshot,
 ): Promise<void> {
   await takeSafetySnapshot()
-  await importFromJSON(structuredClone(snapshot.roots), 'restore-replace')
+  await importFromJSON(structuredClone(snapshot.roots), 'restore-replace', {
+    trusted: true,
+  })
 }
