@@ -829,6 +829,10 @@
     "message": "Falló la exportación",
     "description": "Export page toast title when an export fails"
   },
+  "exportSelectionGone": {
+    "message": "Los marcadores seleccionados ya no existen. Selecciónalos de nuevo e inténtalo otra vez.",
+    "description": "Export page toast description when every selected bookmark was deleted before the export started"
+  },
   "exportPage_noResultsTitle": {
     "message": "Ningún marcador coincide con \"$TERM$\"",
     "description": "Export page empty state title when a search matches nothing",

@@ -69,6 +69,7 @@ export const BookmarkTree = forwardRef<
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set())
   const [focusedId, setFocusedId] = useState<string | undefined>()
   const treeReference = useRef<HTMLDivElement>(null)
+  const isFocusInTreeReference = useRef(false)
   const pendingFocusReference = useRef<string | undefined>(undefined)
   /**
    * Snapshot of `expandedFolders` from just before a search started, so it
@@ -102,6 +103,12 @@ export const BookmarkTree = forwardRef<
     [autoExpandFolders],
   )
 
+  const isSearching = searchTerm.trim() !== ''
+  const visibleNodes = useMemo(
+    () => (isSearching ? filterNodes(nodes, searchTerm) : nodes),
+    [isSearching, nodes, searchTerm],
+  )
+
   /**
    * The imperative API exposed to the parent via `ref` (see
    * {@link BookmarkTreeHandle}). Selection lives in this component's own
@@ -110,7 +117,7 @@ export const BookmarkTree = forwardRef<
    */
   useImperativeHandle(reference, () => ({
     selectAll: () => {
-      const allBookmarkIds = collectBookmarkIds(nodes)
+      const allBookmarkIds = collectBookmarkIds(visibleNodes)
       const newState = new Map<string, boolean>()
       for (const id of allBookmarkIds) newState.set(id, true)
       setCheckedState(newState)
@@ -207,11 +214,6 @@ export const BookmarkTree = forwardRef<
     onSelectionChange(count)
   }, [checkedState, nodes, onSelectionChange])
 
-  const isSearching = searchTerm.trim() !== ''
-  const visibleNodes = useMemo(
-    () => (isSearching ? filterNodes(nodes, searchTerm) : nodes),
-    [isSearching, nodes, searchTerm],
-  )
   const rows = useMemo(
     () => flattenVisibleRows(visibleNodes, expandedFolders),
     [visibleNodes, expandedFolders],
@@ -231,6 +233,18 @@ export const BookmarkTree = forwardRef<
     rangeExtractor: (range) =>
       withPinnedIndex(defaultRangeExtractor(range), activeIndex),
   })
+
+  /**
+   * Restores keyboard focus when the focused row leaves the tree (a search
+   * excludes it or the bookmark is deleted) while focus was inside the tree:
+   * the browser would otherwise drop focus to the body.
+   */
+  useEffect(() => {
+    if (activeId === undefined || !isFocusInTreeReference.current) return
+    const activeElement = document.activeElement
+    if (activeElement && activeElement !== document.body) return
+    pendingFocusReference.current = activeId
+  }, [rows, activeId])
 
   useEffect(() => {
     const pendingId = pendingFocusReference.current
@@ -337,6 +351,15 @@ export const BookmarkTree = forwardRef<
       role="tree"
       aria-label={i18n.t('exportPage_treeLabel')}
       aria-multiselectable="true"
+      onFocus={() => {
+        isFocusInTreeReference.current = true
+      }}
+      onBlur={(event) => {
+        const next = event.relatedTarget
+        if (next instanceof Node && !event.currentTarget.contains(next)) {
+          isFocusInTreeReference.current = false
+        }
+      }}
       className={cn('flex-1 overflow-auto p-2', className)}
     >
       <div
@@ -405,14 +428,14 @@ function TreeRow({
 
   return (
     <div
+      // eslint-disable-next-line jsx-a11y/role-has-required-aria-props -- ARIA 1.2 makes aria-checked the supported selection state for a multiselectable tree; aria-selected is optional
       role="treeitem"
       aria-label={node.title}
       aria-level={level}
       aria-setsize={row.setSize}
       aria-posinset={row.position}
       aria-expanded={isFolder ? isExpanded : undefined}
-      aria-selected={checked === true}
-      aria-checked={checked === 'indeterminate' ? 'mixed' : undefined}
+      aria-checked={checked === 'indeterminate' ? 'mixed' : checked}
       tabIndex={isTabStop ? 0 : -1}
       data-node-id={node.id}
       className="absolute inset-x-0 top-0 ml-(--tree-indent) flex h-7.5 translate-y-(--tree-offset) cursor-pointer items-center gap-1.5 rounded px-1 outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring"
@@ -552,8 +575,12 @@ function filterNodes(nodes: BookmarkNode[], term: string): BookmarkNode[] {
     if (node.url) {
       if (isSearchMatch(node, lower)) result.push(node)
     } else {
+      if (isSearchMatch(node, lower)) {
+        result.push(node)
+        continue
+      }
       const matchedChildren = filterNodes(node.children ?? [], lower)
-      if (matchedChildren.length > 0 || isSearchMatch(node, lower)) {
+      if (matchedChildren.length > 0) {
         result.push({ ...node, children: matchedChildren })
       }
     }
@@ -579,7 +606,7 @@ function findAncestorsOfMatches(nodes: BookmarkNode[], term: string): string[] {
         if (isSearchMatch(node, lower)) didMatch = true
       } else {
         const didChildMatch = hasMatchingDescendant(node.children ?? [])
-        if (didChildMatch) {
+        if (didChildMatch || isSearchMatch(node, lower)) {
           ancestors.push(node.id)
           didMatch = true
         }
