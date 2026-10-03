@@ -3,6 +3,7 @@ import {
   createRootRoute,
   createRoute,
   createRouter,
+  Navigate,
   redirect,
   RouterProvider,
 } from '@tanstack/react-router'
@@ -18,7 +19,19 @@ import { SettingsRoute } from './routes/settings'
 import { WelcomeRoute } from './routes/welcome'
 import { WhatsNewRoute } from './routes/whats-new'
 
-const rootRoute = createRootRoute({ component: AppShell })
+/**
+ * Sends any unknown hash route to the Export page so the page content and the
+ * header title agree.
+ * @returns A replace-navigation to the Export route.
+ */
+function RedirectToExport() {
+  return <Navigate to={APP_ROUTES.export} replace />
+}
+
+const rootRoute = createRootRoute({
+  component: AppShell,
+  notFoundComponent: RedirectToExport,
+})
 
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,

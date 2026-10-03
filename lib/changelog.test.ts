@@ -8,6 +8,16 @@ beforeEach(() => {
   fakeBrowser.reset()
 })
 
+function compareVersions(a: string, b: string) {
+  const left = a.split('.').map(Number)
+  const right = b.split('.').map(Number)
+  for (const [index, part] of left.entries()) {
+    const difference = part - (right[index] ?? 0)
+    if (difference !== 0) return difference
+  }
+  return 0
+}
+
 describe('getChangelog', () => {
   it('returns entries newest release first', () => {
     const entries = getChangelog()
@@ -16,8 +26,13 @@ describe('getChangelog', () => {
     expect(versions[0]).toBe('2.0.0')
     expect(versions.at(-1)).toBe('0.1.0')
     expect(versions).toEqual(
-      versions.toSorted((a, b) => a.localeCompare(b)).toReversed(),
+      versions.toSorted((a, b) => compareVersions(a, b)).toReversed(),
     )
+  })
+
+  it('compares versions numerically so 1.10.0 is newer than 1.9.0', () => {
+    expect(compareVersions('1.10.0', '1.9.0')).toBeGreaterThan(0)
+    expect(compareVersions('1.9.0', '1.10.0')).toBeLessThan(0)
   })
 
   it('points every linkUrl at an App route built from the app-URL helper', () => {

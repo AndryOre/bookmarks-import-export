@@ -14,20 +14,26 @@ const mountedHarnesses: DomHarness[] = []
 interface ProbeReport {
   observedThemes: Theme[]
   setters: ((value: Theme) => Promise<void>)[]
+  loadedFlags: boolean[]
 }
 
 async function mountProbe(initialValue?: Theme) {
   fakeBrowser.reset()
-  const report: ProbeReport = { observedThemes: [], setters: [] }
+  const report: ProbeReport = {
+    observedThemes: [],
+    setters: [],
+    loadedFlags: [],
+  }
   const harness = createDomHarness()
   mountedHarnesses.push(harness)
 
   function ThemeProbe() {
-    const [theme, setTheme] = useStorageItem(themeStore, initialValue)
+    const [theme, setTheme, isLoaded] = useStorageItem(themeStore, initialValue)
     useEffect(() => {
+      report.loadedFlags.push(isLoaded)
       report.observedThemes.push(theme)
       report.setters.push(setTheme)
-    }, [theme, setTheme])
+    }, [theme, setTheme, isLoaded])
     return createElement('span', { 'data-testid': 'value' }, theme)
   }
 
@@ -54,6 +60,16 @@ describe('useStorageItem', () => {
 
     expect(probe.report.observedThemes[0]).toBe('system')
     expect(probe.shownValue()).toBe('dark')
+  })
+
+  it('reports isLoaded false until the first read resolves', async () => {
+    const probe = await mountProbe()
+    await themeStore.setValue('dark')
+
+    await probe.start()
+
+    expect(probe.report.loadedFlags[0]).toBe(false)
+    expect(probe.report.loadedFlags.at(-1)).toBe(true)
   })
 
   it('starts from the provided initial value instead of the fallback', async () => {
@@ -117,6 +133,7 @@ describe('useStorageItem', () => {
     await themeStore.setValue('dark')
     await showBookmarkIconStore.setValue(false)
 
-    expect(probe.report.observedThemes).toEqual(['system'])
+    expect(probe.report.observedThemes.at(-1)).toBe('system')
+    expect(probe.report.observedThemes).not.toContain('dark')
   })
 })
