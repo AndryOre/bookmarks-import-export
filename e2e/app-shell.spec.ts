@@ -127,3 +127,45 @@ test('mounts the toast viewport on every route', async ({
   await page.getByRole('link', { name: en.shell_navImport.message }).click()
   await expect(page.locator('[data-slot="toast-viewport"]')).toBeAttached()
 })
+
+test('moves focus to the page heading and announces it on navigation', async ({
+  openExtensionPage,
+}) => {
+  const page = await openExtensionPage('app.html')
+  const nav = page.getByRole('navigation', {
+    name: en.shell_navLabel.message,
+  })
+  const liveRegion = page.locator('[role="status"][aria-live="polite"]')
+  await expect(liveRegion).toHaveText('')
+
+  const titles = [
+    en.shell_navImport.message,
+    en.shell_navDuplicates.message,
+    en.shell_navAutoExport.message,
+    en.shell_navSettings.message,
+    en.shell_navWhatsNew.message,
+    en.shell_navExport.message,
+  ]
+  for (const title of titles) {
+    await nav.getByRole('link', { name: title }).click()
+    await expect(
+      page.getByRole('heading', { level: 1, name: title }),
+    ).toBeFocused()
+    await expect(liveRegion).toHaveText(title)
+  }
+})
+
+test('does not move focus on search changes inside the same route', async ({
+  openExtensionPage,
+}) => {
+  const page = await openExtensionPage('app.html#/export')
+  const heading = page.getByRole('heading', {
+    level: 1,
+    name: en.shell_navExport.message,
+  })
+  await expect(heading).toBeVisible()
+  await page.locator('body').click()
+  await page.goto(page.url().replace(/#.*$/, '#/export?q=abc'))
+  await expect(page).toHaveURL(/#\/export\?q=abc$/)
+  await expect(heading).not.toBeFocused()
+})
