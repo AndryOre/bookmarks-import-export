@@ -37,10 +37,7 @@ import { createLatestOnly } from '@/lib/latest-only'
 import { getReplaceDiff } from '@/lib/replace-diff'
 import type { ReplaceDiff } from '@/lib/replace-diff'
 import { runImport } from '@/lib/run-import'
-import {
-  readLatestSafetySnapshot,
-  restoreSafetySnapshot,
-} from '@/lib/safety-snapshot'
+import { restoreSafetySnapshot } from '@/lib/safety-snapshot'
 import type { SafetySnapshot } from '@/lib/safety-snapshot'
 import { defaultImportModeStore, skipDuplicatesStore } from '@/lib/storage'
 import type { ImportMode, ImportPreview } from '@/lib/types'
@@ -105,6 +102,7 @@ export function ImportRoute() {
   const [skipDuplicates, setSkipDuplicates] =
     useStorageItem(skipDuplicatesStore)
   const [status, setStatus] = useState<ImportStatus>('idle')
+  const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const [wasRestored, setWasRestored] = useState(false)
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
@@ -118,6 +116,7 @@ export function ImportRoute() {
   const hasLocationData = preview?.hasLocationData ?? false
   const effectiveMode: ImportMode = hasLocationData ? storedMode : 'folder'
   const isImporting = status === 'importing'
+  const isBusy = isImporting || isAnalyzing
   const isEmpty = isSupported && preview.totalCount === 0
   const isSkippingDuplicates =
     skipDuplicates && effectiveMode !== 'restore-replace'
@@ -128,10 +127,14 @@ export function ImportRoute() {
 
   const analyzeLatestFile = useRef(createLatestOnly(analyzeFile)).current
 
+  const importStartedReference = useRef(false)
+
   const handleFile = async (file: File) => {
+    if (importStartedReference.current) return
+    setIsAnalyzing(true)
     try {
       const outcome = await analyzeLatestFile(file)
-      if (!outcome.isCurrent) return
+      if (!outcome.isCurrent || importStartedReference.current) return
       const { parsed, text, replaceDiff, duplicates } = outcome.value
       setChosen({ file, text, preview: parsed, replaceDiff, duplicates })
       setStatus(parsed.format === 'unknown' ? 'error' : 'idle')
@@ -142,12 +145,15 @@ export function ImportRoute() {
       setChosen(null)
       setStatus('error')
       setErrorMessage((error as Error).message)
+    } finally {
+      setIsAnalyzing(false)
     }
   }
 
   const executeImport = async () => {
-    if (!chosen) return
+    if (!chosen || isAnalyzing) return
 
+    importStartedReference.current = true
     setStatus('importing')
     setErrorMessage('')
     setUndoSnapshot(null)
@@ -167,9 +173,7 @@ export function ImportRoute() {
           onProgress: progress.report,
         },
       )
-      if (effectiveMode === 'restore-replace') {
-        setUndoSnapshot(await readLatestSafetySnapshot())
-      }
+      setUndoSnapshot(result.snapshot ?? null)
       setSkippedCount(result.skippedInvalidUrl)
       setSkippedDuplicatesCount(result.skippedDuplicates)
       setStatus('success')
@@ -182,12 +186,14 @@ export function ImportRoute() {
         setWasRestored(wasImportRestored(error))
       }
     } finally {
+      importStartedReference.current = false
       progress.end()
     }
   }
 
   const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault()
+    if (isBusy) return
     if (effectiveMode === 'restore-replace') {
       setIsConfirmOpen(true)
     } else {
@@ -309,7 +315,7 @@ export function ImportRoute() {
         <ImportFileStep
           file={chosen?.file ?? null}
           onFile={(file) => void handleFile(file)}
-          disabled={isImporting}
+          disabled={isBusy}
         />
       </ImportStep>
 
@@ -349,7 +355,7 @@ export function ImportRoute() {
           <Button
             type="submit"
             size="lg"
-            disabled={isImporting || isEmpty || importCount === 0}
+            disabled={isBusy || isEmpty || importCount === 0}
           >
             {isImporting && <Spinner data-icon="inline-start" />}
             {isImporting

@@ -122,6 +122,10 @@
     "message": "Dateiformat wird nicht unterstützt",
     "description": "Unsupported file format"
   },
+  "importAnotherRunning": {
+    "message": "Es läuft bereits ein anderer Import. Warte, bis er abgeschlossen ist, und versuche es erneut.",
+    "description": "Error shown when an import is started while another extension page is already importing"
+  },
   "bookmarksImportedSuccessfully": {
     "message": "Lesezeichen erfolgreich importiert!",
     "description": "Bookmarks imported successfully"

@@ -123,6 +123,10 @@
     "message": "Unsupported file format",
     "description": "Unsupported file format"
   },
+  "importAnotherRunning": {
+    "message": "Another import is already running. Wait for it to finish and try again.",
+    "description": "Error shown when an import is started while another extension page is already importing"
+  },
   "bookmarksImportedSuccessfully": {
     "message": "Bookmarks imported successfully!",
     "description": "Bookmarks imported successfully"

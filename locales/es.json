@@ -123,6 +123,10 @@
     "message": "Formato de archivo no soportado",
     "description": "Formato de archivo no soportado"
   },
+  "importAnotherRunning": {
+    "message": "Ya hay otra importación en curso. Espera a que termine e inténtalo de nuevo.",
+    "description": "Error shown when an import is started while another extension page is already importing"
+  },
   "bookmarksImportedSuccessfully": {
     "message": "Marcadores importados correctamente!",
     "description": "Marcadores importados correctamente"

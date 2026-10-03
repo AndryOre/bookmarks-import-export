@@ -122,6 +122,10 @@
     "message": "サポートされていないファイル形式です",
     "description": "Unsupported file format"
   },
+  "importAnotherRunning": {
+    "message": "別のインポートがすでに実行中です。完了するまで待ってから、もう一度お試しください。",
+    "description": "Error shown when an import is started while another extension page is already importing"
+  },
   "bookmarksImportedSuccessfully": {
     "message": "ブックマークを読み込みました。",
     "description": "Bookmarks imported successfully"
