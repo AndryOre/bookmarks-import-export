@@ -949,6 +949,20 @@
   "import_skippedInvalidUrl": {
     "n": "已跳过 $1 个，因为其地址不受支持"
   },
+  "import_skipDuplicates": {
+    "message": "跳过重复项",
+    "description": "Label of the switch on the Import page that skips bookmarks the browser already has"
+  },
+  "import_skipDuplicatesFound": {
+    "n": "此文件中有 $1 个书签已存在或重复，将被跳过"
+  },
+  "import_skipDuplicatesNone": {
+    "message": "此文件中没有已存在的书签。",
+    "description": "Helper text under the Skip duplicates switch when no bookmark in the file already exists"
+  },
+  "import_skippedDuplicates": {
+    "n": "已作为重复项跳过 $1 个"
+  },
   "shell_navDuplicates": {
     "message": "重复项",
     "description": "App sidebar nav item and page title"

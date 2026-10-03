@@ -949,6 +949,20 @@
   "import_skippedInvalidUrl": {
     "n": "$1개를 건너뛰었습니다. 주소가 지원되지 않습니다"
   },
+  "import_skipDuplicates": {
+    "message": "중복 건너뛰기",
+    "description": "Label of the switch on the Import page that skips bookmarks the browser already has"
+  },
+  "import_skipDuplicatesFound": {
+    "n": "이 파일의 북마크 $1개는 이미 있거나 반복되어 건너뜁니다"
+  },
+  "import_skipDuplicatesNone": {
+    "message": "이 파일의 북마크 중 이미 있는 것은 없습니다.",
+    "description": "Helper text under the Skip duplicates switch when no bookmark in the file already exists"
+  },
+  "import_skippedDuplicates": {
+    "n": "중복으로 $1개를 건너뛰었습니다"
+  },
   "shell_navDuplicates": {
     "message": "중복",
     "description": "App sidebar nav item and page title"

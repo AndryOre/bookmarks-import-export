@@ -210,7 +210,7 @@ describe('importFromJSON', () => {
 
     const result = await importFromJSON(bookmarks, 'folder')
 
-    expect(result).toEqual({ skippedInvalidUrl: 3 })
+    expect(result).toEqual({ skippedInvalidUrl: 3, skippedDuplicates: 0 })
 
     const root = getFakeBookmarksRoot()
     const otherBookmarks = root.children?.find((n) => n.id === '2')
@@ -476,7 +476,7 @@ describe('importFromJSON empty folders', () => {
       'restore-merge',
     )
 
-    expect(result).toEqual({ skippedInvalidUrl: 0 })
+    expect(result).toEqual({ skippedInvalidUrl: 0, skippedDuplicates: 0 })
     const bar = getFakeBookmarksRoot().children?.find((n) => n.id === '1')
     expect(bar?.children?.map((n) => n.title)).toEqual(['Empty'])
   })

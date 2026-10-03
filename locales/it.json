@@ -957,6 +957,22 @@
     "1": "$1 saltato perché il suo indirizzo non è supportato",
     "n": "$1 saltati perché il loro indirizzo non è supportato"
   },
+  "import_skipDuplicates": {
+    "message": "Salta i duplicati",
+    "description": "Label of the switch on the Import page that skips bookmarks the browser already has"
+  },
+  "import_skipDuplicatesFound": {
+    "1": "$1 segnalibro di questo file esiste già o si ripete e verrà saltato",
+    "n": "$1 segnalibri di questo file esistono già o si ripetono e verranno saltati"
+  },
+  "import_skipDuplicatesNone": {
+    "message": "Nessun segnalibro di questo file esiste già.",
+    "description": "Helper text under the Skip duplicates switch when no bookmark in the file already exists"
+  },
+  "import_skippedDuplicates": {
+    "1": "$1 saltato come duplicato",
+    "n": "$1 saltati come duplicati"
+  },
   "shell_navDuplicates": {
     "message": "Duplicati",
     "description": "App sidebar nav item and page title"

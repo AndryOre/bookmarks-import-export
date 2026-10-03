@@ -957,6 +957,22 @@
     "1": "$1 omitido porque su dirección no es compatible",
     "n": "$1 omitidos porque su dirección no es compatible"
   },
+  "import_skipDuplicates": {
+    "message": "Omitir duplicados",
+    "description": "Label of the switch on the Import page that skips bookmarks the browser already has"
+  },
+  "import_skipDuplicatesFound": {
+    "1": "$1 marcador de este archivo ya existe o se repite y se omitirá",
+    "n": "$1 marcadores de este archivo ya existen o se repiten y se omitirán"
+  },
+  "import_skipDuplicatesNone": {
+    "message": "Ningún marcador de este archivo existe ya.",
+    "description": "Helper text under the Skip duplicates switch when no bookmark in the file already exists"
+  },
+  "import_skippedDuplicates": {
+    "1": "$1 omitido por duplicado",
+    "n": "$1 omitidos por duplicados"
+  },
   "shell_navDuplicates": {
     "message": "Duplicados",
     "description": "App sidebar nav item and page title"

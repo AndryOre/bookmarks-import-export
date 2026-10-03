@@ -949,6 +949,20 @@
   "import_skippedInvalidUrl": {
     "n": "Пропущено: $1 — адрес не поддерживается"
   },
+  "import_skipDuplicates": {
+    "message": "Пропускать дубликаты",
+    "description": "Label of the switch on the Import page that skips bookmarks the browser already has"
+  },
+  "import_skipDuplicatesFound": {
+    "n": "Закладок в этом файле, которые уже есть или повторяются и будут пропущены: $1"
+  },
+  "import_skipDuplicatesNone": {
+    "message": "Закладок из этого файла, которые уже есть, нет.",
+    "description": "Helper text under the Skip duplicates switch when no bookmark in the file already exists"
+  },
+  "import_skippedDuplicates": {
+    "n": "Пропущено как дубликаты: $1"
+  },
   "shell_navDuplicates": {
     "message": "Дубликаты",
     "description": "App sidebar nav item and page title"

@@ -965,6 +965,22 @@
     "1": "$1 ignorado porque o endereço não é compatível",
     "n": "$1 ignorados porque o endereço não é compatível"
   },
+  "import_skipDuplicates": {
+    "message": "Ignorar duplicados",
+    "description": "Label of the switch on the Import page that skips bookmarks the browser already has"
+  },
+  "import_skipDuplicatesFound": {
+    "1": "$1 favorito deste arquivo já existe ou se repete e será ignorado",
+    "n": "$1 favoritos deste arquivo já existem ou se repetem e serão ignorados"
+  },
+  "import_skipDuplicatesNone": {
+    "message": "Nenhum favorito deste arquivo já existe.",
+    "description": "Helper text under the Skip duplicates switch when no bookmark in the file already exists"
+  },
+  "import_skippedDuplicates": {
+    "1": "$1 ignorado como duplicado",
+    "n": "$1 ignorados como duplicados"
+  },
   "shell_navDuplicates": {
     "message": "Duplicados",
     "description": "App sidebar nav item and page title"

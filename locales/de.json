@@ -950,6 +950,22 @@
     "1": "$1 übersprungen, weil seine Adresse nicht unterstützt wird",
     "n": "$1 übersprungen, weil ihre Adresse nicht unterstützt wird"
   },
+  "import_skipDuplicates": {
+    "message": "Duplikate überspringen",
+    "description": "Label of the switch on the Import page that skips bookmarks the browser already has"
+  },
+  "import_skipDuplicatesFound": {
+    "1": "$1 Lesezeichen in dieser Datei existiert bereits oder wiederholt sich und wird übersprungen",
+    "n": "$1 Lesezeichen in dieser Datei existieren bereits oder wiederholen sich und werden übersprungen"
+  },
+  "import_skipDuplicatesNone": {
+    "message": "Kein Lesezeichen in dieser Datei existiert bereits.",
+    "description": "Helper text under the Skip duplicates switch when no bookmark in the file already exists"
+  },
+  "import_skippedDuplicates": {
+    "1": "$1 als Duplikat übersprungen",
+    "n": "$1 als Duplikate übersprungen"
+  },
   "shell_navDuplicates": {
     "message": "Duplikate",
     "description": "App sidebar nav item and page title"
