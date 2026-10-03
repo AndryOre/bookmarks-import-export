@@ -73,6 +73,17 @@ describe('recordSavedDownload', () => {
     expect(raw.autoExportDownloadIds).toEqual(expected)
   })
 
+  it('keeps overlapping runs apart instead of splitting one run in two', async () => {
+    await recordSavedDownload(1, 100)
+    await recordSavedDownload(2, 200)
+    await recordSavedDownload(3, 100)
+
+    expect(await autoExportDownloadIdsStore.getValue()).toEqual([
+      { runAt: 100, ids: [1, 3] },
+      { runAt: 200, ids: [2] },
+    ])
+  })
+
   it('does not lose ids recorded concurrently', async () => {
     await Promise.all([1, 2, 3, 4].map((id) => recordSavedDownload(id, 50)))
 

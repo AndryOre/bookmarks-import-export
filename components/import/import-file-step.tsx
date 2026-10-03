@@ -41,9 +41,11 @@ export function ImportFileStep({
   const inputReference = useRef<HTMLInputElement>(null)
   const [isDragging, setIsDragging] = useState(false)
   const changeFocusRequest = useRef(false)
+  const changeButtonReference = useRef<HTMLButtonElement | null>(null)
 
   const focusChangeButton = (element: HTMLButtonElement | null) => {
-    if (!element || !changeFocusRequest.current) return
+    changeButtonReference.current = element
+    if (!element || element.disabled || !changeFocusRequest.current) return
     changeFocusRequest.current = false
     element.focus()
   }
@@ -68,7 +70,11 @@ export function ImportFileStep({
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const selected = event.target.files?.[0]
     if (selected) {
-      changeFocusRequest.current = document.activeElement === event.target
+      const activeElement = document.activeElement
+      changeFocusRequest.current =
+        activeElement === event.target ||
+        (activeElement !== null &&
+          activeElement === changeButtonReference.current)
       onFile(selected)
     }
     event.target.value = ''

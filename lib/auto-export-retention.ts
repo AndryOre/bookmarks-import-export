@@ -43,14 +43,12 @@ export function recordSavedDownload(
   runAt: number,
 ): Promise<void> {
   return updateDownloadIds((runs) => {
-    const lastRun = runs.at(-1)
-    if (lastRun?.runAt === runAt) {
-      return [
-        ...runs.slice(0, -1),
-        { runAt, ids: [...lastRun.ids, downloadId] },
-      ]
-    }
-    return [...runs, { runAt, ids: [downloadId] }]
+    const runIndex = runs.findIndex((run) => run.runAt === runAt)
+    return runIndex === -1
+      ? [...runs, { runAt, ids: [downloadId] }]
+      : runs.map((run, index) =>
+          index === runIndex ? { runAt, ids: [...run.ids, downloadId] } : run,
+        )
   })
 }
 
