@@ -6,36 +6,44 @@ Snug — Backup e transferência de favoritos
 
 ## Summary
 
-Exporte, importe e agende backups automáticos dos seus favoritos em HTML, JSON
-ou CSV — tudo no dispositivo, sem conta e sem nuvem.
+Exporte favoritos em HTML, JSON, CSV, Markdown, OPML ou XBEL, importe do Chrome
+ou Safari e agende backups. Tudo local.
 
 ## Detailed description
 
-Snug leva seus favoritos de um navegador para outro, exatamente como você os
-deixou — nada é enviado para lugar nenhum e você não precisa de conta.
+O Snug leva seus favoritos entre navegadores, exatamente como você os deixou —
+nada é enviado a lugar nenhum e você não precisa de conta.
 
-Exporte toda a sua árvore de favoritos ou só a pasta que escolher, em HTML, JSON
-ou CSV. Ao importar, você vê primeiro uma pré-visualização e depois decide:
-mesclar com os favoritos atuais, substituí-los por completo ou guardar tudo em
-uma pasta nova — a escolha é sua, toda vez.
+Exporte toda a árvore de favoritos ou só a pasta que escolher, em HTML, JSON,
+CSV, Markdown, OPML ou XBEL. Importe de HTML, JSON, CSV, XBEL, do arquivo
+Bookmarks de um perfil do Chrome ou dos favoritos do Safari, com uma prévia
+primeiro. Depois decida: mesclar com os favoritos atuais, substituí-los por
+completo ou colocar tudo em uma pasta nova — a escolha é sempre sua.
 
-Configure um agendamento uma única vez e o Snug faz backup dos seus favoritos
-direto na pasta Downloads, sozinho, nos formatos e na frequência que você
-escolher. Os nomes de arquivo podem incluir a data e a hora automaticamente,
-para que nenhum backup seja sobrescrito nem confundido com o anterior.
+Antes de qualquer substituição, o Snug salva um instantâneo de segurança dos
+seus favoritos, para você poder desfazer. Uma página Duplicados encontra
+favoritos repetidos e exclui só os que você escolher, e a importação pode
+ignorar duplicados.
 
-O Snug funciona inteiramente no seu dispositivo — sem conta, sem nuvem, sem
-servidor. Cada operação lê e grava diretamente na árvore de favoritos do seu
-navegador, e essa é toda a história da confiança. Funciona no Chrome e em
-qualquer navegador baseado em Chromium (Edge, Opera, Brave) a partir da mesma
-página.
+Configure um agendamento uma única vez — por hora, diário, semanal e mais — e o
+Snug salva seus favoritos direto na pasta Downloads, nos formatos que você
+escolher. A Retenção mantém só os backups mais recentes, e um aviso informa se
+algum falhar. Os nomes de arquivo podem incluir data e hora automaticamente.
+
+O Snug roda inteiramente no seu dispositivo — sem conta, sem nuvem, sem
+servidor. Cada operação lê e grava direto nos favoritos do seu navegador, e essa
+é toda a história de confiança. A árvore de favoritos funciona totalmente com
+teclado e leitores de tela, e o Snug fala 10 idiomas. Funciona no Chrome e em
+qualquer outro navegador baseado em Chromium (Edge, Opera, Brave) pela mesma
+página da loja.
 
 ## Source notes
 
 - Source: the English listing in [`../README.md`](../README.md) and
   `docs/brand/copy.md` section 1.
-- Terms kept in English: Snug, HTML, JSON, CSV, Chrome, Chromium, Edge, Opera,
-  Brave, Downloads (Chrome's pt-BR label for the folder).
+- Terms kept in English: Snug, HTML, JSON, CSV, Markdown, OPML, XBEL, Safari,
+  Chrome, Chromium, Edge, Opera, Brave, Downloads (Chrome's pt-BR label for the
+  folder).
 - "Bookmarks" is "favoritos", Chrome's pt-BR term.
 - Adapted rather than translated: the summary drops "seu" before "dispositivo"
   to fit the 132-character limit (131 characters); "same listing" becomes "mesma

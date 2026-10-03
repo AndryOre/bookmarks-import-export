@@ -56,6 +56,18 @@ describe('getChangelog', () => {
   })
 })
 
+describe('2.0.0 entry', () => {
+  it('covers every headline feature, linking duplicates to its page', () => {
+    const entry = getChangelog().find((item) => item.version === '2.0.0')
+
+    expect(entry?.items.map((item) => item.textKey)).toEqual(
+      [1, 2, 3, 4, 5, 6, 7, 8].map((index) => `changelog_2_0_0_${index}`),
+    )
+    expect(entry?.items[4]?.linkUrl).toBe(getAppUrl(APP_ROUTES.duplicates))
+    expect(entry?.items[5]?.linkUrl).toBe(getAppUrl(APP_ROUTES.autoExport))
+  })
+})
+
 describe('changelog dates', () => {
   it('stores every release date as a valid ISO date', () => {
     for (const { isoDate } of getChangelog()) {

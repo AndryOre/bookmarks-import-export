@@ -4,7 +4,7 @@
     "description": "Name of the extension."
   },
   "extensionDescription": {
-    "message": "Lesezeichen exportieren, importieren und automatisch sichern – als HTML, JSON oder CSV, auf deinem Gerät, ohne Konto, ohne Cloud.",
+    "message": "Lesezeichen als HTML, JSON, CSV, Markdown, OPML oder XBEL exportieren, aus Chrome oder Safari importieren, automatisch sichern.",
     "description": "Description of the extension"
   },
   "welcomeSubtitle": {
@@ -331,6 +331,30 @@
   },
   "changelog_2_0_0_2_link": {
     "message": "App öffnen"
+  },
+  "changelog_2_0_0_3": {
+    "message": "Snug spricht jetzt 10 Sprachen: Englisch, Spanisch, Deutsch, Französisch, Italienisch, brasilianisches Portugiesisch, Russisch, Japanisch, Koreanisch und vereinfachtes Chinesisch."
+  },
+  "changelog_2_0_0_4": {
+    "message": "Beim Wiederherstellen wird zuerst eine Sicherheitskopie deiner Lesezeichen angelegt, und ein Ersetzen lässt sich auf der Importseite rückgängig machen."
+  },
+  "changelog_2_0_0_5": {
+    "message": "Neue Seite Duplikate, um doppelte Lesezeichen zu finden und nur die gewählten zu löschen. Der Import kann Duplikate auch überspringen."
+  },
+  "changelog_2_0_0_5_link": {
+    "message": "Duplikate finden"
+  },
+  "changelog_2_0_0_6": {
+    "message": "Auto-Export bietet stündliche und wöchentliche Zeitpläne, Aufbewahrung für nur die neuesten Sicherungen und eine Benachrichtigung bei Fehlern."
+  },
+  "changelog_2_0_0_6_link": {
+    "message": "Auto-Export öffnen"
+  },
+  "changelog_2_0_0_7": {
+    "message": "Export als Markdown, OPML und XBEL. Import aus der Bookmarks-Datei eines Chrome-Profils, aus XBEL und Safari-Lesezeichen, mit Fortschritt und Abbrechen."
+  },
+  "changelog_2_0_0_8": {
+    "message": "Der Lesezeichenbaum ist jetzt auch bei riesigen Sammlungen schnell und lässt sich vollständig per Tastatur und Screenreader bedienen."
   },
   "changelog_1_7_0_1": {
     "message": "Statuskarte und Schaltfläche „Jetzt exportieren“ in den Auto-Export-Einstellungen hinzugefügt, dazu eine Statuszeile im Popup, die zeigt, ob der Auto-Export an, aus oder fehlgeschlagen ist."
@@ -707,7 +731,7 @@
     "description": "Welcome page quick-start item title"
   },
   "welcome_exportDescription": {
-    "message": "In zehn Sekunden zu einer sicheren Kopie deiner Lesezeichen.",
+    "message": "Zehn Sekunden bis zur sicheren Kopie, als HTML, JSON, CSV, Markdown, OPML oder XBEL.",
     "description": "Welcome page quick-start item description"
   },
   "welcome_exportAction": {
@@ -731,7 +755,7 @@
     "description": "Welcome page quick-start item title"
   },
   "welcome_importDescription": {
-    "message": "Lesezeichen aus einem anderen Browser oder einer Sicherung übernehmen.",
+    "message": "Hole Lesezeichen aus Chrome, Safari, XBEL oder einer Sicherungsdatei.",
     "description": "Welcome page quick-start item description"
   },
   "welcome_importAction": {

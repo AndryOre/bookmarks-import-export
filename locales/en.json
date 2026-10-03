@@ -4,7 +4,7 @@
     "description": "Name of the extension."
   },
   "extensionDescription": {
-    "message": "Export, import, and schedule automatic backups for your bookmarks — HTML, JSON, or CSV, all on your device, no account, no cloud.",
+    "message": "Export bookmarks to HTML, JSON, CSV, Markdown, OPML or XBEL, import from Chrome or Safari, and back up on a schedule. All local.",
     "description": "Description of the extension"
   },
   "welcomeSubtitle": {
@@ -332,6 +332,30 @@
   },
   "changelog_2_0_0_2_link": {
     "message": "Open the App"
+  },
+  "changelog_2_0_0_3": {
+    "message": "Snug now speaks 10 languages: English, Spanish, German, French, Italian, Brazilian Portuguese, Russian, Japanese, Korean and Simplified Chinese."
+  },
+  "changelog_2_0_0_4": {
+    "message": "Restore now saves a safety snapshot of your bookmarks first, and you can Undo a replace from the Import page."
+  },
+  "changelog_2_0_0_5": {
+    "message": "New Duplicates page to find repeated bookmarks and delete only the ones you pick. Import can also skip duplicates."
+  },
+  "changelog_2_0_0_5_link": {
+    "message": "Find duplicates"
+  },
+  "changelog_2_0_0_6": {
+    "message": "Auto-export gets hourly and weekly schedules, Retention to keep only the latest backups, and a notification if a backup fails."
+  },
+  "changelog_2_0_0_6_link": {
+    "message": "Open Auto-export"
+  },
+  "changelog_2_0_0_7": {
+    "message": "Export to Markdown, OPML and XBEL. Import from a Chrome profile Bookmarks file, XBEL and Safari bookmarks, with progress and Cancel."
+  },
+  "changelog_2_0_0_8": {
+    "message": "The bookmark tree is now fast on huge libraries and works fully with the keyboard and screen readers."
   },
   "changelog_1_7_0_1": {
     "message": "Added a status card and an Export now button to Auto-export settings, plus a popup status line showing whether auto-export is on, off, or failed."
@@ -710,7 +734,7 @@
     "description": "Welcome page quick-start item title"
   },
   "welcome_exportDescription": {
-    "message": "Ten seconds to a safe copy of your bookmarks.",
+    "message": "Ten seconds to a safe copy, in HTML, JSON, CSV, Markdown, OPML or XBEL.",
     "description": "Welcome page quick-start item description"
   },
   "welcome_exportAction": {
@@ -734,7 +758,7 @@
     "description": "Welcome page quick-start item title"
   },
   "welcome_importDescription": {
-    "message": "Bring in bookmarks from another browser or a backup.",
+    "message": "Bring in bookmarks from Chrome, Safari, XBEL or a backup file.",
     "description": "Welcome page quick-start item description"
   },
   "welcome_importAction": {
