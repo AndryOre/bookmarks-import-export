@@ -12,12 +12,15 @@ import {
   ExportTreeNoBookmarks,
   ExportTreeSkeleton,
 } from '@/components/export/export-tree-states'
+import { OperationProgressCard } from '@/components/operation-progress-card'
 import { toast } from '@/components/ui/toast'
 import { APP_ROUTES } from '@/lib/app-url'
 import { exportBookmarks } from '@/lib/export-all-bookmarks'
+import { ExportCanceledError } from '@/lib/export-control'
 import { formatCount } from '@/lib/format-count'
 import { lastExportFormatStore } from '@/lib/storage'
 import type { BookmarkTreeHandle, CheckedState } from '@/lib/types'
+import { useOperationProgress } from '@/lib/use-operation-progress'
 import { useStorageItem } from '@/lib/use-storage-item'
 
 function isTypingTarget(target: EventTarget | null): boolean {
@@ -68,6 +71,7 @@ export function ExportRoute() {
   const [selectedCount, setSelectedCount] = useState(0)
   const [totalCount, setTotalCount] = useState(0)
   const [isExporting, setIsExporting] = useState(false)
+  const progress = useOperationProgress()
   const [format, setFormat] = useStorageItem(lastExportFormatStore)
 
   useSlashToFocus(searchInputReference)
@@ -89,21 +93,33 @@ export function ExportRoute() {
     if (!tree) return
 
     setIsExporting(true)
+    const signal = progress.begin()
     try {
       const selected = await tree.getSelectedBookmarks()
-      const { fileName, count } = await exportBookmarks(format, selected)
+      const { fileName, count } = await exportBookmarks(format, selected, {
+        signal,
+        onProgress: progress.report,
+      })
       toast.add({
         type: 'success',
         title: i18n.t('exportPage_successTitle', count, [formatCount(count)]),
         description: fileName,
       })
     } catch (error) {
-      toast.add({
-        type: 'error',
-        title: i18n.t('exportPage_failedTitle'),
-        description: (error as Error).message,
-      })
+      toast.add(
+        error instanceof ExportCanceledError
+          ? {
+              title: i18n.t('progress_exportCanceledTitle'),
+              description: i18n.t('progress_exportCanceledDescription'),
+            }
+          : {
+              type: 'error',
+              title: i18n.t('exportPage_failedTitle'),
+              description: (error as Error).message,
+            },
+      )
     } finally {
+      progress.end()
       setIsExporting(false)
     }
   }
@@ -151,6 +167,14 @@ export function ExportRoute() {
 
         <ExportOptionsPanel />
       </div>
+
+      {progress.state.isCardVisible && (
+        <OperationProgressCard
+          kind="export"
+          state={progress.state}
+          onCancel={progress.requestCancel}
+        />
+      )}
 
       <ExportBar
         selectedCount={selectedCount}

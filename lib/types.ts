@@ -1,6 +1,8 @@
 import type { Browser } from '@wxt-dev/browser'
 import type { ReactNode } from 'react'
 
+import type { ImportControl } from './import-control'
+
 /**
  * Minimal bookmark node shape, independent of the `browser.bookmarks` API.
  * Used where a plain, serializable tree is needed (e.g. as an intermediate
@@ -66,7 +68,7 @@ export interface ImportResult {
  * whose normalized URL already exists in the browser or repeats earlier in the
  * file; it has no effect in Restore-replace.
  */
-export interface ImportOptions {
+export interface ImportOptions extends ImportControl {
   skipDuplicates?: boolean
 }
 

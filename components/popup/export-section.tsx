@@ -2,13 +2,16 @@ import { i18n } from '#i18n'
 import { DownloadIcon } from 'lucide-react'
 import { useState } from 'react'
 
+import { OperationProgressCard } from '@/components/operation-progress-card'
 import { Button } from '@/components/ui/button'
 import { toast } from '@/components/ui/toast'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { exportAllBookmarks } from '@/lib/export-all-bookmarks'
+import { ExportCanceledError } from '@/lib/export-control'
 import { formatCount } from '@/lib/format-count'
 import { lastExportFormatStore } from '@/lib/storage'
 import type { AutoExportFormat } from '@/lib/types'
+import { useOperationProgress } from '@/lib/use-operation-progress'
 import { useStorageItem } from '@/lib/use-storage-item'
 
 const FORMATS: AutoExportFormat[] = ['html', 'json', 'csv']
@@ -22,23 +25,36 @@ const FORMATS: AutoExportFormat[] = ['html', 'json', 'csv']
 export function ExportSection() {
   const [format, setFormat] = useStorageItem(lastExportFormatStore)
   const [isExporting, setIsExporting] = useState(false)
+  const progress = useOperationProgress()
 
   const handleExport = async () => {
     setIsExporting(true)
+    const signal = progress.begin()
     try {
-      const { fileName, count } = await exportAllBookmarks(format)
+      const { fileName, count } = await exportAllBookmarks(format, {
+        signal,
+        onProgress: progress.report,
+      })
       toast.add({
         type: 'success',
         title: i18n.t('popup_exportSuccessTitle', count, [formatCount(count)]),
         description: fileName,
       })
     } catch (error) {
-      toast.add({
-        type: 'error',
-        title: i18n.t('popup_exportFailedTitle'),
-        description: (error as Error).message,
-      })
+      toast.add(
+        error instanceof ExportCanceledError
+          ? {
+              title: i18n.t('progress_exportCanceledTitle'),
+              description: i18n.t('progress_exportCanceledDescription'),
+            }
+          : {
+              type: 'error',
+              title: i18n.t('popup_exportFailedTitle'),
+              description: (error as Error).message,
+            },
+      )
     } finally {
+      progress.end()
       setIsExporting(false)
     }
   }
@@ -69,6 +85,13 @@ export function ExportSection() {
         <DownloadIcon data-icon="inline-start" />
         {i18n.t('popup_exportAll')}
       </Button>
+      {progress.state.isCardVisible && (
+        <OperationProgressCard
+          kind="export"
+          state={progress.state}
+          onCancel={progress.requestCancel}
+        />
+      )}
     </section>
   )
 }

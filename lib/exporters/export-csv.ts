@@ -1,10 +1,16 @@
 import { i18n } from '#i18n'
 import Papa from 'papaparse'
 
+import { countBookmarks } from '@/lib/count-bookmarks'
+import {
+  createExportTicker,
+  type ExportControl,
+  type ExportTicker,
+} from '@/lib/export-control'
 import { getFaviconBase64 } from '@/lib/favicon'
 import type { ExtendedBookmarkTreeNode } from '@/lib/types'
 
-interface ExportCSVOptions {
+interface ExportCSVOptions extends ExportControl {
   selectedBookmarks: ExtendedBookmarkTreeNode[] | null
   includeIconData: boolean
   includeDateAdded: boolean
@@ -46,12 +52,20 @@ export async function exportToCSV(options: ExportCSVOptions): Promise<string> {
 
   const rows: CSVRow[] = []
 
+  const ticker = createExportTicker(
+    options,
+    countBookmarks(nodesToExport as ExtendedBookmarkTreeNode[]),
+  )
+
   await flattenToRows(nodesToExport as ExtendedBookmarkTreeNode[], rows, '', {
+    ticker,
     includeIconData,
     includeDateAdded,
     includeDateLastUsed,
     hideParentFolder,
   })
+
+  ticker.finish()
 
   const fields: string[] = ['title', 'url', 'folder']
   if (includeDateAdded) fields.push('dateAdded')
@@ -81,10 +95,13 @@ async function flattenToRows(
   nodes: ExtendedBookmarkTreeNode[],
   rows: CSVRow[],
   parentPath: string,
-  options: Omit<ExportCSVOptions, 'selectedBookmarks'>,
+  options: Omit<ExportCSVOptions, 'selectedBookmarks' | keyof ExportControl> & {
+    ticker: ExportTicker
+  },
 ): Promise<void> {
   for (const node of nodes) {
     if (node.url) {
+      options.ticker.tick()
       const row: CSVRow = {
         title: node.title,
         url: node.url,

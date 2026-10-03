@@ -1067,5 +1067,73 @@
   "autoExportPage_notifyOnFailureDescription": {
     "message": "定时或手动的自动导出失败时显示通知。导出成功时不会通知。",
     "description": "Help text under the Failure notification switch"
+  },
+  "progress_importTitle": {
+    "message": "正在导入书签",
+    "description": "Title of the progress card while importing"
+  },
+  "progress_exportTitle": {
+    "message": "正在导出书签",
+    "description": "Title of the progress card while exporting"
+  },
+  "progress_cancelingTitle": {
+    "message": "正在取消…",
+    "description": "Title of the progress card while a cancel is rolled back"
+  },
+  "progress_cancelingImportDescription": {
+    "message": "正在将书签恢复到原来的状态。",
+    "description": "Progress card text while an import is rolled back"
+  },
+  "progress_cancelingExportDescription": {
+    "message": "正在停止导出。不会下载任何文件。",
+    "description": "Progress card text while an export is stopped"
+  },
+  "progress_importCount": {
+    "message": "已添加 $DONE$ / $TOTAL$",
+    "description": "Import progress: bookmarks added so far out of the total",
+    "placeholders": {
+      "done": {
+        "content": "$1"
+      },
+      "total": {
+        "content": "$2"
+      }
+    }
+  },
+  "progress_exportCount": {
+    "message": "已导出 $DONE$ / $TOTAL$",
+    "description": "Export progress: bookmarks exported so far out of the total",
+    "placeholders": {
+      "done": {
+        "content": "$1"
+      },
+      "total": {
+        "content": "$2"
+      }
+    }
+  },
+  "progress_cancelImport": {
+    "message": "取消导入",
+    "description": "Accessible label of the Cancel button during an import"
+  },
+  "progress_cancelExport": {
+    "message": "取消导出",
+    "description": "Accessible label of the Cancel button during an export"
+  },
+  "progress_importCanceledTitle": {
+    "message": "导入已取消",
+    "description": "Title shown after an import was canceled"
+  },
+  "progress_importCanceledDescription": {
+    "message": "书签已恢复到原来的状态。",
+    "description": "Text shown after an import was canceled and rolled back"
+  },
+  "progress_exportCanceledTitle": {
+    "message": "导出已取消",
+    "description": "Title shown after an export was canceled"
+  },
+  "progress_exportCanceledDescription": {
+    "message": "未下载任何文件。",
+    "description": "Text shown after an export was canceled"
   }
 }

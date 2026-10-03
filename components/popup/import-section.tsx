@@ -2,6 +2,7 @@ import { i18n } from '#i18n'
 import { TriangleAlertIcon, UploadIcon } from 'lucide-react'
 import { useId, useRef, useState } from 'react'
 
+import { OperationProgressCard } from '@/components/operation-progress-card'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import {
   AlertDialog,
@@ -26,11 +27,13 @@ import {
 import { Spinner } from '@/components/ui/spinner'
 import { toast } from '@/components/ui/toast'
 import { formatCount } from '@/lib/format-count'
+import { ImportCanceledError } from '@/lib/import-control'
 import { getImportModeItems } from '@/lib/import-mode-items'
 import { getImportPreview } from '@/lib/import-preview'
 import { runImport } from '@/lib/run-import'
 import { defaultImportModeStore, skipDuplicatesStore } from '@/lib/storage'
 import type { ImportMode } from '@/lib/types'
+import { useOperationProgress } from '@/lib/use-operation-progress'
 import { useStorageItem } from '@/lib/use-storage-item'
 
 interface PendingImport {
@@ -56,6 +59,7 @@ export function ImportSection() {
   const [mode, setMode] = useStorageItem(defaultImportModeStore)
   const [pendingImport, setPendingImport] = useState<PendingImport | null>(null)
   const [isImporting, setIsImporting] = useState(false)
+  const progress = useOperationProgress()
 
   const performImport = async ({
     text,
@@ -64,9 +68,12 @@ export function ImportSection() {
     mode: importMode,
   }: PendingImport) => {
     setIsImporting(true)
+    const signal = progress.begin()
     try {
       const result = await runImport(text, mimeType, importMode, fileName, {
         skipDuplicates: await skipDuplicatesStore.getValue(),
+        signal,
+        onProgress: progress.report,
       })
       const notes = [
         result.skippedDuplicates > 0
@@ -86,12 +93,20 @@ export function ImportSection() {
         description: notes.length > 0 ? notes.join('. ') : undefined,
       })
     } catch (error) {
-      toast.add({
-        type: 'error',
-        title: i18n.t('popup_importFailedTitle'),
-        description: (error as Error).message,
-      })
+      toast.add(
+        error instanceof ImportCanceledError
+          ? {
+              title: i18n.t('progress_importCanceledTitle'),
+              description: i18n.t('progress_importCanceledDescription'),
+            }
+          : {
+              type: 'error',
+              title: i18n.t('popup_importFailedTitle'),
+              description: (error as Error).message,
+            },
+      )
     } finally {
+      progress.end()
       setIsImporting(false)
     }
   }
@@ -207,6 +222,14 @@ export function ImportSection() {
         )}
         {isImporting ? i18n.t('popup_importing') : i18n.t('popup_chooseFile')}
       </Button>
+
+      {progress.state.isCardVisible && (
+        <OperationProgressCard
+          kind="import"
+          state={progress.state}
+          onCancel={progress.requestCancel}
+        />
+      )}
 
       <AlertDialog
         open={pendingImport !== null}
