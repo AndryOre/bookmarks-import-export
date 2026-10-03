@@ -517,3 +517,37 @@ describe('runtime.onMessage — "Export now"', () => {
     expect(response).toBeUndefined()
   })
 })
+
+describe('self-healing alarm', () => {
+  it('re-arms the alarm on start when auto-export is enabled and no alarm exists', async () => {
+    await autoExportConfigStore.setValue(baseConfig())
+    await fakeBrowser.alarms.clearAll()
+
+    background.main?.()
+
+    await vi.waitFor(() => {
+      expect(syncAlarm).toHaveBeenCalledWith('startup')
+    })
+  })
+
+  it('does not re-arm when an alarm already exists', async () => {
+    await autoExportConfigStore.setValue(baseConfig())
+    await browser.alarms.create(ALARM_NAME, { when: Date.now() + 60_000 })
+    vi.mocked(syncAlarm).mockClear()
+
+    background.main?.()
+    await new Promise((resolve) => setTimeout(resolve, 20))
+
+    expect(syncAlarm).not.toHaveBeenCalled()
+  })
+
+  it('does not re-arm when auto-export is disabled', async () => {
+    await autoExportConfigStore.setValue(baseConfig({ enabled: false }))
+    vi.mocked(syncAlarm).mockClear()
+
+    background.main?.()
+    await new Promise((resolve) => setTimeout(resolve, 20))
+
+    expect(syncAlarm).not.toHaveBeenCalled()
+  })
+})
