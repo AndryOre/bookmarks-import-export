@@ -664,6 +664,14 @@
     "message": "Échec de l'importation",
     "description": "Popup toast title when an import fails"
   },
+  "import_nothingToImportTitle": {
+    "message": "Rien à importer",
+    "description": "Popup toast title when Skip duplicates leaves nothing to import"
+  },
+  "import_allDuplicates": {
+    "message": "Tous les favoris de ce fichier existent déjà dans vos favoris, rien n'a donc été importé.",
+    "description": "Popup toast text when every bookmark in the file already exists"
+  },
   "popup_replaceAlertTitle": {
     "message": "Les favoris existants seront remplacés",
     "description": "Title of the popup alert shown when the default mode is Restore - replace"
@@ -926,6 +934,10 @@
         "content": "$1"
       }
     }
+  },
+  "safetySnapshotIncomplete": {
+    "message": "Certains favoris n’ont pas pu être écrits, la restauration a donc été annulée.",
+    "description": "Error when a Safety snapshot restore finished but dropped some bookmarks"
   },
   "import_replaceDiffTitle": {
     "0": "Le remplacement supprimera $1 favori et en ajoutera $2",

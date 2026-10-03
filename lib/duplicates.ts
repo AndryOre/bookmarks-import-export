@@ -111,7 +111,8 @@ export function findDuplicateGroups(
   for (const copy of copies) {
     const key = normalizeUrl(copy.url)
     const bucket = byUrl.get(key)
-    byUrl.set(key, bucket ? [...bucket, copy] : [copy])
+    if (bucket) bucket.push(copy)
+    else byUrl.set(key, [copy])
   }
   const groups: DuplicateGroup[] = []
   for (const [normalizedUrl, bucket] of byUrl) {

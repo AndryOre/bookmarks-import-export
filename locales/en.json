@@ -661,6 +661,14 @@
     "message": "Import failed",
     "description": "Popup toast title when an import fails"
   },
+  "import_nothingToImportTitle": {
+    "message": "Nothing to import",
+    "description": "Popup toast title when Skip duplicates leaves nothing to import"
+  },
+  "import_allDuplicates": {
+    "message": "Every bookmark in this file is already in your bookmarks, so nothing was imported.",
+    "description": "Popup toast text when every bookmark in the file already exists"
+  },
   "popup_replaceAlertTitle": {
     "message": "Existing bookmarks will be replaced",
     "description": "Title of the popup alert shown when the default mode is Restore - replace"
@@ -919,6 +927,10 @@
         "content": "$1"
       }
     }
+  },
+  "safetySnapshotIncomplete": {
+    "message": "Some bookmarks could not be written, so the restore was undone.",
+    "description": "Error when a Safety snapshot restore dropped some bookmarks and was rolled back"
   },
   "import_replaceDiffTitle": {
     "1": "Replace will remove $1 bookmark and add $2",

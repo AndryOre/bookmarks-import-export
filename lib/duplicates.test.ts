@@ -189,3 +189,19 @@ describe('findDuplicateGroups safety', () => {
     expect(group?.copies[0].unmodifiable).toBe(false)
   })
 })
+
+describe('findDuplicateGroups scale', () => {
+  it('builds one huge same-URL bucket in linear time', () => {
+    const nodes = Array.from({ length: 50_000 }, (_, index) => ({
+      id: String(index),
+      title: 'T',
+      url: 'https://x.com',
+      dateAdded: index,
+    }))
+    const start = performance.now()
+    const groups = findDuplicateGroups(nodes)
+    expect(performance.now() - start).toBeLessThan(1000)
+    expect(groups).toHaveLength(1)
+    expect(groups[0]!.copies).toHaveLength(50_000)
+  })
+})
