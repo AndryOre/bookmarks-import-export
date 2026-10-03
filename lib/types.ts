@@ -73,7 +73,8 @@ export interface ImportOptions extends ImportControl {
   skipDuplicates?: boolean
 }
 
-export type BookmarkFormat = 'json' | 'html' | 'csv' | 'unknown'
+export type BookmarkFormat =
+  'json' | 'html' | 'csv' | 'chrome' | 'xbel' | 'safari' | 'unknown'
 
 export type ImportMode = 'folder' | 'restore-merge' | 'restore-replace'
 

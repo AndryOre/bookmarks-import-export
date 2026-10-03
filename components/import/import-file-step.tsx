@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/item'
 import { cn } from '@/lib/utils'
 
-const ACCEPTED_FILE_TYPES = '.csv,.json,.html,.htm'
+const ACCEPTED_FILE_TYPES = '.csv,.json,.html,.htm,.xbel,.xml'
 
 interface ImportFileStepProperties {
   file: File | null

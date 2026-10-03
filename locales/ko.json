@@ -64,7 +64,7 @@
     "description": "Secondary file drop zone prompt"
   },
   "supportedFormats": {
-    "message": "HTML, JSON, CSV 지원",
+    "message": "HTML, JSON, CSV, XBEL, Chrome Bookmarks 파일, Safari 내보내기 지원",
     "description": "Supported import formats"
   },
   "importMode": {

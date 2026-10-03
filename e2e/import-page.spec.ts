@@ -446,6 +446,59 @@ test.describe('Import page', () => {
     await expectSuccess(page)
   })
 
+  test('a Chrome profile Bookmarks file previews per root and restore-merges into the roots', async ({
+    openExtensionPage,
+    readBookmarkTree,
+  }) => {
+    const page = await openImportPage(openExtensionPage)
+    await chooseFile(page, 'chrome-profile-bookmarks.json')
+
+    await expect(
+      page.getByRole('radio', { name: /^Restore — merge/ }),
+    ).toBeEnabled()
+    await expect(page.getByText('Other bookmarks')).toBeVisible()
+    await selectMode(page, 'Restore — merge')
+    await submitImport(page, 4)
+    await expectSuccess(page)
+
+    const [root] = await readBookmarkTree()
+    const bookmarksBar = root?.children?.find((n) => n.id === '1')
+    const otherBookmarks = root?.children?.find((n) => n.id === '2')
+    expect(bookmarksBar?.children?.map((n) => n.title)).toEqual([
+      'Chrome Bar A',
+      'Chrome Folder',
+    ])
+    expect(JSON.stringify(otherBookmarks)).toContain(
+      'https://chrome-other-a.example/page',
+    )
+  })
+
+  test('an XBEL file previews per root and restore-merges into the roots', async ({
+    openExtensionPage,
+    readBookmarkTree,
+  }) => {
+    const page = await openImportPage(openExtensionPage)
+    await chooseFile(page, 'bookmarks.xbel')
+
+    await expect(
+      page.getByRole('radio', { name: /^Restore — merge/ }),
+    ).toBeEnabled()
+    await selectMode(page, 'Restore — merge')
+    await submitImport(page, 3)
+    await expectSuccess(page)
+
+    const [root] = await readBookmarkTree()
+    const bookmarksBar = root?.children?.find((n) => n.id === '1')
+    const otherBookmarks = root?.children?.find((n) => n.id === '2')
+    expect(bookmarksBar?.children?.map((n) => n.title)).toEqual([
+      'XBEL Bar A',
+      'XBEL Folder',
+    ])
+    expect(otherBookmarks?.children?.map((n) => n.url)).toContain(
+      'https://xbel-other-a.example/page',
+    )
+  })
+
   test('an unsupported file shows an inline error and no import button', async ({
     openExtensionPage,
   }) => {

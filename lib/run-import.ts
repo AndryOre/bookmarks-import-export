@@ -2,17 +2,28 @@ import { i18n } from '#i18n'
 
 import { detectFormat } from './detect-format'
 import { ImportCanceledError } from './import-control'
+import { parseChromeBookmarks } from './importers/import-chrome'
 import { importFromCSV } from './importers/import-csv'
 import { importFromHTML } from './importers/import-html'
-import { importFromJSON, normalizeJsonRoot } from './importers/import-json'
+import {
+  importFromJSON,
+  importParsedTree,
+  normalizeJsonRoot,
+} from './importers/import-json'
+import { parseSafari } from './importers/import-safari'
+import { parseXBEL } from './importers/import-xbel'
+import {
+  type ResolvedImportRootTitles,
+  resolveImportRootTitles,
+} from './importers/resolve-roots'
 import { type SafetySnapshot, takeSafetySnapshot } from './safety-snapshot'
 import type { ImportMode, ImportOptions, ImportResult } from './types'
 
 /**
  * Imports the raw content of a bookmarks file into the browser's bookmark
  * tree, dispatching on the detected format. CSV has no location data, so it
- * ignores `mode` and always imports into a folder. Before a Restore-replace of
- * HTML or JSON content, a Safety snapshot is taken; if it cannot be saved the
+ * ignores `mode` and always imports into a folder, as does an XBEL file whose
+ * folders name no browser root. Before a Restore-replace of any other format, a Safety snapshot is taken; if it cannot be saved the
  * error is thrown and nothing is deleted.
  * @param text The raw file content.
  * @param mimeType The file's MIME type, used to help detect its format.
@@ -81,6 +92,24 @@ async function importWithSnapshot(
       await snapshotBeforeReplace()
       return importFromJSON(roots, mode, options)
     }
+    case 'chrome': {
+      const tree = parseChromeBookmarks(text)
+      await snapshotBeforeReplace()
+      return importParsedTree(tree, mode, options)
+    }
+    case 'xbel': {
+      const { tree, hasLocationData } = parseXBEL(text, await liveRootTitles())
+      const effectiveMode = hasLocationData ? mode : 'folder'
+      if (effectiveMode !== mode)
+        return importParsedTree(tree, 'folder', options)
+      await snapshotBeforeReplace()
+      return importParsedTree(tree, mode, options)
+    }
+    case 'safari': {
+      const tree = parseSafari(text, await liveRootTitles())
+      await snapshotBeforeReplace()
+      return importParsedTree(tree, mode, options)
+    }
     case 'csv': {
       return importFromCSV(text, options)
     }
@@ -88,4 +117,9 @@ async function importWithSnapshot(
       throw new Error(i18n.t('unsupportedFileFormat'))
     }
   }
+}
+
+async function liveRootTitles(): Promise<ResolvedImportRootTitles> {
+  const tree = await browser.bookmarks.getTree()
+  return resolveImportRootTitles(tree[0]?.children ?? [])
 }

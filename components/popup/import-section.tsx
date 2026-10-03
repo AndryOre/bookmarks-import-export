@@ -166,7 +166,7 @@ export function ImportSection() {
       <input
         ref={fileInputReference}
         type="file"
-        accept=".csv,.json,.html,.htm"
+        accept=".csv,.json,.html,.htm,.xbel,.xml"
         className="hidden"
         onChange={(event) => void handleFileChange(event)}
       />

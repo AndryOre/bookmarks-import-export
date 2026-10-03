@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xbel PUBLIC "+//IDN python.org//DTD XML Bookmark Exchange Language 1.0//EN//XML" "https://www.python.org/topics/xml/dtds/xbel-1.0.dtd">
+<xbel version="1.0">
+  <folder added="2024-01-01T00:00:00.000Z">
+    <title>Bookmarks bar</title>
+    <bookmark href="https://xbel-bar-a.example/page" added="2024-01-02T00:00:00.000Z">
+      <title>XBEL Bar A</title>
+    </bookmark>
+    <folder>
+      <title>XBEL Folder</title>
+      <bookmark href="https://xbel-nested-a.example/page">
+        <title>XBEL Nested A</title>
+      </bookmark>
+    </folder>
+  </folder>
+  <folder>
+    <title>Other bookmarks</title>
+    <bookmark href="https://xbel-other-a.example/page">
+      <title>XBEL Other A</title>
+    </bookmark>
+    <bookmark href="javascript:alert(1)">
+      <title>XBEL Blocked</title>
+    </bookmark>
+  </folder>
+</xbel>

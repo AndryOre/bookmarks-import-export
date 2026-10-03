@@ -2,8 +2,7 @@ import Papa from 'papaparse'
 
 import { detectFormat } from './detect-format'
 import { processCSVData } from './importers/import-csv'
-import { parseHTML } from './importers/import-html'
-import { normalizeJsonRoot, preprocessBookmarks } from './importers/import-json'
+import { parseLocationAwareImport } from './importers/parse-import'
 import { isAllowedBookmarkUrl } from './importers/url-validation'
 import { collectExistingUrls, dropDuplicateBookmarks } from './skip-duplicates'
 import type { ParsedBookmark } from './types'
@@ -22,10 +21,8 @@ function parseImportTree(
   fileName?: string,
 ): ParsedBookmark[] {
   const format = detectFormat(text, mimeType, fileName)
-  if (format === 'html') return parseHTML(text)
-  if (format === 'json') {
-    return preprocessBookmarks(normalizeJsonRoot(JSON.parse(text)))
-  }
+  const parsed = parseLocationAwareImport(text, format)
+  if (parsed) return parsed.tree
   if (format === 'csv') {
     const parsed = Papa.parse<Record<string, string>>(text.trim(), {
       header: true,

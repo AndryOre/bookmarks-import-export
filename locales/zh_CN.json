@@ -64,7 +64,7 @@
     "description": "Secondary file drop zone prompt"
   },
   "supportedFormats": {
-    "message": "支持 HTML、JSON 和 CSV",
+    "message": "支持 HTML、JSON、CSV、XBEL、Chrome Bookmarks 文件和 Safari 导出文件",
     "description": "Supported import formats"
   },
   "importMode": {

@@ -1,13 +1,18 @@
 import Papa from 'papaparse'
 
+import { isChromeBookmarksFile } from '@/lib/importers/import-chrome'
+import { isSafariExport } from '@/lib/importers/import-safari'
 import type { BookmarkFormat } from '@/lib/types'
 
-type KnownFormat = Exclude<BookmarkFormat, 'unknown'>
+type KnownFormat = 'json' | 'csv' | 'html' | 'xbel'
 
 const FORMAT_BY_MIME: Record<string, KnownFormat> = {
   'application/json': 'json',
   'text/csv': 'csv',
   'text/html': 'html',
+  'application/xml': 'xbel',
+  'text/xml': 'xbel',
+  'application/x-xbel': 'xbel',
 }
 
 const FORMAT_BY_EXTENSION: Record<string, KnownFormat> = {
@@ -15,9 +20,11 @@ const FORMAT_BY_EXTENSION: Record<string, KnownFormat> = {
   csv: 'csv',
   html: 'html',
   htm: 'html',
+  xbel: 'xbel',
+  xml: 'xbel',
 }
 
-const SNIFF_ORDER: readonly KnownFormat[] = ['html', 'json', 'csv']
+const SNIFF_ORDER: readonly KnownFormat[] = ['html', 'xbel', 'json', 'csv']
 
 /**
  * Detects which bookmark format `content` is in. A recognized MIME type
@@ -38,7 +45,11 @@ export function detectFormat(
   fileName = '',
 ): BookmarkFormat {
   const fromMime = FORMAT_BY_MIME[mimeType.toLowerCase()]
-  if (fromMime) return isValidFor(fromMime, content) ? fromMime : 'unknown'
+  if (fromMime) {
+    return isValidFor(fromMime, content)
+      ? refineFormat(fromMime, content)
+      : 'unknown'
+  }
 
   const dotIndex = fileName.lastIndexOf('.')
   const extension = dotIndex === -1 ? '' : fileName.slice(dotIndex + 1)
@@ -47,16 +58,32 @@ export function detectFormat(
     ? [fromExtension, ...SNIFF_ORDER]
     : SNIFF_ORDER
 
-  return (
-    candidates.find((format) => isSniffable(format, content, fromExtension)) ??
-    'unknown'
+  const detected = candidates.find((format) =>
+    isSniffable(format, content, fromExtension),
   )
+  return detected ? refineFormat(detected, content) : 'unknown'
+}
+
+/**
+ * Narrows a validated generic format to a source-specific one: JSON that has
+ * the Chrome profile `roots` shape is `'chrome'`, and Netscape HTML that has
+ * Safari's Favorites / Reading List folders is `'safari'`.
+ * @param format The validated generic format.
+ * @param content The raw file content.
+ * @returns The specific format, or `format` unchanged.
+ */
+function refineFormat(format: KnownFormat, content: string): BookmarkFormat {
+  if (format === 'json' && isChromeBookmarksFile(JSON.parse(content))) {
+    return 'chrome'
+  }
+  return format === 'html' && isSafariExport(content) ? 'safari' : format
 }
 
 const VALIDATORS: Record<KnownFormat, (content: string) => boolean> = {
   json: isValidJSON,
   csv: isValidCSV,
   html: isValidHTML,
+  xbel: isValidXBEL,
 }
 
 function isValidFor(format: KnownFormat, content: string): boolean {
@@ -73,6 +100,19 @@ function isSniffable(
     format !== extensionFormat &&
     !/^[[{]/.test(content.trimStart())
   return !isScalarJSON && isValidFor(format, content)
+}
+
+const XBEL_PROLOG =
+  /^\s*(?:<\?xml[^>]*\?>\s*)?(?:<!--[\s\S]*?-->\s*)*(?:<!DOCTYPE[^>]*>\s*)?(?:<!--[\s\S]*?-->\s*)*<xbel[\s>]/i
+
+/**
+ * Checks that the document element is `xbel`. Full XML validation is left to
+ * the parser, so detection also works where `DOMParser` is unavailable.
+ * @param content The raw file content to validate.
+ * @returns Whether `content` starts like an XBEL document.
+ */
+function isValidXBEL(content: string): boolean {
+  return XBEL_PROLOG.test(content)
 }
 
 function isValidJSON(content: string): boolean {
