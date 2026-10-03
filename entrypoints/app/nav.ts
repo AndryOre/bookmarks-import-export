@@ -1,4 +1,11 @@
-import { Download, History, RefreshCw, Settings, Upload } from 'lucide-react'
+import {
+  Copy,
+  Download,
+  History,
+  RefreshCw,
+  Settings,
+  Upload,
+} from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
 import { APP_ROUTES } from '@/lib/app-url'
@@ -10,6 +17,11 @@ import { APP_ROUTES } from '@/lib/app-url'
 export const NAV_ITEMS = [
   { route: APP_ROUTES.export, titleKey: 'shell_navExport', icon: Download },
   { route: APP_ROUTES.import, titleKey: 'shell_navImport', icon: Upload },
+  {
+    route: APP_ROUTES.duplicates,
+    titleKey: 'shell_navDuplicates',
+    icon: Copy,
+  },
   {
     route: APP_ROUTES.autoExport,
     titleKey: 'shell_navAutoExport',

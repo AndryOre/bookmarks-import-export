@@ -11,6 +11,7 @@ import { APP_ROUTES } from '@/lib/app-url'
 
 import { AppShell } from './app-shell'
 import { AutoExportRoute } from './routes/auto-export'
+import { DuplicatesRoute } from './routes/duplicates'
 import { ExportRoute } from './routes/export'
 import { ImportRoute } from './routes/import'
 import { SettingsRoute } from './routes/settings'
@@ -41,6 +42,11 @@ const routeTree = rootRoute.addChildren([
     getParentRoute: () => rootRoute,
     path: APP_ROUTES.import,
     component: ImportRoute,
+  }),
+  createRoute({
+    getParentRoute: () => rootRoute,
+    path: APP_ROUTES.duplicates,
+    component: DuplicatesRoute,
   }),
   createRoute({
     getParentRoute: () => rootRoute,

@@ -949,5 +949,107 @@
         "content": "$1"
       }
     }
+  },
+  "shell_navDuplicates": {
+    "message": "Duplicados",
+    "description": "App sidebar nav item and page title"
+  },
+  "duplicates_summary": {
+    "message": "$GROUPS$ grupos · $COPIES$ copias extra",
+    "description": "Summary of the Duplicate scan result",
+    "placeholders": {
+      "groups": {
+        "content": "$1"
+      },
+      "copies": {
+        "content": "$2"
+      }
+    }
+  },
+  "duplicates_copiesBadge": {
+    "message": "$COUNT$ copias",
+    "description": "Badge with the number of copies in a Duplicate group",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_groupLabel": {
+    "message": "Copias de $URL$",
+    "description": "Accessible label of the radio group choosing which copy to keep",
+    "placeholders": {
+      "url": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_keep": {
+    "message": "Conservar",
+    "description": "Status of the copy that will be kept"
+  },
+  "duplicates_delete": {
+    "message": "Eliminar",
+    "description": "Status of a copy that will be deleted"
+  },
+  "duplicates_added": {
+    "message": "Agregado el $DATE$",
+    "description": "Date a bookmark was added",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_deleteButton": {
+    "message": "Eliminar $COUNT$ copias extra",
+    "description": "Destructive button that deletes the extra copies",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_confirmTitle": {
+    "message": "¿Eliminar $COUNT$ copias extra?",
+    "description": "Confirm dialog title for deleting extra copies",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_confirmDescription": {
+    "message": "Solo se eliminan de tus marcadores las copias marcadas como Eliminar. Las copias que conservas y todas las carpetas permanecen. Esta acción no se puede deshacer.",
+    "description": "Confirm dialog body; folders are never deleted"
+  },
+  "duplicates_deleted": {
+    "message": "Se eliminaron $COUNT$ copias extra",
+    "description": "Toast after the extra copies were deleted",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_deleteFailed": {
+    "message": "No se pudieron eliminar las copias",
+    "description": "Toast when deleting copies failed"
+  },
+  "duplicates_emptyTitle": {
+    "message": "Sin duplicados",
+    "description": "Empty state title when no Duplicates exist"
+  },
+  "duplicates_emptyDescription": {
+    "message": "Cada marcador tiene su propia dirección.",
+    "description": "Empty state description when no Duplicates exist"
+  },
+  "duplicates_scanAgain": {
+    "message": "Escanear de nuevo",
+    "description": "Button that scans the bookmarks again"
+  },
+  "duplicates_scanning": {
+    "message": "Escaneando tus marcadores",
+    "description": "Accessible label while scanning bookmarks"
   }
 }
