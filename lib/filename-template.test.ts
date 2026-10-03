@@ -42,6 +42,19 @@ describe('formatFilenameTemplate', () => {
     expect(formatFilenameTemplate('///', date)).toBe('___')
   })
 
+  it.each<[string, string]>([
+    ['.x', 'x'],
+    ['con', '_con'],
+    ['nul.txt', '_nul.txt'],
+    ['name. ', 'name'],
+    ['...', 'Bookmarks'],
+  ])(
+    'produces a downloads-safe filename for %j -> %j',
+    (template, expected) => {
+      expect(formatFilenameTemplate(template, date)).toBe(expected)
+    },
+  )
+
   it('defaults to the current date when none is provided', () => {
     const result = formatFilenameTemplate('%yyyy')
     expect(result).toBe(String(new Date().getFullYear()))

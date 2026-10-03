@@ -635,6 +635,12 @@ describe('runAutoExport', () => {
     ['back<up>s:"|/?*/', 'backups/'],
     ['exports/My:Drive/', 'exports/MyDrive/'],
     [`exports/tab\ttest/`, 'exports/tabtest/'],
+    ['.backups', 'backups/'],
+    ['Backups /snug', 'Backups/snug/'],
+    ['a/.../b', 'a/b/'],
+    ['a/./b', 'a/b/'],
+    ['con/nul.txt', '_con/_nul.txt/'],
+    ['exports/trail. /x', 'exports/trail/x/'],
   ])(
     'sanitizes the configured path %s -> %s',
     async (rawPath, expectedPrefix) => {

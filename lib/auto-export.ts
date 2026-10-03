@@ -6,6 +6,7 @@ import {
 import { EXPORT_FORMAT_INFO, type ExportFormat } from '@/lib/export-formats'
 import { formatFilenameTemplate } from '@/lib/filename-template'
 import { downloadViaOffscreenDocument } from '@/lib/offscreen-download'
+import { sanitizePathSegment } from '@/lib/path-segment'
 import { renderExport } from '@/lib/render-export'
 import {
   autoExportConfigStore,
@@ -236,22 +237,22 @@ export async function syncAlarm(trigger: SyncAlarmTrigger): Promise<void> {
 
 /**
  * Sanitises the user-configured auto-export output path before it's used as
- * a `browser.downloads.download` filename prefix: strips a leading `/` (the
- * path is relative to the browser's downloads folder, not absolute), removes
- * `..` segments to prevent escaping that folder, collapses repeated slashes,
- * and strips characters Windows forbids in filenames/paths (`< > : " | ? *`
- * and control characters) so the download doesn't silently fail on that
- * platform.
+ * a `browser.downloads.download` filename prefix. The path is relative to the
+ * browser's downloads folder, so it is split on `/` and each segment has the
+ * characters Windows forbids (`< > : " | ? *` and control characters)
+ * removed and is cleaned with {@link sanitizePathSegment}. Segments left
+ * empty, `.` or `..` are dropped, which also prevents escaping the folder.
  * @param path The user-configured output path.
  * @returns The sanitized, downloads-relative path.
  */
 function sanitizePath(path: string): string {
   return path
-    .replace(/^\/+/, '')
-    .replaceAll('..', '')
-    .replaceAll(/[<>:"|?*\u{0}-\u{1F}]/gu, '')
-    .replaceAll(/\/+/g, '/')
-    .trim()
+    .split('/')
+    .map((segment) =>
+      sanitizePathSegment(segment.replaceAll(/[<>:"|?*\u{0}-\u{1F}]/gu, '')),
+    )
+    .filter(Boolean)
+    .join('/')
 }
 
 /**
