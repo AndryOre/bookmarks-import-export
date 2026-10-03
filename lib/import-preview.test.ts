@@ -129,8 +129,42 @@ describe('getImportPreview', () => {
     const preview = getImportPreview(csv, 'text/csv')
 
     expect(preview.format).toBe('csv')
-    expect(preview.totalCount).toBe(1)
+    expect(preview.totalCount).toBe(2)
     expect(preview.hasLocationData).toBe(false)
+  })
+
+  it('does not count CSV rows with a disallowed scheme or a malformed row', () => {
+    const csv = [
+      'title,url,folder',
+      'A,https://a.example,',
+      'Bad,javascript:alert(1),',
+      'Broken,https://broken.example,Dev,extra',
+    ].join('\n')
+
+    expect(getImportPreview(csv, 'text/csv').totalCount).toBe(1)
+  })
+
+  it('does not count JSON bookmarks with a disallowed scheme', () => {
+    const json = JSON.stringify({
+      id: '0',
+      title: '',
+      children: [
+        {
+          id: '1',
+          title: 'Bookmarks bar',
+          isBookmarksBar: true,
+          children: [
+            { title: 'A', url: 'https://a.example' },
+            { title: 'Bad', url: 'javascript:alert(1)' },
+          ],
+        },
+      ],
+    })
+
+    const preview = getImportPreview(json, 'application/json')
+
+    expect(preview.totalCount).toBe(1)
+    expect(preview.bookmarksBarCount).toBe(1)
   })
 
   it('returns a zeroed preview for an empty tree', () => {

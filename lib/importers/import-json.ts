@@ -1,7 +1,7 @@
 import { i18n } from '#i18n'
 import type { Browser } from '@wxt-dev/browser'
 
-import { countBookmarks } from '@/lib/count-bookmarks'
+import { countBookmarks, countImportableBookmarks } from '@/lib/count-bookmarks'
 import {
   ImportCanceledError,
   type ImportControl,
@@ -264,7 +264,7 @@ async function processBookmarks(
   const result: ImportResult = { skippedInvalidUrl: 0, skippedDuplicates }
   const writer = new ImportWriter(
     control,
-    countBookmarks(parsed),
+    isTrusted ? countBookmarks(parsed) : countImportableBookmarks(parsed),
     skippedDuplicates,
   )
   const root = tree[0]

@@ -1,13 +1,11 @@
-import Papa from 'papaparse'
-
+import { countImportableBookmarks } from './count-bookmarks'
 import { detectFormat } from './detect-format'
-import { processCSVData } from './importers/import-csv'
+import { parseCSVTree } from './importers/import-csv'
 import { parseLocationAwareImport } from './importers/parse-import'
 import {
   type ResolvedImportRootTitles,
   resolveImportRootTitles,
 } from './importers/resolve-roots'
-import { isAllowedBookmarkUrl } from './importers/url-validation'
 import { collectExistingUrls, dropDuplicateBookmarks } from './skip-duplicates'
 import type { ParsedBookmark } from './types'
 
@@ -28,24 +26,7 @@ function parseImportTree(
   const format = detectFormat(text, mimeType, fileName)
   const parsed = parseLocationAwareImport(text, format, liveRootTitles)
   if (parsed) return parsed.tree
-  if (format === 'csv') {
-    const parsed = Papa.parse<Record<string, string>>(text.trim(), {
-      header: true,
-      skipEmptyLines: true,
-      transformHeader: (header) => header.toLowerCase().trim(),
-    })
-    return processCSVData(parsed.data).tree
-  }
-  return []
-}
-
-function countAllowedBookmarks(nodes: ParsedBookmark[]): number {
-  let total = 0
-  for (const node of nodes) {
-    if (isAllowedBookmarkUrl(node.url)) total++
-    total += countAllowedBookmarks(node.children ?? [])
-  }
-  return total
+  return format === 'csv' ? parseCSVTree(text).tree : []
 }
 
 /**
@@ -75,7 +56,10 @@ export async function summarizeImportDuplicates(
       tree,
       collectExistingUrls(liveTree),
     )
-    return { skippedDuplicates, importableCount: countAllowedBookmarks(nodes) }
+    return {
+      skippedDuplicates,
+      importableCount: countImportableBookmarks(nodes),
+    }
   } catch {
     return { skippedDuplicates: 0, importableCount: 0 }
   }

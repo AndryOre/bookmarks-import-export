@@ -222,6 +222,33 @@ describe('importFromJSON', () => {
     expect(importedFolder?.children?.[0]?.url).toBe('https://valid.example')
   })
 
+  it('reports a progress total equal to the bookmarks actually created', async () => {
+    const totals: number[] = []
+    const bookmarks: ParsedBookmark[] = [
+      {
+        title: 'Other bookmarks',
+        isOtherBookmarks: true,
+        dateAdded: 0,
+        children: [
+          {
+            title: 'Disallowed scheme',
+            url: 'javascript:alert(1)',
+            dateAdded: 0,
+          },
+          { title: 'Valid', url: 'https://valid.example', dateAdded: 0 },
+        ],
+      },
+    ]
+
+    await importFromJSON(bookmarks, 'folder', {
+      onProgress: (progress) => {
+        totals.push(progress.total)
+      },
+    })
+
+    expect(totals.at(-1)).toBe(1)
+  })
+
   it('creates bookmarks directly under the bar/other folders in restore-merge mode', async () => {
     const bookmarks: ParsedBookmark[] = [
       {
