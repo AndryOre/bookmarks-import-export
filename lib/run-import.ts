@@ -6,13 +6,10 @@ import { withImportLock } from './import-lock'
 import { parseChromeBookmarks } from './importers/import-chrome'
 import { importFromCSV } from './importers/import-csv'
 import { importFromHTML } from './importers/import-html'
-import {
-  importFromJSON,
-  importParsedTree,
-  normalizeJsonRoot,
-} from './importers/import-json'
+import { importParsedTree } from './importers/import-json'
 import { parseSafari } from './importers/import-safari'
 import { parseXBEL } from './importers/import-xbel'
+import { parseLocationAwareImport } from './importers/parse-import'
 import { loadLiveRootTitles } from './importers/resolve-roots'
 import {
   hasRewrittenRootsFully,
@@ -133,9 +130,9 @@ async function importWithSnapshot(
       return importFromHTML(text, mode, options)
     }
     case 'json': {
-      const roots = normalizeJsonRoot(JSON.parse(text))
+      const parsed = parseLocationAwareImport(text, 'json')
       await snapshotBeforeReplace()
-      return importFromJSON(roots, mode, options)
+      return importParsedTree(parsed?.tree ?? [], mode, options)
     }
     case 'chrome': {
       const tree = parseChromeBookmarks(text)

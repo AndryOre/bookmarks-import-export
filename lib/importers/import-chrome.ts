@@ -1,4 +1,5 @@
 import { isAllowedBookmarkUrl } from '@/lib/importers/url-validation'
+import { parseJsonOnce } from '@/lib/parse-json-once'
 import type { ParsedBookmark } from '@/lib/types'
 
 interface ChromeNode {
@@ -66,7 +67,7 @@ function convertNode(node: ChromeNode): ParsedBookmark {
  * @throws {Error} When `text` is not JSON.
  */
 export function parseChromeBookmarks(text: string): ParsedBookmark[] {
-  const roots = (JSON.parse(text) as { roots?: Record<string, ChromeNode> })
+  const roots = (parseJsonOnce(text) as { roots?: Record<string, ChromeNode> })
     .roots
   const result: ParsedBookmark[] = []
   const mappings = [
