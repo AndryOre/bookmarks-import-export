@@ -8,7 +8,7 @@ export type KeptCopyIds = Record<string, string>
 /**
  * @param group A Duplicate group, copies ordered oldest first.
  * @param keptCopyIds The user's explicit choices; a missing entry keeps the
- *   oldest copy.
+ *   oldest modifiable copy, or the oldest copy when none is modifiable.
  * @returns The id of the copy to keep in that group.
  */
 export function getKeptCopyId(
@@ -17,7 +17,10 @@ export function getKeptCopyId(
 ): string {
   const chosen = keptCopyIds[group.normalizedUrl]
   const isStillPresent = group.copies.some((copy) => copy.id === chosen)
-  return isStillPresent && chosen !== undefined ? chosen : group.copies[0].id
+  if (isStillPresent && chosen !== undefined) return chosen
+  const defaultCopy =
+    group.copies.find((copy) => !copy.unmodifiable) ?? group.copies[0]
+  return defaultCopy.id
 }
 
 /**

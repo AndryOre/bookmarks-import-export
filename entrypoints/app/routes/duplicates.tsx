@@ -1,6 +1,6 @@
 import { i18n } from '#i18n'
 import { CopyCheckIcon, TriangleAlertIcon } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { DuplicateGroupCard } from '@/components/duplicates/duplicate-group-card'
 import {
@@ -107,6 +107,7 @@ export function DuplicatesRoute() {
   const [hasScanFailed, setHasScanFailed] = useState(false)
 
   const [scanCount, setScanCount] = useState(0)
+  const headingFocusPending = useRef(false)
 
   const scan = () => {
     setGroups(null)
@@ -124,6 +125,9 @@ export function DuplicatesRoute() {
       } catch {
         if (isCurrent) setHasScanFailed(true)
       }
+      if (!isCurrent || !headingFocusPending.current) return
+      headingFocusPending.current = false
+      document.querySelector('h1')?.focus()
     }
     void runScan()
     return () => {
@@ -185,8 +189,14 @@ export function DuplicatesRoute() {
     } finally {
       setIsDeleting(false)
       setIsConfirmOpen(false)
+      headingFocusPending.current = true
       scan()
     }
+  }
+
+  const handleOpenChange = (isOpen: boolean) => {
+    if (isDeleting) return
+    setIsConfirmOpen(isOpen)
   }
 
   return (
@@ -221,7 +231,7 @@ export function DuplicatesRoute() {
         />
       ))}
 
-      <AlertDialog open={isConfirmOpen} onOpenChange={setIsConfirmOpen}>
+      <AlertDialog open={isConfirmOpen} onOpenChange={handleOpenChange}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
