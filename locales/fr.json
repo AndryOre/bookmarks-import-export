@@ -112,17 +112,9 @@
     "1": "$1 favori",
     "n": "$1 favoris"
   },
-  "replaceConfirmTitle": {
-    "message": "Remplacer les favoris existants ?",
-    "description": "Title of the replace confirmation dialog"
-  },
   "replaceConfirmDescription": {
     "message": "Votre barre de favoris et Autres favoris actuels sont vidés avant l'importation. Un instantané de sécurité est enregistré d'abord, pour que vous puissiez annuler l'importation.",
     "description": "Body of the replace confirmation dialog"
-  },
-  "replaceConfirmButton": {
-    "message": "Oui, remplacer",
-    "description": "Confirm button in the replace dialog"
   },
   "cancel": {
     "message": "Annuler",

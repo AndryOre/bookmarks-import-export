@@ -110,17 +110,9 @@
   "importPreviewCount": {
     "n": "북마크 $1개"
   },
-  "replaceConfirmTitle": {
-    "message": "기존 북마크를 교체할까요?",
-    "description": "Title of the replace confirmation dialog"
-  },
   "replaceConfirmDescription": {
     "message": "가져오기 전에 현재 북마크바와 기타 북마크가 비워집니다. 안전 스냅샷이 먼저 저장되므로 가져오기를 되돌릴 수 있습니다.",
     "description": "Body of the replace confirmation dialog"
-  },
-  "replaceConfirmButton": {
-    "message": "예, 교체합니다",
-    "description": "Confirm button in the replace dialog"
   },
   "cancel": {
     "message": "취소",

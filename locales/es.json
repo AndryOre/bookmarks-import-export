@@ -111,17 +111,9 @@
     "1": "$1 marcador",
     "n": "$1 marcadores"
   },
-  "replaceConfirmTitle": {
-    "message": "¿Reemplazar marcadores existentes?",
-    "description": "Título del diálogo de confirmación de reemplazo"
-  },
   "replaceConfirmDescription": {
     "message": "Tu barra de marcadores y Otros marcadores actuales se vacían antes de importar. Primero se guarda una instantánea de seguridad, para que puedas deshacer la importación.",
     "description": "Cuerpo del diálogo de confirmación de reemplazo"
-  },
-  "replaceConfirmButton": {
-    "message": "Sí, reemplazar",
-    "description": "Botón de confirmación en el diálogo de reemplazo"
   },
   "cancel": {
     "message": "Cancelar",
