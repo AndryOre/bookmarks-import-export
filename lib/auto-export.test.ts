@@ -859,6 +859,11 @@ function mockCleanup() {
   const erase = vi.fn<(query: { id: number }) => Promise<number[]>>(
     async () => [],
   )
+  const search = vi.fn(async ({ id }: { id: number }) => [
+    { id, byExtensionId: browser.runtime.id },
+  ])
+  browser.downloads.search =
+    search as unknown as typeof browser.downloads.search
   browser.downloads.removeFile =
     removeFile as unknown as typeof browser.downloads.removeFile
   browser.downloads.erase = erase as unknown as typeof browser.downloads.erase

@@ -415,7 +415,7 @@ function TreeRow({
       aria-checked={checked === 'indeterminate' ? 'mixed' : undefined}
       tabIndex={isTabStop ? 0 : -1}
       data-node-id={node.id}
-      className="absolute inset-x-0 top-0 ml-(--tree-indent) flex h-7.5 cursor-pointer items-center gap-1.5 rounded px-1 outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring"
+      className="absolute inset-x-0 top-0 ml-(--tree-indent) flex h-7.5 translate-y-(--tree-offset) cursor-pointer items-center gap-1.5 rounded px-1 outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring"
       style={
         {
           '--tree-indent': `${(level - 1) * 16}px`,

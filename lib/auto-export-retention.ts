@@ -36,13 +36,31 @@ export function recordSavedDownload(downloadId: number): Promise<void> {
 }
 
 /**
- * Removes one of Snug's own saved files and its history entry. A file the
- * user already deleted or moved makes `removeFile` reject; that is expected
- * and not an error, so each step is attempted independently.
+ * Checks that a recorded id still refers to a download this extension
+ * created. Chrome can reuse ids after the user clears download history, so a
+ * stale id may now point at one of the user's own files.
+ * @param downloadId The recorded download id.
+ * @returns `true` only when the download exists and was started by Snug.
+ */
+async function isOwnDownload(downloadId: number): Promise<boolean> {
+  try {
+    const [item] = await browser.downloads.search({ id: downloadId })
+    return item?.byExtensionId === browser.runtime.id
+  } catch {
+    return false
+  }
+}
+
+/**
+ * Removes one of Snug's own saved files and its history entry. An id that no
+ * longer refers to a Snug download is skipped untouched. A file the user
+ * already deleted or moved makes `removeFile` reject; that is expected and
+ * not an error, so each step is attempted independently.
  * @param downloadId The recorded download to clean up.
  * @returns Resolves once both steps have been attempted.
  */
 async function removeSavedDownload(downloadId: number): Promise<void> {
+  if (!(await isOwnDownload(downloadId))) return
   try {
     await browser.downloads.removeFile(downloadId)
   } catch {}

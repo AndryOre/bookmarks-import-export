@@ -9,20 +9,37 @@ import { applyRetention, recordSavedDownload } from './auto-export-retention'
  * Replaces `browser.downloads.removeFile`/`erase` (unimplemented in
  * `fakeBrowser`) with `vi.fn`s; ids in `missingFileIds` make `removeFile`
  * reject like Chrome does for a file the user already deleted or moved.
+ * Also stubs `downloads.search` so every recorded id resolves to a download
+ * started by this extension, except `foreignIds`, which resolve to another
+ * extension's or are gone.
  * @param missingFileIds Download ids whose file is gone.
+ * @param foreignIds Download ids that no longer belong to Snug.
  * @returns The installed mocks.
  */
-function mockDownloadsCleanup(missingFileIds: number[] = []) {
+function mockDownloadsCleanup(
+  missingFileIds: number[] = [],
+  foreignIds: number[] = [],
+) {
   const removeFile = vi.fn(async (id: number) => {
     if (missingFileIds.includes(id)) throw new Error('Download file missing.')
   })
   const erase = vi.fn<(query: { id: number }) => Promise<number[]>>(
     async () => [],
   )
+  const search = vi.fn(async ({ id }: { id: number }) => [
+    {
+      id,
+      byExtensionId: foreignIds.includes(id)
+        ? 'some-other-extension'
+        : browser.runtime.id,
+    },
+  ])
+  browser.downloads.search =
+    search as unknown as typeof browser.downloads.search
   browser.downloads.removeFile =
     removeFile as unknown as typeof browser.downloads.removeFile
   browser.downloads.erase = erase as unknown as typeof browser.downloads.erase
-  return { removeFile, erase }
+  return { removeFile, erase, search }
 }
 
 async function recordAll(ids: number[]): Promise<void> {
@@ -117,5 +134,18 @@ describe('applyRetention', () => {
     await applyRetention(1)
 
     expect(removeFile.mock.calls.map(([id]) => id)).toEqual([10])
+  })
+})
+
+describe('applyRetention ownership check', () => {
+  it('skips an id that no longer belongs to Snug and still drops it from storage', async () => {
+    const { removeFile, erase } = mockDownloadsCleanup([], [2])
+    await recordAll([1, 2, 3, 4])
+
+    await applyRetention(2)
+
+    expect(removeFile.mock.calls.map(([id]) => id)).toEqual([1])
+    expect(erase.mock.calls.map(([query]) => query.id)).toEqual([1])
+    expect(await autoExportDownloadIdsStore.getValue()).toEqual([3, 4])
   })
 })
