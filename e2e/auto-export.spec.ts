@@ -6,6 +6,7 @@ const enabledConfig = {
   enabled: true,
   interval: '1d',
   preferredTime: '09:30',
+  dayOfWeek: 1,
   path: 'bookmarks-backup/',
   formats: ['html'],
 }
@@ -94,6 +95,52 @@ test('every control persists on change and re-arms the alarm', async ({
   await expect(
     page.getByText(en.timeSelectionUnavailable.message),
   ).toBeVisible()
+})
+
+test('hourly disables the time, weekly reveals the day select, both save on change', async ({
+  openExtensionPage,
+  seedStorage,
+  serviceWorker,
+}) => {
+  await seedStorage({
+    autoExportConfig: enabledConfig,
+    autoExportNextRun: Date.now() + 60 * 60 * 1000,
+    autoExportLastRun: null,
+  })
+  const page = await openExtensionPage('app.html#/auto-export')
+
+  const readField = (field: string) =>
+    serviceWorker.evaluate(async (key: string) => {
+      const stored = await chrome.storage.local.get('autoExportConfig')
+      const config = stored.autoExportConfig as Record<string, unknown>
+      return config[key]
+    }, field)
+
+  await expect(
+    page.getByLabel(en.autoExportPage_dayOfWeek.message),
+  ).toHaveCount(0)
+
+  await page
+    .getByRole('button', { name: en.autoExportPage_interval1h.message })
+    .click()
+  await expect.poll(() => readField('interval')).toBe('1h')
+  await expect(
+    page.getByText(en.timeSelectionUnavailable.message),
+  ).toBeVisible()
+
+  await page
+    .getByRole('button', { name: en.autoExportPage_interval7d.message })
+    .click()
+  await expect.poll(() => readField('interval')).toBe('7d')
+  await expect(page.getByText(en.timeSelectionUnavailable.message)).toHaveCount(
+    0,
+  )
+
+  await page.locator('#auto-export-day').click()
+  await page
+    .getByRole('option', { name: en.autoExportPage_day5.message })
+    .click()
+  await expect.poll(() => readField('dayOfWeek')).toBe(5)
 })
 
 test('the last selected format cannot be turned off', async ({

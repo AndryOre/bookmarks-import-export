@@ -525,6 +525,10 @@
     "message": "Frecuencia",
     "description": "Etiqueta del grupo de frecuencia"
   },
+  "autoExportPage_interval1h": {
+    "message": "Cada hora",
+    "description": "Frequency option: hourly"
+  },
   "autoExportPage_interval12h": {
     "message": "Cada 12 horas",
     "description": "Opción de frecuencia: cada 12 horas"
@@ -540,6 +544,38 @@
   "autoExportPage_interval7d": {
     "message": "Semanal",
     "description": "Opción de frecuencia: semanal"
+  },
+  "autoExportPage_dayOfWeek": {
+    "message": "Día",
+    "description": "Label of the weekday select shown for the weekly frequency"
+  },
+  "autoExportPage_day0": {
+    "message": "Domingo",
+    "description": "Weekday name (day 0, 0 is Sunday)"
+  },
+  "autoExportPage_day1": {
+    "message": "Lunes",
+    "description": "Weekday name (day 1, 0 is Sunday)"
+  },
+  "autoExportPage_day2": {
+    "message": "Martes",
+    "description": "Weekday name (day 2, 0 is Sunday)"
+  },
+  "autoExportPage_day3": {
+    "message": "Miércoles",
+    "description": "Weekday name (day 3, 0 is Sunday)"
+  },
+  "autoExportPage_day4": {
+    "message": "Jueves",
+    "description": "Weekday name (day 4, 0 is Sunday)"
+  },
+  "autoExportPage_day5": {
+    "message": "Viernes",
+    "description": "Weekday name (day 5, 0 is Sunday)"
+  },
+  "autoExportPage_day6": {
+    "message": "Sábado",
+    "description": "Weekday name (day 6, 0 is Sunday)"
   },
   "autoExportPage_folderDescription": {
     "message": "Carpeta dentro de Descargas donde se guardan las copias.",

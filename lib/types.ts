@@ -63,7 +63,12 @@ export type BookmarkFormat = 'json' | 'html' | 'csv' | 'unknown'
 
 export type ImportMode = 'folder' | 'restore-merge' | 'restore-replace'
 
-export type AutoExportInterval = '12h' | '1d' | '3d' | '7d'
+export type AutoExportInterval = '1h' | '12h' | '1d' | '3d' | '7d'
+
+/**
+ * Day of the week as `Date#getDay` numbers it: 0 is Sunday, 6 is Saturday.
+ */
+export type DayOfWeek = 0 | 1 | 2 | 3 | 4 | 5 | 6
 export type AutoExportFormat = 'html' | 'json' | 'csv'
 
 export interface AutoExportConfig {
@@ -73,6 +78,10 @@ export interface AutoExportConfig {
    * `HH:mm` in 24h format — only used for intervals >= 1d.
    */
   preferredTime: string
+  /**
+   * The day the weekly (`7d`) interval runs on — only used for `7d`.
+   */
+  dayOfWeek: DayOfWeek
   path: string
   formats: AutoExportFormat[]
 }

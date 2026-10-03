@@ -527,6 +527,10 @@
     "message": "Frequência",
     "description": "Label of the frequency toggle group"
   },
+  "autoExportPage_interval1h": {
+    "message": "A cada hora",
+    "description": "Frequency option: hourly"
+  },
   "autoExportPage_interval12h": {
     "message": "A cada 12 horas",
     "description": "Frequency option: every 12 hours"
@@ -542,6 +546,38 @@
   "autoExportPage_interval7d": {
     "message": "Semanalmente",
     "description": "Frequency option: weekly"
+  },
+  "autoExportPage_dayOfWeek": {
+    "message": "Dia",
+    "description": "Label of the weekday select shown for the weekly frequency"
+  },
+  "autoExportPage_day0": {
+    "message": "Domingo",
+    "description": "Weekday name (day 0, 0 is Sunday)"
+  },
+  "autoExportPage_day1": {
+    "message": "Segunda-feira",
+    "description": "Weekday name (day 1, 0 is Sunday)"
+  },
+  "autoExportPage_day2": {
+    "message": "Terça-feira",
+    "description": "Weekday name (day 2, 0 is Sunday)"
+  },
+  "autoExportPage_day3": {
+    "message": "Quarta-feira",
+    "description": "Weekday name (day 3, 0 is Sunday)"
+  },
+  "autoExportPage_day4": {
+    "message": "Quinta-feira",
+    "description": "Weekday name (day 4, 0 is Sunday)"
+  },
+  "autoExportPage_day5": {
+    "message": "Sexta-feira",
+    "description": "Weekday name (day 5, 0 is Sunday)"
+  },
+  "autoExportPage_day6": {
+    "message": "Sábado",
+    "description": "Weekday name (day 6, 0 is Sunday)"
   },
   "autoExportPage_folderDescription": {
     "message": "Pasta dentro da sua pasta Downloads onde os backups são salvos.",

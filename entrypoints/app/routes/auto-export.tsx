@@ -29,6 +29,14 @@ import {
   InputGroupInput,
   InputGroupText,
 } from '@/components/ui/input-group'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Spinner } from '@/components/ui/spinner'
 import { Switch } from '@/components/ui/switch'
 import { toast } from '@/components/ui/toast'
@@ -50,14 +58,26 @@ import type {
   AutoExportFormat,
   AutoExportInterval,
   AutoExportLastRun,
+  DayOfWeek,
 } from '@/lib/types'
 import { useStorageItem } from '@/lib/use-storage-item'
 
 const INTERVAL_OPTIONS: { value: AutoExportInterval; label: string }[] = [
+  { value: '1h', label: 'autoExportPage_interval1h' },
   { value: '12h', label: 'autoExportPage_interval12h' },
   { value: '1d', label: 'autoExportPage_interval1d' },
   { value: '3d', label: 'autoExportPage_interval3d' },
   { value: '7d', label: 'autoExportPage_interval7d' },
+]
+
+const DAY_OPTIONS: { value: DayOfWeek; label: string }[] = [
+  { value: 1, label: 'autoExportPage_day1' },
+  { value: 2, label: 'autoExportPage_day2' },
+  { value: 3, label: 'autoExportPage_day3' },
+  { value: 4, label: 'autoExportPage_day4' },
+  { value: 5, label: 'autoExportPage_day5' },
+  { value: 6, label: 'autoExportPage_day6' },
+  { value: 0, label: 'autoExportPage_day0' },
 ]
 
 const FORMAT_OPTIONS: { value: AutoExportFormat; label: string }[] = [
@@ -264,7 +284,12 @@ export function AutoExportRoute() {
 
   const folder = folderDraft ?? config.path
   const isOff = !config.enabled
-  const isTimeUnused = config.interval === '12h'
+  const isTimeUnused = config.interval === '1h' || config.interval === '12h'
+  const isWeekly = config.interval === '7d'
+  const dayItems = DAY_OPTIONS.map(({ value, label }) => ({
+    value: String(value),
+    label: i18n.t(label as 'autoExportPage_day0'),
+  }))
 
   const save = async (patch: Partial<AutoExportConfig>) => {
     await setConfig({ ...(await autoExportConfigStore.getValue()), ...patch })
@@ -326,6 +351,35 @@ export function AutoExportRoute() {
                 ))}
               </ToggleGroup>
             </FieldSet>
+
+            {isWeekly && (
+              <Field data-disabled={isOff || undefined}>
+                <FieldLabel htmlFor="auto-export-day">
+                  {i18n.t('autoExportPage_dayOfWeek')}
+                </FieldLabel>
+                <Select
+                  items={dayItems}
+                  value={String(config.dayOfWeek)}
+                  disabled={isOff}
+                  onValueChange={(value) =>
+                    void save({ dayOfWeek: Number(value) as DayOfWeek })
+                  }
+                >
+                  <SelectTrigger id="auto-export-day" className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {dayItems.map(({ value, label }) => (
+                        <SelectItem key={value} value={value}>
+                          {label}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </Field>
+            )}
 
             <Field data-disabled={isOff || isTimeUnused || undefined}>
               <FieldLabel htmlFor="auto-export-time">

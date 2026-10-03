@@ -7,6 +7,7 @@ const enabledConfig: AutoExportConfig = {
   enabled: true,
   interval: '1d',
   preferredTime: '00:00',
+  dayOfWeek: 1,
   path: 'bookmarks-backup/',
   formats: ['html'],
 }
