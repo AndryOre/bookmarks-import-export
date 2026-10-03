@@ -31,6 +31,66 @@ beforeEach(() => {
 })
 
 describe('parseHTML', () => {
+  it('keeps the children of folders that carry a <DD> description', () => {
+    const html = `${HTML_HEADER}
+<DL><p>
+    <DT><H3 PERSONAL_TOOLBAR_FOLDER="true">Bookmarks bar</H3>
+    <DL><p>
+        <DT><H3>Described</H3>
+        <DD>A folder description
+        <DL><p>
+            <DT><A HREF="https://inner.example">Inner</A>
+            <DT><H3>Deep</H3>
+            <DD>Deep description
+            <DL><p>
+                <DT><A HREF="https://deep.example">Deep link</A>
+            </DL><p>
+        </DL><p>
+    </DL><p>
+</DL><p>`
+
+    const bar = parseHTML(html).find((n) => n.isBookmarksBar)
+    const described = bar?.children?.[0]
+    expect(described?.title).toBe('Described')
+    expect(described?.children?.map((n) => n.title)).toEqual(['Inner', 'Deep'])
+    expect(described?.children?.[1]?.children?.[0]?.url).toBe(
+      'https://deep.example',
+    )
+  })
+
+  it('keeps wrapper siblings when the toolbar folder is nested inside a wrapper folder', () => {
+    const html = `${HTML_HEADER}
+<DL><p>
+    <DT><A HREF="https://top.example">Top level</A>
+    <DT><H3>Wrapper</H3>
+    <DL><p>
+        <DT><A HREF="https://sibling.example">Wrapper sibling</A>
+        <DT><H3 PERSONAL_TOOLBAR_FOLDER="true">Bookmarks bar</H3>
+        <DL><p>
+            <DT><A HREF="https://bar.example">Bar link</A>
+        </DL><p>
+    </DL><p>
+</DL><p>`
+
+    const parsed = parseHTML(html)
+    const bar = parsed.find((n) => n.isBookmarksBar)
+    expect(bar?.children?.map((n) => n.url)).toEqual(['https://bar.example'])
+
+    const other = parsed.find((n) => n.isOtherBookmarks)
+    const urls: string[] = []
+    const collect = (nodes: typeof parsed): void => {
+      for (const node of nodes) {
+        if (node.url) urls.push(node.url)
+        collect(node.children ?? [])
+      }
+    }
+    collect(other?.children ?? [])
+    expect(urls.toSorted((a, b) => a.localeCompare(b))).toEqual([
+      'https://sibling.example',
+      'https://top.example',
+    ])
+  })
+
   it('returns an empty array when there is no <dl>', () => {
     expect(parseHTML('<html><body>nothing here</body></html>')).toEqual([])
   })
