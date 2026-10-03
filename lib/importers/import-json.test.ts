@@ -188,6 +188,43 @@ describe('preprocessBookmarks', () => {
   })
 })
 
+describe('preprocessBookmarks orphans with an explicit Other node', () => {
+  it('appends top-level orphans to the existing Other node', () => {
+    const input: ParsedBookmark[] = [
+      { id: '2', title: 'Other bookmarks', dateAdded: 0, children: [] },
+      { title: 'Stray', url: 'https://stray.example', dateAdded: 0 },
+    ]
+
+    const result = preprocessBookmarks(input)
+
+    const other = result.find((b) => b.isOtherBookmarks)
+    expect(result).toHaveLength(1)
+    expect(other?.children?.map((c) => c.title)).toEqual(['Stray'])
+  })
+})
+
+describe('importFromJSON non-string titles', () => {
+  it('coerces numeric and null titles instead of failing', async () => {
+    const input = [
+      {
+        id: '2',
+        title: 'Other bookmarks',
+        dateAdded: 0,
+        children: [
+          { title: 2024, url: 'https://n.example', dateAdded: 0 },
+          { title: null, url: 'https://z.example', dateAdded: 0 },
+          { title: 7, dateAdded: 0, children: [] },
+        ],
+      },
+    ] as unknown as ParsedBookmark[]
+
+    await expect(importFromJSON(input, 'restore-merge')).resolves.toBeDefined()
+
+    const other = getFakeBookmarksRoot().children?.find((n) => n.id === '2')
+    expect(other?.children?.map((c) => c.title)).toEqual(['2024', '', '7'])
+  })
+})
+
 describe('importFromJSON', () => {
   it('creates an "Imported bookmarks" folder tree in folder mode', async () => {
     const bookmarks: ParsedBookmark[] = [
