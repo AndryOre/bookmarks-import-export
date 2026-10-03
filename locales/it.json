@@ -497,6 +497,10 @@
     "message": "Importazione non riuscita",
     "description": "Title of the import error alert"
   },
+  "import_errorRestored": {
+    "message": "I tuoi segnalibri precedenti sono stati ripristinati.",
+    "description": "Shown in the import error alert when the Safety snapshot was restored after a failed Restore-replace"
+  },
   "import_another": {
     "message": "Importa un altro file",
     "description": "Button shown after a successful import"
