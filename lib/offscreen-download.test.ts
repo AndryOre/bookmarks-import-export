@@ -30,16 +30,26 @@ type OnChangedListener = (delta: Browser.downloads.DownloadDelta) => void
  * @returns The installed mocks, for call-count/call-args assertions.
  */
 function mockOffscreenApi(existingContexts: unknown[] = []) {
-  const createDocument = vi.fn(async () => {})
-  const closeDocument = vi.fn(async () => {})
-  const getContexts = vi.fn(async () => existingContexts)
+  let isOpen = existingContexts.length > 0
+  const createDocument = vi.fn(async () => {
+    isOpen = true
+  })
+  const closeDocument = vi.fn(async () => {
+    isOpen = false
+  })
+  const getContexts = vi.fn(async () =>
+    isOpen ? [{ contextType: 'OFFSCREEN_DOCUMENT' }] : [],
+  )
   chrome.offscreen = {
     createDocument,
     closeDocument,
   } as unknown as typeof chrome.offscreen
   chrome.runtime.getContexts =
     getContexts as unknown as typeof chrome.runtime.getContexts
-  return { createDocument, closeDocument, getContexts }
+  function closeFromAnotherContext(): void {
+    isOpen = false
+  }
+  return { createDocument, closeDocument, getContexts, closeFromAnotherContext }
 }
 
 /**
@@ -375,5 +385,72 @@ describe('downloadViaOffscreenDocument', () => {
 
     expect(offscreen.createDocument).toHaveBeenCalledTimes(1)
     expect(offscreen.closeDocument).toHaveBeenCalledTimes(1)
+  })
+
+  it('still resolves with the download id when revoking the object URL fails', async () => {
+    mockOffscreenApi()
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const sendMessage = vi.fn(async (message: { type: string }) => {
+      if (message.type === CREATE_BLOB_URL_MESSAGE_TYPE) {
+        return { url: 'blob:mock-1' }
+      }
+      throw new Error('Could not establish connection')
+    })
+    browser.runtime.sendMessage =
+      sendMessage as unknown as typeof browser.runtime.sendMessage
+    const downloads = mockDownloadsApi()
+
+    const runPromise = downloadViaOffscreenDocument('c', 'text/plain', 'f.txt')
+    await flushMicrotasks()
+    downloads.fire(1, 'complete')
+
+    await expect(runPromise).resolves.toBe(1)
+    expect(errorSpy).toHaveBeenCalled()
+  })
+
+  it('treats a concurrent "single offscreen document" createDocument error as already open', async () => {
+    const offscreen = mockOffscreenApi()
+    offscreen.createDocument.mockRejectedValueOnce(
+      new Error('Only a single offscreen document may be created.'),
+    )
+    mockRuntimeSendMessage()
+    const downloads = mockDownloadsApi()
+
+    const runPromise = downloadViaOffscreenDocument('c', 'text/plain', 'f.txt')
+    await flushMicrotasks()
+    downloads.fire(1, 'complete')
+
+    await expect(runPromise).resolves.toBe(1)
+  })
+
+  it('recreates the document when another context closed it while a download was in flight', async () => {
+    const offscreen = mockOffscreenApi()
+    mockRuntimeSendMessage()
+    const downloads = mockDownloadsApi()
+
+    const first = downloadViaOffscreenDocument('a', 'text/plain', 'a.txt')
+    await flushMicrotasks()
+    offscreen.closeFromAnotherContext()
+    const second = downloadViaOffscreenDocument('b', 'text/plain', 'b.txt')
+    await flushMicrotasks()
+
+    expect(offscreen.createDocument).toHaveBeenCalledTimes(2)
+    downloads.fire(1, 'complete')
+    downloads.fire(2, 'complete')
+    await Promise.all([first, second])
+  })
+
+  it('does not fail a successful download when closing the document fails', async () => {
+    const offscreen = mockOffscreenApi()
+    offscreen.closeDocument.mockRejectedValueOnce(new Error('No document'))
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+    mockRuntimeSendMessage()
+    const downloads = mockDownloadsApi()
+
+    const runPromise = downloadViaOffscreenDocument('c', 'text/plain', 'f.txt')
+    await flushMicrotasks()
+    downloads.fire(1, 'complete')
+
+    await expect(runPromise).resolves.toBe(1)
   })
 })

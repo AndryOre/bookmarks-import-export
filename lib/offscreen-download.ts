@@ -51,19 +51,23 @@ export interface CreateBlobUrlResponse {
 
 /**
  * Mutable offscreen-document lifecycle state, grouped in one object (instead
- * of top-level `let` bindings reassigned from inside a function) so it's
- * open-once-per-run/closed-once-idle across concurrent downloads.
- * `lifecycle` serializes every create/close call onto a single promise chain
- * so a close triggered by one download settling can never run concurrently
- * with a create triggered by another — see {@link ensureOffscreenDocument}
- * and {@link closeOffscreenDocumentIfIdle}.
+ * of top-level `let` bindings reassigned from inside a function). The
+ * offscreen document itself is browser-wide, but this state is per JS
+ * context (the service worker and the App page each have their own), so
+ * `documentOpened` is only a hint that this context opened or reused the
+ * document — {@link ensureOffscreenDocument} always re-checks `getContexts`
+ * rather than trusting it. `lifecycle` serializes every create/close call
+ * within this context onto a single promise chain so a close triggered by one
+ * download settling can never run concurrently with a create triggered by
+ * another — see {@link ensureOffscreenDocument} and
+ * {@link closeOffscreenDocumentIfIdle}.
  */
 const offscreenState: {
-  openDocumentPromise: Promise<void> | null
+  documentOpened: boolean
   pendingDownloads: number
   lifecycle: Promise<void>
 } = {
-  openDocumentPromise: null,
+  documentOpened: false,
   pendingDownloads: 0,
   lifecycle: Promise.resolve(),
 }
@@ -98,10 +102,23 @@ async function runLifecycleStep<T>(step: () => Promise<T>): Promise<T> {
 }
 
 /**
- * Opens the offscreen document, reusing one Chrome still has open from a
- * previous service worker lifetime (the in-memory state is lost when the
- * worker is killed, but the document survives, and a second `createDocument`
- * would reject).
+ * Whether `error` is Chrome's rejection for creating a second offscreen
+ * document, which happens when another JS context created one between this
+ * context's `getContexts` check and its `createDocument` call.
+ * @param error The rejection from `chrome.offscreen.createDocument`.
+ * @returns `true` if the document already exists.
+ */
+function isOffscreenAlreadyExistsError(error: unknown): boolean {
+  const message = error instanceof Error ? error.message : String(error)
+  return message.includes('Only a single offscreen document may be created')
+}
+
+/**
+ * Opens the offscreen document, reusing one Chrome still has open (from a
+ * previous service worker lifetime or another JS context — the document is
+ * browser-wide, and a second `createDocument` would reject). A concurrent
+ * creation by another context that wins the race is treated as "already
+ * exists" rather than surfaced.
  * @returns Resolves once an offscreen document is open.
  */
 async function openOffscreenDocument(): Promise<void> {
@@ -110,57 +127,55 @@ async function openOffscreenDocument(): Promise<void> {
   })
   if (existingContexts.length > 0) return
 
-  await chrome.offscreen.createDocument({
-    url: chrome.runtime.getURL(OFFSCREEN_DOCUMENT_PATH),
-    reasons: ['BLOBS'],
-    justification:
-      'Create Blob object URLs for exported bookmark files too large for a data URL.',
-  })
+  try {
+    await chrome.offscreen.createDocument({
+      url: chrome.runtime.getURL(OFFSCREEN_DOCUMENT_PATH),
+      reasons: ['BLOBS'],
+      justification:
+        'Create Blob object URLs for exported bookmark files too large for a data URL.',
+    })
+  } catch (error) {
+    if (!isOffscreenAlreadyExistsError(error)) throw error
+  }
 }
 
 /**
- * Creates the offscreen document if one isn't already open, or awaits the
- * in-flight creation triggered by a previous, still-pending download in the
- * same run. Resets the cached promise on failure so a later call retries
- * document creation instead of re-throwing a stale rejection forever. Chained
- * onto {@link offscreenState}'s `lifecycle` promise so it never runs
- * concurrently with {@link closeOffscreenDocumentIfIdle}.
+ * Ensures an offscreen document is open, re-checking `getContexts` on every
+ * call (via {@link openOffscreenDocument}) so a document another JS context
+ * closed since this context last used it is recreated instead of assumed
+ * present. Chained onto {@link offscreenState}'s `lifecycle` promise so it
+ * never runs concurrently with {@link closeOffscreenDocumentIfIdle}.
  * @returns Resolves once the offscreen document is open.
  */
 async function ensureOffscreenDocument(): Promise<void> {
   await runLifecycleStep(async () => {
-    if (!offscreenState.openDocumentPromise) {
-      offscreenState.openDocumentPromise = openOffscreenDocument()
-    }
-
-    try {
-      await offscreenState.openDocumentPromise
-    } catch (error) {
-      offscreenState.openDocumentPromise = null
-      throw error
-    }
+    await openOffscreenDocument()
+    offscreenState.documentOpened = true
   })
 }
 
 /**
- * Closes the offscreen document once every download started in this run has
- * settled, so a run exporting multiple formats reuses a single document
+ * Closes the offscreen document once every download started in this context
+ * has settled, so a run exporting multiple formats reuses a single document
  * instead of opening and closing one per file. Chained onto
  * {@link offscreenState}'s `lifecycle` promise so it never runs concurrently
  * with {@link ensureOffscreenDocument}, and re-checks `pendingDownloads` at
  * the time it actually runs (not when it was called) in case another
- * download started in the meantime.
+ * download started in the meantime. A close failure (for example another
+ * context already closed the document) is logged, never thrown, so it can't
+ * fail a download that already succeeded.
  * @returns Resolves once the document is closed, or immediately if another download is pending or none is open.
  */
 async function closeOffscreenDocumentIfIdle(): Promise<void> {
   await runLifecycleStep(async () => {
-    if (
-      offscreenState.pendingDownloads > 0 ||
-      !offscreenState.openDocumentPromise
-    )
+    if (offscreenState.pendingDownloads > 0 || !offscreenState.documentOpened)
       return
-    offscreenState.openDocumentPromise = null
-    await chrome.offscreen.closeDocument()
+    offscreenState.documentOpened = false
+    try {
+      await chrome.offscreen.closeDocument()
+    } catch (error) {
+      console.error('Failed to close the offscreen document.', error)
+    }
   })
 }
 
@@ -251,7 +266,8 @@ function waitForDownloadSettled(downloadId: number): Promise<void> {
 
 /**
  * Downloads `content` via a shared offscreen document instead of a base64
- * data URL, so exports aren't capped by the data-URL/IPC size limit. Creates
+ * data URL, so exports aren't capped by the data-URL size limit. The content still
+ * travels through `runtime.sendMessage`, which caps it at 64 MiB. Creates
  * the offscreen document on first use (or reuses one already open from a
  * concurrent call in the same run), messages it to obtain a `Blob` object
  * URL, downloads that URL with `saveAs: false` and `conflictAction:
@@ -284,7 +300,11 @@ export async function downloadViaOffscreenDocument(
       await waitForDownloadSettled(downloadId)
       return downloadId
     } finally {
-      await revokeBlobUrl(url)
+      try {
+        await revokeBlobUrl(url)
+      } catch (error) {
+        console.error('Failed to revoke the export blob URL.', error)
+      }
     }
   } finally {
     offscreenState.pendingDownloads -= 1
