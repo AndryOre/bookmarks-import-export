@@ -282,6 +282,9 @@ test('virtualizes a 5,000-bookmark library and keyboard navigation reaches unren
     })),
   )
   const page = await openExtensionPage('app.html#/export')
+  await page
+    .getByRole('button', { name: en.exportPage_expandAll.message })
+    .click()
   const tree = treeOf(page)
   const rows = tree.getByRole('treeitem')
   await expect(tree).toBeVisible()

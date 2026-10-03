@@ -12,7 +12,6 @@ import {
   ExportTreeNoBookmarks,
   ExportTreeSkeleton,
 } from '@/components/export/export-tree-states'
-import { ScrollArea } from '@/components/ui/scroll-area'
 import { toast } from '@/components/ui/toast'
 import { APP_ROUTES } from '@/lib/app-url'
 import { exportBookmarks } from '@/lib/export-all-bookmarks'
@@ -131,13 +130,12 @@ export function ExportRoute() {
             onExpandAll={() => treeReference.current?.expandAll()}
             onCollapseAll={() => treeReference.current?.collapseAll()}
           />
-          <ScrollArea className="h-128">
+          <div className="flex h-128 flex-col">
             <BookmarkTree
               ref={treeReference}
               searchTerm={searchTerm}
               onSelectionChange={setSelectedCount}
               onTotalChange={setTotalCount}
-              className="overflow-visible"
               loadingState={<ExportTreeSkeleton />}
               noBookmarksState={<ExportTreeNoBookmarks />}
               errorState={(retry) => <ExportTreeError onRetry={retry} />}
@@ -148,7 +146,7 @@ export function ExportRoute() {
                 />
               }
             />
-          </ScrollArea>
+          </div>
         </section>
 
         <ExportOptionsPanel />
