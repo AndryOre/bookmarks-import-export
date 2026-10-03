@@ -142,6 +142,30 @@ describe('getImportPreview', () => {
     })
   })
 
+  it('recognizes XBEL root folders titled like the live browser roots', () => {
+    const edgeXbel = `<?xml version="1.0" encoding="UTF-8"?>
+<xbel version="1.0">
+  <folder><title>Favorites bar</title><bookmark href="https://a.example"><title>A</title></bookmark></folder>
+  <folder><title>Other favorites</title><bookmark href="https://b.example"><title>B</title></bookmark></folder>
+</xbel>`
+    const liveRootTitles = {
+      bookmarksBarTitle: 'Favorites bar',
+      otherBookmarksTitle: 'Other favorites',
+      mobileTitle: undefined,
+    }
+
+    expect(getImportPreview(edgeXbel, '', 'a.xbel')).toMatchObject({
+      hasLocationData: false,
+    })
+    expect(
+      getImportPreview(edgeXbel, '', 'a.xbel', liveRootTitles),
+    ).toMatchObject({
+      hasLocationData: true,
+      bookmarksBarCount: 1,
+      otherBookmarksCount: 1,
+    })
+  })
+
   it('counts per root for XBEL and Safari', () => {
     expect(getImportPreview(xbelFile, '', 'a.xbel')).toMatchObject({
       format: 'xbel',

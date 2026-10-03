@@ -118,3 +118,14 @@ export function resolveImportRootTitles<T extends RootTitleNode>(
     mobileTitle: mobileNode?.title,
   }
 }
+
+/**
+ * Resolves the root titles of the live bookmark tree, so that import files
+ * written by this browser (whose root folders carry its own titles) are
+ * recognized as carrying location data.
+ * @returns The current browser's root titles.
+ */
+export async function loadLiveRootTitles(): Promise<ResolvedImportRootTitles> {
+  const tree = await browser.bookmarks.getTree()
+  return resolveImportRootTitles(tree[0]?.children ?? [])
+}

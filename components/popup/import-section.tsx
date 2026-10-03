@@ -30,6 +30,7 @@ import { formatCount } from '@/lib/format-count'
 import { ImportCanceledError } from '@/lib/import-control'
 import { getImportModeItems } from '@/lib/import-mode-items'
 import { getImportPreview } from '@/lib/import-preview'
+import { loadLiveRootTitles } from '@/lib/importers/resolve-roots'
 import { runImport } from '@/lib/run-import'
 import { defaultImportModeStore, skipDuplicatesStore } from '@/lib/storage'
 import type { ImportMode } from '@/lib/types'
@@ -125,6 +126,7 @@ export function ImportSection() {
         text,
         file.type,
         file.name,
+        await loadLiveRootTitles(),
       )
       if (format === 'unknown') {
         throw new Error(i18n.t('unsupportedFileFormat'))

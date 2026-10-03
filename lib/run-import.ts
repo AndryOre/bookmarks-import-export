@@ -12,10 +12,7 @@ import {
 } from './importers/import-json'
 import { parseSafari } from './importers/import-safari'
 import { parseXBEL } from './importers/import-xbel'
-import {
-  type ResolvedImportRootTitles,
-  resolveImportRootTitles,
-} from './importers/resolve-roots'
+import { loadLiveRootTitles } from './importers/resolve-roots'
 import { type SafetySnapshot, takeSafetySnapshot } from './safety-snapshot'
 import type { ImportMode, ImportOptions, ImportResult } from './types'
 
@@ -98,7 +95,10 @@ async function importWithSnapshot(
       return importParsedTree(tree, mode, options)
     }
     case 'xbel': {
-      const { tree, hasLocationData } = parseXBEL(text, await liveRootTitles())
+      const { tree, hasLocationData } = parseXBEL(
+        text,
+        await loadLiveRootTitles(),
+      )
       const effectiveMode = hasLocationData ? mode : 'folder'
       if (effectiveMode !== mode)
         return importParsedTree(tree, 'folder', options)
@@ -106,7 +106,7 @@ async function importWithSnapshot(
       return importParsedTree(tree, mode, options)
     }
     case 'safari': {
-      const tree = parseSafari(text, await liveRootTitles())
+      const tree = parseSafari(text, await loadLiveRootTitles())
       await snapshotBeforeReplace()
       return importParsedTree(tree, mode, options)
     }
@@ -117,9 +117,4 @@ async function importWithSnapshot(
       throw new Error(i18n.t('unsupportedFileFormat'))
     }
   }
-}
-
-async function liveRootTitles(): Promise<ResolvedImportRootTitles> {
-  const tree = await browser.bookmarks.getTree()
-  return resolveImportRootTitles(tree[0]?.children ?? [])
 }
