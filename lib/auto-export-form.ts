@@ -1,6 +1,4 @@
-import type { AutoExportFormat } from '@/lib/types'
-
-const FORMAT_ORDER: AutoExportFormat[] = ['html', 'json', 'csv']
+import { EXPORT_FORMATS, type ExportFormat } from '@/lib/export-formats'
 
 /**
  * Normalizes a formats selection coming from the Auto-export page's
@@ -11,11 +9,11 @@ const FORMAT_ORDER: AutoExportFormat[] = ['html', 'json', 'csv']
  * @returns The formats to persist, in canonical order.
  */
 export function resolveFormats(
-  next: AutoExportFormat[],
-  previous: AutoExportFormat[],
-): AutoExportFormat[] {
+  next: ExportFormat[],
+  previous: ExportFormat[],
+): ExportFormat[] {
   const chosen = next.length === 0 ? previous : next
-  return FORMAT_ORDER.filter((format) => chosen.includes(format))
+  return EXPORT_FORMATS.filter((format) => chosen.includes(format))
 }
 
 /**

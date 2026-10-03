@@ -48,6 +48,15 @@ import { useStorageItem } from '@/lib/use-storage-item'
 type ImportStatus =
   'idle' | 'importing' | 'canceled' | 'success' | 'undoing' | 'undone' | 'error'
 
+/**
+ * Ref callback that moves focus to an element when it mounts, so a result
+ * view keeps keyboard focus after the form that triggered it unmounts.
+ * @param element The mounted element, or `null` on unmount.
+ */
+function focusOnMount(element: HTMLElement | null) {
+  element?.focus()
+}
+
 function openBookmarkManager() {
   void browser.tabs.create({ url: 'chrome://bookmarks' })
 }
@@ -202,7 +211,7 @@ export function ImportRoute() {
   if (status === 'undone') {
     return (
       <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
-        <Alert>
+        <Alert key="undone" tabIndex={-1} ref={focusOnMount}>
           <Undo2Icon />
           <AlertTitle>{i18n.t('import_undoneTitle')}</AlertTitle>
           <AlertDescription>
@@ -225,7 +234,7 @@ export function ImportRoute() {
     const isUndoing = status === 'undoing'
     return (
       <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
-        <Alert>
+        <Alert key="success" tabIndex={-1} ref={focusOnMount}>
           <CircleCheckIcon />
           <AlertTitle>{i18n.t('bookmarksImportedSuccessfully')}</AlertTitle>
           {skippedDuplicatesCount > 0 && (
@@ -350,7 +359,7 @@ export function ImportRoute() {
       )}
 
       {status === 'canceled' && (
-        <Alert>
+        <Alert tabIndex={-1} ref={focusOnMount}>
           <CircleSlashIcon />
           <AlertTitle>{i18n.t('progress_importCanceledTitle')}</AlertTitle>
           <AlertDescription>
@@ -360,7 +369,7 @@ export function ImportRoute() {
       )}
 
       {status === 'error' && (
-        <Alert variant="destructive">
+        <Alert variant="destructive" tabIndex={-1} ref={focusOnMount}>
           <CircleAlertIcon />
           <AlertTitle>{i18n.t('import_errorTitle')}</AlertTitle>
           <AlertDescription>{errorMessage}</AlertDescription>

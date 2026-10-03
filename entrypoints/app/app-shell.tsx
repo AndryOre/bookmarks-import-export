@@ -1,7 +1,7 @@
 import { i18n } from '#i18n'
 import { Link, Outlet, useRouterState } from '@tanstack/react-router'
 import { cn } from 'cn'
-import { useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import {
   Sidebar,
@@ -74,6 +74,30 @@ function useIsWhatsNewUnseen(pathname: string): boolean {
 }
 
 /**
+ * Moves focus to the page heading and announces the new page title through a
+ * polite live region whenever the pathname changes. The initial load is
+ * skipped, and search or hash-param changes inside one route do not retrigger
+ * because only the pathname is observed.
+ * @param pathname The current router pathname.
+ * @param title The localized page title for that pathname.
+ * @returns A ref for the page `h1` and the text to render in the live region.
+ */
+function usePageChangeFocus(pathname: string, title: string) {
+  const headingReference = useRef<HTMLHeadingElement>(null)
+  const previousPathname = useRef(pathname)
+  const [announcement, setAnnouncement] = useState('')
+
+  useEffect(() => {
+    if (previousPathname.current === pathname) return
+    previousPathname.current = pathname
+    headingReference.current?.focus()
+    setAnnouncement(title)
+  }, [pathname, title])
+
+  return { headingReference, announcement }
+}
+
+/**
  * The App's root layout: collapsible sidebar (offcanvas when narrow), a 48px
  * header with the page title, and a scrolling content area that renders the
  * active route.
@@ -85,6 +109,11 @@ export function AppShell() {
   })
   const autoExport = useAutoExportStatus()
   const isWhatsNewUnseen = useIsWhatsNewUnseen(pathname)
+  const pageTitle = i18n.t(getTitleKey(pathname))
+  const { headingReference, announcement } = usePageChangeFocus(
+    pathname,
+    pageTitle,
+  )
 
   const statusByRoute: Record<string, { status: NavStatus; label?: string }> = {
     [APP_ROUTES.autoExport]: autoExport,
@@ -163,9 +192,16 @@ export function AppShell() {
       <SidebarInset className="h-svh overflow-hidden">
         <header className="flex h-12 shrink-0 items-center gap-2 border-b px-4">
           <SidebarTrigger aria-label={i18n.t('shell_toggleSidebar')} />
-          <h1 className="font-heading text-sm font-medium">
-            {i18n.t(getTitleKey(pathname))}
+          <h1
+            ref={headingReference}
+            tabIndex={-1}
+            className="font-heading text-sm font-medium outline-none"
+          >
+            {pageTitle}
           </h1>
+          <div role="status" aria-live="polite" className="sr-only">
+            {announcement}
+          </div>
         </header>
         <div data-app-scroll className="flex-1 overflow-auto p-4">
           <Outlet />

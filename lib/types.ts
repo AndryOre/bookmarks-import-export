@@ -1,6 +1,7 @@
 import type { Browser } from '@wxt-dev/browser'
 import type { ReactNode } from 'react'
 
+import type { ExportFormat } from './export-formats'
 import type { ImportControl } from './import-control'
 
 /**
@@ -82,7 +83,6 @@ export type AutoExportInterval = '1h' | '12h' | '1d' | '3d' | '7d'
  * Day of the week as `Date#getDay` numbers it: 0 is Sunday, 6 is Saturday.
  */
 export type DayOfWeek = 0 | 1 | 2 | 3 | 4 | 5 | 6
-export type AutoExportFormat = 'html' | 'json' | 'csv'
 
 export interface AutoExportConfig {
   enabled: boolean
@@ -96,7 +96,7 @@ export interface AutoExportConfig {
    */
   dayOfWeek: DayOfWeek
   path: string
-  formats: AutoExportFormat[]
+  formats: ExportFormat[]
   /**
    * Retention: how many of Snug's own exported files to keep in the folder.
    * `0` keeps everything. See `applyRetention` in `lib/auto-export-retention.ts`.

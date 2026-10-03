@@ -292,7 +292,7 @@
     "description": "Enable auto export toggle label"
   },
   "enableAutoExportDescription": {
-    "message": "북마크를 HTML, JSON, CSV 형식으로 자동으로 내보내요.",
+    "message": "북마크를 사용 가능한 형식으로 자동으로 내보내요.",
     "description": "Enable auto export toggle description"
   },
   "preferredExportTime": {

@@ -292,7 +292,7 @@
     "description": "Enable auto export toggle label"
   },
   "enableAutoExportDescription": {
-    "message": "Deine Lesezeichen automatisch als HTML, JSON und CSV exportieren.",
+    "message": "Deine Lesezeichen automatisch in einem der verfügbaren Formate exportieren.",
     "description": "Enable auto export toggle description"
   },
   "preferredExportTime": {

@@ -256,9 +256,11 @@ test.describe('Import page', () => {
       .getByRole('button', { name: en.import_replaceConfirm.message })
       .click()
     await expectSuccess(page)
+    await expect(page.getByRole('alert').first()).toBeFocused()
 
     await page.getByRole('button', { name: en.import_undo.message }).click()
     await expect(page.getByText(en.import_undoneTitle.message)).toBeVisible()
+    await expect(page.getByRole('alert').first()).toBeFocused()
 
     const [root] = await readBookmarkTree()
     const bookmarksBar = root?.children?.find((n) => n.id === '1')

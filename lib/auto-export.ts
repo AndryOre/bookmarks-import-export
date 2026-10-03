@@ -3,11 +3,10 @@ import {
   applyRetention,
   recordSavedDownload,
 } from '@/lib/auto-export-retention'
-import { exportToCSV } from '@/lib/exporters/export-csv'
-import { exportToHTML } from '@/lib/exporters/export-html'
-import { exportToJSON } from '@/lib/exporters/export-json'
+import { EXPORT_FORMAT_INFO, type ExportFormat } from '@/lib/export-formats'
 import { formatFilenameTemplate } from '@/lib/filename-template'
 import { downloadViaOffscreenDocument } from '@/lib/offscreen-download'
+import { renderExport } from '@/lib/render-export'
 import {
   autoExportConfigStore,
   autoExportLastRunStore,
@@ -22,7 +21,6 @@ import {
 } from '@/lib/storage'
 import type {
   AutoExportConfig,
-  AutoExportFormat,
   AutoExportInterval,
   AutoExportLastRun,
   AutoExportTrigger,
@@ -48,7 +46,7 @@ export const RUN_MANUAL_EXPORT_MESSAGE_TYPE = 'auto-export-run-manual'
  */
 export interface RunManualExportMessage {
   type: typeof RUN_MANUAL_EXPORT_MESSAGE_TYPE
-  formats: AutoExportFormat[]
+  formats: ExportFormat[]
   path: string
 }
 
@@ -359,7 +357,7 @@ async function saveDownload(
  */
 export async function runAutoExport(
   trigger: AutoExportTrigger,
-  overrides?: { formats: AutoExportFormat[]; path: string },
+  overrides?: { formats: ExportFormat[]; path: string },
 ): Promise<void> {
   const config = await autoExportConfigStore.getValue()
   if (!overrides && (!config.enabled || config.formats.length === 0)) return
@@ -402,44 +400,11 @@ export async function runAutoExport(
       ? `${sanitized}${sanitized.endsWith('/') ? '' : '/'}`
       : ''
 
-    const downloads: Promise<void>[] = []
-
-    if (formats.includes('html')) {
-      downloads.push(
-        (async () => {
-          const content = await exportToHTML(baseOptions)
-          await saveDownload(content, 'text/html', `${prefix}${baseName}.html`)
-        })(),
-      )
-    }
-
-    if (formats.includes('json')) {
-      downloads.push(
-        (async () => {
-          const data = await exportToJSON(baseOptions)
-          await saveDownload(
-            JSON.stringify(data, null, 2),
-            'application/json',
-            `${prefix}${baseName}.json`,
-          )
-        })(),
-      )
-    }
-
-    if (formats.includes('csv')) {
-      downloads.push(
-        (async () => {
-          const content = await exportToCSV({
-            selectedBookmarks: null,
-            includeIconData,
-            includeDateAdded,
-            includeDateLastUsed,
-            hideParentFolder,
-          })
-          await saveDownload(content, 'text/csv', `${prefix}${baseName}.csv`)
-        })(),
-      )
-    }
+    const downloads = formats.map(async (format) => {
+      const { extension, mimeType } = EXPORT_FORMAT_INFO[format]
+      const content = await renderExport(format, baseOptions)
+      await saveDownload(content, mimeType, `${prefix}${baseName}.${extension}`)
+    })
 
     await Promise.all(downloads)
     await autoExportLastRunStore.setValue({ at: Date.now(), ok: true, trigger })

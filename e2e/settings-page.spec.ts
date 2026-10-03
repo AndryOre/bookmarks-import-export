@@ -82,18 +82,18 @@ test('default import mode persists and is shown in the popup', async ({
 }) => {
   const page = await openExtensionPage('app.html#/settings')
 
-  await page.getByRole('combobox').click()
+  await page.getByRole('combobox', { name: /^(?!Export format)/ }).click()
   await page.getByRole('option', { name: en.importModeFolder.message }).click()
   await page.reload()
 
-  await expect(page.getByRole('combobox')).toContainText(
-    en.importModeFolder.message,
-  )
+  await expect(
+    page.getByRole('combobox', { name: /^(?!Export format)/ }),
+  ).toContainText(en.importModeFolder.message)
 
   const popup = await openExtensionPage('popup.html')
-  await expect(popup.getByRole('combobox')).toContainText(
-    en.importModeFolder.message,
-  )
+  await expect(
+    popup.getByRole('combobox', { name: /^(?!Export format)/ }),
+  ).toContainText(en.importModeFolder.message)
 })
 
 test('Safety snapshot card shows an empty state when no snapshot exists', async ({

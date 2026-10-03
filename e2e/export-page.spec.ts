@@ -92,6 +92,55 @@ test('exports a mixed selection as JSON and confirms with a toast', async ({
   await expect(page.getByText(download.suggestedFilename())).toBeVisible()
 })
 
+const structuralFormats = [
+  {
+    format: 'Markdown',
+    extension: '.md',
+    shapes: [
+      '- Personal Folder',
+      '- [Recipe Page](https://example.com/recipe-page)',
+    ],
+  },
+  {
+    format: 'OPML',
+    extension: '.opml',
+    shapes: ['<opml version="2.0">', '<outline type="link" text="Recipe Page"'],
+  },
+  {
+    format: 'XBEL',
+    extension: '.xbel',
+    shapes: [
+      '<xbel version="1.0">',
+      '<bookmark href="https://example.com/recipe-page"',
+    ],
+  },
+] as const
+
+for (const { format, extension, shapes } of structuralFormats) {
+  test(`exports a selected folder as ${format} with the right file name and content shape`, async ({
+    seedBookmarks,
+    openExtensionPage,
+  }) => {
+    await seedBookmarks(seedTree)
+    const page = await openExtensionPage('app.html#/export')
+
+    await page
+      .getByRole('button', { name: en.exportPage_expandAll.message })
+      .click()
+    await selectRow(page, 'Personal Folder')
+    await page.getByRole('button', { name: format, exact: true }).click()
+
+    const downloadPromise = page.waitForEvent('download')
+    await page.getByRole('button', { name: 'Export 2 bookmarks' }).click()
+    const download = await downloadPromise
+
+    expect(download.suggestedFilename().endsWith(extension)).toBe(true)
+    const content = await readFile((await download.path()) as string, 'utf8')
+    for (const shape of shapes) expect(content).toContain(shape)
+    expect(content).not.toContain('Work Doc')
+  })
+}
+
 test('exports a selection made from the search-filtered tree', async ({
   seedBookmarks,
   openExtensionPage,

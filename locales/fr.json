@@ -294,7 +294,7 @@
     "description": "Enable auto export toggle label"
   },
   "enableAutoExportDescription": {
-    "message": "Exporter automatiquement vos favoris aux formats HTML, JSON et CSV.",
+    "message": "Exporter automatiquement vos favoris dans l'un des formats disponibles.",
     "description": "Enable auto export toggle description"
   },
   "preferredExportTime": {

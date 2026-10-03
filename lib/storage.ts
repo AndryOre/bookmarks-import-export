@@ -1,5 +1,6 @@
 import { storage } from '#imports'
 
+import type { ExportFormat } from '@/lib/export-formats'
 import type {
   AutoExportConfig,
   AutoExportLastRun,
@@ -67,9 +68,10 @@ export const exportFilenameTemplateStore = storage.defineItem<string>(
  * The format last chosen in the popup's Export section, so a one-click
  * "Export all" repeats it next time.
  */
-export const lastExportFormatStore = storage.defineItem<
-  'csv' | 'html' | 'json'
->('local:lastExportFormat', { fallback: 'html' })
+export const lastExportFormatStore = storage.defineItem<ExportFormat>(
+  'local:lastExportFormat',
+  { fallback: 'html' },
+)
 
 const DEFAULT_AUTO_EXPORT_CONFIG: AutoExportConfig = {
   enabled: false,
