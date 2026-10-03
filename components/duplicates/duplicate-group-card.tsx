@@ -28,12 +28,21 @@ function formatDateAdded(dateAdded: number | undefined): string {
 interface DuplicateCopyRowProperties {
   copy: DuplicateCopy
   isKept: boolean
+  normalizedUrl: string
 }
 
-function DuplicateCopyRow({ copy, isKept }: DuplicateCopyRowProperties) {
+function DuplicateCopyRow({
+  copy,
+  isKept,
+  normalizedUrl,
+}: DuplicateCopyRowProperties) {
   const titleId = useId()
   const folder = copy.folderPath.join(' / ')
-  const details = [folder, formatDateAdded(copy.dateAdded)]
+  const details = [
+    copy.url === normalizedUrl ? '' : copy.url,
+    folder,
+    formatDateAdded(copy.dateAdded),
+  ]
     .filter(Boolean)
     .join(' · ')
 
@@ -106,6 +115,7 @@ export function DuplicateGroupCard({
               key={copy.id}
               copy={copy}
               isKept={copy.id === keptId}
+              normalizedUrl={group.normalizedUrl}
             />
           ))}
         </RadioGroup>

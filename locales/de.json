@@ -1061,6 +1061,22 @@
     "message": "Die Kopien konnten nicht gelöscht werden",
     "description": "Toast when deleting copies failed"
   },
+  "duplicates_deletedPartial": {
+    "message": "$DELETED$ gelöscht, $FAILED$ konnten nicht gelöscht werden",
+    "description": "Toast when some extra copies were deleted and some could not be",
+    "placeholders": {
+      "deleted": {
+        "content": "$1"
+      },
+      "failed": {
+        "content": "$2"
+      }
+    }
+  },
+  "duplicates_scanFailed": {
+    "message": "Deine Lesezeichen konnten nicht geladen werden",
+    "description": "Error state title when the bookmarks could not be read for the Duplicate scan"
+  },
   "duplicates_emptyTitle": {
     "message": "Keine Duplikate",
     "description": "Empty state title when no Duplicates exist"

@@ -1079,6 +1079,22 @@
     "message": "Impossible de supprimer les copies",
     "description": "Toast when deleting copies failed"
   },
+  "duplicates_deletedPartial": {
+    "message": "$DELETED$ supprimés, $FAILED$ n'ont pas pu être supprimés",
+    "description": "Toast when some extra copies were deleted and some could not be",
+    "placeholders": {
+      "deleted": {
+        "content": "$1"
+      },
+      "failed": {
+        "content": "$2"
+      }
+    }
+  },
+  "duplicates_scanFailed": {
+    "message": "Impossible de charger vos favoris",
+    "description": "Error state title when the bookmarks could not be read for the Duplicate scan"
+  },
   "duplicates_emptyTitle": {
     "message": "Aucun doublon",
     "description": "Empty state title when no Duplicates exist"

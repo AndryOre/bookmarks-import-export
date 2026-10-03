@@ -42,6 +42,26 @@ describe('normalizeUrl', () => {
     )
   })
 
+  it('keeps route-like fragments', () => {
+    expect(normalizeUrl('https://mail.google.com/mail/u/0/#inbox')).toBe(
+      normalizeUrl('https://mail.google.com/mail/u/0/#inbox'),
+    )
+    expect(normalizeUrl('https://a/x#/inbox')).not.toBe(
+      normalizeUrl('https://a/x#/sent'),
+    )
+    expect(normalizeUrl('https://a/x#!one')).not.toBe(
+      normalizeUrl('https://a/x#!two'),
+    )
+    expect(normalizeUrl('https://a/x#top')).toBe(normalizeUrl('https://a/x'))
+  })
+
+  it('leaves non-http(s) URLs untouched', () => {
+    const first = 'javascript:alert(1)#a'
+    const second = 'javascript:alert(1)#b'
+    expect(normalizeUrl(first)).not.toBe(normalizeUrl(second))
+    expect(normalizeUrl('chrome://Settings/#x')).toBe('chrome://Settings/#x')
+  })
+
   it('preserves the query string', () => {
     expect(normalizeUrl('https://example.com/a?q=1')).not.toBe(
       normalizeUrl('https://example.com/a?q=2'),
@@ -132,5 +152,40 @@ describe('findDuplicateGroups', () => {
   it('never compares folders', () => {
     const tree = treeWith([folder('20', 'Same'), folder('21', 'Same')])
     expect(findDuplicateGroups(tree)).toEqual([])
+  })
+})
+
+describe('findDuplicateGroups safety', () => {
+  it('does not group Gmail folders', () => {
+    expect(
+      findDuplicateGroups([
+        { id: '1', title: 'a', url: 'https://mail.google.com/mail/u/0/#inbox' },
+        { id: '2', title: 'b', url: 'https://mail.google.com/mail/u/0/#sent' },
+      ]),
+    ).toEqual([])
+  })
+
+  it('never groups two different bookmarklets', () => {
+    expect(
+      findDuplicateGroups([
+        { id: '1', title: 'a', url: 'javascript:foo()#x' },
+        { id: '2', title: 'b', url: 'javascript:bar()#x' },
+      ]),
+    ).toEqual([])
+  })
+
+  it('carries unmodifiable onto copies', () => {
+    const [group] = findDuplicateGroups([
+      { id: '1', title: 'a', url: 'https://a.com', dateAdded: 1 },
+      {
+        id: '2',
+        title: 'b',
+        url: 'https://a.com',
+        dateAdded: 2,
+        unmodifiable: 'managed',
+      },
+    ])
+    expect(group?.copies[1].unmodifiable).toBe(true)
+    expect(group?.copies[0].unmodifiable).toBe(false)
   })
 })
