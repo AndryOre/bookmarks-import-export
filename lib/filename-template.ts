@@ -1,3 +1,5 @@
+import { sanitizePathSegment } from '@/lib/path-segment'
+
 /**
  * Supported filename template tokens, paired with the function that
  * resolves each to its value for a given date. Matching is case-insensitive
@@ -42,10 +44,9 @@ export function formatFilenameTemplate(
     result = result.replace(pattern, () => resolver(date))
   }
 
-  result = result
-    .replaceAll(/[/\\:*?"<>|]/g, '_')
-    .replaceAll(/\s+/g, ' ')
-    .trim()
+  result = sanitizePathSegment(
+    result.replaceAll(/[/\\:*?"<>|]/g, '_').replaceAll(/\s+/g, ' '),
+  )
 
   return result || 'Bookmarks'
 }
