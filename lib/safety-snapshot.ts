@@ -51,7 +51,10 @@ function toParsedBookmark(node: LiveNode): ParsedBookmark {
  * Captures the bookmarks-bar, other-bookmarks and Mobile (when present) roots
  * as they are now,
  * preserving folder nesting and order. Empty folders are kept in the capture,
- * but the importer skips them on restore.
+ * but the importer skips them on restore. When the profile has both a local
+ * and an account set of roots, every root of both sets is captured, each
+ * tagged with its `folderType` and `syncing` so a restore writes it back to
+ * its own root.
  * @returns The capture, stamped with the current time.
  * @throws {Error} When either root cannot be found in the bookmarks tree.
  */
@@ -69,14 +72,38 @@ export async function captureSafetySnapshot(): Promise<SafetySnapshot> {
     ? rootChildren.find((node) => node.id === mobileId)
     : undefined
 
+  const takenAt = Date.now()
+  if (hasSeveralSets(rootChildren)) {
+    return {
+      takenAt,
+      roots: rootChildren
+        .filter((node) => ROOT_FOLDER_TYPES.includes(node.folderType ?? ''))
+        .map((node) => ({
+          ...toParsedBookmark(node),
+          id: node.id,
+          folderType: node.folderType,
+          syncing: node.syncing,
+        })),
+    }
+  }
+
   return {
-    takenAt: Date.now(),
+    takenAt,
     roots: [
       { ...toParsedBookmark(barNode), id: '1' },
       { ...toParsedBookmark(otherNode), id: '2' },
       ...(mobileNode ? [{ ...toParsedBookmark(mobileNode), id: '3' }] : []),
     ],
   }
+}
+
+const ROOT_FOLDER_TYPES = ['bookmarks-bar', 'other', 'mobile']
+
+function hasSeveralSets(rootChildren: { folderType?: string }[]): boolean {
+  return ROOT_FOLDER_TYPES.some(
+    (folderType) =>
+      rootChildren.filter((node) => node.folderType === folderType).length > 1,
+  )
 }
 
 function snapshotFileName(takenAt: number): string {

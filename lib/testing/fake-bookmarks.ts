@@ -24,9 +24,48 @@ import type { ExtendedBookmarkTreeNode } from '@/lib/types'
  * `options.withMobileRoot`, which defaults to `false` so existing tests keep
  * seeing the two-root tree most browsers actually have.
  * @param shouldIncludeMobileRoot Whether to also seed the Mobile root.
+ * @param shouldIncludeAccountRoots Whether to also seed a `syncing: true`
+ *   account set of roots next to the local ones.
  * @returns The freshly built root node.
  */
 function makeDefaultRoot(
+  shouldIncludeMobileRoot: boolean,
+  shouldIncludeAccountRoots = false,
+): ExtendedBookmarkTreeNode {
+  const root = makeLocalRoot(shouldIncludeMobileRoot)
+  if (shouldIncludeAccountRoots) {
+    root.children?.push(...makeAccountRoots(shouldIncludeMobileRoot))
+  }
+  return root
+}
+
+function makeAccountRoots(
+  shouldIncludeMobileRoot: boolean,
+): ExtendedBookmarkTreeNode[] {
+  const roots: [string, string, string][] = [
+    ['acct-1', 'Bookmarks bar', 'bookmarks-bar'],
+    ['acct-2', 'Other bookmarks', 'other'],
+    ...(shouldIncludeMobileRoot
+      ? ([['acct-3', 'Mobile bookmarks', 'mobile']] as [
+          string,
+          string,
+          string,
+        ][])
+      : []),
+  ]
+  return roots.map(([id, title, folderType], offset) => ({
+    id,
+    parentId: '0',
+    index: 3 + offset,
+    title,
+    folderType: folderType as 'bookmarks-bar',
+    syncing: true,
+    dateAdded: Date.now(),
+    children: [],
+  }))
+}
+
+function makeLocalRoot(
   shouldIncludeMobileRoot: boolean,
 ): ExtendedBookmarkTreeNode {
   return {
@@ -119,6 +158,13 @@ export interface ResetFakeBookmarksOptions {
    * for tests exercising Mobile-aware root resolution. Defaults to `false`.
    */
   withMobileRoot?: boolean
+  /**
+   * Also seed an account-storage set of roots (ids `"acct-1"`, `"acct-2"` and,
+   * with `withMobileRoot`, `"acct-3"`) that share the local roots'
+   * `folderType` but carry `syncing: true`, as a signed-in profile has.
+   * Defaults to `false`.
+   */
+  withAccountRoots?: boolean
 }
 
 /**
@@ -133,7 +179,10 @@ export function resetFakeBookmarks(
 ): void {
   resetFakeI18n()
   store.nextId = options.withMobileRoot ? 4 : 3
-  store.root = makeDefaultRoot(options.withMobileRoot ?? false)
+  store.root = makeDefaultRoot(
+    options.withMobileRoot ?? false,
+    options.withAccountRoots ?? false,
+  )
 
   fakeBrowser.bookmarks.getTree = async () => [clone(store.root)]
 
@@ -151,7 +200,7 @@ export function resetFakeBookmarks(
       parentId,
       index: parent.children.length,
       title: details.title ?? '',
-      syncing: false,
+      syncing: parent.syncing,
       dateAdded: Date.now(),
     }
     if (details.url === undefined) {

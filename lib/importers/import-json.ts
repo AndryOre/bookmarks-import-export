@@ -9,7 +9,10 @@ import {
   withImportRollback,
 } from '@/lib/import-control'
 import { shouldClearMobileRoot } from '@/lib/importers/mobile-root'
-import { resolveImportRoots } from '@/lib/importers/resolve-roots'
+import {
+  resolveImportRoots,
+  resolveSplitRootTargets,
+} from '@/lib/importers/resolve-roots'
 import { isAllowedBookmarkUrl } from '@/lib/importers/url-validation'
 import { applySkipDuplicates } from '@/lib/skip-duplicates'
 import type {
@@ -369,12 +372,23 @@ async function processBookmarks(
           (isTrusted || shouldClearMobileRoot(bookmark)),
       )
 
+      const splitTargets = resolveSplitRootTargets(parsed, root?.children ?? [])
+
       if (mode === 'restore-replace') {
         writer.markClearingExisting()
-        await removeAllChildren(bookmarksBarId, root)
-        await removeAllChildren(otherBookmarksId, root)
-        if (hasMobileContent && mobileId) {
-          await removeAllChildren(mobileId, root)
+        const clearedIds = new Set([bookmarksBarId, otherBookmarksId])
+        if (hasMobileContent && mobileId) clearedIds.add(mobileId)
+        for (const [node, targetId] of splitTargets) {
+          if (
+            isTrusted ||
+            !node.isMobileBookmarks ||
+            shouldClearMobileRoot(node)
+          ) {
+            clearedIds.add(targetId)
+          }
+        }
+        for (const clearedId of clearedIds) {
+          await removeAllChildren(clearedId, root)
         }
       }
 
@@ -382,7 +396,7 @@ async function processBookmarks(
         if (bookmark.isBookmarksBar && bookmark.children) {
           await createBookmarks(
             bookmark.children,
-            bookmarksBarId,
+            splitTargets.get(bookmark) ?? bookmarksBarId,
             result,
             writer,
             isTrusted,
@@ -390,7 +404,7 @@ async function processBookmarks(
         } else if (bookmark.isOtherBookmarks && bookmark.children) {
           await createBookmarks(
             bookmark.children,
-            otherBookmarksId,
+            splitTargets.get(bookmark) ?? otherBookmarksId,
             result,
             writer,
             isTrusted,
@@ -398,7 +412,7 @@ async function processBookmarks(
         } else if (bookmark.isMobileBookmarks && bookmark.children) {
           await writeMobileBookmarks(
             bookmark.children,
-            mobileId,
+            splitTargets.get(bookmark) ?? mobileId,
             otherBookmarksId,
             result,
             writer,
