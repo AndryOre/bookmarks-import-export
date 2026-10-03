@@ -3,6 +3,7 @@ interface DuplicateSourceNode {
   title: string
   url?: string
   dateAdded?: number
+  unmodifiable?: 'managed'
   children?: DuplicateSourceNode[]
 }
 
@@ -15,6 +16,7 @@ interface DuplicateCopy {
   url: string
   folderPath: string[]
   dateAdded: number | undefined
+  unmodifiable: boolean
 }
 
 /**
@@ -26,25 +28,43 @@ export interface DuplicateGroup {
   copies: [DuplicateCopy, DuplicateCopy, ...DuplicateCopy[]]
 }
 
+const ROUTE_FRAGMENT = /^#[/!]/
+
+function hasRouteFragment(parsed: URL): boolean {
+  if (parsed.hash.length <= 1) return false
+  const isDirectoryPath =
+    parsed.search === '' &&
+    parsed.pathname.length > 1 &&
+    parsed.pathname.endsWith('/')
+  return ROUTE_FRAGMENT.test(parsed.hash) || isDirectoryPath
+}
+
 /**
  * Normalizes a URL for Duplicate comparison: scheme and host lowercased,
- * `http` treated as `https`, a leading `www.`, a trailing slash and any
- * `#fragment` ignored. The query string is preserved. An unparseable URL falls
- * back to its trimmed, lowercased text so the result is stable.
+ * `http` treated as `https`, a leading `www.` and a trailing slash ignored.
+ * The query string is preserved. A `#fragment` is ignored only when it looks
+ * like a plain anchor; a route-like fragment (`#/`, `#!`, or any fragment on a
+ * directory-style path without a query, such as Gmail's `/mail/u/0/#inbox`) is kept. A
+ * non-http(s) URL is returned trimmed and untouched, an unparseable one
+ * trimmed and lowercased, so only exact matches group.
  * @param url The raw bookmark URL.
  * @returns The normalized URL used as the comparison key.
  */
 export function normalizeUrl(url: string): string {
+  const trimmed = url.trim()
   let parsed: URL
   try {
-    parsed = new URL(url.trim())
+    parsed = new URL(trimmed)
   } catch {
-    return url.trim().toLowerCase()
+    return trimmed.toLowerCase()
   }
-  const scheme = parsed.protocol === 'http:' ? 'https:' : parsed.protocol
+  if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+    return trimmed
+  }
   const host = parsed.host.replace(/^www\./, '')
   const path = parsed.pathname.replace(/\/+$/, '')
-  return `${scheme}//${host}${path}${parsed.search}`
+  const hash = hasRouteFragment(parsed) ? parsed.hash : ''
+  return `https://${host}${path}${parsed.search}${hash}`
 }
 
 function collectCopies(
@@ -60,6 +80,7 @@ function collectCopies(
         url: node.url,
         folderPath,
         dateAdded: node.dateAdded,
+        unmodifiable: node.unmodifiable !== undefined,
       })
     } else if (node.children) {
       const nextPath = node.title ? [...folderPath, node.title] : folderPath

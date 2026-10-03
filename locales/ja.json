@@ -1055,6 +1055,22 @@
     "message": "コピーを削除できませんでした",
     "description": "Toast when deleting copies failed"
   },
+  "duplicates_deletedPartial": {
+    "message": "$DELETED$ 件を削除、$FAILED$ 件は削除できませんでした",
+    "description": "Toast when some extra copies were deleted and some could not be",
+    "placeholders": {
+      "deleted": {
+        "content": "$1"
+      },
+      "failed": {
+        "content": "$2"
+      }
+    }
+  },
+  "duplicates_scanFailed": {
+    "message": "ブックマークを読み込めませんでした",
+    "description": "Error state title when the bookmarks could not be read for the Duplicate scan"
+  },
   "duplicates_emptyTitle": {
     "message": "重複はありません",
     "description": "Empty state title when no Duplicates exist"

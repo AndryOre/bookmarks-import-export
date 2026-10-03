@@ -1067,6 +1067,22 @@
     "message": "Could not delete the copies",
     "description": "Toast when deleting copies failed"
   },
+  "duplicates_deletedPartial": {
+    "message": "Deleted $DELETED$, could not delete $FAILED$",
+    "description": "Toast when some extra copies were deleted and some could not be",
+    "placeholders": {
+      "deleted": {
+        "content": "$1"
+      },
+      "failed": {
+        "content": "$2"
+      }
+    }
+  },
+  "duplicates_scanFailed": {
+    "message": "Could not load your bookmarks",
+    "description": "Error state title when the bookmarks could not be read for the Duplicate scan"
+  },
   "duplicates_emptyTitle": {
     "message": "No duplicates",
     "description": "Empty state title when no Duplicates exist"

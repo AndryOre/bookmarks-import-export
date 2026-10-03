@@ -67,10 +67,14 @@ export interface ImportResult {
 /**
  * Options shared by every importer. `skipDuplicates` leaves out bookmarks
  * whose normalized URL already exists in the browser or repeats earlier in the
- * file; it has no effect in Restore-replace.
+ * file; it has no effect in Restore-replace. `trusted` is for trees read from
+ * the browser itself (Safety snapshots): every URL is written, including
+ * `javascript:`, `chrome://` and `file://`, and a failed create is counted
+ * rather than fatal. Never set it for a file the user supplied.
  */
 export interface ImportOptions extends ImportControl {
   skipDuplicates?: boolean
+  trusted?: boolean
 }
 
 export type BookmarkFormat =

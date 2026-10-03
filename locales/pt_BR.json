@@ -1079,6 +1079,22 @@
     "message": "Não foi possível excluir as cópias",
     "description": "Toast when deleting copies failed"
   },
+  "duplicates_deletedPartial": {
+    "message": "$DELETED$ excluídos, $FAILED$ não puderam ser excluídos",
+    "description": "Toast when some extra copies were deleted and some could not be",
+    "placeholders": {
+      "deleted": {
+        "content": "$1"
+      },
+      "failed": {
+        "content": "$2"
+      }
+    }
+  },
+  "duplicates_scanFailed": {
+    "message": "Não foi possível carregar seus favoritos",
+    "description": "Error state title when the bookmarks could not be read for the Duplicate scan"
+  },
   "duplicates_emptyTitle": {
     "message": "Nenhum duplicado",
     "description": "Empty state title when no Duplicates exist"
