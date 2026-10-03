@@ -661,6 +661,14 @@
     "message": "Falló la importación",
     "description": "Popup toast title when an import fails"
   },
+  "import_nothingToImportTitle": {
+    "message": "Nada que importar",
+    "description": "Popup toast title when Skip duplicates leaves nothing to import"
+  },
+  "import_allDuplicates": {
+    "message": "Todos los marcadores de este archivo ya están en tus marcadores, así que no se importó nada.",
+    "description": "Popup toast text when every bookmark in the file already exists"
+  },
   "popup_replaceAlertTitle": {
     "message": "Se reemplazarán los marcadores existentes",
     "description": "Title of the popup alert shown when the default mode is Restore - replace"

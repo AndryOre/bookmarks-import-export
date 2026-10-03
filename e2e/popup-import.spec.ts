@@ -179,3 +179,61 @@ test('a file with no bookmarks shows an error toast and imports nothing', async 
   await expect(popup.getByText('Import failed')).toBeVisible()
   await expect(popup.getByText('No bookmarks found in this file')).toBeVisible()
 })
+
+test('a file above the size threshold opens the App Import page and imports nothing', async ({
+  context,
+  openExtensionPage,
+  readBookmarkTree,
+}) => {
+  const popup = await openExtensionPage('popup.html')
+  const rows = Array.from(
+    { length: 201 },
+    (_, index) => `Big ${index},https://big-${index}.example/page,`,
+  )
+
+  const appPagePromise = context.waitForEvent('page')
+  await popup.locator('input[type="file"]').setInputFiles({
+    name: 'big.csv',
+    mimeType: 'text/csv',
+    buffer: Buffer.from(['title,url,folder', ...rows].join('\n')),
+  })
+  const appPage = await appPagePromise
+
+  await expect(appPage).toHaveURL(/app\.html#\/import$/)
+  await expect(popup.getByText('Bookmarks imported')).not.toBeVisible()
+
+  const [root] = await readBookmarkTree()
+  const otherBookmarks = root?.children?.find((n) => n.id === '2')
+  expect(otherBookmarks?.children ?? []).toEqual([])
+})
+
+test('a file whose bookmarks all exist creates no folder and says nothing was imported', async ({
+  openExtensionPage,
+  seedBookmarks,
+  readBookmarkTree,
+}) => {
+  await seedBookmarks([
+    {
+      title: 'Existing CSV root',
+      url: 'https://csv-root-a.example/page',
+    },
+  ])
+
+  const popup = await openExtensionPage('popup.html')
+  await popup.locator('input[type="file"]').setInputFiles({
+    name: 'dupes.csv',
+    mimeType: 'text/csv',
+    buffer: Buffer.from(
+      'title,url,folder\nCSV Root A,https://csv-root-a.example/page,Docs',
+    ),
+  })
+
+  await expect(popup.getByText('Nothing to import')).toBeVisible()
+  await expect(popup.getByText('Bookmarks imported')).not.toBeVisible()
+
+  const [root] = await readBookmarkTree()
+  const otherBookmarks = root?.children?.find((n) => n.id === '2')
+  expect(
+    otherBookmarks?.children?.some((n) => n.title === 'Imported bookmarks'),
+  ).toBe(false)
+})

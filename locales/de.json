@@ -658,6 +658,14 @@
     "message": "Import fehlgeschlagen",
     "description": "Popup toast title when an import fails"
   },
+  "import_nothingToImportTitle": {
+    "message": "Nichts zu importieren",
+    "description": "Popup toast title when Skip duplicates leaves nothing to import"
+  },
+  "import_allDuplicates": {
+    "message": "Alle Lesezeichen in dieser Datei sind bereits vorhanden, daher wurde nichts importiert.",
+    "description": "Popup toast text when every bookmark in the file already exists"
+  },
   "popup_replaceAlertTitle": {
     "message": "Vorhandene Lesezeichen werden ersetzt",
     "description": "Title of the popup alert shown when the default mode is Restore - replace"

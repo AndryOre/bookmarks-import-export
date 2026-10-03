@@ -664,6 +664,14 @@
     "message": "Échec de l'importation",
     "description": "Popup toast title when an import fails"
   },
+  "import_nothingToImportTitle": {
+    "message": "Rien à importer",
+    "description": "Popup toast title when Skip duplicates leaves nothing to import"
+  },
+  "import_allDuplicates": {
+    "message": "Tous les favoris de ce fichier existent déjà dans vos favoris, rien n'a donc été importé.",
+    "description": "Popup toast text when every bookmark in the file already exists"
+  },
   "popup_replaceAlertTitle": {
     "message": "Les favoris existants seront remplacés",
     "description": "Title of the popup alert shown when the default mode is Restore - replace"

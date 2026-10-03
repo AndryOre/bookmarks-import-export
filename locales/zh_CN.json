@@ -658,6 +658,14 @@
     "message": "导入失败",
     "description": "Popup toast title when an import fails"
   },
+  "import_nothingToImportTitle": {
+    "message": "没有可导入的内容",
+    "description": "Popup toast title when Skip duplicates leaves nothing to import"
+  },
+  "import_allDuplicates": {
+    "message": "此文件中的所有书签都已存在，因此未导入任何内容。",
+    "description": "Popup toast text when every bookmark in the file already exists"
+  },
   "popup_replaceAlertTitle": {
     "message": "现有书签将被替换",
     "description": "Title of the popup alert shown when the default mode is Restore - replace"

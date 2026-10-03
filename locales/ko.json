@@ -658,6 +658,14 @@
     "message": "가져오기에 실패했어요",
     "description": "Popup toast title when an import fails"
   },
+  "import_nothingToImportTitle": {
+    "message": "가져올 항목이 없습니다",
+    "description": "Popup toast title when Skip duplicates leaves nothing to import"
+  },
+  "import_allDuplicates": {
+    "message": "이 파일의 북마크가 모두 이미 있어서 아무것도 가져오지 않았습니다.",
+    "description": "Popup toast text when every bookmark in the file already exists"
+  },
   "popup_replaceAlertTitle": {
     "message": "기존 북마크가 교체돼요",
     "description": "Title of the popup alert shown when the default mode is Restore - replace"

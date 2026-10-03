@@ -661,6 +661,14 @@
     "message": "Importazione non riuscita",
     "description": "Popup toast title when an import fails"
   },
+  "import_nothingToImportTitle": {
+    "message": "Niente da importare",
+    "description": "Popup toast title when Skip duplicates leaves nothing to import"
+  },
+  "import_allDuplicates": {
+    "message": "Tutti i segnalibri di questo file sono già presenti, quindi non è stato importato nulla.",
+    "description": "Popup toast text when every bookmark in the file already exists"
+  },
   "popup_replaceAlertTitle": {
     "message": "I segnalibri esistenti verranno sostituiti",
     "description": "Title of the popup alert shown when the default mode is Restore - replace"
