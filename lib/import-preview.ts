@@ -4,7 +4,7 @@ import { parseCSVTree } from './importers/import-csv'
 import { shouldClearMobileRoot } from './importers/mobile-root'
 import { parseLocationAwareImport } from './importers/parse-import'
 import type { ResolvedImportRootTitles } from './importers/resolve-roots'
-import type { ImportPreview } from './types'
+import type { ImportPreview, ParsedBookmark } from './types'
 
 /**
  * Builds a summary of what importing `text` would do, without importing
@@ -31,26 +31,28 @@ export function getImportPreview(
   try {
     const parsed = parseLocationAwareImport(text, format, liveRootTitles)
     if (parsed) {
-      const barNode = parsed.tree.find((n) => n.isBookmarksBar)
-      const otherNode = parsed.tree.find((n) => n.isOtherBookmarks)
-      const mobileNode = parsed.tree.find((n) => n.isMobileBookmarks)
-      const bookmarksBarCount = countImportableBookmarks(
-        barNode?.children ?? [],
-      )
-      const otherBookmarksCount = countImportableBookmarks(
-        otherNode?.children ?? [],
-      )
-      const mobileBookmarksCount = countImportableBookmarks(
-        mobileNode?.children ?? [],
-      )
+      const countRootChildren = (
+        isRoot: (node: ParsedBookmark) => boolean | undefined,
+      ) => {
+        let total = 0
+        for (const node of parsed.tree) {
+          if (isRoot(node)) {
+            total += countImportableBookmarks(node.children ?? [])
+          }
+        }
+        return total
+      }
+      const bookmarksBarCount = countRootChildren((n) => n.isBookmarksBar)
+      const otherBookmarksCount = countRootChildren((n) => n.isOtherBookmarks)
+      const mobileBookmarksCount = countRootChildren((n) => n.isMobileBookmarks)
       return {
         format,
         bookmarksBarCount,
         otherBookmarksCount,
         mobileBookmarksCount,
-        clearsMobileRoot: mobileNode
-          ? shouldClearMobileRoot(mobileNode)
-          : false,
+        clearsMobileRoot: parsed.tree.some(
+          (n) => n.isMobileBookmarks && shouldClearMobileRoot(n),
+        ),
         totalCount:
           bookmarksBarCount + otherBookmarksCount + mobileBookmarksCount,
         hasLocationData: parsed.hasLocationData,
