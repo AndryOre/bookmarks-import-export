@@ -84,6 +84,11 @@ export interface AutoExportConfig {
   dayOfWeek: DayOfWeek
   path: string
   formats: AutoExportFormat[]
+  /**
+   * Retention: how many of Snug's own exported files to keep in the folder.
+   * `0` keeps everything. See `applyRetention` in `lib/auto-export-retention.ts`.
+   */
+  keepLast: number
 }
 
 /**

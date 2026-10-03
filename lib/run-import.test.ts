@@ -13,7 +13,7 @@ import {
 import type { ExtendedBookmarkTreeNode } from './types'
 
 vi.mock('./offscreen-download', () => ({
-  downloadViaOffscreenDocument: vi.fn(async () => {}),
+  downloadViaOffscreenDocument: vi.fn(async () => 1),
 }))
 
 const downloadMock = vi.mocked(downloadViaOffscreenDocument)
@@ -57,7 +57,7 @@ beforeEach(() => {
   fakeBrowser.reset()
   resetFakeBookmarks()
   downloadMock.mockReset()
-  downloadMock.mockResolvedValue()
+  downloadMock.mockResolvedValue(1)
 })
 
 describe('runImport', () => {

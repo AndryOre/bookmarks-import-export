@@ -96,6 +96,13 @@ Snug can back up your bookmarks on a schedule, without any manual action:
    scheduled export was due, it catches up automatically shortly after the
    browser next starts, instead of waiting for the next scheduled time.
 
+**Keep the last N files** (default 10) limits how many exported files pile up:
+after each successful run, Snug deletes its own oldest exported files beyond N
+and their entries in the browser's download history. It only ever removes files
+Snug itself saved, never other files in the folder, and a file you already
+deleted or moved is simply skipped. A failed run deletes nothing. Set it to 0 to
+keep everything.
+
 Changes on the **Auto-export** page are saved automatically. Its status card
 always shows the real schedule state, independently of any unsaved changes below
 it:

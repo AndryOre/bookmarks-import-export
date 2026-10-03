@@ -589,6 +589,18 @@
     "message": "At least one format must stay selected.",
     "description": "Help text under the formats toggle group"
   },
+  "autoExportPage_keepLast": {
+    "message": "Keep the last N files",
+    "description": "Label of the retention number field on the Auto-export page"
+  },
+  "autoExportPage_keepLastDescription": {
+    "message": "After each successful export, Snug deletes its own oldest exported files beyond this number. Only files Snug saved are ever removed, never other files in the folder. Set 0 to keep everything.",
+    "description": "Help text explaining the retention rule under the field"
+  },
+  "autoExportPage_keepLastInvalid": {
+    "message": "Enter a whole number, 0 or higher.",
+    "description": "Validation error shown when the retention field is not a whole number >= 0"
+  },
   "popup_exportAll": {
     "message": "Export all",
     "description": "Popup button that exports every bookmark in the remembered format"

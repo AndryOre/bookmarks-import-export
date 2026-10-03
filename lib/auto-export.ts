@@ -1,3 +1,7 @@
+import {
+  applyRetention,
+  recordSavedDownload,
+} from '@/lib/auto-export-retention'
 import { exportToCSV } from '@/lib/exporters/export-csv'
 import { exportToHTML } from '@/lib/exporters/export-html'
 import { exportToJSON } from '@/lib/exporters/export-json'
@@ -287,6 +291,33 @@ async function setFailureBadge(): Promise<void> {
 }
 
 /**
+ * Retention default used when a stored config predates `keepLast`.
+ */
+const DEFAULT_KEEP_LAST = 10
+
+/**
+ * Downloads one export file via {@link downloadViaOffscreenDocument} and
+ * persists its download id right away, so retention can later remove it
+ * even if the service worker restarts before the run finishes.
+ * @param content The export content.
+ * @param mimeType The content's MIME type.
+ * @param filename The downloads-relative filename.
+ * @returns Resolves once the download settled and its id is persisted.
+ */
+async function saveDownload(
+  content: string,
+  mimeType: string,
+  filename: string,
+): Promise<void> {
+  const downloadId = await downloadViaOffscreenDocument(
+    content,
+    mimeType,
+    filename,
+  )
+  await recordSavedDownload(downloadId)
+}
+
+/**
  * Runs an auto-export: reads the current export settings, generates each
  * selected format, and downloads it to the configured folder via
  * {@link downloadViaOffscreenDocument} (an offscreen-document blob URL,
@@ -300,6 +331,10 @@ async function setFailureBadge(): Promise<void> {
  * HTML/JSON because `exportToCSV` has no `hideOtherBookmarks` or
  * `includeDateGroupModified` support — the user's "hide Other Bookmarks" and
  * "group by modified date" preferences are silently ignored for CSV output.
+ *
+ * After a fully successful run, retention removes Snug's own oldest files
+ * beyond `keepLast` (see {@link applyRetention}); a failed run never deletes
+ * anything.
  *
  * {@link autoExportLastRunStore} is updated only after every selected
  * download has completed (or has failed), recording `trigger` and, on
@@ -372,11 +407,7 @@ export async function runAutoExport(
       downloads.push(
         (async () => {
           const content = await exportToHTML(baseOptions)
-          await downloadViaOffscreenDocument(
-            content,
-            'text/html',
-            `${prefix}${baseName}.html`,
-          )
+          await saveDownload(content, 'text/html', `${prefix}${baseName}.html`)
         })(),
       )
     }
@@ -385,7 +416,7 @@ export async function runAutoExport(
       downloads.push(
         (async () => {
           const data = await exportToJSON(baseOptions)
-          await downloadViaOffscreenDocument(
+          await saveDownload(
             JSON.stringify(data, null, 2),
             'application/json',
             `${prefix}${baseName}.json`,
@@ -404,11 +435,7 @@ export async function runAutoExport(
             includeDateLastUsed,
             hideParentFolder,
           })
-          await downloadViaOffscreenDocument(
-            content,
-            'text/csv',
-            `${prefix}${baseName}.csv`,
-          )
+          await saveDownload(content, 'text/csv', `${prefix}${baseName}.csv`)
         })(),
       )
     }
@@ -416,6 +443,7 @@ export async function runAutoExport(
     await Promise.all(downloads)
     await autoExportLastRunStore.setValue({ at: Date.now(), ok: true, trigger })
     await clearFailureBadge()
+    await applyRetention(config.keepLast ?? DEFAULT_KEEP_LAST)
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error)
     await autoExportLastRunStore.setValue({
