@@ -2,6 +2,7 @@ import Papa from 'papaparse'
 
 import { isChromeBookmarksFile } from '@/lib/importers/import-chrome'
 import { isSafariExport } from '@/lib/importers/import-safari'
+import { parseJsonOnce } from '@/lib/parse-json-once'
 import type { BookmarkFormat } from '@/lib/types'
 
 type KnownFormat = 'json' | 'csv' | 'html' | 'xbel'
@@ -73,7 +74,7 @@ export function detectFormat(
  * @returns The specific format, or `format` unchanged.
  */
 function refineFormat(format: KnownFormat, content: string): BookmarkFormat {
-  if (format === 'json' && isChromeBookmarksFile(JSON.parse(content))) {
+  if (format === 'json' && isChromeBookmarksFile(parseJsonOnce(content))) {
     return 'chrome'
   }
   return format === 'html' && isSafariExport(content) ? 'safari' : format
@@ -150,7 +151,7 @@ function isValidXBEL(content: string): boolean {
 
 function isValidJSON(content: string): boolean {
   try {
-    JSON.parse(content)
+    parseJsonOnce(content)
     return true
   } catch {
     return false

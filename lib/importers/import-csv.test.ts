@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import {
   getFakeBookmarksRoot,
@@ -164,6 +164,27 @@ describe('importFromCSV', () => {
       'https://a.example',
       'https://b.example',
     ])
+  })
+
+  it('looks folders up without one bookmarks.search call per folder', async () => {
+    await importFromCSV('title,url,folder\nA,https://a.example,Dev')
+    const search = vi.spyOn(browser.bookmarks, 'search')
+    const getTree = vi.spyOn(browser.bookmarks, 'getTree')
+    const rows = Array.from(
+      { length: 30 },
+      (_, index) => `B${index},https://b${index}.example,Dev/Folder${index}`,
+    )
+
+    await importFromCSV(['title,url,folder', ...rows].join('\n'))
+
+    expect(search.mock.calls.length + getTree.mock.calls.length).toBeLessThan(4)
+    const root = getFakeBookmarksRoot()
+    const imported = root.children
+      ?.find((n) => n.id === '2')
+      ?.children?.find((n) => n.title === 'Imported bookmarks')
+    expect(imported?.children?.filter((n) => n.title === 'Dev')).toHaveLength(1)
+    search.mockRestore()
+    getTree.mockRestore()
   })
 
   it('throws when the CSV cannot be parsed', async () => {
