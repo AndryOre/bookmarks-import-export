@@ -1046,5 +1046,26 @@
   "duplicates_scanning": {
     "message": "북마크를 검색하는 중",
     "description": "Accessible label while scanning bookmarks"
+  },
+  "autoExportFailureNotification_title": {
+    "message": "Snug · 자동 내보내기 실패",
+    "description": "Title of the system notification shown when an Auto-export run fails"
+  },
+  "autoExportFailureNotification_message": {
+    "message": "원인: $REASON$",
+    "description": "Body of the Failure notification; $1 is the failure reason",
+    "placeholders": {
+      "reason": {
+        "content": "$1"
+      }
+    }
+  },
+  "autoExportPage_notifyOnFailure": {
+    "message": "내보내기 실패 시 알림 받기",
+    "description": "Label of the switch that turns the Failure notification on or off"
+  },
+  "autoExportPage_notifyOnFailureDescription": {
+    "message": "예약되었거나 수동으로 실행한 자동 내보내기가 실패하면 알림을 표시합니다. 성공한 경우에는 알리지 않습니다.",
+    "description": "Help text under the Failure notification switch"
   }
 }

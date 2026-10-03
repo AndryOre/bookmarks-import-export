@@ -1,3 +1,4 @@
+import { notifyAutoExportFailure } from '@/lib/auto-export-notification'
 import {
   applyRetention,
   recordSavedDownload,
@@ -452,6 +453,7 @@ export async function runAutoExport(
       error: message,
       trigger,
     })
+    await notifyAutoExportFailure(message)
     if (trigger !== 'manual') {
       await setFailureBadge()
       await rescheduleAfterRun(config)

@@ -163,6 +163,20 @@ function mockActionBadge() {
   return { setBadgeText, setBadgeBackgroundColor }
 }
 
+/**
+ * Replaces `browser.notifications` (unimplemented in `fakeBrowser`) with a
+ * `vi.fn` for `create`.
+ * @returns The `create` mock.
+ */
+function mockNotifications() {
+  const create = vi.fn(async () => 'auto-export-failure')
+  browser.notifications = {
+    create,
+    clear: vi.fn(async () => true),
+  } as unknown as typeof browser.notifications
+  return create
+}
+
 function baseConfig(
   overrides: Partial<AutoExportConfig> = {},
 ): AutoExportConfig {
@@ -708,6 +722,33 @@ describe('runAutoExport', () => {
     await expect(runAutoExport('catch-up')).rejects.toThrow('disk full')
 
     expect(setBadgeText).toHaveBeenCalledWith({ text: '!' })
+  })
+
+  it.each(['scheduled', 'catch-up', 'manual'] as const)(
+    'creates exactly one Failure notification for a failed %s run',
+    async (trigger) => {
+      await autoExportConfigStore.setValue(baseConfig({ formats: ['html'] }))
+      mockDownload(async () => {
+        throw new Error('disk full')
+      })
+      mockActionBadge()
+      const create = mockNotifications()
+
+      await expect(runAutoExport(trigger)).rejects.toThrow('disk full')
+
+      expect(create).toHaveBeenCalledTimes(1)
+    },
+  )
+
+  it('creates no notification for a successful run', async () => {
+    await autoExportConfigStore.setValue(baseConfig({ formats: ['html'] }))
+    const { mock: downloadSpy, completeAll } = mockDownload()
+    mockActionBadge()
+    const create = mockNotifications()
+
+    await runAutoExportAndSettle(downloadSpy, completeAll, 1)
+
+    expect(create).not.toHaveBeenCalled()
   })
 
   it('does not set the failure badge for a failed manual run', async () => {

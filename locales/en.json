@@ -1058,5 +1058,26 @@
   "duplicates_scanning": {
     "message": "Scanning your bookmarks",
     "description": "Accessible label while scanning bookmarks"
+  },
+  "autoExportFailureNotification_title": {
+    "message": "Snug · Auto-export failed",
+    "description": "Title of the system notification shown when an Auto-export run fails"
+  },
+  "autoExportFailureNotification_message": {
+    "message": "Reason: $REASON$",
+    "description": "Body of the Failure notification; $1 is the failure reason",
+    "placeholders": {
+      "reason": {
+        "content": "$1"
+      }
+    }
+  },
+  "autoExportPage_notifyOnFailure": {
+    "message": "Notify me when an export fails",
+    "description": "Label of the switch that turns the Failure notification on or off"
+  },
+  "autoExportPage_notifyOnFailureDescription": {
+    "message": "Show a notification when a scheduled or manual Auto-export fails. Successful exports never notify.",
+    "description": "Help text under the Failure notification switch"
   }
 }

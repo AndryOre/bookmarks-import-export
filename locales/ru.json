@@ -1046,5 +1046,26 @@
   "duplicates_scanning": {
     "message": "Проверка закладок",
     "description": "Accessible label while scanning bookmarks"
+  },
+  "autoExportFailureNotification_title": {
+    "message": "Snug · Сбой автоэкспорта",
+    "description": "Title of the system notification shown when an Auto-export run fails"
+  },
+  "autoExportFailureNotification_message": {
+    "message": "Причина: $REASON$",
+    "description": "Body of the Failure notification; $1 is the failure reason",
+    "placeholders": {
+      "reason": {
+        "content": "$1"
+      }
+    }
+  },
+  "autoExportPage_notifyOnFailure": {
+    "message": "Уведомлять о сбое экспорта",
+    "description": "Label of the switch that turns the Failure notification on or off"
+  },
+  "autoExportPage_notifyOnFailureDescription": {
+    "message": "Показывать уведомление, если плановый или ручной автоэкспорт завершился сбоем. Об успешных экспортах уведомлений нет.",
+    "description": "Help text under the Failure notification switch"
   }
 }

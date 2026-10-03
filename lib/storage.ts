@@ -99,6 +99,15 @@ export const autoExportConfigStore = storage.defineItem<AutoExportConfig>(
   },
 )
 
+/**
+ * Whether a failed Auto-export run shows the Failure notification. Kept apart
+ * from the config so existing users get the default (on) without a migration.
+ */
+export const autoExportNotifyOnFailureStore = storage.defineItem<boolean>(
+  'local:autoExportNotifyOnFailure',
+  { fallback: true },
+)
+
 export const autoExportLastRunStore = storage.defineItem<
   AutoExportLastRun | number | null
 >('local:autoExportLastRun', { fallback: null })

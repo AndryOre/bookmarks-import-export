@@ -29,6 +29,7 @@ export default defineConfig({
       'downloads',
       'offscreen',
       'unlimitedStorage',
+      'notifications',
     ],
   },
   vite: () => ({
