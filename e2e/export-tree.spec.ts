@@ -264,3 +264,46 @@ test('adding and removing a bookmark updates the tree without a reload', async (
   )
   await expect(rowOf(page, 'Fresh Link')).toBeHidden()
 })
+
+test('virtualizes a 5,000-bookmark library and keyboard navigation reaches unrendered rows', async ({
+  seedBookmarks,
+  openExtensionPage,
+}) => {
+  test.setTimeout(180_000)
+  const folderCount = 10
+  const bookmarksPerFolder = 500
+  await seedBookmarks(
+    Array.from({ length: folderCount }, (_, folderIndex) => ({
+      title: `Bulk Folder ${folderIndex + 1}`,
+      children: Array.from({ length: bookmarksPerFolder }, (_, index) => ({
+        title: `Bulk ${folderIndex + 1}-${index + 1}`,
+        url: `https://example.com/bulk/${folderIndex + 1}/${index + 1}`,
+      })),
+    })),
+  )
+  const page = await openExtensionPage('app.html#/export')
+  const tree = treeOf(page)
+  const rows = tree.getByRole('treeitem')
+  await expect(tree).toBeVisible()
+  await expect(rows.first()).toBeVisible()
+
+  const renderedCount = await rows.count()
+  expect(renderedCount).toBeGreaterThan(0)
+  expect(renderedCount).toBeLessThan(120)
+
+  await rows.first().focus()
+  await page.keyboard.press('End')
+  const lastRow = rowOf(page, `Bulk ${folderCount}-${bookmarksPerFolder}`)
+  await expect(lastRow).toBeFocused()
+  await expect(lastRow).toHaveAttribute(
+    'aria-posinset',
+    String(bookmarksPerFolder),
+  )
+  await expect(lastRow).not.toHaveCSS('box-shadow', 'none')
+  expect(await rows.count()).toBeLessThan(120)
+
+  await page.keyboard.press('Home')
+  await expect(rows.first()).toBeFocused()
+  await expect(rows.first()).toHaveAttribute('aria-posinset', '1')
+  await expect(lastRow).toBeHidden()
+})

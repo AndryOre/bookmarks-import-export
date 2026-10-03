@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest'
 
-import { flattenVisibleRows, resolveTreeKey } from './tree-navigation'
+import {
+  flattenVisibleRows,
+  resolveTreeKey,
+  withPinnedIndex,
+} from './tree-navigation'
 import type { BookmarkNode } from './types'
 
 const nodes: BookmarkNode[] = [
@@ -90,5 +94,17 @@ describe('resolveTreeKey', () => {
   it('ignores unrelated keys and unknown focus ids', () => {
     expect(resolveTreeKey(rows, 'a', 'x')).toBeUndefined()
     expect(resolveTreeKey(rows, 'missing', 'ArrowDown')).toBeUndefined()
+  })
+})
+
+describe('withPinnedIndex', () => {
+  it('appends a pinned index outside the rendered window in order', () => {
+    expect(withPinnedIndex([5, 6, 7], 0)).toEqual([0, 5, 6, 7])
+    expect(withPinnedIndex([5, 6, 7], 40)).toEqual([5, 6, 7, 40])
+  })
+
+  it('does not duplicate an index already rendered or add a missing pin', () => {
+    expect(withPinnedIndex([5, 6, 7], 6)).toEqual([5, 6, 7])
+    expect(withPinnedIndex([5, 6, 7], -1)).toEqual([5, 6, 7])
   })
 })
