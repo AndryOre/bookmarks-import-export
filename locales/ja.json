@@ -937,6 +937,20 @@
   "import_skippedInvalidUrl": {
     "n": "$1 件をスキップしました（アドレスが未対応のため）"
   },
+  "import_skipDuplicates": {
+    "message": "重複をスキップ",
+    "description": "Label of the switch on the Import page that skips bookmarks the browser already has"
+  },
+  "import_skipDuplicatesFound": {
+    "n": "このファイルの $1 件のブックマークは既に存在するか重複しているため、スキップされます"
+  },
+  "import_skipDuplicatesNone": {
+    "message": "このファイルのブックマークで既に存在するものはありません。",
+    "description": "Helper text under the Skip duplicates switch when no bookmark in the file already exists"
+  },
+  "import_skippedDuplicates": {
+    "n": "重複のため $1 件をスキップしました"
+  },
   "shell_navDuplicates": {
     "message": "重複",
     "description": "App sidebar nav item and page title"

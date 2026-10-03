@@ -944,6 +944,22 @@
     "1": "$1 skipped because its address is not supported",
     "n": "$1 skipped because their address is not supported"
   },
+  "import_skipDuplicates": {
+    "message": "Skip duplicates",
+    "description": "Label of the switch on the Import page that skips bookmarks the browser already has"
+  },
+  "import_skipDuplicatesFound": {
+    "1": "$1 bookmark in this file already exists or repeats and will be skipped",
+    "n": "$1 bookmarks in this file already exist or repeat and will be skipped"
+  },
+  "import_skipDuplicatesNone": {
+    "message": "No bookmarks in this file already exist.",
+    "description": "Helper text under the Skip duplicates switch when no bookmark in the file already exists"
+  },
+  "import_skippedDuplicates": {
+    "1": "$1 skipped as a duplicate",
+    "n": "$1 skipped as duplicates"
+  },
   "shell_navDuplicates": {
     "message": "Duplicates",
     "description": "App sidebar nav item and page title"

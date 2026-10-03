@@ -190,6 +190,7 @@ describe('importFromHTML', () => {
   it('resolves without creating any bookmarks for HTML with no <dl>', async () => {
     await expect(importFromHTML('<html></html>', 'folder')).resolves.toEqual({
       skippedInvalidUrl: 0,
+      skippedDuplicates: 0,
     })
 
     const root = getFakeBookmarksRoot()
@@ -231,7 +232,7 @@ describe('importFromHTML fidelity', () => {
 
     const result = await importFromHTML(html, 'restore-merge')
 
-    expect(result).toEqual({ skippedInvalidUrl: 2 })
+    expect(result).toEqual({ skippedInvalidUrl: 2, skippedDuplicates: 0 })
     const bar = getFakeBookmarksRoot().children?.find((n) => n.id === '1')
     expect(bar?.children?.map((n) => n.title)).toEqual(['Empty', 'A'])
     expect(bar?.children?.[0]?.children).toEqual([])

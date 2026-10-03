@@ -29,7 +29,7 @@ import { formatCount } from '@/lib/format-count'
 import { getImportModeItems } from '@/lib/import-mode-items'
 import { getImportPreview } from '@/lib/import-preview'
 import { runImport } from '@/lib/run-import'
-import { defaultImportModeStore } from '@/lib/storage'
+import { defaultImportModeStore, skipDuplicatesStore } from '@/lib/storage'
 import type { ImportMode } from '@/lib/types'
 import { useStorageItem } from '@/lib/use-storage-item'
 
@@ -65,16 +65,25 @@ export function ImportSection() {
   }: PendingImport) => {
     setIsImporting(true)
     try {
-      const result = await runImport(text, mimeType, importMode, fileName)
+      const result = await runImport(text, mimeType, importMode, fileName, {
+        skipDuplicates: await skipDuplicatesStore.getValue(),
+      })
+      const notes = [
+        result.skippedDuplicates > 0
+          ? i18n.t('import_skippedDuplicates', result.skippedDuplicates, [
+              formatCount(result.skippedDuplicates),
+            ])
+          : '',
+        result.skippedInvalidUrl > 0
+          ? i18n.t('import_skippedInvalidUrl', result.skippedInvalidUrl, [
+              formatCount(result.skippedInvalidUrl),
+            ])
+          : '',
+      ].filter(Boolean)
       toast.add({
         type: 'success',
         title: i18n.t('popup_importSuccessTitle'),
-        description:
-          result.skippedInvalidUrl > 0
-            ? i18n.t('import_skippedInvalidUrl', result.skippedInvalidUrl, [
-                formatCount(result.skippedInvalidUrl),
-              ])
-            : undefined,
+        description: notes.length > 0 ? notes.join('. ') : undefined,
       })
     } catch (error) {
       toast.add({

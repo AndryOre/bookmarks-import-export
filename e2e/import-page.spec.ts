@@ -214,6 +214,76 @@ test.describe('Import page', () => {
     ])
   })
 
+  test.describe('Skip duplicates', () => {
+    const SWITCH_NAME = en.import_skipDuplicates.message
+
+    test('on by default: the count before importing equals the bookmarks created', async ({
+      openExtensionPage,
+      seedBookmarks,
+      readBookmarkTree,
+    }) => {
+      await seedBookmarks([
+        {
+          title: 'Reading',
+          children: [
+            // eslint-disable-next-line unicorn/prefer-https -- exercises http/https normalization
+            { title: 'Already', url: 'http://www.html-bar-a.example/page/' },
+          ],
+        },
+      ])
+      const page = await openImportPage(openExtensionPage)
+      await chooseFile(page, 'bookmarks.html')
+      await selectMode(page, 'Create folder')
+
+      await expect(
+        page.getByRole('switch', { name: SWITCH_NAME }),
+      ).toBeChecked()
+      await expect(
+        page.getByText(
+          '1 bookmark in this file already exists or repeats and will be skipped',
+        ),
+      ).toBeVisible()
+      await submitImport(page, 2)
+      await expectSuccess(page)
+      await expect(page.getByText('1 skipped as a duplicate')).toBeVisible()
+
+      const [root] = await readBookmarkTree()
+      const urls = JSON.stringify(root)
+      expect(urls.match(/html-bar-a\.example/g)).toHaveLength(1)
+      expect(urls).toContain('html-bar-b.example')
+      expect(urls).toContain('html-other-a.example')
+    })
+
+    test('off: duplicates are created and counted', async ({
+      openExtensionPage,
+      seedBookmarks,
+    }) => {
+      await seedBookmarks([
+        { title: 'Already', url: 'https://html-bar-a.example/page' },
+      ])
+      const page = await openImportPage(openExtensionPage)
+      await chooseFile(page, 'bookmarks.html')
+      await selectMode(page, 'Create folder')
+      await page.getByRole('switch', { name: SWITCH_NAME }).click()
+
+      await submitImport(page, 3)
+      await expectSuccess(page)
+      await expect(page.getByText(/skipped as/)).toHaveCount(0)
+    })
+
+    test('is not rendered in Restore - replace', async ({
+      openExtensionPage,
+    }) => {
+      const page = await openImportPage(openExtensionPage)
+      await chooseFile(page, 'bookmarks.html')
+      await selectMode(page, 'Restore — replace')
+
+      await expect(page.getByRole('switch', { name: SWITCH_NAME })).toHaveCount(
+        0,
+      )
+    })
+  })
+
   test('reports how many bookmarks were skipped for an unsupported address', async ({
     openExtensionPage,
   }) => {

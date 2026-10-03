@@ -54,9 +54,20 @@ export interface ParsedBookmark {
  * What an import reports back once it has finished writing bookmarks.
  * `skippedInvalidUrl` counts bookmarks that were left out because their
  * address is missing or not supported (anything outside http, https and ftp).
+ * `skippedDuplicates` counts bookmarks left out by Skip duplicates.
  */
 export interface ImportResult {
   skippedInvalidUrl: number
+  skippedDuplicates: number
+}
+
+/**
+ * Options shared by every importer. `skipDuplicates` leaves out bookmarks
+ * whose normalized URL already exists in the browser or repeats earlier in the
+ * file; it has no effect in Restore-replace.
+ */
+export interface ImportOptions {
+  skipDuplicates?: boolean
 }
 
 export type BookmarkFormat = 'json' | 'html' | 'csv' | 'unknown'

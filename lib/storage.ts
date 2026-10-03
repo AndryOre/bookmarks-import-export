@@ -123,3 +123,12 @@ export const defaultImportModeStore = storage.defineItem<ImportMode>(
   'local:defaultImportMode',
   { fallback: 'restore-merge' },
 )
+
+/**
+ * Whether imports skip bookmarks whose URL already exists. Shared by the
+ * Import page switch and the popup quick import; on by default.
+ */
+export const skipDuplicatesStore = storage.defineItem<boolean>(
+  'local:skipDuplicates',
+  { fallback: true },
+)

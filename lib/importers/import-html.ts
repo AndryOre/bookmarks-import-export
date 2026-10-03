@@ -7,7 +7,13 @@ import {
 } from '@/lib/importers/resolve-roots'
 import type { ResolvedImportRootTitles } from '@/lib/importers/resolve-roots'
 import { isAllowedBookmarkUrl } from '@/lib/importers/url-validation'
-import type { ImportMode, ImportResult, ParsedBookmark } from '@/lib/types'
+import { applySkipDuplicates } from '@/lib/skip-duplicates'
+import type {
+  ImportMode,
+  ImportOptions,
+  ImportResult,
+  ParsedBookmark,
+} from '@/lib/types'
 
 /**
  * Imports bookmarks from a Netscape-format bookmarks HTML export.
@@ -31,12 +37,14 @@ import type { ImportMode, ImportResult, ParsedBookmark } from '@/lib/types'
  * arbitrary `browser.bookmarks.create()` failure.
  * @param html The Netscape-format bookmarks HTML to import.
  * @param mode Where the parsed tree is written.
+ * @param options Import options such as Skip duplicates.
  * @returns The import result, including how many bookmarks were skipped
- *   because their address is missing or not supported.
+ *   because their address is missing or not supported, or duplicated.
  */
 export async function importFromHTML(
   html: string,
   mode: ImportMode = 'folder',
+  options: ImportOptions = {},
 ): Promise<ImportResult> {
   const tree = await browser.bookmarks.getTree()
   const liveRootTitles = resolveImportRootTitles(tree[0]?.children ?? [])
@@ -52,7 +60,12 @@ export async function importFromHTML(
   }
 
   try {
-    return await processBookmarks(parsed, mode, tree)
+    return await processBookmarks(
+      parsed,
+      mode,
+      tree,
+      options.skipDuplicates ?? false,
+    )
   } catch (error) {
     if (error instanceof Error && error.message.startsWith('PROCESS_ERROR')) {
       throw error
@@ -299,19 +312,27 @@ function parseFolderElement(h3: HTMLElement, dt: Element): ParsedBookmark {
  * bookmarks bar / "Other bookmarks" roots) rather than an arbitrary
  * `browser.bookmarks` API failure, so the caller can rethrow them as-is
  * instead of wrapping them in a generic create-error message.
- * @param parsed The parsed bookmark tree to write.
+ * @param allParsed The parsed bookmark tree to write.
  * @param mode Where and how the tree is written.
  * @param tree The tree snapshot `importFromHTML` already fetched (to resolve
  *   the live root titles for `parseHTML`) — reused here instead of
  *   re-fetching.
- * @returns The import result with the skipped-bookmark count.
+ * @param shouldSkipDuplicates Whether to leave out bookmarks that already exist.
+ * @returns The import result with the skipped-bookmark counts.
  */
 async function processBookmarks(
-  parsed: ParsedBookmark[],
+  allParsed: ParsedBookmark[],
   mode: ImportMode,
   tree: Browser.bookmarks.BookmarkTreeNode[],
+  shouldSkipDuplicates: boolean,
 ): Promise<ImportResult> {
-  const result: ImportResult = { skippedInvalidUrl: 0 }
+  const { nodes: parsed, skippedDuplicates } = applySkipDuplicates(
+    allParsed,
+    tree,
+    mode,
+    shouldSkipDuplicates,
+  )
+  const result: ImportResult = { skippedInvalidUrl: 0, skippedDuplicates }
   const root = tree[0]
   const { bookmarksBarId, otherBookmarksId, mobileId } = resolveImportRoots(
     root?.children ?? [],
