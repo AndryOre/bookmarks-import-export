@@ -20,8 +20,7 @@ import { APP_ROUTES, getAppUrl } from '@/lib/app-url'
 import { formatCount } from '@/lib/format-count'
 import { ImportCanceledError } from '@/lib/import-control'
 import { getImportModeItems } from '@/lib/import-mode-items'
-import { getImportPreview } from '@/lib/import-preview'
-import { loadLiveRootTitles } from '@/lib/importers/resolve-roots'
+import { planPopupImport } from '@/lib/popup-import-plan'
 import { runImport } from '@/lib/run-import'
 import { defaultImportModeStore, skipDuplicatesStore } from '@/lib/storage'
 import type { ImportMode } from '@/lib/types'
@@ -40,16 +39,18 @@ interface PendingImport {
  * while that mode is Restore - replace, and a "Choose file..." button that
  * imports the picked file. A file with no location data (CSV, or HTML/JSON
  * without root folders) is imported in `folder` mode for that file only.
- * Restore - replace never runs in the popup, because Chrome closes it on
- * focus loss mid-replace; it opens the App Import page instead. The
- * button shows a spinner and is disabled while importing; the outcome is
- * reported with a toast.
+ * Restore - replace, and any import above `POPUP_IMPORT_BOOKMARK_LIMIT`
+ * bookmarks, never run in the popup, because Chrome closes it on focus loss
+ * mid-import; they open the App Import page instead. The button shows a
+ * spinner and is disabled from the moment a file is picked until the import
+ * ends; the outcome is reported with a toast.
  * @returns The import section element.
  */
 export function ImportSection() {
   const fileInputReference = useRef<HTMLInputElement>(null)
   const modeSelectId = useId()
   const [mode, setMode] = useStorageItem(defaultImportModeStore)
+  const isBusyReference = useRef(false)
   const [isImporting, setIsImporting] = useState(false)
   const progress = useOperationProgress()
 
@@ -59,7 +60,6 @@ export function ImportSection() {
     fileName,
     mode: importMode,
   }: PendingImport) => {
-    setIsImporting(true)
     const signal = progress.begin()
     try {
       const result = await runImport(text, mimeType, importMode, fileName, {
@@ -99,52 +99,57 @@ export function ImportSection() {
       )
     } finally {
       progress.end()
-      setIsImporting(false)
     }
+  }
+
+  const prepareImport = async (file: File): Promise<PendingImport | null> => {
+    const text = await file.text()
+    const plan = await planPopupImport({
+      text,
+      mimeType: file.type,
+      fileName: file.name,
+      mode,
+      skipDuplicates: await skipDuplicatesStore.getValue(),
+    })
+    if (plan.kind === 'app') {
+      void browser.tabs.create({ url: getAppUrl(APP_ROUTES.import) })
+      return null
+    }
+    if (plan.kind === 'all-duplicates') {
+      toast.add({
+        title: i18n.t('import_nothingToImportTitle'),
+        description: i18n.t('import_allDuplicates'),
+      })
+      return null
+    }
+    return { text, mimeType: file.type, fileName: file.name, mode: plan.mode }
   }
 
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const file = event.target.files?.[0]
-    if (!file) return
     event.target.value = ''
-
-    let prepared: PendingImport
+    if (!file || isBusyReference.current) return
+    isBusyReference.current = true
+    setIsImporting(true)
     try {
-      const text = await file.text()
-      const { format, totalCount, hasLocationData } = getImportPreview(
-        text,
-        file.type,
-        file.name,
-        await loadLiveRootTitles(),
-      )
-      if (format === 'unknown') {
-        throw new Error(i18n.t('unsupportedFileFormat'))
+      let prepared: PendingImport | null
+      try {
+        prepared = await prepareImport(file)
+      } catch (error) {
+        toast.add({
+          type: 'error',
+          title: i18n.t('popup_importFailedTitle'),
+          description: (error as Error).message,
+        })
+        return
       }
-      if (totalCount === 0) {
-        throw new Error(i18n.t('import_noBookmarks'))
-      }
-      prepared = {
-        text,
-        mimeType: file.type,
-        fileName: file.name,
-        mode: hasLocationData ? mode : 'folder',
-      }
-    } catch (error) {
-      toast.add({
-        type: 'error',
-        title: i18n.t('popup_importFailedTitle'),
-        description: (error as Error).message,
-      })
-      return
+      if (prepared) await performImport(prepared)
+    } finally {
+      isBusyReference.current = false
+      setIsImporting(false)
     }
-
-    if (prepared.mode === 'restore-replace') {
-      void browser.tabs.create({ url: getAppUrl(APP_ROUTES.import) })
-      return
-    }
-    await performImport(prepared)
   }
 
   return (
