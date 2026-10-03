@@ -66,7 +66,9 @@ export async function planPopupImport(
         skippedDuplicates: summary.skippedDuplicates,
       }
     }
-    remainingCount = summary.importableCount
+    const isSummaryEmpty =
+      summary.importableCount === 0 && summary.skippedDuplicates === 0
+    remainingCount = isSummaryEmpty ? totalCount : summary.importableCount
   }
 
   return remainingCount > POPUP_IMPORT_BOOKMARK_LIMIT

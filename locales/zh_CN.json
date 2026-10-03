@@ -924,7 +924,7 @@
     }
   },
   "safetySnapshotIncomplete": {
-    "message": "恢复已完成，但部分书签无法写入。",
+    "message": "部分书签无法写入，因此恢复已撤销。",
     "description": "Error when a Safety snapshot restore finished but dropped some bookmarks"
   },
   "import_replaceDiffTitle": {

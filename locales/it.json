@@ -930,7 +930,7 @@
     }
   },
   "safetySnapshotIncomplete": {
-    "message": "Il ripristino è terminato, ma alcuni segnalibri non sono stati scritti.",
+    "message": "Alcuni segnalibri non sono stati scritti, quindi il ripristino è stato annullato.",
     "description": "Error when a Safety snapshot restore finished but dropped some bookmarks"
   },
   "import_replaceDiffTitle": {

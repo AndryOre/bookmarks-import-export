@@ -924,7 +924,7 @@
     }
   },
   "safetySnapshotIncomplete": {
-    "message": "Восстановление завершено, но некоторые закладки не удалось записать.",
+    "message": "Некоторые закладки не удалось записать, поэтому восстановление было отменено.",
     "description": "Error when a Safety snapshot restore finished but dropped some bookmarks"
   },
   "import_replaceDiffTitle": {
