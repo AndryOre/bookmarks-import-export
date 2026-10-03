@@ -28,7 +28,11 @@ async function selectMode(page: Page, label: string): Promise<void> {
 }
 
 async function submitImport(page: Page, count: number): Promise<void> {
-  await page.getByRole('button', { name: `Import ${count} bookmarks` }).click()
+  await page
+    .getByRole('button', {
+      name: `Import ${count.toLocaleString('en-US')} bookmarks`,
+    })
+    .click()
 }
 
 async function expectSuccess(page: Page): Promise<void> {

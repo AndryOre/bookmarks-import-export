@@ -150,7 +150,7 @@ export class ImportWriter {
  * @param writer The writer journaling the step.
  * @param step The writing work.
  * @returns The step's result.
- * @throws {ImportCanceledError} After a successful rollback of a cancel.
+ * @throws {ImportCanceledError} After a rollback attempt of a cancel; a failing rollback is logged and does not replace the cancel.
  */
 export async function withImportRollback<T>(
   writer: ImportWriter,
@@ -159,7 +159,13 @@ export async function withImportRollback<T>(
   try {
     return await step()
   } catch (error) {
-    if (error instanceof ImportCanceledError) await writer.rollback()
+    if (error instanceof ImportCanceledError) {
+      try {
+        await writer.rollback()
+      } catch (rollbackError) {
+        console.error('Import rollback failed', rollbackError)
+      }
+    }
     throw error
   }
 }
