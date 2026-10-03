@@ -497,6 +497,10 @@
     "message": "Error al importar",
     "description": "Title of the import error alert"
   },
+  "import_errorRestored": {
+    "message": "Tus marcadores anteriores se restauraron.",
+    "description": "Shown in the import error alert when the Safety snapshot was restored after a failed Restore-replace"
+  },
   "import_another": {
     "message": "Importar otro archivo",
     "description": "Button shown after a successful import"

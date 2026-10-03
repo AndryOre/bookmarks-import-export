@@ -1,7 +1,7 @@
 import { i18n } from '#i18n'
 
 import { detectFormat } from './detect-format'
-import { ImportCanceledError } from './import-control'
+import { ImportCanceledError, markImportRestored } from './import-control'
 import { parseChromeBookmarks } from './importers/import-chrome'
 import { importFromCSV } from './importers/import-csv'
 import { importFromHTML } from './importers/import-html'
@@ -31,7 +31,9 @@ import type { ImportMode, ImportOptions, ImportResult } from './types'
  * @returns The import result, including the skipped-bookmark count.
  * @throws {ImportCanceledError} After a cancel, once the bookmarks are back to
  *   their previous state (Restore-replace restores the Safety snapshot).
- * @throws {Error} When the format is unsupported or the importer fails.
+ * @throws {Error} When the format is unsupported or the importer fails; the
+ *   original error is rethrown after a rollback, and after a Safety snapshot
+ *   restore when existing bookmarks were already cleared.
  */
 export async function runImport(
   text: string,
@@ -41,28 +43,46 @@ export async function runImport(
   options: ImportOptions = {},
 ): Promise<ImportResult> {
   let snapshot: SafetySnapshot | undefined
+  let hasClearedExisting = false
   try {
     return await importWithSnapshot(
       text,
       mimeType,
       mode,
       fileName,
-      options,
+      {
+        ...options,
+        onClearingExisting: () => {
+          hasClearedExisting = true
+          options.onClearingExisting?.()
+        },
+      },
       (taken) => {
         snapshot = taken
       },
     )
   } catch (error) {
-    if (
-      snapshot &&
-      error instanceof ImportCanceledError &&
-      error.hasClearedExisting
-    ) {
-      await importFromJSON(structuredClone(snapshot.roots), 'restore-replace', {
-        trusted: true,
-      })
+    const wasCleared =
+      hasClearedExisting ||
+      (error instanceof ImportCanceledError && error.hasClearedExisting)
+    if (snapshot && wasCleared) {
+      await restoreSnapshot(snapshot, error)
     }
     throw error
+  }
+}
+
+async function restoreSnapshot(
+  snapshot: SafetySnapshot,
+  originalError: unknown,
+): Promise<void> {
+  try {
+    await importFromJSON(structuredClone(snapshot.roots), 'restore-replace', {
+      trusted: true,
+    })
+    markImportRestored(originalError)
+  } catch (restoreError) {
+    console.error('Safety snapshot restore failed', restoreError)
   }
 }
 

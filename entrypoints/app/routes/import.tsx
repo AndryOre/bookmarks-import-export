@@ -28,7 +28,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
 import { formatCount } from '@/lib/format-count'
-import { ImportCanceledError } from '@/lib/import-control'
+import { ImportCanceledError, wasImportRestored } from '@/lib/import-control'
 import { summarizeImportDuplicates } from '@/lib/import-duplicates'
 import type { ImportDuplicateSummary } from '@/lib/import-duplicates'
 import { getImportPreview } from '@/lib/import-preview'
@@ -86,6 +86,7 @@ export function ImportRoute() {
     useStorageItem(skipDuplicatesStore)
   const [status, setStatus] = useState<ImportStatus>('idle')
   const [errorMessage, setErrorMessage] = useState('')
+  const [wasRestored, setWasRestored] = useState(false)
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
   const [undoSnapshot, setUndoSnapshot] = useState<SafetySnapshot | null>(null)
   const [skippedCount, setSkippedCount] = useState(0)
@@ -171,6 +172,7 @@ export function ImportRoute() {
       } else {
         setStatus('error')
         setErrorMessage((error as Error).message)
+        setWasRestored(wasImportRestored(error))
       }
     } finally {
       progress.end()
@@ -378,7 +380,10 @@ export function ImportRoute() {
         <Alert variant="destructive" tabIndex={-1} ref={focusOnMount}>
           <CircleAlertIcon />
           <AlertTitle>{i18n.t('import_errorTitle')}</AlertTitle>
-          <AlertDescription>{errorMessage}</AlertDescription>
+          <AlertDescription>
+            {errorMessage}
+            {wasRestored && ` ${i18n.t('import_errorRestored')}`}
+          </AlertDescription>
         </Alert>
       )}
 
