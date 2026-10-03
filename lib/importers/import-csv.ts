@@ -1,7 +1,7 @@
 import { i18n } from '#i18n'
 import Papa from 'papaparse'
 
-import { countBookmarks } from '@/lib/count-bookmarks'
+import { countImportableBookmarks } from '@/lib/count-bookmarks'
 import { ImportWriter, withImportRollback } from '@/lib/import-control'
 import { isAllowedBookmarkUrl } from '@/lib/importers/url-validation'
 import { applySkipDuplicates } from '@/lib/skip-duplicates'
@@ -22,17 +22,7 @@ export async function importFromCSV(
   csv: string,
   options: ImportOptions = {},
 ): Promise<ImportResult> {
-  const parsed = Papa.parse<Record<string, string>>(csv.trim(), {
-    header: true,
-    skipEmptyLines: true,
-    transformHeader: (header) => header.toLowerCase().trim(),
-  })
-
-  if (parsed.errors.length > 0) {
-    throw new Error(parsed.errors.map((error) => error.message).join('; '))
-  }
-
-  const { tree: parsedTree, skippedInvalidUrl } = processCSVData(parsed.data)
+  const { tree: parsedTree, skippedInvalidUrl } = parseCSVTree(csv)
   const liveTree = await browser.bookmarks.getTree()
   const { nodes, skippedDuplicates } = applySkipDuplicates(
     parsedTree,
@@ -42,7 +32,7 @@ export async function importFromCSV(
   )
   const writer = new ImportWriter(
     options,
-    countBookmarks(nodes),
+    countImportableBookmarks(nodes),
     skippedDuplicates,
   )
   await withImportRollback(writer, () => createBookmarks(nodes, writer))
@@ -51,17 +41,52 @@ export async function importFromCSV(
 }
 
 /**
- * Builds a folder tree from the flat CSV rows. Rows missing a `title` or
- * `url`, or whose `url` fails `isAllowedBookmarkUrl` validation, are
- * skipped without throwing or rejecting the import; rows skipped for an
- * invalid URL are counted. Folder path segments (split on `/`) are memoized
+ * Parses CSV text into a folder tree. Rows with the wrong number of fields
+ * (`FieldMismatch`) are skipped and counted in `skippedInvalidUrl` rather than
+ * failing the import; any other parse error throws.
+ * @param csv The CSV text to parse.
+ * @returns The folder tree and the count of rows skipped as unusable.
+ * @throws {Error} When Papa Parse reports an error other than `FieldMismatch`.
+ */
+export function parseCSVTree(csv: string): {
+  tree: ParsedBookmark[]
+  skippedInvalidUrl: number
+} {
+  const parsed = Papa.parse<Record<string, string>>(csv.trim(), {
+    header: true,
+    skipEmptyLines: true,
+    transformHeader: (header) => header.toLowerCase().trim(),
+  })
+
+  const fatalErrors = parsed.errors.filter(
+    (error) => error.type !== 'FieldMismatch',
+  )
+  if (fatalErrors.length > 0) {
+    throw new Error(fatalErrors.map((error) => error.message).join('; '))
+  }
+
+  const malformedRows = new Set(
+    parsed.errors.flatMap((error) =>
+      error.row === undefined ? [] : [error.row],
+    ),
+  )
+  const rows = parsed.data.filter((_, index) => !malformedRows.has(index))
+  const { tree, skippedInvalidUrl } = processCSVData(rows)
+  return { tree, skippedInvalidUrl: skippedInvalidUrl + malformedRows.size }
+}
+
+/**
+ * Builds a folder tree from the flat CSV rows. Rows whose `url` is missing or
+ * fails `isAllowedBookmarkUrl` validation, are
+ * skipped without throwing or rejecting the import and are counted. An
+ * empty `title` is kept, since icon-only bookmarks export that way. Folder path segments (split on `/`) are memoized
  * by their full path so that rows sharing a folder path reuse the same
  * folder node instead of creating duplicates within this batch.
  * @param rows The parsed CSV rows.
  * @returns The resulting folder tree and the count of rows skipped because
  *   their `url` is not allowed.
  */
-export function processCSVData(rows: Record<string, string>[]): {
+function processCSVData(rows: Record<string, string>[]): {
   tree: ParsedBookmark[]
   skippedInvalidUrl: number
 } {
@@ -70,10 +95,8 @@ export function processCSVData(rows: Record<string, string>[]): {
   const folderMemo: Record<string, ParsedBookmark> = {}
 
   for (const row of rows) {
-    const title = row['title']?.trim()
+    const title = row['title']?.trim() ?? ''
     const url = row['url']?.trim()
-
-    if (!title || !url) continue
 
     if (!isAllowedBookmarkUrl(url)) {
       skippedInvalidUrl++
@@ -137,7 +160,7 @@ async function createBookmarks(
 
   let importedFolderId: string
 
-  const existingFolder = existing[0]
+  const existingFolder = existing.find((node) => !node.url)
   if (existingFolder) {
     importedFolderId = existingFolder.id
   } else {

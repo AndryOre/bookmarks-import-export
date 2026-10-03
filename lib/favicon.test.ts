@@ -4,51 +4,32 @@ import { fakeBrowser } from 'wxt/testing/fake-browser'
 
 import { resetFakeI18n } from '@/lib/testing/fake-i18n'
 
-import { getFaviconBase64, getFaviconUrl } from './favicon'
-
-/**
- * Chrome's generic globe placeholder icon, copied verbatim from the
- * `DEFAULT_CHROME_FAVICON` constant in `lib/favicon.ts` (the string
- * `getFaviconBase64` compares its `FileReader` result against to detect "no
- * real favicon"). Used with a stubbed `FileReader` below, rather than a real
- * `Blob`/`FileReader` round-trip, since that literal isn't valid padded
- * base64 (its length isn't a multiple of 4) and a real `FileReader` always
- * emits correctly padded output.
- */
-const DEFAULT_CHROME_FAVICON =
-  'data:image/bmp;base64,Qk06AAAAAAAAADYAAAAoAAAAEAAAABAAAAABABgAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAArwCvAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
-
-/**
- * A minimal `FileReader` stand-in that ignores the blob it's given and
- * synchronously "resolves" to a fixed `result`, so `getFaviconBase64` tests
- * can control exactly what the real `FileReader` would have read without
- * needing to build a `Blob` whose bytes encode to a specific base64 string.
- */
-class StubFileReader {
-  private readonly listeners = new Map<string, (() => void)[]>()
-
-  result: string | null = null
-
-  addEventListener(type: string, callback: () => void): void {
-    const existing = this.listeners.get(type) ?? []
-    existing.push(callback)
-    this.listeners.set(type, existing)
-  }
-
-  readAsDataURL(): void {
-    queueMicrotask(() => {
-      const callbacks = this.listeners.get('loadend') ?? []
-      for (const callback of callbacks) callback()
-    })
-  }
+async function loadFavicon() {
+  vi.resetModules()
+  return import('./favicon')
 }
 
-function stubFileReaderResult(value: string): void {
+const placeholderBlob = new Blob(['placeholder-globe'], { type: 'image/png' })
+const realBlob = new Blob(['real-icon'], { type: 'image/png' })
+const realDataUrl = 'data:image/png;base64,cmVhbC1pY29u'
+
+/**
+ * Stubs `fetch` so each `_favicon` request is answered by looking at its
+ * `pageUrl`: return a `Blob` to resolve with it, or an `Error` to reject.
+ * @param responseByPageUrl Picks the outcome for a given `pageUrl`.
+ */
+function stubFaviconResponses(
+  responseByPageUrl: (pageUrl: string) => Blob | Error,
+): void {
   vi.stubGlobal(
-    'FileReader',
-    class extends StubFileReader {
-      override result = value
-    },
+    'fetch',
+    vi.fn((input: string) => {
+      const pageUrl = new URL(input).searchParams.get('pageUrl') as string
+      const outcome = responseByPageUrl(pageUrl)
+      return outcome instanceof Error
+        ? Promise.reject(outcome)
+        : Promise.resolve({ blob: () => Promise.resolve(outcome) })
+    }),
   )
 }
 
@@ -62,7 +43,8 @@ afterEach(() => {
 })
 
 describe('getFaviconUrl', () => {
-  it('builds a _favicon URL with the page URL and default size 16', () => {
+  it('builds a _favicon URL with the page URL and default size 16', async () => {
+    const { getFaviconUrl } = await loadFavicon()
     const url = getFaviconUrl('https://example.com/')
 
     const parsed = new URL(url)
@@ -71,7 +53,8 @@ describe('getFaviconUrl', () => {
     expect(parsed.searchParams.get('size')).toBe('16')
   })
 
-  it('honors a custom size', () => {
+  it('honors a custom size', async () => {
+    const { getFaviconUrl } = await loadFavicon()
     const url = getFaviconUrl('https://example.com/', 32)
 
     expect(new URL(url).searchParams.get('size')).toBe('32')
@@ -80,32 +63,56 @@ describe('getFaviconUrl', () => {
 
 describe('getFaviconBase64', () => {
   it('resolves the favicon as a base64 data URL', async () => {
-    const blob = new Blob(['test'], { type: 'image/png' })
-    vi.stubGlobal(
-      'fetch',
-      vi.fn().mockResolvedValue({ blob: () => Promise.resolve(blob) }),
+    const { getFaviconBase64 } = await loadFavicon()
+    stubFaviconResponses((pageUrl) =>
+      pageUrl === 'https://example.com/' ? realBlob : placeholderBlob,
     )
 
     const result = await getFaviconBase64('https://example.com/')
 
-    expect(result).toBe('data:image/png;base64,dGVzdA==')
+    expect(result).toBe(realDataUrl)
   })
 
-  it('resolves to an empty string when the API falls back to the default Chrome placeholder', async () => {
-    stubFileReaderResult(DEFAULT_CHROME_FAVICON)
-    vi.stubGlobal(
-      'fetch',
-      vi.fn().mockResolvedValue({
-        blob: () => Promise.resolve(new Blob(['irrelevant'])),
-      }),
-    )
+  it('resolves to an empty string when the icon equals the runtime-fetched placeholder', async () => {
+    const { getFaviconBase64 } = await loadFavicon()
+    stubFaviconResponses(() => placeholderBlob)
 
     const result = await getFaviconBase64('https://example.com/')
 
     expect(result).toBe('')
   })
 
+  it('memoizes the placeholder lookup per size', async () => {
+    const { getFaviconBase64 } = await loadFavicon()
+    stubFaviconResponses((pageUrl) =>
+      pageUrl === 'https://example.com/' ? realBlob : placeholderBlob,
+    )
+
+    await getFaviconBase64('https://example.com/')
+    await getFaviconBase64('https://example.com/')
+    await getFaviconBase64('https://example.com/', 32)
+
+    const placeholderCalls = vi
+      .mocked(fetch)
+      .mock.calls.filter(([input]) => String(input).includes('snug.invalid'))
+    expect(placeholderCalls).toHaveLength(2)
+  })
+
+  it('returns the icon when the placeholder lookup fails', async () => {
+    const { getFaviconBase64 } = await loadFavicon()
+    stubFaviconResponses((pageUrl) =>
+      pageUrl === 'https://example.com/'
+        ? realBlob
+        : new Error('placeholder lookup failed'),
+    )
+
+    const result = await getFaviconBase64('https://example.com/')
+
+    expect(result).toBe(realDataUrl)
+  })
+
   it('resolves to an empty string and logs when fetching fails', async () => {
+    const { getFaviconBase64 } = await loadFavicon()
     const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
     const error = new Error('network error')
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(error))
@@ -117,6 +124,7 @@ describe('getFaviconBase64', () => {
   })
 
   it('resolves to an empty string and logs when the FileReader errors', async () => {
+    const { getFaviconBase64 } = await loadFavicon()
     const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
     const readError = new Error('read failed')
     vi.stubGlobal(
@@ -132,12 +140,7 @@ describe('getFaviconBase64', () => {
         }
       },
     )
-    vi.stubGlobal(
-      'fetch',
-      vi.fn().mockResolvedValue({
-        blob: () => Promise.resolve(new Blob(['x'])),
-      }),
-    )
+    stubFaviconResponses(() => new Blob(['x']))
 
     const result = await getFaviconBase64('https://example.com/')
 

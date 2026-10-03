@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { countBookmarks } from '@/lib/count-bookmarks'
+import { countBookmarks, countImportableBookmarks } from '@/lib/count-bookmarks'
 
 describe('countBookmarks', () => {
   it('counts only url nodes across nested folders', () => {
@@ -30,5 +30,21 @@ describe('countBookmarks', () => {
 
   it('returns zero for an empty tree', () => {
     expect(countBookmarks([])).toBe(0)
+  })
+})
+
+describe('countImportableBookmarks', () => {
+  it('counts only nodes whose url is allowed', () => {
+    const tree = [
+      {
+        title: 'Folder',
+        children: [
+          { title: 'A', url: 'https://a.example' },
+          { title: 'Bad', url: 'javascript:alert(1)' },
+          { title: 'Local', url: 'chrome://settings' },
+        ],
+      },
+    ]
+    expect(countImportableBookmarks(tree)).toBe(1)
   })
 })

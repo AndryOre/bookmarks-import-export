@@ -24,6 +24,18 @@ describe('detectFormat', () => {
     expect(detectFormat('<html></html>', 'text/html')).toBe('unknown')
   })
 
+  it('rejects CSV headers that only contain title and url as substrings', () => {
+    expect(
+      detectFormat('Page Title,Page URL\nX,https://example.com', 'text/csv'),
+    ).toBe('unknown')
+  })
+
+  it('detects CSV headers regardless of case and padding', () => {
+    expect(
+      detectFormat(' Title , URL \nX,https://example.com', 'text/csv'),
+    ).toBe('csv')
+  })
+
   it('detects valid CSV with title and url headers', () => {
     expect(
       detectFormat('title,url\nExample,https://example.com', 'text/csv'),

@@ -180,11 +180,16 @@ function isValidCSV(content: string): boolean {
     preview: 3,
   })
 
-  if (result.errors.length > 0 || result.data.length === 0) return false
+  const hasFatalError = result.errors.some(
+    (error) => error.type !== 'FieldMismatch',
+  )
+  if (hasFatalError || result.data.length === 0) return false
 
-  const fields = (result.meta.fields ?? []).map((f) => f.toLowerCase())
-  const hasTitle = fields.some((f) => f.includes('title'))
-  const hasUrl = fields.some((f) => f.includes('url'))
+  const fields = new Set(
+    (result.meta.fields ?? []).map((field) => field.toLowerCase().trim()),
+  )
+  const hasTitle = fields.has('title')
+  const hasUrl = fields.has('url')
 
   return hasTitle && hasUrl
 }

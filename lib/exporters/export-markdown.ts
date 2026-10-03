@@ -52,6 +52,8 @@ function escapeText(text: string): string {
   return text
     .replaceAll(/\s*[\r\n]+\s*/g, ' ')
     .replaceAll(/[\\`*_[\]<>#|]/g, (character) => `\\${character}`)
+    .replace(/^(\s*)([-+])(?=\s)/, String.raw`$1\$2`)
+    .replace(/^(\s*\d+)([.)])(?=\s)/, String.raw`$1\$2`)
 }
 
 /**

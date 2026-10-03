@@ -19,6 +19,7 @@ export interface ImportProgress {
 export interface ImportControl {
   onProgress?: (progress: ImportProgress) => void
   signal?: AbortSignal
+  onClearingExisting?: () => void
 }
 
 /**
@@ -39,6 +40,28 @@ export class ImportCanceledError extends Error {
     this.name = 'ImportCanceledError'
     this.hasClearedExisting = hasClearedExisting
   }
+}
+
+const restoredErrors = new WeakSet<object>()
+
+/**
+ * Records that the Safety snapshot was restored after `error` aborted an
+ * import, so the UI can tell the user their bookmarks are back.
+ * @param error The error that aborted the import.
+ */
+export function markImportRestored(error: unknown): void {
+  if (typeof error === 'object' && error !== null) restoredErrors.add(error)
+}
+
+/**
+ * Whether the Safety snapshot was restored after `error` aborted an import.
+ * @param error Any caught value.
+ * @returns True when {@link markImportRestored} was called for it.
+ */
+export function wasImportRestored(error: unknown): boolean {
+  return (
+    typeof error === 'object' && error !== null && restoredErrors.has(error)
+  )
 }
 
 /**
@@ -105,6 +128,7 @@ export class ImportWriter {
   markClearingExisting(): void {
     this.throwIfAborted()
     this.hasClearedExisting = true
+    this.control.onClearingExisting?.()
   }
 
   /**
@@ -145,12 +169,12 @@ export class ImportWriter {
 }
 
 /**
- * Runs an import step and, when it is canceled, rolls back everything the
- * writer created before rethrowing the cancel error.
+ * Runs an import step and, when it fails or is canceled, rolls back everything
+ * the writer created before rethrowing the original error.
  * @param writer The writer journaling the step.
  * @param step The writing work.
  * @returns The step's result.
- * @throws {ImportCanceledError} After a rollback attempt of a cancel; a failing rollback is logged and does not replace the cancel.
+ * @throws {Error} The step's original error after a rollback attempt; a failing rollback is logged and does not replace it.
  */
 export async function withImportRollback<T>(
   writer: ImportWriter,
@@ -159,12 +183,10 @@ export async function withImportRollback<T>(
   try {
     return await step()
   } catch (error) {
-    if (error instanceof ImportCanceledError) {
-      try {
-        await writer.rollback()
-      } catch (rollbackError) {
-        console.error('Import rollback failed', rollbackError)
-      }
+    try {
+      await writer.rollback()
+    } catch (rollbackError) {
+      console.error('Import rollback failed', rollbackError)
     }
     throw error
   }

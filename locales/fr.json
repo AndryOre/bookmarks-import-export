@@ -499,6 +499,10 @@
     "message": "Échec de l'importation",
     "description": "Title of the import error alert"
   },
+  "import_errorRestored": {
+    "message": "Vos favoris précédents ont été restaurés.",
+    "description": "Shown in the import error alert when the Safety snapshot was restored after a failed Restore-replace"
+  },
   "import_another": {
     "message": "Importer un autre fichier",
     "description": "Button shown after a successful import"
