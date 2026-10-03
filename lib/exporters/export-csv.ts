@@ -2,6 +2,7 @@ import { i18n } from '#i18n'
 import Papa from 'papaparse'
 
 import { countBookmarks } from '@/lib/count-bookmarks'
+import { escapeFolderSegment } from '@/lib/csv-escaping'
 import {
   createExportTicker,
   type ExportControl,
@@ -35,7 +36,9 @@ interface CSVRow {
  * `dateLastUsed`, `iconData` when their options are enabled). Timestamps are
  * converted from the milliseconds Chrome stores to whole seconds. Nested
  * folders are flattened into a single `folder` column, with path segments
- * joined by `/`.
+ * joined by `/`. `/` and `\` inside a folder name are backslash-escaped,
+ * and `=`, `+`, `-`, `@`, tab or CR at the start of a field get a leading `'`
+ * so spreadsheets do not run them as formulas.
  * @param options Which bookmarks to export and which optional columns to include.
  * @returns The CSV text.
  */
@@ -76,6 +79,7 @@ export async function exportToCSV(options: ExportCSVOptions): Promise<string> {
 
   return Papa.unparse(rows, {
     quotes: true,
+    escapeFormulae: true,
     delimiter: ',',
     newline: '\r\n',
     header: true,
@@ -160,7 +164,8 @@ function getFolderLabel(
   shouldHideParentFolder: boolean,
 ): string {
   if (node.id === '0') return ''
-  if (isBookmarksBar(node)) return i18n.t('bookmarksBar')
-  if (isOtherBookmarks(node)) return i18n.t('otherBookmarks')
-  return shouldHideParentFolder ? '' : node.title
+  if (isBookmarksBar(node)) return escapeFolderSegment(i18n.t('bookmarksBar'))
+  if (isOtherBookmarks(node))
+    return escapeFolderSegment(i18n.t('otherBookmarks'))
+  return shouldHideParentFolder ? '' : escapeFolderSegment(node.title)
 }

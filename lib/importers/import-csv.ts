@@ -2,6 +2,7 @@ import { i18n } from '#i18n'
 import Papa from 'papaparse'
 
 import { countImportableBookmarks } from '@/lib/count-bookmarks'
+import { splitFolderPath, unescapeFormulaField } from '@/lib/csv-escaping'
 import { ImportWriter, withImportRollback } from '@/lib/import-control'
 import { isAllowedBookmarkUrl } from '@/lib/importers/url-validation'
 import { applySkipDuplicates } from '@/lib/skip-duplicates'
@@ -79,7 +80,7 @@ export function parseCSVTree(csv: string): {
  * Builds a folder tree from the flat CSV rows. Rows whose `url` is missing or
  * fails `isAllowedBookmarkUrl` validation, are
  * skipped without throwing or rejecting the import and are counted. An
- * empty `title` is kept, since icon-only bookmarks export that way. Folder path segments (split on `/`) are memoized
+ * empty `title` is kept, since icon-only bookmarks export that way. Folder path segments (split on unescaped `/`) are memoized
  * by their full path so that rows sharing a folder path reuse the same
  * folder node instead of creating duplicates within this batch.
  * @param rows The parsed CSV rows.
@@ -95,7 +96,7 @@ function processCSVData(rows: Record<string, string>[]): {
   const folderMemo: Record<string, ParsedBookmark> = {}
 
   for (const row of rows) {
-    const title = row['title']?.trim() ?? ''
+    const title = unescapeFormulaField(row['title']?.trim() ?? '')
     const url = row['url']?.trim()
 
     if (!isAllowedBookmarkUrl(url)) {
@@ -103,14 +104,14 @@ function processCSVData(rows: Record<string, string>[]): {
       continue
     }
 
-    const folderPath = row['folder']?.trim() ?? ''
-    const segments = folderPath.split('/').filter(Boolean)
+    const folderPath = unescapeFormulaField(row['folder']?.trim() ?? '')
+    const segments = splitFolderPath(folderPath)
 
     let currentLevel = root
     let currentPath = ''
 
     for (const segment of segments) {
-      currentPath = currentPath ? `${currentPath}/${segment}` : segment
+      currentPath = currentPath ? `${currentPath}\0${segment}` : segment
 
       let folder = folderMemo[currentPath]
       if (!folder) {
