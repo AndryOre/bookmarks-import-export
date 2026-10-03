@@ -8,6 +8,7 @@ import {
   ImportWriter,
   withImportRollback,
 } from '@/lib/import-control'
+import { shouldClearMobileRoot } from '@/lib/importers/mobile-root'
 import {
   resolveImportRoots,
   resolveImportRootTitles,
@@ -468,7 +469,7 @@ async function processBookmarks(
         (bookmark) =>
           bookmark.isMobileBookmarks &&
           bookmark.children &&
-          bookmark.children.length > 0,
+          shouldClearMobileRoot(bookmark),
       )
 
       if (mode === 'restore-replace') {

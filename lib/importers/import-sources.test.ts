@@ -137,6 +137,7 @@ describe('getImportPreview', () => {
       bookmarksBarCount: 2,
       otherBookmarksCount: 1,
       mobileBookmarksCount: 1,
+      clearsMobileRoot: true,
       totalCount: 4,
       hasLocationData: true,
     })

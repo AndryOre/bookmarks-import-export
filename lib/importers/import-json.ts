@@ -8,6 +8,7 @@ import {
   ImportWriter,
   withImportRollback,
 } from '@/lib/import-control'
+import { shouldClearMobileRoot } from '@/lib/importers/mobile-root'
 import { resolveImportRoots } from '@/lib/importers/resolve-roots'
 import { isAllowedBookmarkUrl } from '@/lib/importers/url-validation'
 import { applySkipDuplicates } from '@/lib/skip-duplicates'
@@ -105,26 +106,35 @@ interface PreprocessLevelResult {
   virtualRootChildren: ParsedBookmark[] | undefined
 }
 
+const ROOT_ID_BY_FOLDER_TYPE: Readonly<Record<string, string>> = {
+  'bookmarks-bar': '1',
+  other: '2',
+  mobile: '3',
+}
+
+function resolveRootId(bookmark: ParsedBookmark): string | undefined {
+  return (
+    ROOT_ID_BY_FOLDER_TYPE[bookmark.folderType ?? ''] ??
+    (['1', '2', '3'].includes(bookmark.id ?? '') ? bookmark.id : undefined)
+  )
+}
+
 /**
  * Decides whether `bookmark` is a virtual root wrapping the real tree,
  * rather than an ordinary top-level folder that belongs in "Other
  * bookmarks" (see `preprocessLevel`). A folder only counts as a virtual
- * root when it is the sole node at its level (so scanning it can't
- * discard any sibling already classified), or when its own children
- * contain an `id === '1'`/`'2'`/`'3'` node (so it demonstrably wraps the
- * real bookmarks bar / "Other bookmarks" / Mobile bookmarks roots).
+ * root when it has `id === '0'`, or when its own children contain an
+ * `id === '1'`/`'2'`/`'3'` node or a root `folderType` (so it demonstrably
+ * wraps the real bookmarks bar / "Other bookmarks" / Mobile bookmarks
+ * roots). A lone ordinary folder is kept as a folder.
  * @param bookmark The node being considered as a virtual root.
- * @param level The full sibling array `bookmark` was found in.
  * @returns Whether `bookmark` should be unwrapped as a virtual root.
  */
-function isVirtualRoot(
-  bookmark: ParsedBookmark,
-  level: ParsedBookmark[],
-): boolean {
+function isVirtualRoot(bookmark: ParsedBookmark): boolean {
   return (
-    level.length === 1 ||
-    (bookmark.children ?? []).some((child) =>
-      ['1', '2', '3'].includes(child.id ?? ''),
+    bookmark.id === '0' ||
+    (bookmark.children ?? []).some(
+      (child) => resolveRootId(child) !== undefined,
     )
   )
 }
@@ -157,7 +167,7 @@ function preprocessLevel(level: ParsedBookmark[]): PreprocessLevelResult {
   let virtualRootChildren: ParsedBookmark[] | undefined
 
   for (const bookmark of level) {
-    switch (bookmark.id) {
+    switch (resolveRootId(bookmark)) {
       case '1': {
         bookmark.isBookmarksBar = true
         result.unshift(bookmark)
@@ -177,7 +187,7 @@ function preprocessLevel(level: ParsedBookmark[]): PreprocessLevelResult {
 
     if (bookmark.parentId === '2') {
       orphans.push(bookmark)
-    } else if (bookmark.children && isVirtualRoot(bookmark, level)) {
+    } else if (bookmark.children && isVirtualRoot(bookmark)) {
       virtualRootChildren = bookmark.children as ParsedBookmark[]
       break
     } else {
@@ -338,7 +348,7 @@ async function processBookmarks(
         (bookmark) =>
           bookmark.isMobileBookmarks &&
           bookmark.children &&
-          (isTrusted || bookmark.children.length > 0),
+          (isTrusted || shouldClearMobileRoot(bookmark)),
       )
 
       if (mode === 'restore-replace') {

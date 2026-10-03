@@ -1,6 +1,7 @@
 import { countImportableBookmarks } from './count-bookmarks'
 import { detectFormat } from './detect-format'
 import { parseCSVTree } from './importers/import-csv'
+import { shouldClearMobileRoot } from './importers/mobile-root'
 import { parseLocationAwareImport } from './importers/parse-import'
 import type { ResolvedImportRootTitles } from './importers/resolve-roots'
 import type { ImportPreview } from './types'
@@ -47,6 +48,9 @@ export function getImportPreview(
         bookmarksBarCount,
         otherBookmarksCount,
         mobileBookmarksCount,
+        clearsMobileRoot: mobileNode
+          ? shouldClearMobileRoot(mobileNode)
+          : false,
         totalCount:
           bookmarksBarCount + otherBookmarksCount + mobileBookmarksCount,
         hasLocationData: parsed.hasLocationData,
@@ -60,6 +64,7 @@ export function getImportPreview(
         bookmarksBarCount: 0,
         otherBookmarksCount: 0,
         mobileBookmarksCount: 0,
+        clearsMobileRoot: false,
         totalCount: count,
         hasLocationData: false,
       }
@@ -71,6 +76,7 @@ export function getImportPreview(
     bookmarksBarCount: 0,
     otherBookmarksCount: 0,
     mobileBookmarksCount: 0,
+    clearsMobileRoot: false,
     totalCount: 0,
     hasLocationData: false,
   }

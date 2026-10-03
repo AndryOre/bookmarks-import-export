@@ -27,7 +27,7 @@ export async function getReplaceDiff(
   const { bookmarksBarId, otherBookmarksId, mobileId } =
     resolveImportRoots(rootChildren)
   const clearedIds = new Set([bookmarksBarId, otherBookmarksId])
-  if (preview.mobileBookmarksCount > 0) clearedIds.add(mobileId)
+  if (preview.clearsMobileRoot) clearedIds.add(mobileId)
 
   const clearedRoots = rootChildren.filter((node) => clearedIds.has(node.id))
   return {
