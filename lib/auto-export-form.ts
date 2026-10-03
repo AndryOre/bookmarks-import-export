@@ -29,7 +29,7 @@ export function resolveFolder(typed: string, previous: string): string {
 }
 
 /**
- * Parses the "Keep the last N files" field on the Auto-export page. Only a
+ * Parses the "Keep the last N runs" field on the Auto-export page. Only a
  * whole number of at least 0 is valid.
  * @param typed The raw text in the retention field.
  * @returns The parsed count, or `null` when the text is not a valid integer >= 0.

@@ -172,27 +172,87 @@ describe('downloadViaOffscreenDocument', () => {
     expect(downloads.removeListener).toHaveBeenCalledTimes(1)
   })
 
-  it('rejects after the timeout and removes its listener when the download never settles', async () => {
+  it('reports the download id as soon as it starts, before it settles', async () => {
+    mockOffscreenApi()
+    mockRuntimeSendMessage()
+    const downloads = mockDownloadsApi()
+    const onDownloadStarted = vi.fn()
+
+    const runPromise = downloadViaOffscreenDocument(
+      'c',
+      'text/plain',
+      'f.txt',
+      onDownloadStarted,
+    )
+    await flushMicrotasks()
+
+    expect(onDownloadStarted).toHaveBeenCalledExactlyOnceWith(1)
+    downloads.fire(1, 'complete')
+    await runPromise
+  })
+
+  it('rejects with a localized message on timeout but keeps the blob URL alive until the download settles', async () => {
     vi.useFakeTimers()
     try {
-      mockOffscreenApi()
-      mockRuntimeSendMessage()
+      const offscreen = mockOffscreenApi()
+      const sendMessage = mockRuntimeSendMessage()
       const downloads = mockDownloadsApi()
+      const onDownloadStarted = vi.fn()
 
-      const runPromise = downloadViaOffscreenDocument(
-        'c',
-        'text/plain',
-        'f.txt',
-      )
-      const settled = Promise.allSettled([runPromise])
+      const settled = Promise.allSettled([
+        downloadViaOffscreenDocument(
+          'c',
+          'text/plain',
+          'f.txt',
+          onDownloadStarted,
+        ),
+      ])
       await vi.advanceTimersByTimeAsync(DOWNLOAD_SETTLE_TIMEOUT_MS)
       const [outcome] = await settled
       expect(outcome.status).toBe('rejected')
-      expect(String((outcome as PromiseRejectedResult).reason)).toMatch(
-        /timed out/i,
+      expect((outcome as PromiseRejectedResult).reason).toEqual(
+        new Error('Download 1 timed out.'),
       )
+      expect(onDownloadStarted).toHaveBeenCalledWith(1)
 
-      expect(downloads.removeListener).toHaveBeenCalledTimes(1)
+      const revokeCalls = () =>
+        sendMessage.mock.calls.filter(
+          ([message]) => message.type === REVOKE_BLOB_URL_MESSAGE_TYPE,
+        )
+      expect(revokeCalls()).toHaveLength(0)
+      expect(offscreen.closeDocument).not.toHaveBeenCalled()
+
+      downloads.fire(1, 'complete')
+      await vi.advanceTimersByTimeAsync(0)
+
+      expect(revokeCalls()).toHaveLength(1)
+      expect(offscreen.closeDocument).toHaveBeenCalledTimes(1)
+      expect(downloads.removeListener).toHaveBeenCalledTimes(2)
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  it('also revokes a timed-out download once it is interrupted', async () => {
+    vi.useFakeTimers()
+    try {
+      mockOffscreenApi()
+      const sendMessage = mockRuntimeSendMessage()
+      const downloads = mockDownloadsApi()
+
+      const settled = Promise.allSettled([
+        downloadViaOffscreenDocument('c', 'text/plain', 'f.txt'),
+      ])
+      await vi.advanceTimersByTimeAsync(DOWNLOAD_SETTLE_TIMEOUT_MS)
+      await settled
+      downloads.fire(1, 'interrupted')
+      await vi.advanceTimersByTimeAsync(0)
+
+      expect(
+        sendMessage.mock.calls.filter(
+          ([message]) => message.type === REVOKE_BLOB_URL_MESSAGE_TYPE,
+        ),
+      ).toHaveLength(1)
     } finally {
       vi.useRealTimers()
     }

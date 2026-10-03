@@ -172,12 +172,12 @@ Snug can export your bookmarks on a schedule, without any manual action:
    scheduled export was due, it catches up automatically shortly after the
    browser next starts, instead of waiting for the next scheduled time.
 
-**Keep the last N files** (Retention, default 10) limits how many exported files
-pile up: after each successful run, Snug deletes its own oldest exported files
-beyond N and their entries in the browser's download history. It only ever
-removes files Snug itself saved, never other files in the folder, and a file you
-already deleted or moved is simply skipped. A failed run deletes nothing. Set it
-to 0 to keep everything.
+**Keep the last N runs** (Retention, default 10) limits how many exports pile
+up: after each successful run, Snug deletes the files of its own oldest runs
+beyond N (every format of a kept run stays) and their entries in the browser's
+download history. It only ever removes files Snug itself saved, never other
+files in the folder, and a file you already deleted or moved is simply skipped.
+A failed run deletes nothing. Set it to 0 to keep everything.
 
 **Notify me when an export fails** (on by default) shows a system notification,
 titled "Snug · Auto-export failed" with the reason, when a run fails. Clicking

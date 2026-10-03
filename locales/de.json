@@ -616,11 +616,11 @@
     "description": "Help text under the formats toggle group"
   },
   "autoExportPage_keepLast": {
-    "message": "Die letzten N Dateien behalten",
+    "message": "Die letzten N Durchläufe behalten",
     "description": "Label of the retention number field on the Auto-export page"
   },
   "autoExportPage_keepLastDescription": {
-    "message": "Nach jedem erfolgreichen Export löscht Snug seine eigenen ältesten exportierten Dateien über dieser Anzahl. Es werden nur von Snug gespeicherte Dateien entfernt, nie andere Dateien im Ordner. Mit 0 bleibt alles erhalten.",
+    "message": "Nach jedem erfolgreichen Export löscht Snug die Dateien seiner ältesten Durchläufe über dieser Anzahl, sodass alle Formate eines behaltenen Durchlaufs erhalten bleiben. Es werden nur von Snug gespeicherte Dateien entfernt, nie andere Dateien im Ordner. Mit 0 bleibt alles erhalten.",
     "description": "Help text explaining the retention rule under the field"
   },
   "autoExportPage_keepLastInvalid": {
@@ -891,6 +891,15 @@
   "downloadInterrupted": {
     "message": "Download $ID$ wurde unterbrochen.",
     "description": "Last-run error when a download is interrupted; $ID$ is the download id",
+    "placeholders": {
+      "id": {
+        "content": "$1"
+      }
+    }
+  },
+  "downloadTimedOut": {
+    "message": "Zeitüberschreitung bei Download $ID$.",
+    "description": "Last-run error when a download is still running after the wait limit; $ID$ is the download id",
     "placeholders": {
       "id": {
         "content": "$1"

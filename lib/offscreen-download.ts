@@ -227,41 +227,65 @@ async function readDownloadState(
 }
 
 /**
- * Resolves once `downloadId` reaches a terminal `browser.downloads.onChanged`
- * state, rejects if it is interrupted, or rejects after
- * {@link DOWNLOAD_SETTLE_TIMEOUT_MS} if it never settles. Always removes its
- * listener and timer when it settles. A download that already settled before
- * the listener attached is picked up by a one-off `downloads.search`.
- * @param downloadId The download to watch.
- * @returns Resolves on `'complete'`, rejects on `'interrupted'` or timeout.
+ * How a watched download ended: it reached a terminal `downloads.onChanged`
+ * state, or the optional wait limit ran out first.
  */
-function waitForDownloadSettled(downloadId: number): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const cleanup = (): void => {
+type DownloadOutcome = 'complete' | 'interrupted' | 'timeout'
+
+/**
+ * Resolves once `downloadId` reaches a terminal `browser.downloads.onChanged`
+ * state, or, when `timeoutMs` is set, once that wait limit passes without one.
+ * Never rejects. Always removes its listener and timer when it resolves. A
+ * download that already settled before the listener attached is picked up by
+ * a one-off `downloads.search`.
+ * @param downloadId The download to watch.
+ * @param timeoutMs How long to wait, or `null` to wait for as long as it takes.
+ * @returns The download's outcome.
+ */
+function watchDownload(
+  downloadId: number,
+  timeoutMs: number | null,
+): Promise<DownloadOutcome> {
+  return new Promise((resolve) => {
+    let timeoutHandle: ReturnType<typeof setTimeout> | undefined
+    const finish = (outcome: DownloadOutcome): void => {
       clearTimeout(timeoutHandle)
       browser.downloads.onChanged.removeListener(listener)
+      resolve(outcome)
     }
     const settle = (state: string | undefined): void => {
-      if (state === 'complete') {
-        cleanup()
-        resolve()
-      } else if (state === 'interrupted') {
-        cleanup()
-        const message = i18n.t('downloadInterrupted', [String(downloadId)])
-        reject(new Error(message))
-      }
+      if (state === 'complete' || state === 'interrupted') finish(state)
     }
     const listener = (delta: Browser.downloads.DownloadDelta): void => {
       if (delta.id !== downloadId) return
       settle(delta.state?.current)
     }
-    const timeoutHandle = setTimeout(() => {
-      cleanup()
-      reject(new Error(`Download ${downloadId} timed out.`))
-    }, DOWNLOAD_SETTLE_TIMEOUT_MS)
+    if (timeoutMs !== null) {
+      timeoutHandle = setTimeout(() => finish('timeout'), timeoutMs)
+    }
     browser.downloads.onChanged.addListener(listener)
     void readDownloadState(downloadId).then(settle)
   })
+}
+
+/**
+ * Releases what a download held: revokes its blob URL and, once no other
+ * download of this context is pending, closes the offscreen document.
+ * @param url The blob URL to revoke, if one was created.
+ * @returns Resolves once the cleanup has run.
+ */
+async function releaseDownloadResources(
+  url: string | undefined,
+): Promise<void> {
+  if (url !== undefined) {
+    try {
+      await revokeBlobUrl(url)
+    } catch (error) {
+      console.error('Failed to revoke the export blob URL.', error)
+    }
+  }
+  offscreenState.pendingDownloads -= 1
+  await closeOffscreenDocumentIfIdle()
 }
 
 /**
@@ -273,41 +297,53 @@ function waitForDownloadSettled(downloadId: number): Promise<void> {
  * URL, downloads that URL with `saveAs: false` and `conflictAction:
  * 'uniquify'`, and — once the download reaches `'complete'` or
  * `'interrupted'` — revokes the object URL and closes the offscreen document
- * if no other download from this run is still pending.
+ * if no other download from this run is still pending. A download still
+ * running after {@link DOWNLOAD_SETTLE_TIMEOUT_MS} rejects with a localized
+ * timeout error, but its blob URL and the offscreen document stay alive until
+ * it settles, so the transfer isn't cut off.
  * @param content The export content to download.
  * @param mimeType The content's MIME type.
  * @param filename The downloads-relative filename to save it as.
+ * @param onDownloadStarted Called with the download id as soon as the download
+ * starts, before it settles, so callers can track the file even if it later
+ * times out.
  * @returns Resolves with the completed download's id once it has settled and cleanup has run.
  */
 export async function downloadViaOffscreenDocument(
   content: string,
   mimeType: string,
   filename: string,
+  onDownloadStarted?: (downloadId: number) => Promise<void> | void,
 ): Promise<number> {
   offscreenState.pendingDownloads += 1
+  let url: string | undefined
+  let isReleaseDeferred = false
   try {
     await ensureOffscreenDocument()
-    const url = await requestBlobUrl(content, mimeType)
+    url = await requestBlobUrl(content, mimeType)
 
-    try {
-      const downloadId = await browser.downloads.download({
-        url,
-        filename,
-        saveAs: false,
-        conflictAction: 'uniquify',
-      })
+    const downloadId = await browser.downloads.download({
+      url,
+      filename,
+      saveAs: false,
+      conflictAction: 'uniquify',
+    })
+    await onDownloadStarted?.(downloadId)
 
-      await waitForDownloadSettled(downloadId)
-      return downloadId
-    } finally {
-      try {
-        await revokeBlobUrl(url)
-      } catch (error) {
-        console.error('Failed to revoke the export blob URL.', error)
-      }
+    const outcome = await watchDownload(downloadId, DOWNLOAD_SETTLE_TIMEOUT_MS)
+    if (outcome === 'interrupted') {
+      throw new Error(i18n.t('downloadInterrupted', [String(downloadId)]))
     }
+    if (outcome === 'timeout') {
+      isReleaseDeferred = true
+      const heldUrl = url
+      void watchDownload(downloadId, null).then(() =>
+        releaseDownloadResources(heldUrl),
+      )
+      throw new Error(i18n.t('downloadTimedOut', [String(downloadId)]))
+    }
+    return downloadId
   } finally {
-    offscreenState.pendingDownloads -= 1
-    await closeOffscreenDocumentIfIdle()
+    if (!isReleaseDeferred) await releaseDownloadResources(url)
   }
 }

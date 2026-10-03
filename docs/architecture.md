@@ -259,16 +259,16 @@ alarm, so a run always reschedules even if it failed. On a failed
 `scheduled`/`catch-up` run it also sets a toolbar failure badge
 (`chrome.action.setBadgeText('!')` plus a destructive-colored background); the
 next run that succeeds, on any trigger, clears it. After a successful run,
-Retention (`applyRetention`) keeps only the newest `keepLast` files: every
-download Snug saves has its id recorded in `autoExportDownloadIdsStore`, and the
-oldest ids beyond the limit are checked to still be Snug's own (`byExtensionId`)
-before `downloads.removeFile` and `downloads.erase` run. A missing file is
-skipped, `0` keeps everything, and a failed run deletes nothing. On any failed
-run, manual included, `notifyAutoExportFailure` shows the Failure notification
-(fixed id, so repeats replace it) unless the user turned it off; the
-background's `notifications.onClicked` listener opens the Auto-export page. The
-interval can be hourly, 12 hours, daily, 3 days or weekly (`7d`, on
-`dayOfWeek`).
+Retention (`applyRetention`) keeps only the files of the newest `keepLast` runs:
+every download Snug saves has its id recorded, grouped per run, in
+`autoExportDownloadIdsStore`, and the ids of runs beyond the limit are checked
+to still be Snug's own (`byExtensionId`) before `downloads.removeFile` and
+`downloads.erase` run. A missing file is skipped, `0` keeps everything, and a
+failed run deletes nothing. On any failed run, manual included,
+`notifyAutoExportFailure` shows the Failure notification (fixed id, so repeats
+replace it) unless the user turned it off; the background's
+`notifications.onClicked` listener opens the Auto-export page. The interval can
+be hourly, 12 hours, daily, 3 days or weekly (`7d`, on `dayOfWeek`).
 
 ## Invariants
 
