@@ -122,6 +122,10 @@
     "message": "지원하지 않는 파일 형식이에요",
     "description": "Unsupported file format"
   },
+  "importAnotherRunning": {
+    "message": "다른 가져오기가 이미 실행 중입니다. 완료될 때까지 기다린 후 다시 시도하세요.",
+    "description": "Error shown when an import is started while another extension page is already importing"
+  },
   "bookmarksImportedSuccessfully": {
     "message": "북마크를 가져왔어요!",
     "description": "Bookmarks imported successfully"

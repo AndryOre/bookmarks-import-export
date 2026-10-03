@@ -122,6 +122,10 @@
     "message": "Неподдерживаемый формат файла",
     "description": "Unsupported file format"
   },
+  "importAnotherRunning": {
+    "message": "Другой импорт уже выполняется. Дождитесь его завершения и повторите попытку.",
+    "description": "Error shown when an import is started while another extension page is already importing"
+  },
   "bookmarksImportedSuccessfully": {
     "message": "Закладки импортированы!",
     "description": "Bookmarks imported successfully"

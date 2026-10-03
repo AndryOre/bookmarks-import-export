@@ -2,6 +2,7 @@ import { i18n } from '#i18n'
 
 import { detectFormat } from './detect-format'
 import { ImportCanceledError, markImportRestored } from './import-control'
+import { withImportLock } from './import-lock'
 import { parseChromeBookmarks } from './importers/import-chrome'
 import { importFromCSV } from './importers/import-csv'
 import { importFromHTML } from './importers/import-html'
@@ -17,6 +18,13 @@ import { type SafetySnapshot, takeSafetySnapshot } from './safety-snapshot'
 import type { ImportMode, ImportOptions, ImportResult } from './types'
 
 /**
+ * An {@link ImportResult} plus the Safety snapshot the import took, if any.
+ */
+export interface RunImportResult extends ImportResult {
+  snapshot?: SafetySnapshot
+}
+
+/**
  * Imports the raw content of a bookmarks file into the browser's bookmark
  * tree, dispatching on the detected format. CSV has no location data, so it
  * ignores `mode` and always imports into a folder, as does an XBEL file whose
@@ -28,24 +36,38 @@ import type { ImportMode, ImportOptions, ImportResult } from './types'
  * @param fileName The file's name, a fallback hint when the MIME type fails.
  * @param options Import options; `skipDuplicates` is ignored in Restore-replace.
  *   `signal` cancels the import and `onProgress` reports each batch.
- * @returns The import result, including the skipped-bookmark count.
+ * @returns The import result, including the skipped-bookmark count and, for
+ *   a Restore-replace, the Safety snapshot this import took (for Undo).
+ * @throws {ImportLockHeldError} When another extension page is importing.
  * @throws {ImportCanceledError} After a cancel, once the bookmarks are back to
  *   their previous state (Restore-replace restores the Safety snapshot).
  * @throws {Error} When the format is unsupported or the importer fails; the
  *   original error is rethrown after a rollback, and after a Safety snapshot
  *   restore when existing bookmarks were already cleared.
  */
-export async function runImport(
+export function runImport(
   text: string,
   mimeType: string,
   mode: ImportMode,
   fileName?: string,
   options: ImportOptions = {},
-): Promise<ImportResult> {
+): Promise<RunImportResult> {
+  return withImportLock(() =>
+    runImportUnlocked(text, mimeType, mode, fileName, options),
+  )
+}
+
+async function runImportUnlocked(
+  text: string,
+  mimeType: string,
+  mode: ImportMode,
+  fileName: string | undefined,
+  options: ImportOptions,
+): Promise<RunImportResult> {
   let snapshot: SafetySnapshot | undefined
   let hasClearedExisting = false
   try {
-    return await importWithSnapshot(
+    const result = await importWithSnapshot(
       text,
       mimeType,
       mode,
@@ -61,6 +83,7 @@ export async function runImport(
         snapshot = taken
       },
     )
+    return snapshot ? { ...result, snapshot } : result
   } catch (error) {
     const wasCleared =
       hasClearedExisting ||

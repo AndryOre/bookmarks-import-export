@@ -4,6 +4,7 @@ import { WxtVitest } from 'wxt/testing/vitest-plugin'
 export default defineConfig({
   plugins: [WxtVitest()],
   test: {
+    setupFiles: ['./lib/testing/setup-locks.ts'],
     exclude: [...configDefaults.exclude, 'e2e/**', 'e2e-store/**'],
     coverage: {
       provider: 'v8',

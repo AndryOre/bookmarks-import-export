@@ -124,6 +124,10 @@
     "message": "Format de fichier non pris en charge",
     "description": "Unsupported file format"
   },
+  "importAnotherRunning": {
+    "message": "Une autre importation est déjà en cours. Attendez qu'elle se termine, puis réessayez.",
+    "description": "Error shown when an import is started while another extension page is already importing"
+  },
   "bookmarksImportedSuccessfully": {
     "message": "Favoris importés.",
     "description": "Bookmarks imported successfully"

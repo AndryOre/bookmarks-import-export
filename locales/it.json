@@ -123,6 +123,10 @@
     "message": "Formato di file non supportato",
     "description": "Unsupported file format"
   },
+  "importAnotherRunning": {
+    "message": "È già in corso un'altra importazione. Attendi che termini e riprova.",
+    "description": "Error shown when an import is started while another extension page is already importing"
+  },
   "bookmarksImportedSuccessfully": {
     "message": "Segnalibri importati correttamente!",
     "description": "Bookmarks imported successfully"

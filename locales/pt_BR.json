@@ -124,6 +124,10 @@
     "message": "Formato de arquivo não compatível",
     "description": "Unsupported file format"
   },
+  "importAnotherRunning": {
+    "message": "Outra importação já está em andamento. Aguarde a conclusão e tente novamente.",
+    "description": "Error shown when an import is started while another extension page is already importing"
+  },
   "bookmarksImportedSuccessfully": {
     "message": "Favoritos importados com sucesso!",
     "description": "Bookmarks imported successfully"
