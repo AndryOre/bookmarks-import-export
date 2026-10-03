@@ -238,7 +238,7 @@ export async function syncAlarm(trigger: SyncAlarmTrigger): Promise<void> {
 /**
  * Sanitises the user-configured auto-export output path before it's used as
  * a `browser.downloads.download` filename prefix. The path is relative to the
- * browser's downloads folder, so it is split on `/` and each segment has the
+ * browser's downloads folder, so it is split on `/` and `\` and each segment has the
  * characters Windows forbids (`< > : " | ? *` and control characters)
  * removed and is cleaned with {@link sanitizePathSegment}. Segments left
  * empty, `.` or `..` are dropped, which also prevents escaping the folder.
@@ -247,7 +247,7 @@ export async function syncAlarm(trigger: SyncAlarmTrigger): Promise<void> {
  */
 function sanitizePath(path: string): string {
   return path
-    .split('/')
+    .split(/[/\\]/)
     .map((segment) =>
       sanitizePathSegment(segment.replaceAll(/[<>:"|?*\u{0}-\u{1F}]/gu, '')),
     )

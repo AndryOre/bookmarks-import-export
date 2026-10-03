@@ -639,6 +639,8 @@ describe('runAutoExport', () => {
     ['Backups /snug', 'Backups/snug/'],
     ['a/.../b', 'a/b/'],
     ['a/./b', 'a/b/'],
+    [String.raw`Backups\..\Snug`, 'Backups/Snug/'],
+    [String.raw`Backups.\Snug`, 'Backups/Snug/'],
     ['con/nul.txt', '_con/_nul.txt/'],
     ['exports/trail. /x', 'exports/trail/x/'],
   ])(

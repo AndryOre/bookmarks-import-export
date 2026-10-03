@@ -45,8 +45,8 @@ function hasRouteFragment(parsed: URL): boolean {
  * The query string is preserved. A `#fragment` is ignored only when it looks
  * like a plain anchor; a route-like fragment (`#/`, `#!`, or any fragment on a
  * directory-style path without a query, such as Gmail's `/mail/u/0/#inbox`) is kept. A
- * non-http(s) or non-http(s) URL is returned trimmed and untouched, an unparseable one trimmed and lowercased, so
- * only exact matches group.
+ * non-http(s) URL is returned trimmed and untouched, an unparseable one
+ * trimmed and lowercased, so only exact matches group.
  * @param url The raw bookmark URL.
  * @returns The normalized URL used as the comparison key.
  */
