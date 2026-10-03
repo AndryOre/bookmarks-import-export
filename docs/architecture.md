@@ -7,10 +7,11 @@ links rot and names mostly don't.
 
 ## Bird's-eye view
 
-This is a Chrome MV3 extension for importing and exporting bookmarks in HTML
-(Netscape bookmark file), JSON, and CSV formats, plus a scheduled auto-export to
-the downloads folder. The extension has no backend and no network calls: every
-operation reads and writes the browser's own bookmarks tree through
+This is a Chrome MV3 extension for importing and exporting bookmarks in many
+formats (HTML, JSON, CSV, Markdown, OPML and XBEL out; HTML, JSON, CSV, XBEL, a
+Chrome profile `Bookmarks` file and Safari exports in), plus a scheduled
+auto-export to the downloads folder. The extension has no backend and no network
+calls: every operation reads and writes the browser's own bookmarks tree through
 `chrome.bookmarks`, and files are parsed or generated entirely client-side. The
 UI is React, in two surfaces: a compact toolbar popup, and one hash-routed
 full-page App (`app.html`) holding every larger screen. They are separate
@@ -43,33 +44,69 @@ the threat model.
   Router (`router.tsx`, hash history, see
   [ADR 0006](adr/0006-single-app-hash-routed-shell.md)) with a sidebar
   (`app-shell.tsx`, `nav.ts`) and one route module per screen under `routes/`:
-  Export (searchable checkable bookmark tree plus the Export options panel),
-  Import (file, import mode, then a preview-first commit), Auto-export (status,
-  schedule, Export now), Settings (theme, tree display, default import mode),
-  What's new (changelog) and Welcome (first-install tour). Route paths live in
-  `lib/app-url.ts` (`APP_ROUTES`, `getAppUrl`) so the popup, background and
-  changelog deep-link with `app.html#/<route>`.
+  Export (searchable, virtualized checkable bookmark tree plus the Export
+  options panel), Import (file, import mode, then a preview-first commit),
+  Duplicates (scan and delete duplicate bookmarks), Auto-export (status,
+  schedule, Export now), Settings (theme, tree display, default import mode,
+  Safety snapshot restore), What's new (changelog) and Welcome (first-install
+  tour). The sidebar lists every route except Welcome. On each navigation the
+  shell moves focus to the page's `h1` and announces the new title. Route paths
+  live in `lib/app-url.ts` (`APP_ROUTES`, `getAppUrl`) so the popup, background
+  and changelog deep-link with `app.html#/<route>`.
 - **`offscreen/`** — the hidden document used for blob downloads (see Runtime
   contexts).
+- **`advanced-export/`, `advanced-import/`, `update/`, `welcome/`** — the legacy
+  v1 pages. Each is only a stub whose `main.ts` calls `redirectToApp` with the
+  App route that replaced it (Export, Import, What's new, Welcome), so old links
+  and bookmarks still land somewhere useful. The v1 deep link
+  `?settings=auto-export` maps to the Auto-export route.
+  `lib/legacy-redirect.ts` holds the shared logic. This is the single exception
+  to the one-App rule, see [ADR 0007](adr/0007-legacy-page-redirects.md).
 
 ### `lib/`
 
 - **Importers** (`lib/importers/import-html.ts`, `import-json.ts`,
-  `import-csv.ts`) — each turns one file format into `chrome.bookmarks` API
-  calls. HTML and JSON share an internal `ParsedBookmark` tree shape and
-  understand the three `ImportMode`s (folder / restore-merge / restore-replace).
-  Both also share `lib/importers/resolve-roots.ts`'s `resolveImportRoots` to
-  locate the bookmarks-bar/Other/Mobile roots to write into — see Invariants.
-  CSV is flat rows with an optional `folder` path column and only ever imports
-  into a single deduplicated folder — it has no mode selector because it has no
-  bar/other placement to restore.
+  `import-csv.ts`, plus the source parsers `import-xbel.ts`, `import-chrome.ts`
+  and `import-safari.ts`) — each turns one file format into `chrome.bookmarks`
+  API calls. The XBEL, Chrome profile and Safari parsers produce the same
+  `ParsedBookmark` tree as HTML and JSON, and `parse-import.ts`
+  (`parseLocationAwareImport`) picks the parser for a detected format. Chrome
+  `Bookmarks` timestamps (WebKit epoch microseconds) are converted to Unix
+  milliseconds on the way in. The location-aware formats understand the three
+  `ImportMode`s (folder / restore-merge / restore-replace). Both also share
+  `lib/importers/resolve-roots.ts`'s `resolveImportRoots` to locate the
+  bookmarks-bar/Other/Mobile roots to write into — see Invariants. CSV is flat
+  rows with an optional `folder` path column and only ever imports into a single
+  deduplicated folder — it has no mode selector because it has no bar/other
+  placement to restore.
 - **Exporters** (`lib/exporters/export-html.ts`, `export-json.ts`,
-  `export-csv.ts`) — each turns a `chrome.bookmarks` subtree (or the whole tree)
-  into a file's text content. All three accept a `selectedBookmarks` option (a
-  pruned subtree from the Export page's tree, or `null` for "the whole tree").
-- **`detect-format.ts`** — sniffs a file's format from its MIME type plus a
-  structural check (JSON parses, HTML starts with the Netscape doctype, CSV has
-  `title`/`url`-ish headers), returning `'unknown'` on no match.
+  `export-csv.ts`, `export-markdown.ts`, `export-opml.ts`, `export-xbel.ts`) —
+  each turns a `chrome.bookmarks` subtree (or the whole tree) into a file's text
+  content. All accept a `selectedBookmarks` option (a pruned subtree from the
+  Export page's tree, or `null` for "the whole tree"). `lib/export-formats.ts`
+  lists the six formats with their extension and MIME type, `render-export.ts`
+  dispatches to the right exporter, and `export-control.ts` carries the progress
+  callback and abort signal every exporter honors. Markdown and OPML are
+  export-only.
+- **`detect-format.ts`** — detects a file's format by MIME type, then file
+  extension, then content sniffing, validating each candidate against the
+  content (JSON parses, HTML starts with the Netscape doctype, XBEL is
+  well-formed XML with an `xbel` root, CSV has `title`/`url`-ish headers). It
+  also refines JSON into a Chrome profile file and HTML into a Safari export.
+  Returns `'unknown'` on no match.
+- **`run-import.ts`** — the import entry point shared by Quick import and the
+  Import page: detects the format, applies Skip duplicates, takes the Safety
+  snapshot before a Restore-replace, and runs the importer with the progress
+  callback and abort signal (`import-control.ts`).
+- **`duplicates.ts`** — URL normalization and `findDuplicateGroups` for the
+  Duplicates page, oldest copy first. `skip-duplicates.ts` reuses the same
+  normalization to drop bookmarks that already exist (never in Restore-replace),
+  and `import-duplicates.ts` summarizes the effect for the Import page.
+- **`safety-snapshot.ts`** — captures the two roots, saves them as a JSON file
+  through the offscreen download and keeps the latest one in
+  `local:safetySnapshot`. See Invariants.
+- **`replace-diff.ts`** — the removed/added counts the Import page shows before
+  a Restore-replace.
 - **`import-preview.ts`** — runs a file through the same parsing the real
   importer would use, without touching `chrome.bookmarks`, to produce counts and
   an `hasLocationData` flag for the Import page's preview.
@@ -79,6 +116,9 @@ the threat model.
   all three name files the same way.
 - **`favicon.ts`** — fetches a page's favicon and returns it as base64, for the
   optional `iconData` export column/field.
+- **`auto-export-retention.ts`** and **`auto-export-notification.ts`** — the
+  steps `runAutoExport` runs after an outcome: Retention, and the Failure
+  notification. See Data flows.
 - **`auto-export.ts`** — owns the alarm lifecycle (`syncAlarm`, which keeps a
   single one-shot `browser.alarms` alarm — not `periodInMinutes`, which drifts
   across DST — armed at the next due time; `computeNextRun`, the pure function
@@ -110,6 +150,7 @@ the threat model.
 - **`components/import/`** — the Import page's steps: `import-file-step.tsx`,
   `import-mode-step.tsx`, `import-preview-step.tsx` and the `import-step.tsx`
   wrapper.
+- **`components/duplicates/`** — the Duplicates page's group card.
 - **`components/popup/`** — the popup's `export-section.tsx`,
   `import-section.tsx`, `auto-export-status-item.tsx` and `footer.tsx`.
 - **`components/ui/`** — the shadcn/ui-generated primitives (`button.tsx`,
@@ -125,8 +166,8 @@ API surface available differs between them:
 
 - **The service worker** (`background.ts`) has no `window`, no `document`, and
   is torn down and restarted freely by Chrome between events. It can call
-  `chrome.bookmarks`, `chrome.alarms`, `chrome.downloads`, and `chrome.storage`,
-  but has no DOM.
+  `chrome.bookmarks`, `chrome.alarms`, `chrome.downloads`,
+  `chrome.notifications`, and `chrome.storage`, but has no DOM.
 - **Extension pages** (the popup and the App) are ordinary web pages with a full
   DOM, rendered as React trees.
 - **The offscreen document** (`entrypoints/offscreen`) is an unlisted, hidden
@@ -166,16 +207,29 @@ hash, so the router's index route redirects it to `#/export`.
 `getImportPreview` (detect format → attempt the real parse without writing
 anything) produces counts and a location-data flag for the preview panel. The
 user picks an `ImportMode`; `restore-replace` is gated behind a confirmation
-dialog because it deletes existing bookmarks first. On confirm, `detectFormat`
-runs again and the matching importer
-(`importFromHTML`/`importFromJSON`/`importFromCSV`) writes directly to
-`chrome.bookmarks`.
+dialog because it deletes existing bookmarks first. For a `restore-replace`,
+`getReplaceDiff` also shows how many bookmarks will be removed and added. On
+confirm, `runImport` detects the format again, drops bookmarks that already
+exist when Skip duplicates is on (not for `restore-replace`), takes the Safety
+snapshot first for `restore-replace`, and the matching importer writes directly
+to `chrome.bookmarks`. An `ImportWriter` journals every node it creates and
+reports progress per batch; aborting the signal removes those nodes again (and,
+if a Restore-replace had already cleared the roots, restores the Safety
+snapshot) and throws `ImportCanceledError`. After a replace, the Import result
+offers Undo import, which restores the snapshot.
 
 **Export** (popup and Export page): the Export page's bookmark tree produces a
 selection (or the popup exports the whole tree by passing
 `selectedBookmarks: null`); the chosen exporter turns that into a format's text
 content; the page wraps it in a `Blob`, turns that into an object URL, and
-triggers a browser download via a synthetic `<a>` click.
+triggers a browser download via a synthetic `<a>` click. Every exporter ticks
+once per bookmark, which drives the progress card and lets Cancel abort the
+export before any file is produced.
+
+**Duplicates** (Duplicates page): `findDuplicateGroups` walks the live tree and
+groups bookmarks by normalized URL. The page keeps the oldest copy of each group
+by default and removes the copies marked Delete after a confirmation. No Safety
+snapshot is taken for this.
 
 **Auto-export** (background service worker): the authoritative next due time
 lives in `autoExportNextRunStore` (epoch milliseconds, or `null` when disabled),
@@ -190,20 +244,31 @@ recomputing — computing one only if it's missing — and, if it's already in t
 past, arm a **catch-up** alarm about a minute out rather than firing
 immediately, without touching the stored due time). When the alarm fires, the
 listener tells `runAutoExport` whether it's a `scheduled` or `catch-up` run (by
-comparing the alarm's fire time to the stored next run) or a `manual` one (a
-later ticket's "Export now" button calls it directly). `runAutoExport` reads the
-persisted export settings, runs whichever exporters are enabled in the config,
-and downloads each result via `downloadViaOffscreenDocument` — delegating the
-`Blob`/object-URL step the page-based exports do inline to the offscreen
-document, since the service worker has neither `Blob` nor a `URL` registry of
-its own. It then records the outcome in `autoExportLastRunStore` as
-`{ at, ok, error?, trigger }` (a legacy plain-number value from before this
-shape existed is migrated on read to a successful `scheduled` run), and — for
-`scheduled`/`catch-up` triggers only — recomputes the next due time anchored to
-this run's completion and re-arms the alarm, so a run always reschedules even if
-it failed. On a failed `scheduled`/`catch-up` run it also sets a toolbar failure
-badge (`chrome.action.setBadgeText('!')` plus a destructive-colored background);
-the next run that succeeds, on any trigger, clears it.
+comparing the alarm's fire time to the stored next run) or a `manual` one (the
+Auto-export page's "Export now" button messages the background to call it).
+`runAutoExport` reads the persisted export settings, runs whichever exporters
+are enabled in the config, and downloads each result via
+`downloadViaOffscreenDocument` — delegating the `Blob`/object-URL step the
+page-based exports do inline to the offscreen document, since the service worker
+has neither `Blob` nor a `URL` registry of its own. It then records the outcome
+in `autoExportLastRunStore` as `{ at, ok, error?, trigger }` (a legacy
+plain-number value from before this shape existed is migrated on read to a
+successful `scheduled` run), and — for `scheduled`/`catch-up` triggers only —
+recomputes the next due time anchored to this run's completion and re-arms the
+alarm, so a run always reschedules even if it failed. On a failed
+`scheduled`/`catch-up` run it also sets a toolbar failure badge
+(`chrome.action.setBadgeText('!')` plus a destructive-colored background); the
+next run that succeeds, on any trigger, clears it. After a successful run,
+Retention (`applyRetention`) keeps only the newest `keepLast` files: every
+download Snug saves has its id recorded in `autoExportDownloadIdsStore`, and the
+oldest ids beyond the limit are checked to still be Snug's own (`byExtensionId`)
+before `downloads.removeFile` and `downloads.erase` run. A missing file is
+skipped, `0` keeps everything, and a failed run deletes nothing. On any failed
+run, manual included, `notifyAutoExportFailure` shows the Failure notification
+(fixed id, so repeats replace it) unless the user turned it off; the
+background's `notifications.onClicked` listener opens the Auto-export page. The
+interval can be hourly, 12 hours, daily, 3 days or weekly (`7d`, on
+`dayOfWeek`).
 
 ## Invariants
 
@@ -236,7 +301,13 @@ the next run that succeeds, on any trigger, clears it.
   `chrome.bookmarks.removeTree` on every existing bookmarks-bar and
   other-bookmarks child before writing the imported tree in their place. A
   Safety snapshot is taken first (`lib/safety-snapshot.ts`), and the Import
-  result's Undo import and the Settings Safety snapshot card restore it.
+  result's Undo import and the Settings Safety snapshot card restore it. The
+  snapshot is written as a file first and only then stored, so a failed download
+  leaves the previous one intact; if it fails, nothing is deleted. There is no
+  undo for anything else: deleting duplicates and retention deletes are final.
+- Only the latest Safety snapshot is kept, in `local:safetySnapshot` (hence the
+  `unlimitedStorage` permission). Retention only ever touches downloads whose
+  recorded id still belongs to this extension.
 - All persisted settings go through `storage.defineItem` with a
   `local:`-prefixed key (`lib/storage.ts`) — there is no `sync:`-scoped storage
   anywhere in this codebase.

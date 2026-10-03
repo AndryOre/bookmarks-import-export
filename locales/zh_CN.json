@@ -183,7 +183,7 @@
     "message": "修复了扩展程序在部分浏览器中无法运行的问题。"
   },
   "changelog_0_1_0_1": {
-    "message": "书签导入/导出扩展程序的首个版本。"
+    "message": "Snug 的首个版本。"
   },
   "changelog_0_1_0_2": {
     "message": "支持导入 HTML 和 JSON 文件的基础功能。"

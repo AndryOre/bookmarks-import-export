@@ -23,19 +23,22 @@ claim.
 **Manifest permissions**, as declared in `wxt.config.ts`, and why each one is
 needed:
 
-| Permission         | Why it's needed                                                                                                                                                                                         |
-| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `bookmarks`        | Core functionality: read the bookmark tree for export, and create/remove nodes in it for import.                                                                                                        |
-| `favicon`          | Reads a bookmark's favicon through Chrome's internal `_favicon` API, which serves the browser's own cached icon for a page. This never makes a network request to the bookmarked site.                  |
-| `storage`          | Persists settings (default import mode, auto-export config, last-run status) via `local:`-prefixed `storage.defineItem` keys — never `sync:`-scoped, so settings stay on-device.                        |
-| `tabs`             | Opens the welcome page on install and the update/changelog page after an update (`browser.tabs.create`). Not used to read or query other tabs' content or URLs.                                         |
-| `alarms`           | Schedules auto-export runs (a single one-shot `chrome.alarms` alarm, recomputed after each run) without needing the service worker to stay alive between them.                                          |
-| `downloads`        | Saves exported files (manual export and auto-export) to the browser's Downloads folder via `browser.downloads.download`.                                                                                |
-| `unlimitedStorage` | Lifts the `storage.local` quota so the latest Safety snapshot (a copy of the bookmarks bar and other bookmarks, taken before every Restore-replace) fits even for very large libraries. On-device only. |
-| `offscreen`        | Creates a hidden, unlisted document so the service worker — which has no `document` or `Blob`/URL registry — can turn an in-memory export into a downloadable object URL during auto-export.            |
+| Permission         | Why it's needed                                                                                                                                                                                            |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `bookmarks`        | Core functionality: read the bookmark tree for export, and create/remove nodes in it for import.                                                                                                           |
+| `favicon`          | Reads a bookmark's favicon through Chrome's internal `_favicon` API, which serves the browser's own cached icon for a page. This never makes a network request to the bookmarked site.                     |
+| `storage`          | Persists settings (default import mode, auto-export config, last-run status) via `local:`-prefixed `storage.defineItem` keys — never `sync:`-scoped, so settings stay on-device.                           |
+| `alarms`           | Schedules auto-export runs (a single one-shot `chrome.alarms` alarm, recomputed after each run) without needing the service worker to stay alive between them.                                             |
+| `downloads`        | Saves auto-export files and the Safety snapshot file to the Downloads folder (`browser.downloads.download`), and lets Retention delete Snug's own old auto-export files (`downloads.removeFile`, `erase`). |
+| `notifications`    | Shows the Failure notification when an Auto-export run fails. Nothing else is ever notified, and the user can turn it off.                                                                                 |
+| `unlimitedStorage` | Lifts the `storage.local` quota so the latest Safety snapshot (a copy of the bookmarks bar and other bookmarks, taken before every Restore-replace) fits even for very large libraries. On-device only.    |
+| `offscreen`        | Creates a hidden, unlisted document so the service worker — which has no `document` or `Blob`/URL registry — can turn an in-memory export into a downloadable object URL during auto-export.               |
 
-No `host_permissions` are declared: the extension never injects into or reads
-content from other pages.
+Manual exports from the popup and the Export page use an `<a download>` link and
+do not need `downloads`. No `host_permissions` are declared, and there is no
+`tabs` permission: the extension never injects into or reads content from other
+pages, and opens its own pages without it. The manifest also sets
+`minimum_chrome_version` to 119.
 
 ## Threat model and trust boundaries
 
@@ -47,7 +50,8 @@ The extension has two categories of input:
 2. **Untrusted input** — a file the user drops into Quick import or the Import
    page. Its contents are attacker-controlled from the extension's perspective:
    the file could come from an untrusted download, an email attachment, or a
-   bookmark export shared by someone else. Every importer (HTML, JSON, CSV) and
+   bookmark export shared by someone else. Every importer (HTML, JSON, CSV,
+   XBEL, a Chrome profile `Bookmarks` file, and Safari exports) and
    `lib/import-preview.ts` treat this file's contents as hostile by default.
 
 The trust boundary sits at the file-read step: text read from a dropped file
@@ -79,10 +83,18 @@ split. Both run the extension's own code exclusively.
   and aborts the import rather than writing a partial or malformed tree. See
   "Weaknesses it counters" below for what a _non-structural_ malformed row or
   node does instead.
-- **Destructive actions are gated.** `restore-replace` import mode — the only
-  operation that deletes existing bookmarks — is selectable from both Quick
-  import and the Import page, and can be saved as the default import mode, but
-  every replace always requires confirming a dialog before anything is deleted.
+- **Destructive actions are gated.** Three operations delete things, and each
+  one asks first:
+  - `restore-replace` import mode deletes the bookmarks bar and other bookmarks.
+    It is selectable from both Quick import and the Import page, and can be
+    saved as the default import mode, but every replace requires confirming a
+    dialog, and a Safety snapshot is saved before anything is deleted (if the
+    snapshot fails, nothing is deleted).
+  - Deleting duplicates on the Duplicates page removes only the copies marked
+    Delete, after a confirmation. It is not undoable and takes no snapshot.
+  - Retention deletes old auto-export files, but only downloads Snug itself
+    recorded and re-verified as its own (`byExtensionId`), only after a
+    successful run, and never when set to 0.
 - **On-device storage only.** Settings use `local:`-scoped storage exclusively
   (see the `storage` permission above); nothing syncs to a Google account or any
   remote store.
@@ -120,6 +132,20 @@ skipped individually (logged via `console.warn`) without aborting the rest of
 the import. Header matching is case-insensitive and trimmed, so inconsistent
 casing or whitespace in a hand-edited CSV doesn't cause a false rejection.
 
+**Malformed or hostile XBEL input** (`lib/importers/import-xbel.ts`): the file
+must contain an `<xbel>` root and parse as XML with `DOMParser`
+(`application/xml`) with no `parsererror`; otherwise it is rejected as
+unrecognized. Titles are read as text and never injected as markup. Each `href`
+goes through `isAllowedBookmarkUrl`, so non-`http(s)`/`ftp` URLs are dropped.
+
+**Malformed or hostile Chrome profile input**
+(`lib/importers/import-chrome.ts`): a `Bookmarks` file is recognized only if
+parsed JSON has a `roots` object with a `bookmark_bar` or `other` folder. The
+walk reads only the expected fields (`name`, `type`, `url`, dates, `children`)
+and ignores everything else, including the profile checksum. Unexpected types
+fall back to safe defaults (empty titles, the current time for a bad date), and
+every `url` is validated with `isAllowedBookmarkUrl`.
+
 **The Import preview gate** (`lib/import-preview.ts`, surfaced by the Import
 page): before anything is written to `chrome.bookmarks`, the dropped file is run
 through the same detection and parsing logic the real import would use, purely
@@ -142,7 +168,11 @@ format they expected) or clearly didn't — and back out.
   Before it deletes anything, the extension saves a snapshot (a file in
   Downloads plus one copy in `storage.local`); the Import result's Undo import
   and Settings' Restore snapshot restore it. Only the latest snapshot is kept,
-  so an older replace cannot be undone once a newer snapshot exists.
+  so an older replace cannot be undone once a newer snapshot exists. The
+  snapshot holds the titles and URLs of the user's bookmarks, so it is as
+  sensitive as the bookmarks themselves; it never leaves the device.
+- **Duplicate deletion and Retention deletes are final.** Neither takes a
+  snapshot or can be undone.
 - **Single maintainer, no backup reviewer.** There is no second maintainer to
   review security-relevant changes or act as a continuity backup if the primary
   maintainer is unavailable. This is a deliberate, accepted gap for this
