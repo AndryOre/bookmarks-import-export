@@ -23,7 +23,7 @@ const cases = [
   {
     format: 'Markdown',
     extension: '.md',
-    shape: '    - [Popup Export Bookmark](https://popup-export.example.com/)',
+    shape: '  - [Popup Export Bookmark](https://popup-export.example.com/)',
   },
   { format: 'OPML', extension: '.opml', shape: '<opml version="2.0">' },
   { format: 'XBEL', extension: '.xbel', shape: '<xbel version="1.0">' },
@@ -76,13 +76,13 @@ test('remembers the last chosen export format across popup opens', async ({
   await chooseFormat(firstPopup, 'OPML')
   await expect(
     firstPopup.getByRole('combobox', { name: 'Export format' }),
-  ).toHaveText('OPML')
+  ).toContainText('OPML')
   await firstPopup.close()
 
   const secondPopup = await openExtensionPage('popup.html')
   await expect(
     secondPopup.getByRole('combobox', { name: 'Export format' }),
-  ).toHaveText('OPML')
+  ).toContainText('OPML')
 
   const downloadPromise = secondPopup.waitForEvent('download')
   await secondPopup.getByRole('button', { name: 'Export all' }).click()

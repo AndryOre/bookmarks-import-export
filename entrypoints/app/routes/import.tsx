@@ -211,7 +211,7 @@ export function ImportRoute() {
   if (status === 'undone') {
     return (
       <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
-        <Alert tabIndex={-1} ref={focusOnMount}>
+        <Alert key="undone" tabIndex={-1} ref={focusOnMount}>
           <Undo2Icon />
           <AlertTitle>{i18n.t('import_undoneTitle')}</AlertTitle>
           <AlertDescription>
@@ -234,7 +234,7 @@ export function ImportRoute() {
     const isUndoing = status === 'undoing'
     return (
       <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
-        <Alert tabIndex={-1} ref={focusOnMount}>
+        <Alert key="success" tabIndex={-1} ref={focusOnMount}>
           <CircleCheckIcon />
           <AlertTitle>{i18n.t('bookmarksImportedSuccessfully')}</AlertTitle>
           {skippedDuplicatesCount > 0 && (

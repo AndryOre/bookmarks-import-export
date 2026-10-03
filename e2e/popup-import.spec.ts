@@ -16,7 +16,7 @@ async function uploadFixture(page: Page, fileName: string): Promise<void> {
 }
 
 async function selectDefaultMode(page: Page, label: string): Promise<void> {
-  await page.getByRole('combobox').click()
+  await page.getByRole('combobox', { name: /^(?!Export format)/ }).click()
   await page.getByRole('option', { name: label }).click()
 }
 

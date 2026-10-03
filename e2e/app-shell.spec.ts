@@ -147,7 +147,7 @@ test('moves focus to the page heading and announces it on navigation', async ({
     en.shell_navExport.message,
   ]
   for (const title of titles) {
-    await nav.getByRole('link', { name: title }).click()
+    await nav.getByRole('link', { name: title, exact: true }).click()
     await expect(
       page.getByRole('heading', { level: 1, name: title }),
     ).toBeFocused()
