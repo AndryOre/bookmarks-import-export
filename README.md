@@ -11,9 +11,10 @@
 Export, import, and back up your bookmarks — entirely on your device.
 
 Snug is a browser extension that moves your bookmarks between browsers, exactly
-as you left them. Export your whole tree or just a folder, as HTML, JSON, or
-CSV. Import back with a preview, then merge, replace, or drop everything into a
-new folder. Set a schedule once and Snug backs your bookmarks up to your
+as you left them. Export your whole tree or just a folder, in six formats.
+Import back with a preview, then merge, replace, or drop everything into a new
+folder, and undo a replace if you change your mind. Find and remove duplicate
+bookmarks, and set a schedule once so Snug exports your bookmarks to your
 Downloads folder on its own.
 
 Snug makes no network calls. Every operation reads and writes your browser's own
@@ -22,12 +23,21 @@ bookmarks tree, locally — no account, no cloud, no server to trust. See the
 
 ## Features
 
-- Export and import bookmarks as HTML, JSON, or CSV.
+- Export bookmarks as HTML, JSON, CSV, Markdown, OPML, or XBEL.
+- Import HTML, JSON, CSV, and XBEL files, a Chrome profile `Bookmarks` file, or
+  a Safari export (Favorites and Reading List). The format is detected for you.
 - Export your whole tree or only the folders you pick.
 - Import with a preview first, then merge, replace, or add everything to a new
-  folder.
-- Scheduled automatic backups to your Downloads folder.
-- Follows your browser's theme and language.
+  folder. A replace shows how many bookmarks it removes and adds.
+- Undo a replace: Snug saves a Safety snapshot first, and you can restore it
+  from the import result or from Settings.
+- Duplicates page to find bookmarks that share a URL and delete the extra
+  copies, and Skip duplicates to leave them out of an import.
+- Scheduled Auto-export (hourly, every 12 hours, daily, every 3 days, or weekly
+  on a day you pick) to your Downloads folder, with Retention to keep only the
+  newest files and an optional notification if a run fails.
+- Progress and Cancel for long imports and exports.
+- Follows your browser's theme and language, in 10 languages.
 
 ## Install
 
@@ -45,8 +55,8 @@ why.
 
 ## Documentation
 
-- [`docs/usage.md`](docs/usage.md) — exporting, importing, and automatic
-  backups.
+- [`docs/usage.md`](docs/usage.md) — exporting, importing, duplicates, and
+  Auto-export.
 - [`docs/development.md`](docs/development.md) — scripts, git hooks,
   commit/branch conventions, and how `fakeBrowser` testing works.
 - [`docs/architecture.md`](docs/architecture.md) — a code map of the codebase's

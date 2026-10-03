@@ -12,20 +12,19 @@ The focus for the next year is maintenance rather than new surface area:
 - **Maintenance** — keeping dependencies, CI, and the extension's platform
   compatibility current as Chrome and the broader extension ecosystem evolve.
 - **Meaning improvements** — refining existing features (export, import,
-  scheduled backups) based on real usage and feedback, without expanding into
-  new domains.
+  Auto-export) based on real usage and feedback, without expanding into new
+  domains.
 - **Bug fixes** — addressing defects as they're reported.
 - **Issue triage** — keeping the issue tracker current so contributors and users
   know what's open, planned, or declined.
 
 ## Future enhancements under consideration
 
-The following are ideas that have come up but are not yet scoped, scheduled, or
-committed to. Being listed here is not a promise they will ship:
-
-- Additional bookmark formats or import sources.
-- Finer-grained scheduling or filtering for automatic backups.
-- Accessibility and localization improvements beyond current coverage.
+Nothing is queued at the moment. The formats and import sources, finer-grained
+scheduling, and accessibility and localization ideas that used to be listed here
+all shipped in v2.0.0. New ideas are welcome as
+[GitHub issues](https://github.com/AndryOre/snug/issues); being listed here
+would never be a promise that they ship.
 
 ## Out of scope
 

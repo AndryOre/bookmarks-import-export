@@ -1,6 +1,6 @@
 {
   "name": "snug",
-  "description": "Export, import, and schedule automatic backups for your bookmarks — HTML, JSON, or CSV, all on your device, no account, no cloud.",
+  "description": "Export, import, and schedule automatic exports of your bookmarks — six formats, duplicate cleanup, and undo, all on your device, no account, no cloud.",
   "keywords": [
     "browser-extension",
     "bookmarks",
@@ -8,6 +8,10 @@
     "export",
     "import",
     "csv",
+    "markdown",
+    "opml",
+    "xbel",
+    "duplicates",
     "chrome",
     "wxt"
   ],

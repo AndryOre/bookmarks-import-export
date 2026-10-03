@@ -33,10 +33,23 @@ An index of every document in this repository.
 - [`docs/adr/0004-enable-codeql-sast.md`](adr/0004-enable-codeql-sast.md) — the
   ADR documenting why CodeQL now runs (superseding ADR 0001's rejection) and the
   accepted branch-protection limitation.
+- [`docs/adr/0005-store-publishing-via-cws-api-v2.md`](adr/0005-store-publishing-via-cws-api-v2.md)
+  — the ADR documenting why the release workflow publishes to the Chrome Web
+  Store through API v2.
+- [`docs/adr/0006-single-app-hash-routed-shell.md`](adr/0006-single-app-hash-routed-shell.md)
+  — the ADR documenting the single hash-routed App shell that replaced the four
+  full-tab pages.
+- [`docs/adr/0007-legacy-page-redirects.md`](adr/0007-legacy-page-redirects.md)
+  — the ADR documenting the legacy v1 page redirects, the only extra
+  entrypoints.
+- [`docs/adr/0008-safety-snapshot-in-extension-storage.md`](adr/0008-safety-snapshot-in-extension-storage.md)
+  — the ADR documenting why the Safety snapshot lives in extension storage and
+  in a download.
 
 ## How-to
 
-- [`docs/usage.md`](usage.md) — exporting, importing, and automatic backups.
+- [`docs/usage.md`](usage.md) — exporting, importing, duplicates, the Safety
+  snapshot and Undo, and Auto-export.
 - [`docs/how-to/add-a-locale.md`](how-to/add-a-locale.md) — steps to add a new
   locale.
 - [`docs/how-to/cut-a-release.md`](how-to/cut-a-release.md) — steps to cut a new
@@ -45,8 +58,12 @@ An index of every document in this repository.
 ## Store
 
 - [`docs/store/README.md`](store/README.md) — the Chrome Web Store listing pack
-  for v2.0.0: listing copy (EN/ES), graphic assets, privacy-tab justifications,
-  distribution, and the pre-publish checklist.
+  for v2.0.0: English and Spanish listing copy, graphic assets, privacy-tab
+  justifications, distribution, and the pre-publish checklist.
+- [`docs/store/screenshots.md`](store/screenshots.md) — the store screenshot
+  shot list and how the slides are produced.
+- [`docs/store/listings/`](store/listings/) — listing copy for the other eight
+  locales (`TEMPLATE.md` plus one file per locale).
 - [`docs/store/baseline-2026-09.md`](store/baseline-2026-09.md) — pre-rename
   store analytics, for comparison after the rename.
 

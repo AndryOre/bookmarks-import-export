@@ -1,6 +1,6 @@
 # Privacy Policy for Snug
 
-Last updated: October 2, 2026
+Last updated: October 3, 2026
 
 ## Introduction
 
@@ -17,8 +17,10 @@ data to external servers.
 ### Bookmarks Data
 
 - The extension accesses your browser bookmarks solely for the purpose of
-  exporting them to HTML, JSON, or CSV files, or importing bookmarks from these
-  file formats.
+  exporting them to HTML, JSON, CSV, Markdown, OPML, or XBEL files, or importing
+  bookmarks from HTML, JSON, CSV, or XBEL files, a Chrome profile `Bookmarks`
+  file, or a Safari export. The Duplicates page also reads your bookmarks to
+  find copies of the same address, and deletes them only when you confirm.
 - This access occurs only when you explicitly initiate an import or export
   operation, or when a scheduled automatic export you configured runs (see
   "Automatic Export" below).
@@ -41,12 +43,23 @@ data to external servers.
   prompt.
 - This only happens if you explicitly enable automatic export and configure a
   schedule; it is disabled by default.
+- Retention: after each successful automatic export, Snug deletes its own oldest
+  exported files beyond the number you set (10 by default; 0 keeps everything).
+  It only removes files it saved itself and never touches other files in your
+  Downloads folder.
+- Notifications: if an automatic export fails, Snug shows a system notification
+  on your device with the reason. You can turn this off on the Auto-export page.
+  Successful exports never notify, and no notification content leaves your
+  device.
 
 ## Data Storage
 
 - Snug does not store any user data, including bookmarks, on external servers.
 - Any files created during export (manual or automatic) are saved directly to
-  your local device through your browser's download functionality.
+  your local device through your browser's download functionality. Manual
+  exports use a standard `<a download>` link and do not need the `downloads`
+  permission; automatic exports and the safety snapshot file use the `downloads`
+  permission.
 - The extension stores your local preferences and settings — such as theme,
   display options, export options, the filename template, and your automatic
   export configuration — using the browser's local storage (`storage.local`).
@@ -68,7 +81,8 @@ purpose described:
 | `favicon`          | Display site icons next to bookmarks via Chrome's built-in `_favicon` API.                                                                    |
 | `storage`          | Save your local preferences and settings on your device.                                                                                      |
 | `alarms`           | Schedule and trigger automatic bookmark exports at the configured interval.                                                                   |
-| `downloads`        | Save exported bookmark files (manual and automatic) to your device.                                                                           |
+| `downloads`        | Save automatic exports and safety snapshot files to your device, and delete Snug's own old automatic export files (Retention).                |
+| `notifications`    | Show a notification on your device when an automatic export fails. You can turn it off.                                                       |
 | `unlimitedStorage` | Keep the latest safety snapshot of your bookmarks on your device, which can be large for big libraries.                                       |
 | `offscreen`        | Create a short-lived hidden document so an automatic export can be turned into a downloadable file. It has no UI and loads no remote content. |
 

@@ -11,7 +11,8 @@
    at the same time.
 
 3. Add the i18n keys that entry references (every item's `textKey` and any
-   `linkKey`; the date needs no key) to **every** file in `locales/`.
+   `linkKey`; the date needs no key) to **every** file in `locales/` (all 10:
+   `de`, `en`, `es`, `fr`, `it`, `ja`, `ko`, `pt_BR`, `ru`, `zh_CN`).
    `lib/locale-parity.test.ts` requires every locale to carry the same top-level
    key set as `en.json`, so a new changelog entry with keys missing from either
    file fails that test.
@@ -55,4 +56,6 @@
 
    Listing text, screenshots, promo graphics, and privacy-practice fields are
    out of scope for this step — those stay dashboard-managed in the Chrome Web
-   Store Developer Dashboard.
+   Store Developer Dashboard. Work through the
+   [pre-publish checklist](../store/README.md#pre-publish-checklist) before
+   pushing the tag.
