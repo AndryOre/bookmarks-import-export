@@ -293,7 +293,7 @@
     "description": "Etiqueta del interruptor de exportación automática"
   },
   "enableAutoExportDescription": {
-    "message": "Exporta automáticamente tus marcadores en formato HTML, JSON y CSV.",
+    "message": "Exporta automáticamente tus marcadores en cualquiera de los formatos disponibles.",
     "description": "Descripción del interruptor de exportación automática"
   },
   "preferredExportTime": {

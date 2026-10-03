@@ -8,8 +8,9 @@ import {
 /**
  * Exports bookmarks as an XBEL 1.0 document: folders are `<folder>` elements
  * and bookmarks are `<bookmark href>` elements, each with a `<title>`. Dates
- * become ISO 8601 `added`, `modified` and `visited` attributes when their
- * options are enabled.
+ * become ISO 8601 `added` (folders and bookmarks) and `visited` (bookmarks)
+ * attributes when their options are enabled; the XBEL 1.0 DTD has no
+ * folder-level `modified`.
  * @param options Which bookmarks to export, which dates to write and which folders to hide.
  * @returns The XBEL XML text.
  */
@@ -62,9 +63,7 @@ function renderNodes(
         `${indent}</bookmark>`,
       )
     } else {
-      const attributes =
-        dateAttribute('added', node.dateAdded) +
-        dateAttribute('modified', node.dateGroupModified)
+      const attributes = dateAttribute('added', node.dateAdded)
       lines.push(`${indent}<folder${attributes}>`, `${indent}  ${title}`)
       renderNodes(node.children, depth + 1, lines)
       lines.push(`${indent}</folder>`)

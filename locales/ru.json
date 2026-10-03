@@ -292,7 +292,7 @@
     "description": "Enable auto export toggle label"
   },
   "enableAutoExportDescription": {
-    "message": "Автоматический экспорт закладок в форматы HTML, JSON и CSV.",
+    "message": "Автоматический экспорт закладок в любой из доступных форматов.",
     "description": "Enable auto export toggle description"
   },
   "preferredExportTime": {

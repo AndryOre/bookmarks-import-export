@@ -293,7 +293,7 @@
     "description": "Enable auto export toggle label"
   },
   "enableAutoExportDescription": {
-    "message": "Automatically export your bookmarks to HTML, JSON, and CSV formats.",
+    "message": "Automatically export your bookmarks in any of the available formats.",
     "description": "Enable auto export toggle description"
   },
   "preferredExportTime": {

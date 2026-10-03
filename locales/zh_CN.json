@@ -292,7 +292,7 @@
     "description": "Enable auto export toggle label"
   },
   "enableAutoExportDescription": {
-    "message": "自动将书签导出为 HTML、JSON 和 CSV 格式。",
+    "message": "自动将书签导出为任一可用格式。",
     "description": "Enable auto export toggle description"
   },
   "preferredExportTime": {

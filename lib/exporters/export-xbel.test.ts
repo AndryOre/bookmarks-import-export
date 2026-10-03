@@ -121,6 +121,34 @@ describe('exportToXBEL', () => {
     expect(without?.hasAttribute('added')).toBe(false)
   })
 
+  it('never writes a folder-level modified attribute, which the XBEL 1.0 DTD does not allow', async () => {
+    seedFakeBookmarksTree(
+      [
+        {
+          id: '10',
+          parentId: '1',
+          title: 'Folder',
+          syncing: false,
+          dateAdded: 1_700_000_000_000,
+          dateGroupModified: 1_700_000_200_000,
+          children: [],
+        },
+      ],
+      [],
+    )
+
+    const folder = parse(
+      await exportToXBEL({
+        selectedBookmarks: null,
+        ...baseOptions,
+        includeDateAdded: true,
+        includeDateGroupModified: true,
+      }),
+    ).querySelector('folder')
+    expect(folder?.hasAttribute('added')).toBe(true)
+    expect(folder?.hasAttribute('modified')).toBe(false)
+  })
+
   it('exports only the selection and flattens hidden folders', async () => {
     const document_ = parse(
       await exportToXBEL({

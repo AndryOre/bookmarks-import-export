@@ -293,7 +293,7 @@
     "description": "Enable auto export toggle label"
   },
   "enableAutoExportDescription": {
-    "message": "Esporta automaticamente i tuoi segnalibri nei formati HTML, JSON e CSV.",
+    "message": "Esporta automaticamente i tuoi segnalibri in uno qualsiasi dei formati disponibili.",
     "description": "Enable auto export toggle description"
   },
   "preferredExportTime": {

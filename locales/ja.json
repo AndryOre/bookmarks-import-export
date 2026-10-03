@@ -292,7 +292,7 @@
     "description": "Enable auto export toggle label"
   },
   "enableAutoExportDescription": {
-    "message": "ブックマークをHTML、JSON、CSV形式で自動的に書き出します。",
+    "message": "ブックマークを利用可能な形式で自動的に書き出します。",
     "description": "Enable auto export toggle description"
   },
   "preferredExportTime": {
