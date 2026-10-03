@@ -1,21 +1,9 @@
-import Papa from 'papaparse'
-
+import { countImportableBookmarks } from './count-bookmarks'
 import { detectFormat } from './detect-format'
+import { parseCSVTree } from './importers/import-csv'
 import { parseLocationAwareImport } from './importers/parse-import'
 import type { ResolvedImportRootTitles } from './importers/resolve-roots'
-import type { ImportPreview, ParsedBookmark } from './types'
-
-function countBookmarks(nodes: ParsedBookmark[]): number {
-  let count = 0
-  for (const node of nodes) {
-    if (node.url) {
-      count += 1
-    } else if (node.children) {
-      count += countBookmarks(node.children)
-    }
-  }
-  return count
-}
+import type { ImportPreview } from './types'
 
 /**
  * Builds a summary of what importing `text` would do, without importing
@@ -45,9 +33,15 @@ export function getImportPreview(
       const barNode = parsed.tree.find((n) => n.isBookmarksBar)
       const otherNode = parsed.tree.find((n) => n.isOtherBookmarks)
       const mobileNode = parsed.tree.find((n) => n.isMobileBookmarks)
-      const bookmarksBarCount = countBookmarks(barNode?.children ?? [])
-      const otherBookmarksCount = countBookmarks(otherNode?.children ?? [])
-      const mobileBookmarksCount = countBookmarks(mobileNode?.children ?? [])
+      const bookmarksBarCount = countImportableBookmarks(
+        barNode?.children ?? [],
+      )
+      const otherBookmarksCount = countImportableBookmarks(
+        otherNode?.children ?? [],
+      )
+      const mobileBookmarksCount = countImportableBookmarks(
+        mobileNode?.children ?? [],
+      )
       return {
         format,
         bookmarksBarCount,
@@ -60,21 +54,7 @@ export function getImportPreview(
     }
 
     if (format === 'csv') {
-      const csv = Papa.parse<Record<string, string>>(text.trim(), {
-        header: true,
-        skipEmptyLines: true,
-        transformHeader: (h) => h.toLowerCase().trim(),
-      })
-      let count = 0
-      for (const row of csv.data) {
-        const title = row['title']?.trim()
-        const url = row['url']?.trim()
-        if (!title || !url) continue
-        try {
-          new URL(url)
-          count++
-        } catch {}
-      }
+      const count = countImportableBookmarks(parseCSVTree(text).tree)
       return {
         format,
         bookmarksBarCount: 0,

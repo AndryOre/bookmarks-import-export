@@ -56,7 +56,7 @@ describe('importFromCSV', () => {
     ).toBe(true)
   })
 
-  it('skips rows with a missing title, url, or a disallowed url', async () => {
+  it('skips rows with a missing url or a disallowed url, but keeps empty titles', async () => {
     const csv = [
       'title,url,folder',
       ',https://missing-title.example,',
@@ -74,8 +74,59 @@ describe('importFromCSV', () => {
       (n) => n.title === 'Imported bookmarks',
     )
 
-    expect(imported?.children).toHaveLength(1)
-    expect(imported?.children?.[0]?.url).toBe('https://valid.example')
+    expect(imported?.children?.map((n) => n.url)).toEqual([
+      'https://missing-title.example',
+      'https://valid.example',
+    ])
+  })
+
+  it('imports a bookmark row with an empty title', async () => {
+    await importFromCSV('title,url,folder\n,https://icon.example,')
+
+    const imported = getFakeBookmarksRoot()
+      .children?.find((n) => n.id === '2')
+      ?.children?.find((n) => n.title === 'Imported bookmarks')
+    expect(imported?.children?.[0]).toMatchObject({
+      title: '',
+      url: 'https://icon.example',
+    })
+  })
+
+  it('ignores a bookmark titled "Imported bookmarks" when reusing the folder', async () => {
+    await browser.bookmarks.create({
+      parentId: '2',
+      title: 'Imported bookmarks',
+      url: 'https://decoy.example',
+    })
+
+    await importFromCSV('title,url,folder\nA,https://a.example,')
+
+    const folder = getFakeBookmarksRoot()
+      .children?.find((n) => n.id === '2')
+      ?.children?.find((n) => n.title === 'Imported bookmarks' && !n.url)
+    expect(folder?.children?.map((n) => n.url)).toEqual(['https://a.example'])
+  })
+
+  it('skips a malformed row and counts it instead of failing the import', async () => {
+    const csv = [
+      'title,url,folder',
+      'A,https://a.example,',
+      'Broken,https://broken.example,Dev,extra',
+      'B,https://b.example,',
+    ].join('\n')
+
+    await expect(importFromCSV(csv)).resolves.toEqual({
+      skippedInvalidUrl: 1,
+      skippedDuplicates: 0,
+    })
+
+    const imported = getFakeBookmarksRoot()
+      .children?.find((n) => n.id === '2')
+      ?.children?.find((n) => n.title === 'Imported bookmarks')
+    expect(imported?.children?.map((n) => n.url)).toEqual([
+      'https://a.example',
+      'https://b.example',
+    ])
   })
 
   it('reuses the existing "Imported bookmarks" folder across calls (deduplication)', async () => {
