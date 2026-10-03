@@ -945,5 +945,107 @@
   "safetySnapshot_restored": {
     "message": "快照已恢复。",
     "description": "Shown after the snapshot was restored"
+  },
+  "shell_navDuplicates": {
+    "message": "重复项",
+    "description": "App sidebar nav item and page title"
+  },
+  "duplicates_summary": {
+    "message": "$GROUPS$ 组 · $COPIES$ 个多余副本",
+    "description": "Summary of the Duplicate scan result",
+    "placeholders": {
+      "groups": {
+        "content": "$1"
+      },
+      "copies": {
+        "content": "$2"
+      }
+    }
+  },
+  "duplicates_copiesBadge": {
+    "message": "$COUNT$ 个副本",
+    "description": "Badge with the number of copies in a Duplicate group",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_groupLabel": {
+    "message": "$URL$ 的副本",
+    "description": "Accessible label of the radio group choosing which copy to keep",
+    "placeholders": {
+      "url": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_keep": {
+    "message": "保留",
+    "description": "Status of the copy that will be kept"
+  },
+  "duplicates_delete": {
+    "message": "删除",
+    "description": "Status of a copy that will be deleted"
+  },
+  "duplicates_added": {
+    "message": "添加于 $DATE$",
+    "description": "Date a bookmark was added",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_deleteButton": {
+    "message": "删除 $COUNT$ 个多余副本",
+    "description": "Destructive button that deletes the extra copies",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_confirmTitle": {
+    "message": "删除 $COUNT$ 个多余副本？",
+    "description": "Confirm dialog title for deleting extra copies",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_confirmDescription": {
+    "message": "只会从书签中移除标记为“删除”的副本。保留的副本和所有文件夹都不会受影响。此操作无法撤销。",
+    "description": "Confirm dialog body; folders are never deleted"
+  },
+  "duplicates_deleted": {
+    "message": "已删除 $COUNT$ 个多余副本",
+    "description": "Toast after the extra copies were deleted",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_deleteFailed": {
+    "message": "无法删除这些副本",
+    "description": "Toast when deleting copies failed"
+  },
+  "duplicates_emptyTitle": {
+    "message": "没有重复项",
+    "description": "Empty state title when no Duplicates exist"
+  },
+  "duplicates_emptyDescription": {
+    "message": "每个书签都有各自的地址。",
+    "description": "Empty state description when no Duplicates exist"
+  },
+  "duplicates_scanAgain": {
+    "message": "重新扫描",
+    "description": "Button that scans the bookmarks again"
+  },
+  "duplicates_scanning": {
+    "message": "正在扫描书签",
+    "description": "Accessible label while scanning bookmarks"
   }
 }

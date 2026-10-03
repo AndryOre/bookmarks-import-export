@@ -945,5 +945,107 @@
   "safetySnapshot_restored": {
     "message": "Instantâneo restaurado.",
     "description": "Shown after the snapshot was restored"
+  },
+  "shell_navDuplicates": {
+    "message": "Duplicados",
+    "description": "App sidebar nav item and page title"
+  },
+  "duplicates_summary": {
+    "message": "$GROUPS$ grupos · $COPIES$ cópias extras",
+    "description": "Summary of the Duplicate scan result",
+    "placeholders": {
+      "groups": {
+        "content": "$1"
+      },
+      "copies": {
+        "content": "$2"
+      }
+    }
+  },
+  "duplicates_copiesBadge": {
+    "message": "$COUNT$ cópias",
+    "description": "Badge with the number of copies in a Duplicate group",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_groupLabel": {
+    "message": "Cópias de $URL$",
+    "description": "Accessible label of the radio group choosing which copy to keep",
+    "placeholders": {
+      "url": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_keep": {
+    "message": "Manter",
+    "description": "Status of the copy that will be kept"
+  },
+  "duplicates_delete": {
+    "message": "Excluir",
+    "description": "Status of a copy that will be deleted"
+  },
+  "duplicates_added": {
+    "message": "Adicionado em $DATE$",
+    "description": "Date a bookmark was added",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_deleteButton": {
+    "message": "Excluir $COUNT$ cópias extras",
+    "description": "Destructive button that deletes the extra copies",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_confirmTitle": {
+    "message": "Excluir $COUNT$ cópias extras?",
+    "description": "Confirm dialog title for deleting extra copies",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_confirmDescription": {
+    "message": "Somente as cópias marcadas como Excluir são removidas dos seus favoritos. As cópias mantidas e todas as pastas permanecem. Esta ação não pode ser desfeita.",
+    "description": "Confirm dialog body; folders are never deleted"
+  },
+  "duplicates_deleted": {
+    "message": "$COUNT$ cópias extras excluídas",
+    "description": "Toast after the extra copies were deleted",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_deleteFailed": {
+    "message": "Não foi possível excluir as cópias",
+    "description": "Toast when deleting copies failed"
+  },
+  "duplicates_emptyTitle": {
+    "message": "Nenhum duplicado",
+    "description": "Empty state title when no Duplicates exist"
+  },
+  "duplicates_emptyDescription": {
+    "message": "Cada favorito tem seu próprio endereço.",
+    "description": "Empty state description when no Duplicates exist"
+  },
+  "duplicates_scanAgain": {
+    "message": "Verificar novamente",
+    "description": "Button that scans the bookmarks again"
+  },
+  "duplicates_scanning": {
+    "message": "Verificando seus favoritos",
+    "description": "Accessible label while scanning bookmarks"
   }
 }

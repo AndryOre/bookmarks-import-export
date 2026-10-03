@@ -945,5 +945,107 @@
   "safetySnapshot_restored": {
     "message": "Снимок восстановлен.",
     "description": "Shown after the snapshot was restored"
+  },
+  "shell_navDuplicates": {
+    "message": "Дубликаты",
+    "description": "App sidebar nav item and page title"
+  },
+  "duplicates_summary": {
+    "message": "Групп: $GROUPS$ · лишних копий: $COPIES$",
+    "description": "Summary of the Duplicate scan result",
+    "placeholders": {
+      "groups": {
+        "content": "$1"
+      },
+      "copies": {
+        "content": "$2"
+      }
+    }
+  },
+  "duplicates_copiesBadge": {
+    "message": "Копий: $COUNT$",
+    "description": "Badge with the number of copies in a Duplicate group",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_groupLabel": {
+    "message": "Копии $URL$",
+    "description": "Accessible label of the radio group choosing which copy to keep",
+    "placeholders": {
+      "url": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_keep": {
+    "message": "Оставить",
+    "description": "Status of the copy that will be kept"
+  },
+  "duplicates_delete": {
+    "message": "Удалить",
+    "description": "Status of a copy that will be deleted"
+  },
+  "duplicates_added": {
+    "message": "Добавлено $DATE$",
+    "description": "Date a bookmark was added",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_deleteButton": {
+    "message": "Удалить лишние копии: $COUNT$",
+    "description": "Destructive button that deletes the extra copies",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_confirmTitle": {
+    "message": "Удалить лишние копии: $COUNT$?",
+    "description": "Confirm dialog title for deleting extra copies",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_confirmDescription": {
+    "message": "Из закладок будут удалены только копии с пометкой «Удалить». Оставленные копии и все папки сохранятся. Это действие нельзя отменить.",
+    "description": "Confirm dialog body; folders are never deleted"
+  },
+  "duplicates_deleted": {
+    "message": "Удалено лишних копий: $COUNT$",
+    "description": "Toast after the extra copies were deleted",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_deleteFailed": {
+    "message": "Не удалось удалить копии",
+    "description": "Toast when deleting copies failed"
+  },
+  "duplicates_emptyTitle": {
+    "message": "Дубликатов нет",
+    "description": "Empty state title when no Duplicates exist"
+  },
+  "duplicates_emptyDescription": {
+    "message": "У каждой закладки свой адрес.",
+    "description": "Empty state description when no Duplicates exist"
+  },
+  "duplicates_scanAgain": {
+    "message": "Проверить снова",
+    "description": "Button that scans the bookmarks again"
+  },
+  "duplicates_scanning": {
+    "message": "Проверка закладок",
+    "description": "Accessible label while scanning bookmarks"
   }
 }

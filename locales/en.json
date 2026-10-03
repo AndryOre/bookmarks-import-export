@@ -945,5 +945,107 @@
   "safetySnapshot_restored": {
     "message": "Snapshot restored.",
     "description": "Shown after the snapshot was restored"
+  },
+  "shell_navDuplicates": {
+    "message": "Duplicates",
+    "description": "App sidebar nav item and page title"
+  },
+  "duplicates_summary": {
+    "message": "$GROUPS$ groups · $COPIES$ extra copies",
+    "description": "Summary of the Duplicate scan result",
+    "placeholders": {
+      "groups": {
+        "content": "$1"
+      },
+      "copies": {
+        "content": "$2"
+      }
+    }
+  },
+  "duplicates_copiesBadge": {
+    "message": "$COUNT$ copies",
+    "description": "Badge with the number of copies in a Duplicate group",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_groupLabel": {
+    "message": "Copies of $URL$",
+    "description": "Accessible label of the radio group choosing which copy to keep",
+    "placeholders": {
+      "url": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_keep": {
+    "message": "Keep",
+    "description": "Status of the copy that will be kept"
+  },
+  "duplicates_delete": {
+    "message": "Delete",
+    "description": "Status of a copy that will be deleted"
+  },
+  "duplicates_added": {
+    "message": "Added $DATE$",
+    "description": "Date a bookmark was added",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_deleteButton": {
+    "message": "Delete $COUNT$ extra copies",
+    "description": "Destructive button that deletes the extra copies",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_confirmTitle": {
+    "message": "Delete $COUNT$ extra copies?",
+    "description": "Confirm dialog title for deleting extra copies",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_confirmDescription": {
+    "message": "Only the copies marked Delete are removed from your bookmarks. The copies you keep and all folders stay. This cannot be undone.",
+    "description": "Confirm dialog body; folders are never deleted"
+  },
+  "duplicates_deleted": {
+    "message": "Deleted $COUNT$ extra copies",
+    "description": "Toast after the extra copies were deleted",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_deleteFailed": {
+    "message": "Could not delete the copies",
+    "description": "Toast when deleting copies failed"
+  },
+  "duplicates_emptyTitle": {
+    "message": "No duplicates",
+    "description": "Empty state title when no Duplicates exist"
+  },
+  "duplicates_emptyDescription": {
+    "message": "Every bookmark has its own address.",
+    "description": "Empty state description when no Duplicates exist"
+  },
+  "duplicates_scanAgain": {
+    "message": "Scan again",
+    "description": "Button that scans the bookmarks again"
+  },
+  "duplicates_scanning": {
+    "message": "Scanning your bookmarks",
+    "description": "Accessible label while scanning bookmarks"
   }
 }

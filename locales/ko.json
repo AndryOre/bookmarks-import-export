@@ -945,5 +945,107 @@
   "safetySnapshot_restored": {
     "message": "스냅샷을 복원했습니다.",
     "description": "Shown after the snapshot was restored"
+  },
+  "shell_navDuplicates": {
+    "message": "중복",
+    "description": "App sidebar nav item and page title"
+  },
+  "duplicates_summary": {
+    "message": "그룹 $GROUPS$개 · 추가 사본 $COPIES$개",
+    "description": "Summary of the Duplicate scan result",
+    "placeholders": {
+      "groups": {
+        "content": "$1"
+      },
+      "copies": {
+        "content": "$2"
+      }
+    }
+  },
+  "duplicates_copiesBadge": {
+    "message": "사본 $COUNT$개",
+    "description": "Badge with the number of copies in a Duplicate group",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_groupLabel": {
+    "message": "$URL$의 사본",
+    "description": "Accessible label of the radio group choosing which copy to keep",
+    "placeholders": {
+      "url": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_keep": {
+    "message": "유지",
+    "description": "Status of the copy that will be kept"
+  },
+  "duplicates_delete": {
+    "message": "삭제",
+    "description": "Status of a copy that will be deleted"
+  },
+  "duplicates_added": {
+    "message": "추가일: $DATE$",
+    "description": "Date a bookmark was added",
+    "placeholders": {
+      "date": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_deleteButton": {
+    "message": "추가 사본 $COUNT$개 삭제",
+    "description": "Destructive button that deletes the extra copies",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_confirmTitle": {
+    "message": "추가 사본 $COUNT$개를 삭제할까요?",
+    "description": "Confirm dialog title for deleting extra copies",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_confirmDescription": {
+    "message": "삭제로 표시된 사본만 북마크에서 제거됩니다. 유지하는 사본과 모든 폴더는 그대로 남습니다. 이 작업은 되돌릴 수 없습니다.",
+    "description": "Confirm dialog body; folders are never deleted"
+  },
+  "duplicates_deleted": {
+    "message": "추가 사본 $COUNT$개를 삭제했습니다",
+    "description": "Toast after the extra copies were deleted",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "duplicates_deleteFailed": {
+    "message": "사본을 삭제하지 못했습니다",
+    "description": "Toast when deleting copies failed"
+  },
+  "duplicates_emptyTitle": {
+    "message": "중복 없음",
+    "description": "Empty state title when no Duplicates exist"
+  },
+  "duplicates_emptyDescription": {
+    "message": "모든 북마크가 고유한 주소를 가지고 있습니다.",
+    "description": "Empty state description when no Duplicates exist"
+  },
+  "duplicates_scanAgain": {
+    "message": "다시 검색",
+    "description": "Button that scans the bookmarks again"
+  },
+  "duplicates_scanning": {
+    "message": "북마크를 검색하는 중",
+    "description": "Accessible label while scanning bookmarks"
   }
 }
