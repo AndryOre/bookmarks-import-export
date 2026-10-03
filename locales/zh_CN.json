@@ -267,6 +267,10 @@
     "message": "尚未运行",
     "description": "Status card value when auto-export has never run"
   },
+  "autoExportScheduling": {
+    "message": "正在安排…",
+    "description": "Status card next run value while auto-export is enabled but not yet scheduled"
+  },
   "exportNow": {
     "message": "立即导出",
     "description": "Button label to run an on-demand export immediately"

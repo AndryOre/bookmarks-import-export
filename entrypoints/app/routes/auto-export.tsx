@@ -58,6 +58,7 @@ import {
   EXPORT_FORMATS,
   type ExportFormat,
 } from '@/lib/export-formats'
+import { resolveNextRunStatus } from '@/lib/next-run-status'
 import {
   autoExportConfigStore,
   autoExportLastRunStore,
@@ -210,13 +211,14 @@ function StatusCard({ config, folder }: StatusCardProperties) {
     )
   }
 
+  const nextRunStatus = resolveNextRunStatus(config.enabled, nextRun)
   let nextRunText: string
-  if (!config.enabled) {
+  if (nextRunStatus.kind === 'off') {
     nextRunText = i18n.t('autoExportPage_off')
-  } else if (nextRun === null) {
-    nextRunText = i18n.t('autoExportNeverRun')
+  } else if (nextRunStatus.kind === 'scheduling') {
+    nextRunText = i18n.t('autoExportScheduling')
   } else {
-    nextRunText = formatDateTime(nextRun)
+    nextRunText = formatDateTime(nextRunStatus.nextRun)
   }
 
   return (

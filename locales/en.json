@@ -268,6 +268,10 @@
     "message": "Never run yet",
     "description": "Status card value when auto-export has never run"
   },
+  "autoExportScheduling": {
+    "message": "Scheduling…",
+    "description": "Status card next run value while auto-export is enabled but not yet scheduled"
+  },
   "exportNow": {
     "message": "Export now",
     "description": "Button label to run an on-demand export immediately"
