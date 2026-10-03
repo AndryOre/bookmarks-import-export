@@ -41,10 +41,10 @@ function renderNodes(
 ): void {
   const indent = '  '.repeat(depth)
   for (const node of nodes) {
-    const title = escapeXml(node.title)
+    const title = escapeAttribute(node.title)
     if (node.kind === 'bookmark') {
       lines.push(
-        `${indent}<outline type="link" text="${title}" title="${title}" url="${escapeXml(node.url)}"/>`,
+        `${indent}<outline type="link" text="${title}" title="${title}" url="${escapeAttribute(node.url)}"/>`,
       )
     } else if (node.children.length === 0) {
       lines.push(`${indent}<outline text="${title}" title="${title}"/>`)
@@ -54,4 +54,15 @@ function renderNodes(
       lines.push(`${indent}</outline>`)
     }
   }
+}
+
+/**
+ * Escapes text for an XML attribute value. Raw newlines and tabs are encoded
+ * as character references because XML attribute-value normalization would
+ * otherwise turn them into spaces.
+ * @param text The raw attribute text.
+ * @returns The escaped attribute text.
+ */
+function escapeAttribute(text: string): string {
+  return escapeXml(text).replaceAll('\n', '&#10;').replaceAll('\t', '&#9;')
 }

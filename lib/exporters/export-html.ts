@@ -7,6 +7,8 @@ import {
 import { getFaviconBase64 } from '@/lib/favicon'
 import type { ExtendedBookmarkTreeNode } from '@/lib/types'
 
+import { isBookmarksBar, isOtherBookmarks } from './root-folders'
+
 type HtmlNodeOptions = Omit<
   ExportHTMLOptions,
   'selectedBookmarks' | keyof ExportControl
@@ -108,12 +110,12 @@ async function generateHtmlContent(
       await appendBookmarkLine(lines, node, indent, options)
     } else if (node.children) {
       const isOtherBookmarksHidden =
-        node.id === '2' && options.hideOtherBookmarks
+        isOtherBookmarks(node) && options.hideOtherBookmarks
       const isParentFolderHidden =
         options.hideParentFolder &&
         node.id !== '0' &&
-        node.id !== '1' &&
-        node.id !== '2'
+        !isBookmarksBar(node) &&
+        !isOtherBookmarks(node)
 
       if (isOtherBookmarksHidden || isParentFolderHidden) {
         await generateHtmlContent(
@@ -195,7 +197,7 @@ async function appendFolderLines(
     attributes += ` LAST_MODIFIED="${Math.floor(node.dateGroupModified / 1000)}"`
   }
 
-  if (node.id === '1') {
+  if (isBookmarksBar(node)) {
     attributes += ' PERSONAL_TOOLBAR_FOLDER="true"'
   }
 
@@ -231,15 +233,15 @@ function escapeTitle(string_: string): string {
 }
 
 /**
- * Escapes a URL for use in the `HREF` attribute. Unlike {@link escapeTitle},
- * this does not escape `&`, since Netscape-format bookmark files leave `&` in
- * URLs unescaped (URLs rarely contain literal `<`/`>`/quotes, but commonly
- * contain `&` as a query-parameter separator, which escaping would corrupt).
+ * Escapes a URL for use in the `HREF` attribute. Like {@link escapeTitle},
+ * this escapes `&` first: HTML parsers decode character references inside
+ * attribute values, so a raw `?a=1&copy` would be read back as `?a=1©`.
  * @param url The URL to escape.
  * @returns The escaped URL.
  */
 function escapeUrl(url: string): string {
   return url
+    .replaceAll('&', '&amp;')
     .replaceAll('<', '&lt;')
     .replaceAll('>', '&gt;')
     .replaceAll('"', '&quot;')
