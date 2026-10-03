@@ -61,7 +61,7 @@ An index of every document in this repository.
   for v2.0.0: English and Spanish listing copy, graphic assets, privacy-tab
   justifications, distribution, and the pre-publish checklist.
 - [`docs/store/screenshots.md`](store/screenshots.md) — the store screenshot
-  shot list and how the slides are produced.
+  shot list, the ten localized sets and how the slides are produced.
 - [`docs/store/listings/`](store/listings/) — listing copy for the other eight
   locales (`TEMPLATE.md` plus one file per locale).
 - [`docs/store/baseline-2026-09.md`](store/baseline-2026-09.md) — pre-rename
