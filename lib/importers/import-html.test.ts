@@ -7,6 +7,7 @@ import {
 } from '@/lib/testing/fake-bookmarks'
 
 import { importFromHTML, parseHTML } from './import-html'
+import { parseLocationAwareImport } from './parse-import'
 
 const HTML_HEADER = [
   '<!DOCTYPE NETSCAPE-Bookmark-file-1>',
@@ -258,8 +259,7 @@ describe('importFromHTML', () => {
     const importedFolder = otherBookmarks?.children?.find(
       (n) => n.title === 'Imported bookmarks',
     )
-    expect(importedFolder?.children).toHaveLength(1)
-    expect(importedFolder?.children?.[0]?.children).toEqual([])
+    expect(importedFolder?.children).toEqual([])
   })
 
   it('resolves the bookmarks bar and Other bookmarks by folderType, not position', async () => {
@@ -296,5 +296,46 @@ describe('importFromHTML fidelity', () => {
     const bar = getFakeBookmarksRoot().children?.find((n) => n.id === '1')
     expect(bar?.children?.map((n) => n.title)).toEqual(['Empty', 'A'])
     expect(bar?.children?.[0]?.children).toEqual([])
+  })
+})
+
+describe('HTML location data and folder mode', () => {
+  const flatHtml = `${HTML_HEADER}
+<DL><p>
+    <DT><A HREF="https://a.example">A</A>
+    <DT><H3>Reading</H3>
+    <DL><p><DT><A HREF="https://b.example">B</A></DL><p>
+</DL><p>`
+
+  it('reports no location data for a flat export', () => {
+    expect(parseLocationAwareImport(flatHtml, 'html')?.hasLocationData).toBe(
+      false,
+    )
+  })
+
+  it('reports location data for toolbar, Other and Mobile markers', () => {
+    const other = `${HTML_HEADER}
+<DL><p><DT><H3>Other bookmarks</H3><DL><p><DT><A HREF="https://a.example">A</A></DL><p></DL><p>`
+    const mobile = `${HTML_HEADER}
+<DL><p><DT><H3>Mobile bookmarks</H3><DL><p><DT><A HREF="https://a.example">A</A></DL><p></DL><p>`
+    const unfiled = `${HTML_HEADER}
+<DL><p><DT><H3 UNFILED_BOOKMARKS_FOLDER="true">Misc</H3><DL><p><DT><A HREF="https://a.example">A</A></DL><p></DL><p>`
+    for (const html of [buildHtml(), other, mobile, unfiled]) {
+      expect(parseLocationAwareImport(html, 'html')?.hasLocationData).toBe(true)
+    }
+  })
+
+  it('creates no empty "Bookmarks bar" subfolder in folder mode', async () => {
+    await importFromHTML(flatHtml, 'folder')
+
+    const root = getFakeBookmarksRoot()
+    const other = root.children?.find((n) => n.id === '2')
+    const imported = other?.children?.find(
+      (n) => n.title === 'Imported bookmarks',
+    )
+    expect(imported).toBeDefined()
+    expect(imported?.children?.some((n) => n.title === 'Bookmarks bar')).toBe(
+      false,
+    )
   })
 })

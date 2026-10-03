@@ -20,6 +20,42 @@ describe('detectFormat', () => {
     ).toBe('html')
   })
 
+  it('detects a lowercase Netscape doctype', () => {
+    expect(
+      detectFormat(
+        '<!doctype netscape-bookmark-file-1>\n<DL><p></DL><p>',
+        'text/html',
+      ),
+    ).toBe('html')
+  })
+
+  it('does not treat a non-Safari top-level Favorites folder as Safari', () => {
+    const html = `<!DOCTYPE NETSCAPE-Bookmark-file-1>
+<DL><p>
+<DT><H3>Tech</H3>
+<DL><p><DT><A HREF="https://x.example">X</A></DL><p>
+<DT><H3>Favorites</H3>
+<DL><p><DT><A HREF="https://a.example">A</A></DL><p>
+</DL><p>`
+    expect(detectFormat(html, 'text/html')).toBe('html')
+  })
+
+  it('detects Safari by a leading Favorites or a Reading List folder', () => {
+    const favoritesFirst = `<!DOCTYPE NETSCAPE-Bookmark-file-1>
+<DL><p>
+<DT><H3>Favorites</H3>
+<DL><p><DT><A HREF="https://a.example">A</A></DL><p>
+</DL><p>`
+    const readingList = `<!DOCTYPE NETSCAPE-Bookmark-file-1>
+<DL><p>
+<DT><H3>Misc</H3><DL><p></DL><p>
+<DT><H3>Reading List</H3>
+<DL><p><DT><A HREF="https://a.example">A</A></DL><p>
+</DL><p>`
+    expect(detectFormat(favoritesFirst, 'text/html')).toBe('safari')
+    expect(detectFormat(readingList, 'text/html')).toBe('safari')
+  })
+
   it('rejects HTML without the Netscape doctype', () => {
     expect(detectFormat('<html></html>', 'text/html')).toBe('unknown')
   })
