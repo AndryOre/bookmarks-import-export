@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest'
 
-import { isMinorOrMajorUpdate, isWhatsNewUnseen } from './version'
+import {
+  isChangelogEntryCurrent,
+  isMinorOrMajorUpdate,
+  isWhatsNewUnseen,
+} from './version'
 
 describe('isMinorOrMajorUpdate', () => {
   it.each([
@@ -30,5 +34,16 @@ describe('isWhatsNewUnseen', () => {
 
   it('is seen when versions match', () => {
     expect(isWhatsNewUnseen('2.0.0', '2.0.0')).toBe(false)
+  })
+})
+
+describe('isChangelogEntryCurrent', () => {
+  it.each([
+    ['2.0', '2.0.1', true],
+    ['2.0', '2.0.0', true],
+    ['2.1', '2.0.1', false],
+    ['1.9', '2.0.1', false],
+  ])('entry %s against installed %s is %s', (entry, installed, expected) => {
+    expect(isChangelogEntryCurrent(entry, installed)).toBe(expected)
   })
 })
