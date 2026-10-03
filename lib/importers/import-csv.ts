@@ -169,7 +169,42 @@ async function createBookmarks(
     importedFolderId = created.id
   }
 
-  await createBookmarksRecursive(tree, importedFolderId, writer)
+  await createBookmarksRecursive(
+    tree,
+    importedFolderId,
+    writer,
+    indexFoldersByParent(tree_chrome),
+  )
+}
+
+type FolderIdsByParent = Map<string, Map<string, string>>
+
+/**
+ * Indexes every existing folder by parent id and title in one walk, so reusing
+ * a folder is a map lookup instead of a `bookmarks.search` call per folder.
+ * The first folder in tree order wins when titles repeat under one parent.
+ * @param nodes The live bookmarks tree to index.
+ * @param index The map being built, shared across the recursion.
+ * @returns A map of parent id to a map of folder title to folder id.
+ */
+function indexFoldersByParent(
+  nodes: Browser.bookmarks.BookmarkTreeNode[],
+  index: FolderIdsByParent = new Map(),
+): FolderIdsByParent {
+  for (const node of nodes) {
+    if (node.url || !node.children) continue
+    for (const child of node.children) {
+      if (child.url || !child.children) continue
+      let titles = index.get(node.id)
+      if (!titles) {
+        titles = new Map()
+        index.set(node.id, titles)
+      }
+      if (!titles.has(child.title)) titles.set(child.title, child.id)
+    }
+    indexFoldersByParent(node.children, index)
+  }
+  return index
 }
 
 /**
@@ -181,29 +216,35 @@ async function createBookmarks(
  * @param nodes The nodes to create.
  * @param parentId The id of the folder to create them under.
  * @param writer The writer that creates and journals the nodes.
+ * @param existingFolders The existing folders, indexed by parent id and title.
  * @returns Resolves once every node has been created.
  */
 async function createBookmarksRecursive(
   nodes: ParsedBookmark[],
   parentId: string,
   writer: ImportWriter,
+  existingFolders: FolderIdsByParent,
 ): Promise<void> {
   for (const node of nodes) {
     if (node.url) {
       await writer.create({ parentId, title: node.title, url: node.url })
     } else if (node.children) {
-      const existing = await browser.bookmarks.search({ title: node.title })
-      const match = existing.find((r) => r.parentId === parentId && !r.url)
+      const matchId = existingFolders.get(parentId)?.get(node.title)
 
       let folderId: string
-      if (match) {
-        folderId = match.id
+      if (matchId) {
+        folderId = matchId
       } else {
         const created = await writer.create({ parentId, title: node.title })
         folderId = created.id
       }
 
-      await createBookmarksRecursive(node.children, folderId, writer)
+      await createBookmarksRecursive(
+        node.children,
+        folderId,
+        writer,
+        existingFolders,
+      )
     }
   }
 }

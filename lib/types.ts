@@ -52,6 +52,7 @@ export interface ParsedBookmark {
   id?: string
   parentId?: string
   folderType?: string
+  syncing?: boolean
 }
 
 /**
@@ -139,6 +140,11 @@ export interface ImportPreview {
   otherBookmarksCount: number
   mobileBookmarksCount: number
   clearsMobileRoot: boolean
+  /**
+   * The root types (`folderType`) for which the file carries both a local
+   * and an account set. Absent for a single-set file.
+   */
+  splitRootTypes?: ('bookmarks-bar' | 'other' | 'mobile')[]
   totalCount: number
   hasLocationData: boolean
 }

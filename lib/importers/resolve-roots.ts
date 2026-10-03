@@ -1,5 +1,7 @@
 import type { Browser } from '@wxt-dev/browser'
 
+import type { ParsedBookmark } from '@/lib/types'
+
 /**
  * The three fixed top-level roots a restore-mode import writes into,
  * resolved by {@link resolveImportRoots}. `mobileId` is `undefined` when the
@@ -20,7 +22,7 @@ export interface ResolvedImportRoots {
 export type RootChildNode = Pick<
   Browser.bookmarks.BookmarkTreeNode,
   'id' | 'folderType'
->
+> & { syncing?: boolean }
 
 /**
  * The current browser's own root titles, resolved by
@@ -52,6 +54,12 @@ export type RootTitleNode = Pick<
  * addition (not yet present on every channel/browser), the fixed ids only
  * hold on Chrome itself, and position is the last resort for anything else
  * (e.g. a browser that reorders its roots).
+ *
+ * A signed-in profile can have several roots with the same `folderType`: a
+ * local set and an account set, told apart by `syncing`. Among those, the
+ * account set (`syncing: true`, the one a signed-in user sees as theirs) is
+ * preferred, otherwise the first (local) root. A profile with a single set
+ * resolves exactly as before.
  * @param rootChildren The root node's `children` array to search.
  * @param folderType The `folderType` value that identifies this root.
  * @param fallbackId The Chrome-fixed id that identifies this root.
@@ -64,11 +72,76 @@ function resolveRoot<T extends RootChildNode>(
   fallbackId: string,
   fallbackPosition: number,
 ): T | undefined {
+  const sameType = rootChildren.filter((node) => node.folderType === folderType)
+  const preferred =
+    sameType.find((node) => node.syncing === true) ?? sameType[0]
   return (
-    rootChildren.find((node) => node.folderType === folderType) ??
+    preferred ??
     rootChildren.find((node) => node.id === fallbackId) ??
     rootChildren.at(fallbackPosition)
   )
+}
+
+const ROOT_FOLDER_TYPES = ['bookmarks-bar', 'other', 'mobile'] as const
+
+/**
+ * The browser-assigned `folderType` of one of the three roots an import can
+ * write into.
+ */
+export type RootFolderType = (typeof ROOT_FOLDER_TYPES)[number]
+
+function rootFolderTypeOf(node: ParsedBookmark): RootFolderType | undefined {
+  if (node.isBookmarksBar) return 'bookmarks-bar'
+  if (node.isOtherBookmarks) return 'other'
+  return node.isMobileBookmarks ? 'mobile' : undefined
+}
+
+/**
+ * Finds the root types for which a parsed tree carries both an account set
+ * and a local set (nodes flagged `syncing: true` and not), as a full Snug
+ * JSON export of a signed-in profile does.
+ * @param parsed The flagged root nodes of an import.
+ * @returns The folder types present in both sets, empty for a single set.
+ */
+export function findSplitRootTypes(parsed: ParsedBookmark[]): RootFolderType[] {
+  return ROOT_FOLDER_TYPES.filter((folderType) => {
+    const ofType = parsed.filter(
+      (node) => rootFolderTypeOf(node) === folderType,
+    )
+    return (
+      ofType.some((node) => node.syncing === true) &&
+      ofType.some((node) => node.syncing !== true)
+    )
+  })
+}
+
+/**
+ * Maps each parsed root that belongs to a split type (see
+ * {@link findSplitRootTypes}) to the live root of its own set, so a file with
+ * both local and account bars is written without merging them. Roots of a
+ * single-set file, or whose set the browser lacks, are absent from the map:
+ * callers write those to the primary root from {@link resolveImportRoots}.
+ * @param parsed The flagged root nodes of an import.
+ * @param rootChildren `browser.bookmarks.getTree()`'s root node's `children`.
+ * @returns The live root id for each split parsed root.
+ */
+export function resolveSplitRootTargets<T extends RootChildNode>(
+  parsed: ParsedBookmark[],
+  rootChildren: T[],
+): Map<ParsedBookmark, string> {
+  const targets = new Map<ParsedBookmark, string>()
+  const splitTypes = new Set<RootFolderType>(findSplitRootTypes(parsed))
+  for (const node of parsed) {
+    const folderType = rootFolderTypeOf(node)
+    if (!folderType || !splitTypes.has(folderType)) continue
+    const live = rootChildren.find(
+      (candidate) =>
+        candidate.folderType === folderType &&
+        (candidate.syncing === true) === (node.syncing === true),
+    )
+    if (live) targets.set(node, live.id)
+  }
+  return targets
 }
 
 /**

@@ -60,3 +60,26 @@ describe('resolveImportRoots', () => {
     })
   })
 })
+
+describe('resolveImportRoots with several sets sharing a folderType', () => {
+  it('prefers the account (syncing) set over the local one', () => {
+    const result = resolveImportRoots([
+      { id: '1', folderType: 'bookmarks-bar', syncing: false },
+      { id: '2', folderType: 'other', syncing: false },
+      { id: 'a1', folderType: 'bookmarks-bar', syncing: true },
+      { id: 'a2', folderType: 'other', syncing: true },
+    ])
+
+    expect(result.bookmarksBarId).toBe('a1')
+    expect(result.otherBookmarksId).toBe('a2')
+  })
+
+  it('takes the first (local) root when none is syncing', () => {
+    const result = resolveImportRoots([
+      { id: '1', folderType: 'bookmarks-bar', syncing: false },
+      { id: 'x', folderType: 'bookmarks-bar', syncing: false },
+    ])
+
+    expect(result.bookmarksBarId).toBe('1')
+  })
+})

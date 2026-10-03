@@ -3,7 +3,10 @@ import { detectFormat } from './detect-format'
 import { parseCSVTree } from './importers/import-csv'
 import { shouldClearMobileRoot } from './importers/mobile-root'
 import { parseLocationAwareImport } from './importers/parse-import'
-import type { ResolvedImportRootTitles } from './importers/resolve-roots'
+import {
+  findSplitRootTypes,
+  type ResolvedImportRootTitles,
+} from './importers/resolve-roots'
 import type { ImportPreview, ParsedBookmark } from './types'
 
 /**
@@ -45,11 +48,13 @@ export function getImportPreview(
       const bookmarksBarCount = countRootChildren((n) => n.isBookmarksBar)
       const otherBookmarksCount = countRootChildren((n) => n.isOtherBookmarks)
       const mobileBookmarksCount = countRootChildren((n) => n.isMobileBookmarks)
+      const splitRootTypes = findSplitRootTypes(parsed.tree)
       return {
         format,
         bookmarksBarCount,
         otherBookmarksCount,
         mobileBookmarksCount,
+        ...(splitRootTypes.length > 0 && { splitRootTypes }),
         clearsMobileRoot: parsed.tree.some(
           (n) => n.isMobileBookmarks && shouldClearMobileRoot(n),
         ),
