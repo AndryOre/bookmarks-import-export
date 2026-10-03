@@ -1070,5 +1070,73 @@
   "duplicates_scanning": {
     "message": "Analyse de vos favoris",
     "description": "Accessible label while scanning bookmarks"
+  },
+  "progress_importTitle": {
+    "message": "Importation des favoris",
+    "description": "Title of the progress card while importing"
+  },
+  "progress_exportTitle": {
+    "message": "Exportation des favoris",
+    "description": "Title of the progress card while exporting"
+  },
+  "progress_cancelingTitle": {
+    "message": "Annulation…",
+    "description": "Title of the progress card while a cancel is rolled back"
+  },
+  "progress_cancelingImportDescription": {
+    "message": "Vos favoris sont remis dans leur état initial.",
+    "description": "Progress card text while an import is rolled back"
+  },
+  "progress_cancelingExportDescription": {
+    "message": "Arrêt de l'exportation. Aucun fichier ne sera téléchargé.",
+    "description": "Progress card text while an export is stopped"
+  },
+  "progress_importCount": {
+    "message": "$DONE$ sur $TOTAL$ ajoutés",
+    "description": "Import progress: bookmarks added so far out of the total",
+    "placeholders": {
+      "done": {
+        "content": "$1"
+      },
+      "total": {
+        "content": "$2"
+      }
+    }
+  },
+  "progress_exportCount": {
+    "message": "$DONE$ sur $TOTAL$ exportés",
+    "description": "Export progress: bookmarks exported so far out of the total",
+    "placeholders": {
+      "done": {
+        "content": "$1"
+      },
+      "total": {
+        "content": "$2"
+      }
+    }
+  },
+  "progress_cancelImport": {
+    "message": "Annuler l'importation",
+    "description": "Accessible label of the Cancel button during an import"
+  },
+  "progress_cancelExport": {
+    "message": "Annuler l'exportation",
+    "description": "Accessible label of the Cancel button during an export"
+  },
+  "progress_importCanceledTitle": {
+    "message": "Importation annulée",
+    "description": "Title shown after an import was canceled"
+  },
+  "progress_importCanceledDescription": {
+    "message": "Vos favoris sont revenus à leur état initial.",
+    "description": "Text shown after an import was canceled and rolled back"
+  },
+  "progress_exportCanceledTitle": {
+    "message": "Exportation annulée",
+    "description": "Title shown after an export was canceled"
+  },
+  "progress_exportCanceledDescription": {
+    "message": "Aucun fichier n'a été téléchargé.",
+    "description": "Text shown after an export was canceled"
   }
 }

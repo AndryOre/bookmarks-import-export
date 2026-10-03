@@ -1,7 +1,13 @@
+import { countBookmarks } from '@/lib/count-bookmarks'
+import {
+  createExportTicker,
+  type ExportControl,
+  type ExportTicker,
+} from '@/lib/export-control'
 import { getFaviconBase64 } from '@/lib/favicon'
 import type { ExtendedBookmarkTreeNode } from '@/lib/types'
 
-interface ExportJSONOptions {
+interface ExportJSONOptions extends ExportControl {
   selectedBookmarks: ExtendedBookmarkTreeNode[] | null
   includeIconData: boolean
   includeDateAdded: boolean
@@ -11,7 +17,10 @@ interface ExportJSONOptions {
   hideParentFolder: boolean
 }
 
-type NodeOptions = Omit<ExportJSONOptions, 'selectedBookmarks'>
+type NodeOptions = Omit<
+  ExportJSONOptions,
+  'selectedBookmarks' | keyof ExportControl
+> & { ticker: ExportTicker }
 
 const toSeconds = (ms: number): number => Math.floor(ms / 1000)
 
@@ -40,7 +49,12 @@ export async function exportToJSON(
   const rootNode = rootNodes[0] as ExtendedBookmarkTreeNode
   const nodesToExport = selectedBookmarks ?? rootNode.children ?? []
 
+  const ticker = createExportTicker(
+    options,
+    countBookmarks(nodesToExport as ExtendedBookmarkTreeNode[]),
+  )
   const options_: NodeOptions = {
+    ticker,
     includeIconData,
     includeDateAdded,
     includeDateLastUsed,
@@ -53,6 +67,8 @@ export async function exportToJSON(
     nodesToExport as ExtendedBookmarkTreeNode[],
     options_,
   )
+
+  ticker.finish()
 
   const root: ExtendedBookmarkTreeNode = {
     ...rootNode,
@@ -107,6 +123,7 @@ async function processNode(
   options: NodeOptions,
 ): Promise<ExtendedBookmarkTreeNode[]> {
   if (node.url) {
+    options.ticker.tick()
     const processed: ExtendedBookmarkTreeNode = { ...node }
 
     if (processed.dateAdded)

@@ -1,6 +1,13 @@
 import { i18n } from '#i18n'
 import type { Browser } from '@wxt-dev/browser'
 
+import { countBookmarks } from '@/lib/count-bookmarks'
+import {
+  ImportCanceledError,
+  type ImportControl,
+  ImportWriter,
+  withImportRollback,
+} from '@/lib/import-control'
 import {
   resolveImportRoots,
   resolveImportRootTitles,
@@ -65,8 +72,10 @@ export async function importFromHTML(
       mode,
       tree,
       options.skipDuplicates ?? false,
+      options,
     )
   } catch (error) {
+    if (error instanceof ImportCanceledError) throw error
     if (error instanceof Error && error.message.startsWith('PROCESS_ERROR')) {
       throw error
     }
@@ -318,6 +327,7 @@ function parseFolderElement(h3: HTMLElement, dt: Element): ParsedBookmark {
  *   the live root titles for `parseHTML`) — reused here instead of
  *   re-fetching.
  * @param shouldSkipDuplicates Whether to leave out bookmarks that already exist.
+ * @param control Progress callback and abort signal.
  * @returns The import result with the skipped-bookmark counts.
  */
 async function processBookmarks(
@@ -325,6 +335,7 @@ async function processBookmarks(
   mode: ImportMode,
   tree: Browser.bookmarks.BookmarkTreeNode[],
   shouldSkipDuplicates: boolean,
+  control: ImportControl,
 ): Promise<ImportResult> {
   const { nodes: parsed, skippedDuplicates } = applySkipDuplicates(
     allParsed,
@@ -333,6 +344,11 @@ async function processBookmarks(
     shouldSkipDuplicates,
   )
   const result: ImportResult = { skippedInvalidUrl: 0, skippedDuplicates }
+  const writer = new ImportWriter(
+    control,
+    countBookmarks(parsed),
+    skippedDuplicates,
+  )
   const root = tree[0]
   const { bookmarksBarId, otherBookmarksId, mobileId } = resolveImportRoots(
     root?.children ?? [],
@@ -342,72 +358,94 @@ async function processBookmarks(
     throw new Error('PROCESS_ERROR:' + i18n.t('importFromHTMLProcessError'))
   }
 
-  if (mode === 'folder') {
-    const importedFolder = await createItem({
-      title: i18n.t('importedBookmarks'),
-    })
+  await withImportRollback(writer, async () => {
+    if (mode === 'folder') {
+      const importedFolder = await writer.create({
+        title: i18n.t('importedBookmarks'),
+      })
 
-    const importedBookmarksBar = await createItem({
-      parentId: importedFolder.id,
-      title: i18n.t('bookmarksBar'),
-    })
+      const importedBookmarksBar = await writer.create({
+        parentId: importedFolder.id,
+        title: i18n.t('bookmarksBar'),
+      })
 
-    for (const bookmark of parsed) {
-      if (bookmark.isBookmarksBar) {
-        await createBookmarks(
-          bookmark.children ?? [],
-          importedBookmarksBar.id,
-          result,
-        )
-      } else if (bookmark.isOtherBookmarks) {
-        await createBookmarks(
-          bookmark.children ?? [],
-          importedFolder.id,
-          result,
-        )
-      } else if (
-        bookmark.isMobileBookmarks &&
-        bookmark.children &&
-        bookmark.children.length > 0
-      ) {
-        const importedMobile = await createItem({
-          parentId: importedFolder.id,
-          title: i18n.t('mobileBookmarks'),
-        })
-        await createBookmarks(bookmark.children, importedMobile.id, result)
+      for (const bookmark of parsed) {
+        if (bookmark.isBookmarksBar) {
+          await createBookmarks(
+            bookmark.children ?? [],
+            importedBookmarksBar.id,
+            result,
+            writer,
+          )
+        } else if (bookmark.isOtherBookmarks) {
+          await createBookmarks(
+            bookmark.children ?? [],
+            importedFolder.id,
+            result,
+            writer,
+          )
+        } else if (
+          bookmark.isMobileBookmarks &&
+          bookmark.children &&
+          bookmark.children.length > 0
+        ) {
+          const importedMobile = await writer.create({
+            parentId: importedFolder.id,
+            title: i18n.t('mobileBookmarks'),
+          })
+          await createBookmarks(
+            bookmark.children,
+            importedMobile.id,
+            result,
+            writer,
+          )
+        }
+      }
+    } else {
+      const hasMobileContent = parsed.some(
+        (bookmark) =>
+          bookmark.isMobileBookmarks &&
+          bookmark.children &&
+          bookmark.children.length > 0,
+      )
+
+      if (mode === 'restore-replace') {
+        writer.markClearingExisting()
+        await removeAllChildren(bookmarksBarId, root)
+        await removeAllChildren(otherBookmarksId, root)
+        if (hasMobileContent && mobileId) {
+          await removeAllChildren(mobileId, root)
+        }
+      }
+
+      for (const bookmark of parsed) {
+        if (bookmark.isBookmarksBar) {
+          await createBookmarks(
+            bookmark.children ?? [],
+            bookmarksBarId,
+            result,
+            writer,
+          )
+        } else if (bookmark.isOtherBookmarks) {
+          await createBookmarks(
+            bookmark.children ?? [],
+            otherBookmarksId,
+            result,
+            writer,
+          )
+        } else if (bookmark.isMobileBookmarks) {
+          await writeMobileBookmarks(
+            bookmark.children ?? [],
+            mobileId,
+            otherBookmarksId,
+            result,
+            writer,
+          )
+        }
       }
     }
-  } else {
-    const hasMobileContent = parsed.some(
-      (bookmark) =>
-        bookmark.isMobileBookmarks &&
-        bookmark.children &&
-        bookmark.children.length > 0,
-    )
-
-    if (mode === 'restore-replace') {
-      await removeAllChildren(bookmarksBarId, root)
-      await removeAllChildren(otherBookmarksId, root)
-      if (hasMobileContent && mobileId) {
-        await removeAllChildren(mobileId, root)
-      }
-    }
-
-    for (const bookmark of parsed) {
-      if (bookmark.isBookmarksBar) {
-        await createBookmarks(bookmark.children ?? [], bookmarksBarId, result)
-      } else if (bookmark.isOtherBookmarks) {
-        await createBookmarks(bookmark.children ?? [], otherBookmarksId, result)
-      } else if (bookmark.isMobileBookmarks) {
-        await writeMobileBookmarks(
-          bookmark.children ?? [],
-          mobileId,
-          otherBookmarksId,
-          result,
-        )
-      }
-    }
-  }
+  })
+  writer.finish()
 
   return result
 }
@@ -444,6 +482,7 @@ async function removeAllChildren(
  * @param mobileId The resolved Mobile root id, if any.
  * @param otherBookmarksId The "Other bookmarks" root id to fall back to.
  * @param result The running import result, updated with skipped bookmarks.
+ * @param writer The writer that creates and journals the nodes.
  * @returns Resolves once the content has been written.
  */
 async function writeMobileBookmarks(
@@ -451,8 +490,9 @@ async function writeMobileBookmarks(
   mobileId: string | undefined,
   otherBookmarksId: string,
   result: ImportResult,
+  writer: ImportWriter,
 ): Promise<void> {
-  await createBookmarks(nodes, mobileId ?? otherBookmarksId, result)
+  await createBookmarks(nodes, mobileId ?? otherBookmarksId, result, writer)
 }
 
 /**
@@ -464,27 +504,23 @@ async function writeMobileBookmarks(
  * @param nodes The nodes to create.
  * @param parentId The id of the folder to create them under.
  * @param result The running import result, updated with skipped bookmarks.
+ * @param writer The writer that creates and journals the nodes.
  * @returns Resolves once every node has been created.
  */
 async function createBookmarks(
   nodes: ParsedBookmark[],
   parentId: string,
   result: ImportResult,
+  writer: ImportWriter,
 ): Promise<void> {
   for (const node of nodes) {
     if (node.url) {
-      await createItem({ parentId, title: node.title, url: node.url })
+      await writer.create({ parentId, title: node.title, url: node.url })
     } else if (node.children) {
-      const folder = await createItem({ parentId, title: node.title })
-      await createBookmarks(node.children, folder.id, result)
+      const folder = await writer.create({ parentId, title: node.title })
+      await createBookmarks(node.children, folder.id, result, writer)
     } else {
       result.skippedInvalidUrl++
     }
   }
-}
-
-function createItem(
-  details: Browser.bookmarks.CreateDetails,
-): Promise<Browser.bookmarks.BookmarkTreeNode> {
-  return browser.bookmarks.create(details)
 }

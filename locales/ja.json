@@ -1046,5 +1046,73 @@
   "duplicates_scanning": {
     "message": "ブックマークをスキャン中",
     "description": "Accessible label while scanning bookmarks"
+  },
+  "progress_importTitle": {
+    "message": "ブックマークをインポート中",
+    "description": "Title of the progress card while importing"
+  },
+  "progress_exportTitle": {
+    "message": "ブックマークをエクスポート中",
+    "description": "Title of the progress card while exporting"
+  },
+  "progress_cancelingTitle": {
+    "message": "キャンセル中…",
+    "description": "Title of the progress card while a cancel is rolled back"
+  },
+  "progress_cancelingImportDescription": {
+    "message": "ブックマークを元の状態に戻しています。",
+    "description": "Progress card text while an import is rolled back"
+  },
+  "progress_cancelingExportDescription": {
+    "message": "エクスポートを停止しています。ファイルはダウンロードされません。",
+    "description": "Progress card text while an export is stopped"
+  },
+  "progress_importCount": {
+    "message": "$TOTAL$ 件中 $DONE$ 件を追加",
+    "description": "Import progress: bookmarks added so far out of the total",
+    "placeholders": {
+      "done": {
+        "content": "$1"
+      },
+      "total": {
+        "content": "$2"
+      }
+    }
+  },
+  "progress_exportCount": {
+    "message": "$TOTAL$ 件中 $DONE$ 件をエクスポート",
+    "description": "Export progress: bookmarks exported so far out of the total",
+    "placeholders": {
+      "done": {
+        "content": "$1"
+      },
+      "total": {
+        "content": "$2"
+      }
+    }
+  },
+  "progress_cancelImport": {
+    "message": "インポートをキャンセル",
+    "description": "Accessible label of the Cancel button during an import"
+  },
+  "progress_cancelExport": {
+    "message": "エクスポートをキャンセル",
+    "description": "Accessible label of the Cancel button during an export"
+  },
+  "progress_importCanceledTitle": {
+    "message": "インポートをキャンセルしました",
+    "description": "Title shown after an import was canceled"
+  },
+  "progress_importCanceledDescription": {
+    "message": "ブックマークは元の状態に戻りました。",
+    "description": "Text shown after an import was canceled and rolled back"
+  },
+  "progress_exportCanceledTitle": {
+    "message": "エクスポートをキャンセルしました",
+    "description": "Title shown after an export was canceled"
+  },
+  "progress_exportCanceledDescription": {
+    "message": "ファイルはダウンロードされませんでした。",
+    "description": "Text shown after an export was canceled"
   }
 }

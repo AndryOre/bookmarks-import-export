@@ -1,7 +1,18 @@
+import { countBookmarks } from '@/lib/count-bookmarks'
+import {
+  createExportTicker,
+  type ExportControl,
+  type ExportTicker,
+} from '@/lib/export-control'
 import { getFaviconBase64 } from '@/lib/favicon'
 import type { ExtendedBookmarkTreeNode } from '@/lib/types'
 
-interface ExportHTMLOptions {
+type HtmlNodeOptions = Omit<
+  ExportHTMLOptions,
+  'selectedBookmarks' | keyof ExportControl
+> & { ticker: ExportTicker }
+
+interface ExportHTMLOptions extends ExportControl {
   selectedBookmarks: ExtendedBookmarkTreeNode[] | null
   includeIconData: boolean
   includeDateAdded: boolean
@@ -48,11 +59,16 @@ export async function exportToHTML(
     '<DL><p>',
   ]
 
+  const ticker = createExportTicker(
+    options,
+    countBookmarks(nodesToExport as ExtendedBookmarkTreeNode[]),
+  )
   await generateHtmlContent(
     lines,
     nodesToExport as ExtendedBookmarkTreeNode[],
     1,
     {
+      ticker,
       includeIconData,
       includeDateAdded,
       includeDateLastUsed,
@@ -62,6 +78,7 @@ export async function exportToHTML(
     },
   )
 
+  ticker.finish()
   lines.push('</DL><p>')
 
   return lines.join('\n')
@@ -82,7 +99,7 @@ async function generateHtmlContent(
   lines: string[],
   nodes: ExtendedBookmarkTreeNode[],
   level: number,
-  options: Omit<ExportHTMLOptions, 'selectedBookmarks'>,
+  options: HtmlNodeOptions,
 ): Promise<void> {
   const indent = ' '.repeat(4).repeat(level)
 
@@ -127,8 +144,9 @@ async function appendBookmarkLine(
   options: Pick<
     ExportHTMLOptions,
     'includeIconData' | 'includeDateAdded' | 'includeDateLastUsed'
-  >,
+  > & { ticker: ExportTicker },
 ): Promise<void> {
+  options.ticker.tick()
   let attributes = `HREF="${escapeUrl(node.url!)}"`
 
   if (options.includeDateAdded && node.dateAdded) {
@@ -165,7 +183,7 @@ async function appendFolderLines(
   node: ExtendedBookmarkTreeNode,
   level: number,
   indent: string,
-  options: Omit<ExportHTMLOptions, 'selectedBookmarks'>,
+  options: HtmlNodeOptions,
 ): Promise<void> {
   let attributes = ''
 

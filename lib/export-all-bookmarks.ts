@@ -1,4 +1,5 @@
 import { countBookmarks } from '@/lib/count-bookmarks'
+import { ExportCanceledError, type ExportControl } from '@/lib/export-control'
 import { exportToCSV } from '@/lib/exporters/export-csv'
 import { exportToHTML } from '@/lib/exporters/export-html'
 import { exportToJSON } from '@/lib/exporters/export-json'
@@ -28,6 +29,7 @@ const MIME_TYPES: Record<AutoExportFormat, string> = {
 async function buildContent(
   format: AutoExportFormat,
   selectedBookmarks: ExtendedBookmarkTreeNode[] | null,
+  control: ExportControl,
 ): Promise<string> {
   const [
     includeIconData,
@@ -46,6 +48,7 @@ async function buildContent(
   ])
 
   const baseOptions = {
+    ...control,
     selectedBookmarks,
     includeIconData,
     includeDateAdded,
@@ -64,6 +67,7 @@ async function buildContent(
     }
     case 'csv': {
       return exportToCSV({
+        ...control,
         selectedBookmarks,
         includeIconData,
         includeDateAdded,
@@ -95,13 +99,18 @@ function triggerDownload(
  * it through a browser download.
  * @param format The format to export.
  * @param selectedBookmarks The pruned selection to export, or `null` for the whole tree.
+ * @param control Progress callback and abort signal.
  * @returns The saved file name and the number of bookmarks exported.
+ * @throws {ExportCanceledError} When `control.signal` aborts; no file is
+ *   downloaded.
  */
 export async function exportBookmarks(
   format: AutoExportFormat,
   selectedBookmarks: ExtendedBookmarkTreeNode[] | null,
+  control: ExportControl = {},
 ): Promise<ExportAllResult> {
-  const content = await buildContent(format, selectedBookmarks)
+  const content = await buildContent(format, selectedBookmarks, control)
+  if (control.signal?.aborted) throw new ExportCanceledError()
   const baseName = formatFilenameTemplate(
     await exportFilenameTemplateStore.getValue(),
   )
@@ -116,10 +125,12 @@ export async function exportBookmarks(
  * Exports every bookmark in the given format using the persisted export
  * options and filename template, and saves it through a browser download.
  * @param format The format to export.
+ * @param control Progress callback and abort signal.
  * @returns The saved file name and the number of bookmarks in the browser.
  */
 export function exportAllBookmarks(
   format: AutoExportFormat,
+  control: ExportControl = {},
 ): Promise<ExportAllResult> {
-  return exportBookmarks(format, null)
+  return exportBookmarks(format, null, control)
 }

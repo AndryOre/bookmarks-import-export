@@ -1052,5 +1052,73 @@
   "duplicates_scanning": {
     "message": "Deine Lesezeichen werden gescannt",
     "description": "Accessible label while scanning bookmarks"
+  },
+  "progress_importTitle": {
+    "message": "Lesezeichen werden importiert",
+    "description": "Title of the progress card while importing"
+  },
+  "progress_exportTitle": {
+    "message": "Lesezeichen werden exportiert",
+    "description": "Title of the progress card while exporting"
+  },
+  "progress_cancelingTitle": {
+    "message": "Wird abgebrochen…",
+    "description": "Title of the progress card while a cancel is rolled back"
+  },
+  "progress_cancelingImportDescription": {
+    "message": "Deine Lesezeichen werden zurückgesetzt.",
+    "description": "Progress card text while an import is rolled back"
+  },
+  "progress_cancelingExportDescription": {
+    "message": "Der Export wird gestoppt. Es wird keine Datei heruntergeladen.",
+    "description": "Progress card text while an export is stopped"
+  },
+  "progress_importCount": {
+    "message": "$DONE$ von $TOTAL$ hinzugefügt",
+    "description": "Import progress: bookmarks added so far out of the total",
+    "placeholders": {
+      "done": {
+        "content": "$1"
+      },
+      "total": {
+        "content": "$2"
+      }
+    }
+  },
+  "progress_exportCount": {
+    "message": "$DONE$ von $TOTAL$ exportiert",
+    "description": "Export progress: bookmarks exported so far out of the total",
+    "placeholders": {
+      "done": {
+        "content": "$1"
+      },
+      "total": {
+        "content": "$2"
+      }
+    }
+  },
+  "progress_cancelImport": {
+    "message": "Import abbrechen",
+    "description": "Accessible label of the Cancel button during an import"
+  },
+  "progress_cancelExport": {
+    "message": "Export abbrechen",
+    "description": "Accessible label of the Cancel button during an export"
+  },
+  "progress_importCanceledTitle": {
+    "message": "Import abgebrochen",
+    "description": "Title shown after an import was canceled"
+  },
+  "progress_importCanceledDescription": {
+    "message": "Deine Lesezeichen sind wieder wie zuvor.",
+    "description": "Text shown after an import was canceled and rolled back"
+  },
+  "progress_exportCanceledTitle": {
+    "message": "Export abgebrochen",
+    "description": "Title shown after an export was canceled"
+  },
+  "progress_exportCanceledDescription": {
+    "message": "Es wurde keine Datei heruntergeladen.",
+    "description": "Text shown after an export was canceled"
   }
 }

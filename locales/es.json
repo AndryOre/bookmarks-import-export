@@ -1059,5 +1059,73 @@
   "duplicates_scanning": {
     "message": "Escaneando tus marcadores",
     "description": "Accessible label while scanning bookmarks"
+  },
+  "progress_importTitle": {
+    "message": "Importando marcadores",
+    "description": "Title of the progress card while importing"
+  },
+  "progress_exportTitle": {
+    "message": "Exportando marcadores",
+    "description": "Title of the progress card while exporting"
+  },
+  "progress_cancelingTitle": {
+    "message": "Cancelando…",
+    "description": "Title of the progress card while a cancel is rolled back"
+  },
+  "progress_cancelingImportDescription": {
+    "message": "Devolviendo tus marcadores a como estaban.",
+    "description": "Progress card text while an import is rolled back"
+  },
+  "progress_cancelingExportDescription": {
+    "message": "Deteniendo la exportación. No se descargará ningún archivo.",
+    "description": "Progress card text while an export is stopped"
+  },
+  "progress_importCount": {
+    "message": "$DONE$ de $TOTAL$ agregados",
+    "description": "Import progress: bookmarks added so far out of the total",
+    "placeholders": {
+      "done": {
+        "content": "$1"
+      },
+      "total": {
+        "content": "$2"
+      }
+    }
+  },
+  "progress_exportCount": {
+    "message": "$DONE$ de $TOTAL$ exportados",
+    "description": "Export progress: bookmarks exported so far out of the total",
+    "placeholders": {
+      "done": {
+        "content": "$1"
+      },
+      "total": {
+        "content": "$2"
+      }
+    }
+  },
+  "progress_cancelImport": {
+    "message": "Cancelar importación",
+    "description": "Accessible label of the Cancel button during an import"
+  },
+  "progress_cancelExport": {
+    "message": "Cancelar exportación",
+    "description": "Accessible label of the Cancel button during an export"
+  },
+  "progress_importCanceledTitle": {
+    "message": "Importación cancelada",
+    "description": "Title shown after an import was canceled"
+  },
+  "progress_importCanceledDescription": {
+    "message": "Tus marcadores volvieron a como estaban.",
+    "description": "Text shown after an import was canceled and rolled back"
+  },
+  "progress_exportCanceledTitle": {
+    "message": "Exportación cancelada",
+    "description": "Title shown after an export was canceled"
+  },
+  "progress_exportCanceledDescription": {
+    "message": "No se descargó ningún archivo.",
+    "description": "Text shown after an export was canceled"
   }
 }

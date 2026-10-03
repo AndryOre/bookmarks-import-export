@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { exportBookmarks } from '@/lib/export-all-bookmarks'
+import { ExportCanceledError, type ExportProgress } from '@/lib/export-control'
 import { resetFakeBookmarks } from '@/lib/testing/fake-bookmarks'
 import type { ExtendedBookmarkTreeNode } from '@/lib/types'
 
@@ -75,4 +76,46 @@ describe('exportBookmarks', () => {
 
     expect(result.fileName.endsWith('.csv')).toBe(true)
   })
+
+  it('reports done and total bookmark counts', async () => {
+    const events: ExportProgress[] = []
+
+    await exportBookmarks('json', selection, {
+      onProgress: (progress) => {
+        events.push(progress)
+      },
+    })
+
+    expect(events).toEqual([{ done: 3, total: 3 }])
+  })
+
+  for (const format of ['json', 'html', 'csv'] as const) {
+    it(`produces no download when canceled mid-export (${format})`, async () => {
+      const controller = new AbortController()
+      const events: ExportProgress[] = []
+      const many: ExtendedBookmarkTreeNode[] = Array.from(
+        { length: 60 },
+        (_, index) => ({
+          id: `b${index}`,
+          title: `Bookmark ${index}`,
+          syncing: false,
+          url: `https://example.com/${index}`,
+        }),
+      )
+
+      await expect(
+        exportBookmarks(format, many, {
+          signal: controller.signal,
+          onProgress: (progress) => {
+            events.push(progress)
+            controller.abort()
+          },
+        }),
+      ).rejects.toBeInstanceOf(ExportCanceledError)
+
+      expect(events[0]).toEqual({ done: 25, total: 60 })
+      expect(anchors).toHaveLength(0)
+      expect(blobs).toHaveLength(0)
+    })
+  }
 })
