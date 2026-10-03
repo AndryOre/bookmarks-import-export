@@ -612,11 +612,11 @@
     "description": "Help text under the formats toggle group"
   },
   "autoExportPage_keepLast": {
-    "message": "최근 N개 파일 유지",
+    "message": "최근 N회 실행분 유지",
     "description": "Label of the retention number field on the Auto-export page"
   },
   "autoExportPage_keepLastDescription": {
-    "message": "내보내기가 성공할 때마다 Snug는 이 개수를 초과하는 가장 오래된 내보내기 파일을 삭제합니다. Snug가 저장한 파일만 삭제되며 폴더의 다른 파일은 절대 삭제하지 않습니다. 0으로 설정하면 모두 보관합니다.",
+    "message": "내보내기가 성공할 때마다 Snug는 이 횟수를 초과하는 가장 오래된 실행분의 파일을 삭제하므로, 유지되는 실행분의 모든 형식은 그대로 남습니다. Snug가 저장한 파일만 삭제되며 폴더의 다른 파일은 절대 삭제하지 않습니다. 0으로 설정하면 모두 보관합니다.",
     "description": "Help text explaining the retention rule under the field"
   },
   "autoExportPage_keepLastInvalid": {
@@ -887,6 +887,15 @@
   "downloadInterrupted": {
     "message": "다운로드 $ID$이(가) 중단되었습니다.",
     "description": "Last-run error when a download is interrupted; $ID$ is the download id",
+    "placeholders": {
+      "id": {
+        "content": "$1"
+      }
+    }
+  },
+  "downloadTimedOut": {
+    "message": "다운로드 $ID$ 시간이 초과되었습니다.",
+    "description": "Last-run error when a download is still running after the wait limit; $ID$ is the download id",
     "placeholders": {
       "id": {
         "content": "$1"

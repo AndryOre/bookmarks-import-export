@@ -378,24 +378,27 @@ const DEFAULT_KEEP_LAST = 10
 
 /**
  * Downloads one export file via {@link downloadViaOffscreenDocument} and
- * persists its download id right away, so retention can later remove it
- * even if the service worker restarts before the run finishes.
+ * persists its download id as soon as the download starts, so retention can
+ * later remove it even if the download times out or the service worker
+ * restarts before the run finishes.
  * @param content The export content.
  * @param mimeType The content's MIME type.
  * @param filename The downloads-relative filename.
- * @returns Resolves once the download settled and its id is persisted.
+ * @param runAt Start time of the run, grouping this file with its siblings.
+ * @returns Resolves once the download settled.
  */
 async function saveDownload(
   content: string,
   mimeType: string,
   filename: string,
+  runAt: number,
 ): Promise<void> {
-  const downloadId = await downloadViaOffscreenDocument(
+  await downloadViaOffscreenDocument(
     content,
     mimeType,
     filename,
+    (downloadId) => recordSavedDownload(downloadId, runAt),
   )
-  await recordSavedDownload(downloadId)
 }
 
 /**
@@ -448,6 +451,7 @@ export async function runAutoExport(
   const formats = overrides?.formats ?? config.formats
   const path = overrides?.path ?? config.path
 
+  const runAt = Date.now()
   const isTrackedRun = trigger !== 'manual'
   if (isTrackedRun) {
     const retryAt = await getAutoExportInFlightRetryAt()
@@ -497,7 +501,12 @@ export async function runAutoExport(
     const downloads = formats.map(async (format) => {
       const { extension, mimeType } = EXPORT_FORMAT_INFO[format]
       const content = await renderExport(format, baseOptions)
-      await saveDownload(content, mimeType, `${prefix}${baseName}.${extension}`)
+      await saveDownload(
+        content,
+        mimeType,
+        `${prefix}${baseName}.${extension}`,
+        runAt,
+      )
     })
 
     await Promise.all(downloads)

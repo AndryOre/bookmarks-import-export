@@ -27,7 +27,10 @@ import {
   runAutoExport,
   syncAlarm,
 } from './auto-export'
-import { CREATE_BLOB_URL_MESSAGE_TYPE } from './offscreen-download'
+import {
+  CREATE_BLOB_URL_MESSAGE_TYPE,
+  DOWNLOAD_SETTLE_TIMEOUT_MS,
+} from './offscreen-download'
 
 type OnChangedListener = (delta: Browser.downloads.DownloadDelta) => void
 
@@ -975,32 +978,66 @@ async function runOnce(expectedDownloads: number) {
 }
 
 describe('runAutoExport retention', () => {
-  it('records the ids of saved files and removes the oldest beyond keepLast after a successful run', async () => {
+  it('records the ids of saved files and removes whole runs beyond keepLast after a successful run', async () => {
     await autoExportConfigStore.setValue(baseConfig({ keepLast: 2 }))
-    await autoExportDownloadIdsStore.setValue([100, 101, 102])
+    await autoExportDownloadIdsStore.setValue([
+      { runAt: 1, ids: [100] },
+      { runAt: 2, ids: [101] },
+      { runAt: 3, ids: [102] },
+    ])
     const { removeFile, erase } = mockCleanup()
 
     await runOnce(1)
 
     expect(removeFile.mock.calls.map(([id]) => id)).toEqual([100, 101])
     expect(erase).toHaveBeenCalledTimes(2)
-    expect(await autoExportDownloadIdsStore.getValue()).toEqual([102, 1])
+    expect(await autoExportDownloadIdsStore.getValue()).toEqual([
+      { runAt: 3, ids: [102] },
+      { runAt: expect.any(Number), ids: [1] },
+    ])
+  })
+
+  it('keeps every format file of the last keepLast runs with several formats', async () => {
+    await autoExportConfigStore.setValue(
+      baseConfig({ keepLast: 2, formats: ['html', 'json', 'csv'] }),
+    )
+    await autoExportDownloadIdsStore.setValue([
+      { runAt: 1, ids: [100, 101, 102] },
+      { runAt: 2, ids: [103, 104, 105] },
+    ])
+    const { removeFile } = mockCleanup()
+
+    await runOnce(3)
+
+    expect(removeFile.mock.calls.map(([id]) => id)).toEqual([100, 101, 102])
+    const stored = await autoExportDownloadIdsStore.getValue()
+    expect(stored.map((run) => run.ids.length)).toEqual([3, 3])
   })
 
   it('keeps everything when keepLast is 0', async () => {
     await autoExportConfigStore.setValue(baseConfig({ keepLast: 0 }))
-    await autoExportDownloadIdsStore.setValue([100, 101])
+    await autoExportDownloadIdsStore.setValue([
+      { runAt: 1, ids: [100] },
+      { runAt: 2, ids: [101] },
+    ])
     const { removeFile } = mockCleanup()
 
     await runOnce(1)
 
     expect(removeFile).not.toHaveBeenCalled()
-    expect(await autoExportDownloadIdsStore.getValue()).toEqual([100, 101, 1])
+    expect(await autoExportDownloadIdsStore.getValue()).toEqual([
+      { runAt: 1, ids: [100] },
+      { runAt: 2, ids: [101] },
+      { runAt: expect.any(Number), ids: [1] },
+    ])
   })
 
   it('never deletes anything when the run fails', async () => {
     await autoExportConfigStore.setValue(baseConfig({ keepLast: 1 }))
-    await autoExportDownloadIdsStore.setValue([100, 101])
+    await autoExportDownloadIdsStore.setValue([
+      { runAt: 1, ids: [100] },
+      { runAt: 2, ids: [101] },
+    ])
     mockActionBadge()
     const { removeFile } = mockCleanup()
     const { mock, fire } = mockDownload()
@@ -1013,12 +1050,14 @@ describe('runAutoExport retention', () => {
     expect(result?.status).toBe('rejected')
 
     expect(removeFile).not.toHaveBeenCalled()
-    expect(await autoExportDownloadIdsStore.getValue()).toEqual([100, 101])
   })
 
   it('does not fail the run when a file to remove is already gone', async () => {
     await autoExportConfigStore.setValue(baseConfig({ keepLast: 1 }))
-    await autoExportDownloadIdsStore.setValue([100, 101])
+    await autoExportDownloadIdsStore.setValue([
+      { runAt: 1, ids: [100] },
+      { runAt: 2, ids: [101] },
+    ])
     const { removeFile } = mockCleanup()
     removeFile.mockRejectedValueOnce(new Error('Download file missing.'))
 
@@ -1026,7 +1065,36 @@ describe('runAutoExport retention', () => {
 
     expect(removeFile).toHaveBeenCalledTimes(2)
     expect(await autoExportLastRunStore.getValue()).toMatchObject({ ok: true })
-    expect(await autoExportDownloadIdsStore.getValue()).toEqual([1])
+    expect(await autoExportDownloadIdsStore.getValue()).toEqual([
+      { runAt: expect.any(Number), ids: [1] },
+    ])
+  })
+
+  it('tracks a download that times out so retention can still remove it later', async () => {
+    vi.useFakeTimers()
+    try {
+      await autoExportConfigStore.setValue(baseConfig({ keepLast: 1 }))
+      mockActionBadge()
+      mockNotifications()
+      mockCleanup()
+      const { mock } = mockDownload()
+
+      const runPromise = runAutoExport('scheduled')
+      const settled = Promise.allSettled([runPromise])
+      await vi.waitFor(() => expect(mock).toHaveBeenCalledTimes(1))
+      await vi.advanceTimersByTimeAsync(DOWNLOAD_SETTLE_TIMEOUT_MS)
+      await settled
+
+      expect(await autoExportLastRunStore.getValue()).toMatchObject({
+        ok: false,
+        error: 'Download 1 timed out.',
+      })
+      expect(await autoExportDownloadIdsStore.getValue()).toEqual([
+        { runAt: expect.any(Number), ids: [1] },
+      ])
+    } finally {
+      vi.useRealTimers()
+    }
   })
 })
 

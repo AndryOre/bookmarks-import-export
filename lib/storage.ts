@@ -115,14 +115,31 @@ export const autoExportLastRunStore = storage.defineItem<
 >('local:autoExportLastRun', { fallback: null })
 
 /**
- * Ids of the downloads Snug itself saved for auto-export, oldest first.
- * Persisted so retention still knows which files are Snug's own after the
- * service worker restarts. See `lib/auto-export-retention.ts`.
+ * The downloads one auto-export run saved: every id of a run is grouped so
+ * retention counts runs, not files.
  */
-export const autoExportDownloadIdsStore = storage.defineItem<number[]>(
-  'local:autoExportDownloadIds',
-  { fallback: [] },
-)
+export interface AutoExportDownloadRun {
+  runAt: number
+  ids: number[]
+}
+
+/**
+ * Downloads Snug itself saved for auto-export, grouped per run, oldest run
+ * first. Persisted so retention still knows which files are Snug's own after
+ * the service worker restarts. Version 1 was a flat id list; each legacy id
+ * migrates to its own run, so retention deletes exactly what it did before.
+ * See `lib/auto-export-retention.ts`.
+ */
+export const autoExportDownloadIdsStore = storage.defineItem<
+  AutoExportDownloadRun[]
+>('local:autoExportDownloadIds', {
+  fallback: [],
+  version: 2,
+  migrations: {
+    2: (legacyIds: number[]): AutoExportDownloadRun[] =>
+      legacyIds.map((id) => ({ runAt: 0, ids: [id] })),
+  },
+})
 
 /**
  * The authoritative next due time for auto-export, in epoch milliseconds.
