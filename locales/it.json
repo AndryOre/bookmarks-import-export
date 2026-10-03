@@ -111,17 +111,9 @@
     "1": "$1 segnalibro",
     "n": "$1 segnalibri"
   },
-  "replaceConfirmTitle": {
-    "message": "Sostituire i segnalibri esistenti?",
-    "description": "Title of the replace confirmation dialog"
-  },
   "replaceConfirmDescription": {
     "message": "La barra dei preferiti e Altri segnalibri attuali vengono svuotati prima dell'importazione. Prima viene salvata un'istantanea di sicurezza, così puoi annullare l'importazione.",
     "description": "Body of the replace confirmation dialog"
-  },
-  "replaceConfirmButton": {
-    "message": "Sì, sostituisci",
-    "description": "Confirm button in the replace dialog"
   },
   "cancel": {
     "message": "Annulla",

@@ -1,6 +1,6 @@
 import { i18n } from '#i18n'
 import type { WxtStorageItem } from '#imports'
-import { useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
@@ -17,6 +17,8 @@ import {
   includeIconDataStore,
 } from '@/lib/storage'
 import { useStorageItem } from '@/lib/use-storage-item'
+
+const TEMPLATE_PERSIST_DELAY_MS = 400
 
 interface OptionSwitchProperties {
   id: string
@@ -50,7 +52,10 @@ function OptionSwitch({ id, label, store }: OptionSwitchProperties) {
 /**
  * The Export options column: filename template with live preview, then the
  * date/icon switches and the hide switches. Self-contained and storage-backed,
- * so it takes no props and the host only decides where to place it.
+ * so it takes no props and the host only decides where to place it. The
+ * filename draft stays local while typing and is persisted on a debounce, on
+ * blur, on unmount and when the page is hidden or unloaded; storage echoes of the panel's own writes are ignored so
+ * a late echo can never overwrite newer keystrokes.
  * @returns The panel markup.
  */
 export function ExportOptionsPanel() {
@@ -58,16 +63,52 @@ export function ExportOptionsPanel() {
     exportFilenameTemplateStore,
   )
   const [draftTemplate, setDraftTemplate] = useState(storedTemplate)
-  const [syncedTemplate, setSyncedTemplate] = useState(storedTemplate)
+  const draftReference = useRef(draftTemplate)
+  const persistedReference = useRef<string | null>(null)
+  const ownWritesReference = useRef<string[]>([])
+  const timerReference = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined,
+  )
 
-  if (storedTemplate !== syncedTemplate) {
-    setSyncedTemplate(storedTemplate)
+  useEffect(() => {
+    const ownWriteIndex = ownWritesReference.current.indexOf(storedTemplate)
+    if (ownWriteIndex !== -1) {
+      ownWritesReference.current.splice(ownWriteIndex, 1)
+      return
+    }
+    persistedReference.current = storedTemplate
+    draftReference.current = storedTemplate
     setDraftTemplate(storedTemplate)
-  }
+  }, [storedTemplate])
+
+  const persistDraft = useCallback(() => {
+    clearTimeout(timerReference.current)
+    timerReference.current = undefined
+    const value = draftReference.current
+    if (value === persistedReference.current) return
+    persistedReference.current = value
+    ownWritesReference.current.push(value)
+    void setStoredTemplate(value)
+  }, [setStoredTemplate])
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') persistDraft()
+    }
+    globalThis.addEventListener('pagehide', persistDraft)
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    return () => {
+      globalThis.removeEventListener('pagehide', persistDraft)
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+      persistDraft()
+    }
+  }, [persistDraft])
 
   const handleTemplateChange = (value: string) => {
+    draftReference.current = value
     setDraftTemplate(value)
-    void setStoredTemplate(value)
+    clearTimeout(timerReference.current)
+    timerReference.current = setTimeout(persistDraft, TEMPLATE_PERSIST_DELAY_MS)
   }
 
   return (
@@ -90,6 +131,7 @@ export function ExportOptionsPanel() {
             id="export-options-filename"
             value={draftTemplate}
             onChange={(event) => handleTemplateChange(event.target.value)}
+            onBlur={persistDraft}
           />
           <p
             data-testid="export-options-preview"

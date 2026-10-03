@@ -1,5 +1,5 @@
 import type { WxtStorageItem } from '#imports'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 /**
  * Subscribes a component to a WXT storage item, mirroring it as React state.
@@ -11,17 +11,26 @@ import { useEffect, useState } from 'react'
  * @param initialValue Optional synchronous value for the first render (for
  * example from a cache), used instead of `item.fallback` until the real read
  * resolves.
- * @returns A `[value, setValue]` tuple mirroring `useState`'s shape.
+ * @returns A `[value, setValue, isLoaded]` tuple (the setter is referentially
+ * stable per item): `useState`'s shape plus a
+ * flag that turns `true` once the initial read has resolved, so callers can
+ * avoid acting on the fallback.
  */
 export function useStorageItem<T>(
   item: WxtStorageItem<T, Record<string, unknown>>,
   initialValue?: T,
-): [T, (value: T) => Promise<void>] {
+): [T, (value: T) => Promise<void>, boolean] {
   const [value, setValue] = useState<T>(initialValue ?? item.fallback)
+  const [isLoaded, setIsLoaded] = useState(false)
+  const setItemValue = useCallback(
+    (nextValue: T) => item.setValue(nextValue),
+    [item],
+  )
 
   useEffect(() => {
     const loadValue = async () => {
       setValue(await item.getValue())
+      setIsLoaded(true)
     }
     void loadValue()
 
@@ -31,5 +40,5 @@ export function useStorageItem<T>(
     return unwatch
   }, [item])
 
-  return [value, item.setValue.bind(item)]
+  return [value, setItemValue, isLoaded]
 }

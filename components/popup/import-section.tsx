@@ -4,16 +4,6 @@ import { useId, useRef, useState } from 'react'
 
 import { OperationProgressCard } from '@/components/operation-progress-card'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { Field, FieldLabel } from '@/components/ui/field'
 import {
@@ -26,6 +16,7 @@ import {
 } from '@/components/ui/select'
 import { Spinner } from '@/components/ui/spinner'
 import { toast } from '@/components/ui/toast'
+import { APP_ROUTES, getAppUrl } from '@/lib/app-url'
 import { formatCount } from '@/lib/format-count'
 import { ImportCanceledError } from '@/lib/import-control'
 import { getImportModeItems } from '@/lib/import-mode-items'
@@ -49,7 +40,8 @@ interface PendingImport {
  * while that mode is Restore - replace, and a "Choose file..." button that
  * imports the picked file. A file with no location data (CSV, or HTML/JSON
  * without root folders) is imported in `folder` mode for that file only.
- * Restore - replace asks for confirmation in an `AlertDialog` first. The
+ * Restore - replace never runs in the popup, because Chrome closes it on
+ * focus loss mid-replace; it opens the App Import page instead. The
  * button shows a spinner and is disabled while importing; the outcome is
  * reported with a toast.
  * @returns The import section element.
@@ -58,7 +50,6 @@ export function ImportSection() {
   const fileInputReference = useRef<HTMLInputElement>(null)
   const modeSelectId = useId()
   const [mode, setMode] = useStorageItem(defaultImportModeStore)
-  const [pendingImport, setPendingImport] = useState<PendingImport | null>(null)
   const [isImporting, setIsImporting] = useState(false)
   const progress = useOperationProgress()
 
@@ -150,17 +141,10 @@ export function ImportSection() {
     }
 
     if (prepared.mode === 'restore-replace') {
-      setPendingImport(prepared)
+      void browser.tabs.create({ url: getAppUrl(APP_ROUTES.import) })
       return
     }
     await performImport(prepared)
-  }
-
-  const handleConfirmReplace = () => {
-    if (!pendingImport) return
-    const confirmed = pendingImport
-    setPendingImport(null)
-    void performImport(confirmed)
   }
 
   return (
@@ -232,31 +216,6 @@ export function ImportSection() {
           onCancel={progress.requestCancel}
         />
       )}
-
-      <AlertDialog
-        open={pendingImport !== null}
-        onOpenChange={(isOpen) => {
-          if (!isOpen) setPendingImport(null)
-        }}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{i18n.t('replaceConfirmTitle')}</AlertDialogTitle>
-            <AlertDialogDescription>
-              {i18n.t('replaceConfirmDescription')}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>{i18n.t('cancel')}</AlertDialogCancel>
-            <AlertDialogAction
-              variant="destructive"
-              onClick={handleConfirmReplace}
-            >
-              {i18n.t('replaceConfirmButton')}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </section>
   )
 }

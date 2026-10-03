@@ -110,17 +110,9 @@
   "importPreviewCount": {
     "n": "Закладок: $1"
   },
-  "replaceConfirmTitle": {
-    "message": "Заменить существующие закладки?",
-    "description": "Title of the replace confirmation dialog"
-  },
   "replaceConfirmDescription": {
     "message": "Текущие панель закладок и «Другие закладки» очищаются перед импортом. Сначала сохраняется страховой снимок, чтобы вы могли отменить импорт.",
     "description": "Body of the replace confirmation dialog"
-  },
-  "replaceConfirmButton": {
-    "message": "Да, заменить",
-    "description": "Confirm button in the replace dialog"
   },
   "cancel": {
     "message": "Отмена",

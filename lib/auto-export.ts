@@ -21,7 +21,6 @@ import {
   includeIconDataStore,
 } from '@/lib/storage'
 import type {
-  AutoExportConfig,
   AutoExportInterval,
   AutoExportLastRun,
   AutoExportTrigger,
@@ -322,7 +321,8 @@ async function saveDownload(
  * selected format, and downloads it to the configured folder via
  * {@link downloadViaOffscreenDocument} (an offscreen-document blob URL,
  * rather than a base64 data URL, so exports aren't capped by the
- * data-URL/IPC size limit). Skips entirely if auto-export is disabled or no
+ * data-URL size limit; the content still travels through
+ * `runtime.sendMessage`, which caps it at 64 MiB). Skips entirely if auto-export is disabled or no
  * format is selected — this can happen if the alarm fires from stale state
  * just before {@link syncAlarm} clears it. Each download uses `saveAs: false`
  * (no save-dialog prompt) and `conflictAction: 'uniquify'` so a repeat run
@@ -422,13 +422,13 @@ export async function runAutoExport(
     await notifyAutoExportFailure(message)
     if (trigger !== 'manual') {
       await setFailureBadge()
-      await rescheduleAfterRun(config)
+      await rescheduleAfterRun()
     }
     throw error
   }
 
   if (trigger !== 'manual') {
-    await rescheduleAfterRun(config)
+    await rescheduleAfterRun()
   }
 }
 
@@ -437,11 +437,19 @@ export async function runAutoExport(
  * run, then re-arms the alarm for it. Shared by both the success and
  * failure paths of {@link runAutoExport} for `scheduled`/`catch-up`
  * triggers, so a failing scheduled export still reschedules instead of
- * going silent.
- * @param config The auto-export config the run used.
+ * going silent. Re-reads the config instead of trusting the one the run
+ * started with: if the user disabled auto-export or changed the schedule
+ * while the run was in flight, the fresh config wins — a disabled or
+ * format-less config defers to `syncAlarm('config-change')`, which clears
+ * the alarm and next run rather than re-arming a stray one.
  * @returns Resolves once the next-run store and alarm are updated.
  */
-async function rescheduleAfterRun(config: AutoExportConfig): Promise<void> {
+async function rescheduleAfterRun(): Promise<void> {
+  const config = await autoExportConfigStore.getValue()
+  if (!config.enabled || config.formats.length === 0) {
+    await syncAlarm('config-change')
+    return
+  }
   const nextRun = computeNextRun(
     config.interval,
     config.preferredTime,

@@ -110,17 +110,9 @@
   "importPreviewCount": {
     "n": "$1件のブックマーク"
   },
-  "replaceConfirmTitle": {
-    "message": "既存のブックマークを置き換えますか？",
-    "description": "Title of the replace confirmation dialog"
-  },
   "replaceConfirmDescription": {
     "message": "インポート前に、現在のブックマークバーとその他のブックマークが空になります。安全スナップショットが先に保存されるため、インポートを元に戻せます。",
     "description": "Body of the replace confirmation dialog"
-  },
-  "replaceConfirmButton": {
-    "message": "置き換える",
-    "description": "Confirm button in the replace dialog"
   },
   "cancel": {
     "message": "キャンセル",

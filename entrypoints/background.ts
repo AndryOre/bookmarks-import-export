@@ -17,6 +17,7 @@ import {
   lastSeenVersionStore,
 } from '@/lib/storage'
 import type { AutoExportConfig } from '@/lib/types'
+import { isMinorOrMajorUpdate } from '@/lib/version'
 
 /**
  * Runs `syncAlarm(trigger)`, logging (never throwing) on failure — every
@@ -82,26 +83,6 @@ async function runManualExport(
     const errorMessage = error instanceof Error ? error.message : String(error)
     return { ok: false, error: errorMessage }
   }
-}
-
-/**
- * Whether an update from `previousVersion` to `currentVersion` changed the
- * major or minor number (patch-only bumps and unparseable or missing
- * versions do not count).
- * @param previousVersion The version before the update, if known.
- * @param currentVersion The version after the update.
- * @returns Whether What's new should open.
- */
-function isMinorOrMajorUpdate(
-  previousVersion: string | undefined,
-  currentVersion: string,
-): boolean {
-  if (previousVersion === undefined) return false
-  const previousParts = previousVersion.split('.', 2)
-  const currentParts = currentVersion.split('.', 2)
-  return (
-    previousParts[0] !== currentParts[0] || previousParts[1] !== currentParts[1]
-  )
 }
 
 /**

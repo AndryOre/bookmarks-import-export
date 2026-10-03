@@ -844,6 +844,54 @@ describe('runAutoExport', () => {
     expect(await autoExportNextRunStore.getValue()).toBe(expected)
   })
 
+  it('leaves no alarm or next run when auto-export is disabled while a run is in flight', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    vi.setSystemTime(new Date(2024, 5, 1, 8, 0, 0, 0))
+    await autoExportConfigStore.setValue(
+      baseConfig({ formats: ['html'], interval: '1d', preferredTime: '10:00' }),
+    )
+    const { mock: downloadSpy, completeAll } = mockDownload()
+    mockActionBadge()
+
+    const runPromise = runAutoExport('scheduled')
+    await vi.waitFor(() => expect(downloadSpy).toHaveBeenCalledTimes(1))
+    await autoExportConfigStore.setValue(
+      baseConfig({ enabled: false, formats: ['html'] }),
+    )
+    await syncAlarm('config-change')
+    completeAll()
+    await runPromise
+
+    expect(await autoExportNextRunStore.getValue()).toBeNull()
+    expect(await browser.alarms.get(ALARM_NAME)).toBeUndefined()
+  })
+
+  it('uses the fresh interval when it changes while a run is in flight', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    vi.setSystemTime(new Date(2024, 5, 1, 8, 0, 0, 0))
+    await autoExportConfigStore.setValue(
+      baseConfig({ formats: ['html'], interval: '1d', preferredTime: '10:00' }),
+    )
+    const { mock: downloadSpy, completeAll } = mockDownload()
+    mockActionBadge()
+
+    const runPromise = runAutoExport('scheduled')
+    await vi.waitFor(() => expect(downloadSpy).toHaveBeenCalledTimes(1))
+    await autoExportConfigStore.setValue(
+      baseConfig({ formats: ['html'], interval: '1h' }),
+    )
+    completeAll()
+    await runPromise
+
+    const nextRun = await autoExportNextRunStore.getValue()
+    expect(nextRun).toBeGreaterThanOrEqual(
+      new Date(2024, 5, 1, 9, 0, 0, 0).getTime(),
+    )
+    expect(nextRun).toBeLessThan(new Date(2024, 5, 1, 9, 0, 5, 0).getTime())
+    const alarm = await browser.alarms.get(ALARM_NAME)
+    expect(alarm?.scheduledTime).toBe(nextRun)
+  })
+
   it('does not reschedule the next run after a manual run', async () => {
     vi.useFakeTimers({ toFake: ['Date'] })
     vi.setSystemTime(new Date(2024, 5, 1, 8, 0, 0, 0))
