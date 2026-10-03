@@ -69,6 +69,7 @@ export async function importParsedTree(
       mode,
       options.skipDuplicates ?? false,
       options,
+      options.trusted ?? false,
     )
   } catch (error) {
     if (error instanceof ImportCanceledError) throw error
@@ -242,6 +243,8 @@ export function preprocessBookmarks(
  * @param mode Where and how the tree is written.
  * @param shouldSkipDuplicates Whether to leave out bookmarks that already exist.
  * @param control Progress callback and abort signal.
+ * @param isTrusted Whether the URLs come from the browser itself, so every URL
+ *   is written as-is and a failed create is counted instead of thrown.
  * @returns The import result with the skipped-bookmark counts.
  */
 async function processBookmarks(
@@ -249,6 +252,7 @@ async function processBookmarks(
   mode: ImportMode,
   shouldSkipDuplicates: boolean,
   control: ImportControl,
+  isTrusted: boolean,
 ): Promise<ImportResult> {
   const tree = await browser.bookmarks.getTree()
   const { nodes: parsed, skippedDuplicates } = applySkipDuplicates(
@@ -293,6 +297,7 @@ async function processBookmarks(
             importedBar.id,
             result,
             writer,
+            isTrusted,
           )
         } else if (bookmark.isOtherBookmarks && bookmark.children) {
           await createBookmarks(
@@ -300,6 +305,7 @@ async function processBookmarks(
             importedFolder.id,
             result,
             writer,
+            isTrusted,
           )
         } else if (
           bookmark.isMobileBookmarks &&
@@ -315,6 +321,7 @@ async function processBookmarks(
             importedMobile.id,
             result,
             writer,
+            isTrusted,
           )
         } else if (isAllowedBookmarkUrl(bookmark.url)) {
           await writer.create({
@@ -331,7 +338,7 @@ async function processBookmarks(
         (bookmark) =>
           bookmark.isMobileBookmarks &&
           bookmark.children &&
-          bookmark.children.length > 0,
+          (isTrusted || bookmark.children.length > 0),
       )
 
       if (mode === 'restore-replace') {
@@ -350,6 +357,7 @@ async function processBookmarks(
             bookmarksBarId,
             result,
             writer,
+            isTrusted,
           )
         } else if (bookmark.isOtherBookmarks && bookmark.children) {
           await createBookmarks(
@@ -357,6 +365,7 @@ async function processBookmarks(
             otherBookmarksId,
             result,
             writer,
+            isTrusted,
           )
         } else if (bookmark.isMobileBookmarks && bookmark.children) {
           await writeMobileBookmarks(
@@ -365,6 +374,7 @@ async function processBookmarks(
             otherBookmarksId,
             result,
             writer,
+            isTrusted,
           )
         } else if (isAllowedBookmarkUrl(bookmark.url)) {
           await writer.create({
@@ -416,6 +426,7 @@ async function removeAllChildren(
  * @param otherBookmarksId The "Other bookmarks" root id to fall back to.
  * @param result The running import result, updated with skipped bookmarks.
  * @param writer The writer that creates and journals the nodes.
+ * @param isTrusted Whether URLs bypass the allowlist (see `createBookmarks`).
  * @returns Resolves once the content has been written.
  */
 async function writeMobileBookmarks(
@@ -424,19 +435,30 @@ async function writeMobileBookmarks(
   otherBookmarksId: string,
   result: ImportResult,
   writer: ImportWriter,
+  isTrusted: boolean,
 ): Promise<void> {
-  await createBookmarks(nodes, mobileId ?? otherBookmarksId, result, writer)
+  await createBookmarks(
+    nodes,
+    mobileId ?? otherBookmarksId,
+    result,
+    writer,
+    isTrusted,
+  )
 }
 
 /**
  * Recursively creates the tree under `parentId`. A node with a `children`
  * array is a folder and is created even when that array is empty. A node
  * that is neither an allowed bookmark nor a folder is skipped and counted in
- * `result.skippedInvalidUrl`.
+ * `result.skippedInvalidUrl`. When `isTrusted` is set, every URL is written
+ * as-is (it came from the browser itself) and a node whose create fails is
+ * counted in `result.skippedInvalidUrl` instead of aborting the import; an
+ * {@link ImportCanceledError} still propagates.
  * @param nodes The nodes to create.
  * @param parentId The id of the folder to create them under.
  * @param result The running import result, updated with skipped bookmarks.
  * @param writer The writer that creates and journals the nodes.
+ * @param isTrusted Whether to bypass `isAllowedBookmarkUrl` for these nodes.
  * @returns Resolves once every node has been created.
  */
 async function createBookmarks(
@@ -444,14 +466,29 @@ async function createBookmarks(
   parentId: string,
   result: ImportResult,
   writer: ImportWriter,
+  isTrusted: boolean,
 ): Promise<void> {
   for (const node of nodes) {
-    if (isAllowedBookmarkUrl(node.url)) {
-      await writer.create({ parentId, title: node.title, url: node.url })
-    } else if (node.children) {
-      const folder = await writer.create({ parentId, title: node.title })
-      await createBookmarks(node.children, folder.id, result, writer)
-    } else {
+    const hasWritableUrl = isTrusted
+      ? node.url !== undefined
+      : isAllowedBookmarkUrl(node.url)
+    try {
+      if (hasWritableUrl) {
+        await writer.create({ parentId, title: node.title, url: node.url })
+      } else if (node.children) {
+        const folder = await writer.create({ parentId, title: node.title })
+        await createBookmarks(
+          node.children,
+          folder.id,
+          result,
+          writer,
+          isTrusted,
+        )
+      } else {
+        result.skippedInvalidUrl++
+      }
+    } catch (error) {
+      if (!isTrusted || error instanceof ImportCanceledError) throw error
       result.skippedInvalidUrl++
     }
   }

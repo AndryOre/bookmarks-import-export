@@ -266,6 +266,78 @@ describe('runImport cancel', () => {
     expect(shapeOf(getFakeBookmarksRoot())).toEqual(before)
   })
 
+  it('Restore-replace cancel brings back Mobile and non-web bookmarks', async () => {
+    resetFakeBookmarks({ withMobileRoot: true })
+    seedFakeBookmarksTree([
+      {
+        id: 'js',
+        title: 'Tool',
+        url: 'javascript:alert(1)',
+        syncing: false,
+      },
+      {
+        id: 'cs',
+        title: 'Settings',
+        url: 'chrome://settings',
+        syncing: false,
+      },
+    ])
+    await browser.bookmarks.create({
+      parentId: '3',
+      title: 'On phone',
+      url: 'https://phone.example/',
+    })
+    const before = shapeOf(getFakeBookmarksRoot())
+    const file = JSON.stringify([
+      {
+        id: '1',
+        title: 'Bookmarks bar',
+        dateAdded: 0,
+        children: fileBookmarks(40),
+      },
+      {
+        id: '3',
+        title: 'Mobile bookmarks',
+        dateAdded: 0,
+        children: [
+          { title: 'New mobile', url: 'https://m.example/', dateAdded: 0 },
+        ],
+      },
+    ])
+    const cancel = cancelAfter(20)
+
+    await expect(
+      runImport(file, 'application/json', 'restore-replace', undefined, {
+        signal: cancel.signal,
+      }),
+    ).rejects.toBeInstanceOf(ImportCanceledError)
+
+    cancel.restore()
+    expect(shapeOf(getFakeBookmarksRoot())).toEqual(before)
+  })
+
+  it('still rejects non-allowed schemes from an untrusted file', async () => {
+    const file = JSON.stringify([
+      {
+        id: '1',
+        title: 'Bookmarks bar',
+        dateAdded: 0,
+        children: [
+          { title: 'Tool', url: 'javascript:alert(1)', dateAdded: 0 },
+          { title: 'Ok', url: 'https://ok.example/', dateAdded: 0 },
+        ],
+      },
+    ])
+
+    const result = await runImport(file, 'application/json', 'restore-merge')
+
+    expect(result.skippedInvalidUrl).toBe(1)
+    const bar = (getFakeBookmarksRoot().children ?? [])[0]
+    expect(shapeOf(bar!).children).toEqual([
+      { title: 'Ok', url: 'https://ok.example/' },
+    ])
+  })
+
   it('leaves everything untouched when canceled before writing starts', async () => {
     seedFakeBookmarksTree(existing())
     const before = getFakeBookmarksRoot()

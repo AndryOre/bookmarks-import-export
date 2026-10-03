@@ -58,7 +58,9 @@ export async function runImport(
       error instanceof ImportCanceledError &&
       error.hasClearedExisting
     ) {
-      await importFromJSON(structuredClone(snapshot.roots), 'restore-replace')
+      await importFromJSON(structuredClone(snapshot.roots), 'restore-replace', {
+        trusted: true,
+      })
     }
     throw error
   }
