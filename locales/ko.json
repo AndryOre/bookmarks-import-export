@@ -1055,6 +1055,22 @@
     "message": "사본을 삭제하지 못했습니다",
     "description": "Toast when deleting copies failed"
   },
+  "duplicates_deletedPartial": {
+    "message": "$DELETED$개 삭제, $FAILED$개는 삭제하지 못했습니다",
+    "description": "Toast when some extra copies were deleted and some could not be",
+    "placeholders": {
+      "deleted": {
+        "content": "$1"
+      },
+      "failed": {
+        "content": "$2"
+      }
+    }
+  },
+  "duplicates_scanFailed": {
+    "message": "북마크를 불러오지 못했습니다",
+    "description": "Error state title when the bookmarks could not be read for the Duplicate scan"
+  },
   "duplicates_emptyTitle": {
     "message": "중복 없음",
     "description": "Empty state title when no Duplicates exist"

@@ -1,5 +1,5 @@
 import { i18n } from '#i18n'
-import { CopyCheckIcon } from 'lucide-react'
+import { CopyCheckIcon, TriangleAlertIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 import { DuplicateGroupCard } from '@/components/duplicates/duplicate-group-card'
@@ -28,6 +28,7 @@ import { toast } from '@/components/ui/toast'
 import {
   deleteBookmarksById,
   getCopyIdsToDelete,
+  getReviewedIdsStillToDelete,
 } from '@/lib/duplicate-selection'
 import type { KeptCopyIds } from '@/lib/duplicate-selection'
 import { findDuplicateGroups } from '@/lib/duplicates'
@@ -73,6 +74,24 @@ function NoDuplicates({ onScanAgain }: NoDuplicatesProperties) {
   )
 }
 
+function ScanFailed({ onScanAgain }: NoDuplicatesProperties) {
+  return (
+    <Empty>
+      <EmptyHeader>
+        <EmptyMedia variant="icon">
+          <TriangleAlertIcon />
+        </EmptyMedia>
+        <EmptyTitle>{i18n.t('duplicates_scanFailed')}</EmptyTitle>
+      </EmptyHeader>
+      <EmptyContent>
+        <Button variant="outline" onClick={onScanAgain}>
+          {i18n.t('duplicates_scanAgain')}
+        </Button>
+      </EmptyContent>
+    </Empty>
+  )
+}
+
 /**
  * The Duplicates screen: scans the bookmarks when opened and lists Duplicate
  * groups, each with a radio to choose the copy to keep (the oldest by
@@ -85,25 +104,40 @@ export function DuplicatesRoute() {
   const [keptCopyIds, setKeptCopyIds] = useState<KeptCopyIds>({})
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
+  const [hasScanFailed, setHasScanFailed] = useState(false)
 
   const [scanCount, setScanCount] = useState(0)
 
   const scan = () => {
     setGroups(null)
+    setHasScanFailed(false)
     setKeptCopyIds({})
     setScanCount((previous) => previous + 1)
   }
 
   useEffect(() => {
     let isCurrent = true
-    void browser.bookmarks.getTree().then((tree) => {
-      if (isCurrent) setGroups(findDuplicateGroups(tree))
-    })
+    const runScan = async () => {
+      try {
+        const tree = await browser.bookmarks.getTree()
+        if (isCurrent) setGroups(findDuplicateGroups(tree))
+      } catch {
+        if (isCurrent) setHasScanFailed(true)
+      }
+    }
+    void runScan()
     return () => {
       isCurrent = false
     }
   }, [scanCount])
 
+  if (hasScanFailed) {
+    return (
+      <div className="mx-auto w-full max-w-2xl">
+        <ScanFailed onScanAgain={scan} />
+      </div>
+    )
+  }
   if (groups === null) return <DuplicatesSkeleton />
   if (groups.length === 0) {
     return (
@@ -123,15 +157,25 @@ export function DuplicatesRoute() {
       const currentGroups = findDuplicateGroups(
         await browser.bookmarks.getTree(),
       )
-      const deletedCount = await deleteBookmarksById(
-        getCopyIdsToDelete(currentGroups, keptCopyIds),
+      const { deleted, failed } = await deleteBookmarksById(
+        getReviewedIdsStillToDelete(idsToDelete, currentGroups, keptCopyIds),
       )
-      toast.add({
-        type: 'success',
-        title: i18n.t('duplicates_deleted', deletedCount, [
-          formatCount(deletedCount),
-        ]),
-      })
+      toast.add(
+        failed === 0
+          ? {
+              type: 'success',
+              title: i18n.t('duplicates_deleted', deleted, [
+                formatCount(deleted),
+              ]),
+            }
+          : {
+              type: 'error',
+              title: i18n.t('duplicates_deletedPartial', [
+                formatCount(deleted),
+                formatCount(failed),
+              ]),
+            },
+      )
     } catch (error) {
       toast.add({
         type: 'error',
