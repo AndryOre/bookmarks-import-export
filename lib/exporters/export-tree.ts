@@ -2,6 +2,8 @@ import { countBookmarks } from '@/lib/count-bookmarks'
 import { createExportTicker, type ExportControl } from '@/lib/export-control'
 import type { ExtendedBookmarkTreeNode } from '@/lib/types'
 
+import { isBookmarksBar, isOtherBookmarks } from './root-folders'
+
 /**
  * Options for the structural exporters (Markdown, OPML, XBEL), which keep the
  * folder tree and titles and ignore icon data.
@@ -71,11 +73,11 @@ export async function buildExportTree(
       } else if (node.children) {
         const children = convert(node.children as ExtendedBookmarkTreeNode[])
         const isHidden =
-          (node.id === '2' && options.hideOtherBookmarks) ||
+          (isOtherBookmarks(node) && options.hideOtherBookmarks) ||
           (options.hideParentFolder &&
             node.id !== '0' &&
-            node.id !== '1' &&
-            node.id !== '2')
+            !isBookmarksBar(node) &&
+            !isOtherBookmarks(node))
         if (isHidden) {
           result.push(...children)
         } else {

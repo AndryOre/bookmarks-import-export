@@ -10,6 +10,8 @@ import {
 import { getFaviconBase64 } from '@/lib/favicon'
 import type { ExtendedBookmarkTreeNode } from '@/lib/types'
 
+import { isBookmarksBar, isOtherBookmarks } from './root-folders'
+
 interface ExportCSVOptions extends ExportControl {
   selectedBookmarks: ExtendedBookmarkTreeNode[] | null
   includeIconData: boolean
@@ -158,7 +160,7 @@ function getFolderLabel(
   shouldHideParentFolder: boolean,
 ): string {
   if (node.id === '0') return ''
-  if (node.id === '1') return i18n.t('bookmarksBar')
-  if (node.id === '2') return i18n.t('otherBookmarks')
+  if (isBookmarksBar(node)) return i18n.t('bookmarksBar')
+  if (isOtherBookmarks(node)) return i18n.t('otherBookmarks')
   return shouldHideParentFolder ? '' : node.title
 }

@@ -59,7 +59,7 @@ describe('exportToHTML', () => {
     )
     expect(html).toContain('<H3>Tools &amp; &quot;Stuff&quot;</H3>')
     expect(html).toContain(
-      '<A HREF="https://example.com/?a=1&b=2">&lt;script&gt;alert(&#39;x&#39;)&lt;/script&gt;</A>',
+      '<A HREF="https://example.com/?a=1&amp;b=2">&lt;script&gt;alert(&#39;x&#39;)&lt;/script&gt;</A>',
     )
   })
 

@@ -7,6 +7,8 @@ import {
 import { getFaviconBase64 } from '@/lib/favicon'
 import type { ExtendedBookmarkTreeNode } from '@/lib/types'
 
+import { isBookmarksBar, isOtherBookmarks } from './root-folders'
+
 interface ExportJSONOptions extends ExportControl {
   selectedBookmarks: ExtendedBookmarkTreeNode[] | null
   includeIconData: boolean
@@ -141,15 +143,15 @@ async function processNode(
     return [processed]
   }
   if (node.children !== undefined) {
-    if (node.id === '2' && options.hideOtherBookmarks) {
+    if (isOtherBookmarks(node) && options.hideOtherBookmarks) {
       return processNodes(node.children as ExtendedBookmarkTreeNode[], options)
     }
 
     if (
       options.hideParentFolder &&
       node.id !== '0' &&
-      node.id !== '1' &&
-      node.id !== '2'
+      !isBookmarksBar(node) &&
+      !isOtherBookmarks(node)
     ) {
       return processNodes(node.children as ExtendedBookmarkTreeNode[], options)
     }
