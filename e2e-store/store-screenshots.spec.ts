@@ -1,14 +1,22 @@
 import { chromium } from '@playwright/test'
 import type { Page } from '@playwright/test'
-import { mkdir } from 'node:fs/promises'
+import { copyFile, mkdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
 
 import { expect, test } from '../e2e/fixtures'
 import type { SeedBookmark } from '../e2e/fixtures'
-import messages from '../locales/en.json' with { type: 'json' }
+import { STORE_CAPTIONS } from './captions'
 import { composeLocalSlide, composeUiSlide } from './compose-slide'
 
-const SCREENSHOTS_DIRECTORY = path.resolve('docs/store/assets/screenshots')
+const SCREENSHOTS_ROOT = path.resolve('docs/store/assets/screenshots')
+const DEFAULT_LOCALE = 'en'
+const SLIDE_FILES = [
+  '01-export.png',
+  '02-import.png',
+  '03-auto-export.png',
+  '04-popup.png',
+  '05-local.png',
+]
 const RAW_DIRECTORY = path.resolve('test-results/store/raw')
 const DEVICE_SCALE_FACTOR = 2
 const APP_CAPTURE = { width: 1280, height: 716 }
@@ -88,19 +96,38 @@ test.use({
   viewport: APP_CAPTURE,
 })
 
+async function readMessages(
+  locale: string,
+): Promise<Record<string, { message: string }>> {
+  const raw = await readFile(path.resolve('locales', `${locale}.json`), 'utf8')
+  return JSON.parse(raw) as Record<string, { message: string }>
+}
+
 test('composes the five store screenshots', async ({
   openExtensionPage,
   seedBookmarks,
   seedStorage,
-}) => {
-  await mkdir(SCREENSHOTS_DIRECTORY, { recursive: true })
+}, testInfo) => {
+  const locale = testInfo.project.name
+  const captions = STORE_CAPTIONS[locale]
+  if (!captions) throw new Error(`No store captions for locale ${locale}`)
+  const messages = await readMessages(locale)
+  const message = (key: string): string => {
+    const entry = messages[key]
+    if (!entry) throw new Error(`Missing ${key} in locales/${locale}.json`)
+    return entry.message
+  }
+  const localeDirectory = path.join(SCREENSHOTS_ROOT, locale)
+  await mkdir(localeDirectory, { recursive: true })
+  if (locale === DEFAULT_LOCALE)
+    await mkdir(SCREENSHOTS_ROOT, { recursive: true })
   const composerBrowser = await chromium.launch({ channel: 'chromium' })
   const composer = await composerBrowser.newPage({
     viewport: CANVAS,
     deviceScaleFactor: 1,
   })
   const outputPath = (fileName: string): string =>
-    path.join(SCREENSHOTS_DIRECTORY, fileName)
+    path.join(localeDirectory, fileName)
 
   await seedStorage({ theme: 'dark' })
   await seedBookmarks(SEED_BOOKMARKS)
@@ -109,11 +136,11 @@ test('composes the five store screenshots', async ({
   await expect(
     exportPage.getByRole('heading', {
       level: 1,
-      name: messages.shell_navExport.message,
+      name: message('shell_navExport'),
     }),
   ).toBeVisible()
   await exportPage
-    .getByRole('button', { name: messages.exportPage_expandAll.message })
+    .getByRole('button', { name: message('exportPage_expandAll') })
     .click()
   await exportPage
     .getByRole('treeitem', { name: 'Development', exact: true })
@@ -124,8 +151,7 @@ test('composes the five store screenshots', async ({
   await composeUiSlide(
     composer,
     {
-      headline: 'Export exactly what you choose',
-      subtitle: 'One folder or everything — as HTML, JSON, or CSV.',
+      ...captions.export,
       screenshot: exportShot,
       cardWidth: CARD_WIDTH,
       cardTop: CARD_TOP,
@@ -137,24 +163,21 @@ test('composes the five store screenshots', async ({
   await expect(
     importPage.getByRole('heading', {
       level: 1,
-      name: messages.shell_navImport.message,
+      name: message('shell_navImport'),
     }),
   ).toBeVisible()
-  await importPage
-    .getByLabel(messages.import_fileInputLabel.message)
-    .setInputFiles({
-      name: 'bookmarks.html',
-      mimeType: 'text/html',
-      buffer: Buffer.from(importFileHtml),
-    })
+  await importPage.getByLabel(message('import_fileInputLabel')).setInputFiles({
+    name: 'bookmarks.html',
+    mimeType: 'text/html',
+    buffer: Buffer.from(importFileHtml),
+  })
   await expect(importPage.getByRole('radio')).toHaveCount(3)
   await importPage.getByRole('radio').nth(1).click()
   const importShot = await captureRaw(importPage, 'body', '02-import.png')
   await composeUiSlide(
     composer,
     {
-      headline: 'Preview every import first',
-      subtitle: 'Then merge, replace, or drop it into a new folder.',
+      ...captions.import,
       screenshot: importShot,
       cardWidth: CARD_WIDTH,
       cardTop: CARD_TOP,
@@ -168,8 +191,10 @@ test('composes the five store screenshots', async ({
       enabled: true,
       interval: '1d',
       preferredTime: '09:30',
+      dayOfWeek: 1,
       path: 'bookmarks-backup/',
-      formats: ['html', 'json'],
+      formats: ['html', 'json', 'markdown'],
+      keepLast: 10,
     },
     autoExportNextRun: Date.now() + 8 * hourInMilliseconds,
     autoExportLastRun: {
@@ -182,11 +207,11 @@ test('composes the five store screenshots', async ({
   await expect(
     autoExportPage.getByRole('heading', {
       level: 1,
-      name: messages.shell_navAutoExport.message,
+      name: message('shell_navAutoExport'),
     }),
   ).toBeVisible()
   await expect(
-    autoExportPage.getByText(messages.autoExportPage_nextRun.message),
+    autoExportPage.getByText(message('autoExportPage_nextRun')),
   ).toBeVisible()
   await expect(autoExportPage.getByRole('switch').first()).toBeChecked()
   const autoExportShot = await captureRaw(
@@ -197,8 +222,7 @@ test('composes the five store screenshots', async ({
   await composeUiSlide(
     composer,
     {
-      headline: 'Scheduled backups, hands-free',
-      subtitle: 'Daily or weekly, straight to your Downloads folder.',
+      ...captions.autoExport,
       screenshot: autoExportShot,
       cardWidth: CARD_WIDTH,
       cardTop: CARD_TOP,
@@ -224,8 +248,7 @@ test('composes the five store screenshots', async ({
   await composeUiSlide(
     composer,
     {
-      headline: 'Export everything in one click',
-      subtitle: 'Right from the toolbar.',
+      ...captions.popup,
       screenshot: popupShot,
       cardWidth: Math.round((popupBox.width * POPUP_HEIGHT) / popupBox.height),
       cardTop: POPUP_CARD_TOP,
@@ -236,14 +259,21 @@ test('composes the five store screenshots', async ({
 
   await composeLocalSlide(
     composer,
-    { headline: 'Everything stays on your device' },
+    { headline: captions.local.headline },
     [
-      { icon: 'account', text: 'No account needed' },
-      { icon: 'upload', text: 'Nothing is uploaded — no cloud, no server' },
-      { icon: 'tracking', text: 'No analytics or tracking' },
-      { icon: 'source', text: 'Open source on GitHub' },
+      { icon: 'account', text: captions.local.claims[0] },
+      { icon: 'upload', text: captions.local.claims[1] },
+      { icon: 'tracking', text: captions.local.claims[2] },
+      { icon: 'source', text: captions.local.claims[3] },
     ],
     outputPath('05-local.png'),
   )
   await composerBrowser.close()
+  if (locale === DEFAULT_LOCALE) {
+    for (const fileName of SLIDE_FILES)
+      await copyFile(
+        path.join(localeDirectory, fileName),
+        path.join(SCREENSHOTS_ROOT, fileName),
+      )
+  }
 })

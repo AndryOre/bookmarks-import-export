@@ -95,7 +95,33 @@ async function renderDocument(
     .card img{display:block;width:100%;height:100%;object-fit:cover;object-position:top}
   </style></head><body>${body}</body></html>`)
   await page.evaluate('document.fonts.ready')
+  await assertNoOverflow(page, outputPath)
   await page.screenshot({ path: outputPath, animations: 'disabled' })
+}
+
+const MAX_TEXT_WIDTH = CANVAS.width - 80
+const MAX_SUBTITLE_HEIGHT = 68
+
+async function assertNoOverflow(page: Page, outputPath: string): Promise<void> {
+  const problems = (await page.evaluate(`(() => {
+    const found = []
+    const textWidth = (element) => {
+      const range = document.createRange()
+      range.selectNodeContents(element)
+      return range.getBoundingClientRect().width
+    }
+    for (const element of document.querySelectorAll('.headline, li')) {
+      if (textWidth(element) > ${MAX_TEXT_WIDTH})
+        found.push(element.textContent + ' is wider than ${MAX_TEXT_WIDTH}px')
+    }
+    for (const element of document.querySelectorAll('.subtitle')) {
+      if (element.getBoundingClientRect().height > ${MAX_SUBTITLE_HEIGHT})
+        found.push(element.textContent + ' wraps past two lines')
+    }
+    return found
+  })()`)) as string[]
+  if (problems.length > 0)
+    throw new Error(`Clipped text in ${outputPath}: ${problems.join('; ')}`)
 }
 
 /**
@@ -140,7 +166,7 @@ export async function composeLocalSlide(
           strokeWidth: 2,
         }),
       )
-      return `<li style="display:flex;align-items:center;gap:24px;height:72px;font-size:30px;line-height:1.2;color:#F3EBDE">${svg}<span>${escapeHtml(text)}</span></li>`
+      return `<li style="display:flex;align-items:center;gap:24px;height:72px;font-size:30px;line-height:1.2;white-space:nowrap;color:#F3EBDE">${svg}<span>${escapeHtml(text)}</span></li>`
     })
     .join('')
   const body = `${captionHtml(caption)}
