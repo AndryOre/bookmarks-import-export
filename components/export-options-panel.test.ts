@@ -93,6 +93,33 @@ describe('ExportOptionsPanel filename draft', () => {
     expect(await exportFilenameTemplateStore.getValue()).toBe('abd')
   })
 
+  it('flushes a pending draft on pagehide before the debounce fires', async () => {
+    const { input } = await mountPanel()
+    await flushStorage()
+
+    await typeInto(input, 'Backup %yyyy')
+    await act(async () => {
+      globalThis.dispatchEvent(new Event('pagehide'))
+    })
+    await flushStorage()
+
+    expect(await exportFilenameTemplateStore.getValue()).toBe('Backup %yyyy')
+  })
+
+  it('flushes a pending draft when the page becomes hidden', async () => {
+    const { input } = await mountPanel()
+    await flushStorage()
+    vi.spyOn(document, 'visibilityState', 'get').mockReturnValue('hidden')
+
+    await typeInto(input, 'Backup %yyyy')
+    await act(async () => {
+      document.dispatchEvent(new Event('visibilitychange'))
+    })
+    await flushStorage()
+
+    expect(await exportFilenameTemplateStore.getValue()).toBe('Backup %yyyy')
+  })
+
   it('persists the draft after the debounce delay', async () => {
     const { input } = await mountPanel()
     await flushStorage()

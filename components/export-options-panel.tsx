@@ -54,7 +54,7 @@ function OptionSwitch({ id, label, store }: OptionSwitchProperties) {
  * date/icon switches and the hide switches. Self-contained and storage-backed,
  * so it takes no props and the host only decides where to place it. The
  * filename draft stays local while typing and is persisted on a debounce, on
- * blur and on unmount; storage echoes of the panel's own writes are ignored so
+ * blur, on unmount and when the page is hidden or unloaded; storage echoes of the panel's own writes are ignored so
  * a late echo can never overwrite newer keystrokes.
  * @returns The panel markup.
  */
@@ -91,7 +91,18 @@ export function ExportOptionsPanel() {
     void setStoredTemplate(value)
   }, [setStoredTemplate])
 
-  useEffect(() => persistDraft, [persistDraft])
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') persistDraft()
+    }
+    globalThis.addEventListener('pagehide', persistDraft)
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    return () => {
+      globalThis.removeEventListener('pagehide', persistDraft)
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+      persistDraft()
+    }
+  }, [persistDraft])
 
   const handleTemplateChange = (value: string) => {
     draftReference.current = value
