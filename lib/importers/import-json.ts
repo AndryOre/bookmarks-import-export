@@ -3,7 +3,13 @@ import type { Browser } from '@wxt-dev/browser'
 
 import { resolveImportRoots } from '@/lib/importers/resolve-roots'
 import { isAllowedBookmarkUrl } from '@/lib/importers/url-validation'
-import type { ImportMode, ImportResult, ParsedBookmark } from '@/lib/types'
+import { applySkipDuplicates } from '@/lib/skip-duplicates'
+import type {
+  ImportMode,
+  ImportOptions,
+  ImportResult,
+  ParsedBookmark,
+} from '@/lib/types'
 
 /**
  * Imports bookmarks from a previously exported `ParsedBookmark[]` JSON
@@ -19,16 +25,22 @@ import type { ImportMode, ImportResult, ParsedBookmark } from '@/lib/types'
  * @param bookmarks The previously exported bookmark tree to import. A single
  *   root object is accepted and treated as a one-element array.
  * @param mode Where and how the tree is written.
+ * @param options Import options such as Skip duplicates.
  * @returns The import result, including how many bookmarks were skipped
- *   because their address is not supported.
+ *   because their address is not supported, or duplicated.
  */
 export async function importFromJSON(
   bookmarks: ParsedBookmark[] | ParsedBookmark,
   mode: ImportMode = 'folder',
+  options: ImportOptions = {},
 ): Promise<ImportResult> {
   try {
     const preprocessed = preprocessBookmarks(normalizeJsonRoot(bookmarks))
-    return await processBookmarks(preprocessed, mode)
+    return await processBookmarks(
+      preprocessed,
+      mode,
+      options.skipDuplicates ?? false,
+    )
   } catch (error) {
     if (error instanceof Error && error.message.startsWith('PROCESS_ERROR')) {
       throw new Error(i18n.t('importFromJSONProcessError'))
@@ -196,16 +208,24 @@ export function preprocessBookmarks(
  * arbitrary `browser.bookmarks` API failure — see `importFromJSON`'s
  * catch block, which replaces a `PROCESS_ERROR` message with a generic
  * localized one rather than surfacing the raw error.
- * @param parsed The preprocessed bookmark tree to write.
+ * @param allParsed The preprocessed bookmark tree to write.
  * @param mode Where and how the tree is written.
- * @returns The import result with the skipped-bookmark count.
+ * @param shouldSkipDuplicates Whether to leave out bookmarks that already exist.
+ * @returns The import result with the skipped-bookmark counts.
  */
 async function processBookmarks(
-  parsed: ParsedBookmark[],
+  allParsed: ParsedBookmark[],
   mode: ImportMode,
+  shouldSkipDuplicates: boolean,
 ): Promise<ImportResult> {
-  const result: ImportResult = { skippedInvalidUrl: 0 }
   const tree = await browser.bookmarks.getTree()
+  const { nodes: parsed, skippedDuplicates } = applySkipDuplicates(
+    allParsed,
+    tree,
+    mode,
+    shouldSkipDuplicates,
+  )
+  const result: ImportResult = { skippedInvalidUrl: 0, skippedDuplicates }
   const root = tree[0]
   const { bookmarksBarId, otherBookmarksId, mobileId } = resolveImportRoots(
     root?.children ?? [],

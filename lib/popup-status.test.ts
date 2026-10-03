@@ -10,6 +10,7 @@ const enabledConfig: AutoExportConfig = {
   dayOfWeek: 1,
   path: 'bookmarks-backup/',
   formats: ['html'],
+  keepLast: 10,
 }
 
 const failedRun: AutoExportLastRun = {

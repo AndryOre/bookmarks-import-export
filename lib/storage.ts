@@ -78,17 +78,22 @@ const DEFAULT_AUTO_EXPORT_CONFIG: AutoExportConfig = {
   dayOfWeek: 1,
   path: 'bookmarks-backup/',
   formats: ['html'],
+  keepLast: 10,
 }
 
 export const autoExportConfigStore = storage.defineItem<AutoExportConfig>(
   'local:autoExportConfig',
   {
     fallback: DEFAULT_AUTO_EXPORT_CONFIG,
-    version: 2,
+    version: 3,
     migrations: {
       2: (stored: Omit<AutoExportConfig, 'dayOfWeek'>): AutoExportConfig => ({
         ...stored,
         dayOfWeek: DEFAULT_AUTO_EXPORT_CONFIG.dayOfWeek,
+      }),
+      3: (stored: Omit<AutoExportConfig, 'keepLast'>): AutoExportConfig => ({
+        ...stored,
+        keepLast: DEFAULT_AUTO_EXPORT_CONFIG.keepLast,
       }),
     },
   },
@@ -97,6 +102,16 @@ export const autoExportConfigStore = storage.defineItem<AutoExportConfig>(
 export const autoExportLastRunStore = storage.defineItem<
   AutoExportLastRun | number | null
 >('local:autoExportLastRun', { fallback: null })
+
+/**
+ * Ids of the downloads Snug itself saved for auto-export, oldest first.
+ * Persisted so retention still knows which files are Snug's own after the
+ * service worker restarts. See `lib/auto-export-retention.ts`.
+ */
+export const autoExportDownloadIdsStore = storage.defineItem<number[]>(
+  'local:autoExportDownloadIds',
+  { fallback: [] },
+)
 
 /**
  * The authoritative next due time for auto-export, in epoch milliseconds.
@@ -122,4 +137,13 @@ export const lastSeenVersionStore = storage.defineItem<string | null>(
 export const defaultImportModeStore = storage.defineItem<ImportMode>(
   'local:defaultImportMode',
   { fallback: 'restore-merge' },
+)
+
+/**
+ * Whether imports skip bookmarks whose URL already exists. Shared by the
+ * Import page switch and the popup quick import; on by default.
+ */
+export const skipDuplicatesStore = storage.defineItem<boolean>(
+  'local:skipDuplicates',
+  { fallback: true },
 )

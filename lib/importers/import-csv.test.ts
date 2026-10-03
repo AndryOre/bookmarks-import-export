@@ -20,10 +20,13 @@ describe('importFromCSV', () => {
       'Good,https://good.example,',
     ].join('\n')
 
-    await expect(importFromCSV(csv)).resolves.toEqual({ skippedInvalidUrl: 2 })
+    await expect(importFromCSV(csv)).resolves.toEqual({
+      skippedInvalidUrl: 2,
+      skippedDuplicates: 0,
+    })
     await expect(
       importFromCSV('title,url,folder\nGood,https://good.example,'),
-    ).resolves.toEqual({ skippedInvalidUrl: 0 })
+    ).resolves.toEqual({ skippedInvalidUrl: 0, skippedDuplicates: 0 })
   })
 
   it('creates a nested folder structure from the folder path column', async () => {

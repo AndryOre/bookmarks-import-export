@@ -41,6 +41,7 @@ describe('storage items', () => {
       dayOfWeek: 1,
       path: 'bookmarks-backup/',
       formats: ['html'],
+      keepLast: 10,
     })
   })
 
@@ -65,6 +66,7 @@ describe('storage items', () => {
       dayOfWeek: 1,
       path: 'backups/',
       formats: ['json', 'csv'],
+      keepLast: 10,
     })
   })
 

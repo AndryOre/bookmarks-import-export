@@ -5,7 +5,7 @@ import { importFromCSV } from './importers/import-csv'
 import { importFromHTML } from './importers/import-html'
 import { importFromJSON, normalizeJsonRoot } from './importers/import-json'
 import { takeSafetySnapshot } from './safety-snapshot'
-import type { ImportMode, ImportResult } from './types'
+import type { ImportMode, ImportOptions, ImportResult } from './types'
 
 /**
  * Imports the raw content of a bookmarks file into the browser's bookmark
@@ -17,6 +17,7 @@ import type { ImportMode, ImportResult } from './types'
  * @param mimeType The file's MIME type, used to help detect its format.
  * @param mode How the bookmarks are written into the existing tree.
  * @param fileName The file's name, a fallback hint when the MIME type fails.
+ * @param options Import options; `skipDuplicates` is ignored in Restore-replace.
  * @returns The import result, including the skipped-bookmark count.
  * @throws {Error} When the format is unsupported or the importer fails.
  */
@@ -25,21 +26,22 @@ export async function runImport(
   mimeType: string,
   mode: ImportMode,
   fileName?: string,
+  options: ImportOptions = {},
 ): Promise<ImportResult> {
   const format = detectFormat(text, mimeType, fileName)
 
   switch (format) {
     case 'html': {
       if (mode === 'restore-replace') await takeSafetySnapshot()
-      return importFromHTML(text, mode)
+      return importFromHTML(text, mode, options)
     }
     case 'json': {
       const roots = normalizeJsonRoot(JSON.parse(text))
       if (mode === 'restore-replace') await takeSafetySnapshot()
-      return importFromJSON(roots, mode)
+      return importFromJSON(roots, mode, options)
     }
     case 'csv': {
-      return importFromCSV(text)
+      return importFromCSV(text, options)
     }
     default: {
       throw new Error(i18n.t('unsupportedFileFormat'))

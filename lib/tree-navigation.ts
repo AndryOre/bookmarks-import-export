@@ -130,3 +130,22 @@ export function resolveTreeKey(
     }
   }
 }
+
+/**
+ * Adds a pinned row index to the indexes a virtualized list renders, keeping
+ * the result sorted and free of duplicates. Used to keep the roving-tabindex
+ * row mounted even when it has scrolled out of the rendered window, so the
+ * tree always has a tab stop in the DOM.
+ * @param renderedIndexes Indexes the virtualizer would render, ascending.
+ * @param pinnedIndex Index that must stay rendered, or `-1` for none.
+ * @returns The indexes to render.
+ */
+export function withPinnedIndex(
+  renderedIndexes: readonly number[],
+  pinnedIndex: number,
+): number[] {
+  const shouldPin = pinnedIndex >= 0 && !renderedIndexes.includes(pinnedIndex)
+  return shouldPin
+    ? [...renderedIndexes, pinnedIndex].toSorted((a, b) => a - b)
+    : [...renderedIndexes]
+}

@@ -587,6 +587,18 @@
     "message": "Mindestens ein Format muss ausgewählt bleiben.",
     "description": "Help text under the formats toggle group"
   },
+  "autoExportPage_keepLast": {
+    "message": "Die letzten N Dateien behalten",
+    "description": "Label of the retention number field on the Auto-export page"
+  },
+  "autoExportPage_keepLastDescription": {
+    "message": "Nach jedem erfolgreichen Export löscht Snug seine eigenen ältesten exportierten Dateien über dieser Anzahl. Es werden nur von Snug gespeicherte Dateien entfernt, nie andere Dateien im Ordner. Mit 0 bleibt alles erhalten.",
+    "description": "Help text explaining the retention rule under the field"
+  },
+  "autoExportPage_keepLastInvalid": {
+    "message": "Gib eine ganze Zahl ab 0 ein.",
+    "description": "Validation error shown when the retention field is not a whole number >= 0"
+  },
   "popup_exportAll": {
     "message": "Alle exportieren",
     "description": "Popup button that exports every bookmark in the remembered format"
@@ -937,6 +949,22 @@
   "import_skippedInvalidUrl": {
     "1": "$1 übersprungen, weil seine Adresse nicht unterstützt wird",
     "n": "$1 übersprungen, weil ihre Adresse nicht unterstützt wird"
+  },
+  "import_skipDuplicates": {
+    "message": "Duplikate überspringen",
+    "description": "Label of the switch on the Import page that skips bookmarks the browser already has"
+  },
+  "import_skipDuplicatesFound": {
+    "1": "$1 Lesezeichen in dieser Datei existiert bereits oder wiederholt sich und wird übersprungen",
+    "n": "$1 Lesezeichen in dieser Datei existieren bereits oder wiederholen sich und werden übersprungen"
+  },
+  "import_skipDuplicatesNone": {
+    "message": "Kein Lesezeichen in dieser Datei existiert bereits.",
+    "description": "Helper text under the Skip duplicates switch when no bookmark in the file already exists"
+  },
+  "import_skippedDuplicates": {
+    "1": "$1 als Duplikat übersprungen",
+    "n": "$1 als Duplikate übersprungen"
   },
   "shell_navDuplicates": {
     "message": "Duplikate",

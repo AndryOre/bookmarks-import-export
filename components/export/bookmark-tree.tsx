@@ -1,4 +1,5 @@
 import { i18n } from '#i18n'
+import { defaultRangeExtractor, useVirtualizer } from '@tanstack/react-virtual'
 import type { Browser } from '@wxt-dev/browser'
 import { cn } from 'cn'
 import { Check, File, Folder, Minus } from 'lucide-react'
@@ -15,7 +16,11 @@ import {
 import { getFaviconUrl } from '@/lib/favicon'
 import { formatCount } from '@/lib/format-count'
 import { autoExpandFoldersStore, showBookmarkIconStore } from '@/lib/storage'
-import { flattenVisibleRows, resolveTreeKey } from '@/lib/tree-navigation'
+import {
+  flattenVisibleRows,
+  resolveTreeKey,
+  withPinnedIndex,
+} from '@/lib/tree-navigation'
 import type { FlatTreeRow } from '@/lib/tree-navigation'
 import type {
   BookmarkNode,
@@ -215,16 +220,29 @@ export const BookmarkTree = forwardRef<
     ? focusedId
     : rows[0]?.node.id
 
+  const activeIndex = rows.findIndex((row) => row.node.id === activeId)
+  // eslint-disable-next-line react-hooks/incompatible-library -- TanStack Virtual's documented hook; its returned functions are not passed to memoized children
+  const virtualizer = useVirtualizer({
+    count: rows.length,
+    getScrollElement: () => treeReference.current,
+    estimateSize: () => TREE_ROW_HEIGHT_PX,
+    getItemKey: (index) => rows[index]?.node.id ?? index,
+    overscan: TREE_OVERSCAN_ROWS,
+    rangeExtractor: (range) =>
+      withPinnedIndex(defaultRangeExtractor(range), activeIndex),
+  })
+
   useEffect(() => {
     const pendingId = pendingFocusReference.current
     if (pendingId === undefined) return
-    pendingFocusReference.current = undefined
     const target = [
       ...(treeReference.current?.querySelectorAll<HTMLElement>(
         '[role="treeitem"]',
       ) ?? []),
     ].find((element) => element.dataset.nodeId === pendingId)
-    target?.focus()
+    if (!target) return
+    pendingFocusReference.current = undefined
+    target.focus()
   })
 
   function handleToggleExpand(id: string) {
@@ -321,31 +339,48 @@ export const BookmarkTree = forwardRef<
       aria-multiselectable="true"
       className={cn('flex-1 overflow-auto p-2', className)}
     >
-      {rows.map((row) => (
-        <TreeRow
-          key={row.node.id}
-          row={row}
-          checked={
-            row.node.url
-              ? (checkedState.get(row.node.id) ?? false)
-              : determineCheckedState(row.node.children ?? [], checkedState)
-          }
-          isTabStop={row.node.id === activeId}
-          showBookmarkIcon={showBookmarkIcon}
-          onFocusRow={setFocusedId}
-          onToggleExpand={handleToggleExpand}
-          onToggleSelection={handleToggleSelection}
-          onKeyDown={handleRowKeyDown}
-        />
-      ))}
+      <div
+        className="relative h-(--tree-height) w-full"
+        style={
+          {
+            '--tree-height': `${virtualizer.getTotalSize()}px`,
+          } as React.CSSProperties
+        }
+      >
+        {virtualizer.getVirtualItems().map((virtualRow) => {
+          const row = rows[virtualRow.index]
+          if (!row) return null
+          return (
+            <TreeRow
+              key={row.node.id}
+              row={row}
+              offset={virtualRow.start}
+              checked={
+                row.node.url
+                  ? (checkedState.get(row.node.id) ?? false)
+                  : determineCheckedState(row.node.children ?? [], checkedState)
+              }
+              isTabStop={row.node.id === activeId}
+              showBookmarkIcon={showBookmarkIcon}
+              onFocusRow={setFocusedId}
+              onToggleExpand={handleToggleExpand}
+              onToggleSelection={handleToggleSelection}
+              onKeyDown={handleRowKeyDown}
+            />
+          )
+        })}
+      </div>
     </div>
   )
 })
 
 const BOOKMARK_CHANGE_DEBOUNCE_MS = 150
+const TREE_ROW_HEIGHT_PX = 30
+const TREE_OVERSCAN_ROWS = 10
 
 interface TreeRowProperties {
   row: FlatTreeRow
+  offset: number
   checked: CheckedState
   isTabStop: boolean
   showBookmarkIcon: boolean
@@ -357,6 +392,7 @@ interface TreeRowProperties {
 
 function TreeRow({
   row,
+  offset,
   checked,
   isTabStop,
   showBookmarkIcon,
@@ -379,9 +415,12 @@ function TreeRow({
       aria-checked={checked === 'indeterminate' ? 'mixed' : undefined}
       tabIndex={isTabStop ? 0 : -1}
       data-node-id={node.id}
-      className="ml-(--tree-indent) flex h-7.5 cursor-pointer items-center gap-1.5 rounded px-1 outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring"
+      className="absolute inset-x-0 top-0 ml-(--tree-indent) flex h-7.5 translate-y-(--tree-offset) cursor-pointer items-center gap-1.5 rounded px-1 outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring"
       style={
-        { '--tree-indent': `${(level - 1) * 16}px` } as React.CSSProperties
+        {
+          '--tree-indent': `${(level - 1) * 16}px`,
+          '--tree-offset': `${offset}px`,
+        } as React.CSSProperties
       }
       onFocus={(event) => {
         if (event.target === event.currentTarget) onFocusRow(node.id)

@@ -246,13 +246,13 @@ function waitForDownloadSettled(downloadId: number): Promise<void> {
  * @param content The export content to download.
  * @param mimeType The content's MIME type.
  * @param filename The downloads-relative filename to save it as.
- * @returns Resolves once the download has settled and cleanup has run.
+ * @returns Resolves with the completed download's id once it has settled and cleanup has run.
  */
 export async function downloadViaOffscreenDocument(
   content: string,
   mimeType: string,
   filename: string,
-): Promise<void> {
+): Promise<number> {
   offscreenState.pendingDownloads += 1
   try {
     await ensureOffscreenDocument()
@@ -267,6 +267,7 @@ export async function downloadViaOffscreenDocument(
       })
 
       await waitForDownloadSettled(downloadId)
+      return downloadId
     } finally {
       await revokeBlobUrl(url)
     }

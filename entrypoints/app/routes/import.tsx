@@ -7,6 +7,7 @@ import { ImportFileStep } from '@/components/import/import-file-step'
 import { ImportModeStep } from '@/components/import/import-mode-step'
 import { ImportPreviewStep } from '@/components/import/import-preview-step'
 import { ImportReplaceDiffAlert } from '@/components/import/import-replace-diff-alert'
+import { ImportSkipDuplicates } from '@/components/import/import-skip-duplicates'
 import { ImportStep } from '@/components/import/import-step'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import {
@@ -21,6 +22,8 @@ import {
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
 import { formatCount } from '@/lib/format-count'
+import { summarizeImportDuplicates } from '@/lib/import-duplicates'
+import type { ImportDuplicateSummary } from '@/lib/import-duplicates'
 import { getImportPreview } from '@/lib/import-preview'
 import { getReplaceDiff } from '@/lib/replace-diff'
 import type { ReplaceDiff } from '@/lib/replace-diff'
@@ -30,7 +33,7 @@ import {
   restoreSafetySnapshot,
 } from '@/lib/safety-snapshot'
 import type { SafetySnapshot } from '@/lib/safety-snapshot'
-import { defaultImportModeStore } from '@/lib/storage'
+import { defaultImportModeStore, skipDuplicatesStore } from '@/lib/storage'
 import type { ImportMode, ImportPreview } from '@/lib/types'
 import { useStorageItem } from '@/lib/use-storage-item'
 
@@ -46,6 +49,7 @@ interface ChosenFile {
   text: string
   preview: ImportPreview
   replaceDiff: ReplaceDiff | null
+  duplicates: ImportDuplicateSummary
 }
 
 /**
@@ -60,11 +64,14 @@ interface ChosenFile {
 export function ImportRoute() {
   const [chosen, setChosen] = useState<ChosenFile | null>(null)
   const [storedMode, setStoredMode] = useStorageItem(defaultImportModeStore)
+  const [skipDuplicates, setSkipDuplicates] =
+    useStorageItem(skipDuplicatesStore)
   const [status, setStatus] = useState<ImportStatus>('idle')
   const [errorMessage, setErrorMessage] = useState('')
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
   const [undoSnapshot, setUndoSnapshot] = useState<SafetySnapshot | null>(null)
   const [skippedCount, setSkippedCount] = useState(0)
+  const [skippedDuplicatesCount, setSkippedDuplicatesCount] = useState(0)
 
   const preview = chosen?.preview ?? null
   const isSupported = preview !== null && preview.format !== 'unknown'
@@ -72,6 +79,12 @@ export function ImportRoute() {
   const effectiveMode: ImportMode = hasLocationData ? storedMode : 'folder'
   const isImporting = status === 'importing'
   const isEmpty = isSupported && preview.totalCount === 0
+  const isSkippingDuplicates =
+    skipDuplicates && effectiveMode !== 'restore-replace'
+  const importCount =
+    isSkippingDuplicates && chosen
+      ? chosen.duplicates.importableCount
+      : (preview?.totalCount ?? 0)
 
   const handleFile = async (file: File) => {
     try {
@@ -83,7 +96,12 @@ export function ImportRoute() {
           ? await getReplaceDiff(parsed)
           : null
 
-      setChosen({ file, text, preview: parsed, replaceDiff })
+      const duplicates =
+        parsed.format === 'unknown'
+          ? { skippedDuplicates: 0, importableCount: 0 }
+          : await summarizeImportDuplicates(text, file.type, file.name)
+
+      setChosen({ file, text, preview: parsed, replaceDiff, duplicates })
       setStatus(parsed.format === 'unknown' ? 'error' : 'idle')
       setErrorMessage(
         parsed.format === 'unknown' ? i18n.t('unsupportedFileFormat') : '',
@@ -102,6 +120,7 @@ export function ImportRoute() {
     setErrorMessage('')
     setUndoSnapshot(null)
     setSkippedCount(0)
+    setSkippedDuplicatesCount(0)
 
     try {
       const result = await runImport(
@@ -109,11 +128,13 @@ export function ImportRoute() {
         chosen.file.type,
         effectiveMode,
         chosen.file.name,
+        { skipDuplicates: isSkippingDuplicates },
       )
       if (effectiveMode === 'restore-replace') {
         setUndoSnapshot(await readLatestSafetySnapshot())
       }
       setSkippedCount(result.skippedInvalidUrl)
+      setSkippedDuplicatesCount(result.skippedDuplicates)
       setStatus('success')
     } catch (error) {
       setStatus('error')
@@ -187,6 +208,13 @@ export function ImportRoute() {
         <Alert>
           <CircleCheckIcon />
           <AlertTitle>{i18n.t('bookmarksImportedSuccessfully')}</AlertTitle>
+          {skippedDuplicatesCount > 0 && (
+            <AlertDescription>
+              {i18n.t('import_skippedDuplicates', skippedDuplicatesCount, [
+                formatCount(skippedDuplicatesCount),
+              ])}
+            </AlertDescription>
+          )}
           {skippedCount > 0 && (
             <AlertDescription>
               {i18n.t('import_skippedInvalidUrl', skippedCount, [
@@ -265,12 +293,25 @@ export function ImportRoute() {
             />
           </ImportStep>
 
-          <Button type="submit" size="lg" disabled={isImporting || isEmpty}>
+          {effectiveMode !== 'restore-replace' && (
+            <ImportSkipDuplicates
+              isChecked={skipDuplicates}
+              onCheckedChange={(checked) => void setSkipDuplicates(checked)}
+              duplicateCount={chosen?.duplicates.skippedDuplicates ?? 0}
+              disabled={isImporting}
+            />
+          )}
+
+          <Button
+            type="submit"
+            size="lg"
+            disabled={isImporting || isEmpty || importCount === 0}
+          >
             {isImporting && <Spinner data-icon="inline-start" />}
             {isImporting
               ? i18n.t('import_importing')
-              : i18n.t('import_submit', preview.totalCount, [
-                  formatCount(preview.totalCount),
+              : i18n.t('import_submit', importCount, [
+                  formatCount(importCount),
                 ])}
           </Button>
           {isEmpty && (

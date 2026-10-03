@@ -587,6 +587,18 @@
     "message": "至少需保留一种格式。",
     "description": "Help text under the formats toggle group"
   },
+  "autoExportPage_keepLast": {
+    "message": "保留最近 N 个文件",
+    "description": "Label of the retention number field on the Auto-export page"
+  },
+  "autoExportPage_keepLastDescription": {
+    "message": "每次导出成功后，Snug 会删除超出此数量的最早导出文件。只会删除 Snug 保存的文件，绝不会删除文件夹中的其他文件。设为 0 则全部保留。",
+    "description": "Help text explaining the retention rule under the field"
+  },
+  "autoExportPage_keepLastInvalid": {
+    "message": "请输入大于或等于 0 的整数。",
+    "description": "Validation error shown when the retention field is not a whole number >= 0"
+  },
   "popup_exportAll": {
     "message": "全部导出",
     "description": "Popup button that exports every bookmark in the remembered format"
@@ -936,6 +948,20 @@
   },
   "import_skippedInvalidUrl": {
     "n": "已跳过 $1 个，因为其地址不受支持"
+  },
+  "import_skipDuplicates": {
+    "message": "跳过重复项",
+    "description": "Label of the switch on the Import page that skips bookmarks the browser already has"
+  },
+  "import_skipDuplicatesFound": {
+    "n": "此文件中有 $1 个书签已存在或重复，将被跳过"
+  },
+  "import_skipDuplicatesNone": {
+    "message": "此文件中没有已存在的书签。",
+    "description": "Helper text under the Skip duplicates switch when no bookmark in the file already exists"
+  },
+  "import_skippedDuplicates": {
+    "n": "已作为重复项跳过 $1 个"
   },
   "shell_navDuplicates": {
     "message": "重复项",

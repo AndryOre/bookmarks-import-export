@@ -591,6 +591,18 @@
     "message": "Pelo menos um formato deve continuar selecionado.",
     "description": "Help text under the formats toggle group"
   },
+  "autoExportPage_keepLast": {
+    "message": "Manter os últimos N arquivos",
+    "description": "Label of the retention number field on the Auto-export page"
+  },
+  "autoExportPage_keepLastDescription": {
+    "message": "Após cada exportação bem-sucedida, o Snug exclui os próprios arquivos exportados mais antigos além desse número. Somente arquivos salvos pelo Snug são removidos, nunca outros arquivos da pasta. Use 0 para manter tudo.",
+    "description": "Help text explaining the retention rule under the field"
+  },
+  "autoExportPage_keepLastInvalid": {
+    "message": "Digite um número inteiro igual ou maior que 0.",
+    "description": "Validation error shown when the retention field is not a whole number >= 0"
+  },
   "popup_exportAll": {
     "message": "Exportar tudo",
     "description": "Popup button that exports every bookmark in the remembered format"
@@ -952,6 +964,22 @@
     "0": "$1 ignorado porque o endereço não é compatível",
     "1": "$1 ignorado porque o endereço não é compatível",
     "n": "$1 ignorados porque o endereço não é compatível"
+  },
+  "import_skipDuplicates": {
+    "message": "Ignorar duplicados",
+    "description": "Label of the switch on the Import page that skips bookmarks the browser already has"
+  },
+  "import_skipDuplicatesFound": {
+    "1": "$1 favorito deste arquivo já existe ou se repete e será ignorado",
+    "n": "$1 favoritos deste arquivo já existem ou se repetem e serão ignorados"
+  },
+  "import_skipDuplicatesNone": {
+    "message": "Nenhum favorito deste arquivo já existe.",
+    "description": "Helper text under the Skip duplicates switch when no bookmark in the file already exists"
+  },
+  "import_skippedDuplicates": {
+    "1": "$1 ignorado como duplicado",
+    "n": "$1 ignorados como duplicados"
   },
   "shell_navDuplicates": {
     "message": "Duplicados",

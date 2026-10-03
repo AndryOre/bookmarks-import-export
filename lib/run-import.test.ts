@@ -13,7 +13,7 @@ import {
 import type { ExtendedBookmarkTreeNode } from './types'
 
 vi.mock('./offscreen-download', () => ({
-  downloadViaOffscreenDocument: vi.fn(async () => {}),
+  downloadViaOffscreenDocument: vi.fn(async () => 1),
 }))
 
 const downloadMock = vi.mocked(downloadViaOffscreenDocument)
@@ -57,7 +57,7 @@ beforeEach(() => {
   fakeBrowser.reset()
   resetFakeBookmarks()
   downloadMock.mockReset()
-  downloadMock.mockResolvedValue()
+  downloadMock.mockResolvedValue(1)
 })
 
 describe('runImport', () => {
@@ -91,6 +91,86 @@ describe('runImport', () => {
     expect(collectUrls(getFakeBookmarksRoot().children ?? [])).toEqual([
       'https://csv.example/page',
     ])
+  })
+
+  describe('Skip duplicates', () => {
+    const FILE_JSON = JSON.stringify({
+      id: '1',
+      title: 'Bookmarks bar',
+      dateAdded: 0,
+      children: [
+        {
+          title: 'Existing again',
+          // eslint-disable-next-line unicorn/prefer-https -- exercises http/https normalization
+          url: 'http://www.existing.example',
+          dateAdded: 0,
+        },
+        { title: 'New', url: 'https://new.example/page', dateAdded: 0 },
+        { title: 'New again', url: 'https://new.example/page/', dateAdded: 0 },
+      ],
+    })
+
+    it('does not create bookmarks that exist or repeat in the file when on', async () => {
+      seedFakeBookmarksTree(existing())
+
+      const result = await runImport(
+        FILE_JSON,
+        'application/json',
+        'restore-merge',
+        undefined,
+        { skipDuplicates: true },
+      )
+
+      expect(result.skippedDuplicates).toBe(2)
+      expect(collectUrls(getFakeBookmarksRoot().children ?? [])).toEqual([
+        'https://existing.example/',
+        'https://new.example/page',
+      ])
+    })
+
+    it('creates every bookmark when off', async () => {
+      seedFakeBookmarksTree(existing())
+
+      const result = await runImport(
+        FILE_JSON,
+        'application/json',
+        'restore-merge',
+        undefined,
+        { skipDuplicates: false },
+      )
+
+      expect(result.skippedDuplicates).toBe(0)
+      expect(collectUrls(getFakeBookmarksRoot().children ?? [])).toHaveLength(4)
+    })
+
+    it('skips existing bookmarks for CSV in folder mode', async () => {
+      seedFakeBookmarksTree(existing())
+
+      const result = await runImport(
+        'title,url\nA,https://existing.example\nB,https://b.example\n',
+        'text/csv',
+        'folder',
+        undefined,
+        { skipDuplicates: true },
+      )
+
+      expect(result.skippedDuplicates).toBe(1)
+    })
+
+    it('is ignored in restore-replace', async () => {
+      seedFakeBookmarksTree(existing())
+
+      const result = await runImport(
+        FILE_JSON,
+        'application/json',
+        'restore-replace',
+        undefined,
+        { skipDuplicates: true },
+      )
+
+      expect(result.skippedDuplicates).toBe(0)
+      expect(collectUrls(getFakeBookmarksRoot().children ?? [])).toHaveLength(3)
+    })
   })
 
   describe('Safety snapshot', () => {

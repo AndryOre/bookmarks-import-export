@@ -587,6 +587,18 @@
     "message": "형식을 하나 이상 선택해야 해요.",
     "description": "Help text under the formats toggle group"
   },
+  "autoExportPage_keepLast": {
+    "message": "최근 N개 파일 유지",
+    "description": "Label of the retention number field on the Auto-export page"
+  },
+  "autoExportPage_keepLastDescription": {
+    "message": "내보내기가 성공할 때마다 Snug는 이 개수를 초과하는 가장 오래된 내보내기 파일을 삭제합니다. Snug가 저장한 파일만 삭제되며 폴더의 다른 파일은 절대 삭제하지 않습니다. 0으로 설정하면 모두 보관합니다.",
+    "description": "Help text explaining the retention rule under the field"
+  },
+  "autoExportPage_keepLastInvalid": {
+    "message": "0 이상의 정수를 입력하세요.",
+    "description": "Validation error shown when the retention field is not a whole number >= 0"
+  },
   "popup_exportAll": {
     "message": "모두 내보내기",
     "description": "Popup button that exports every bookmark in the remembered format"
@@ -936,6 +948,20 @@
   },
   "import_skippedInvalidUrl": {
     "n": "$1개를 건너뛰었습니다. 주소가 지원되지 않습니다"
+  },
+  "import_skipDuplicates": {
+    "message": "중복 건너뛰기",
+    "description": "Label of the switch on the Import page that skips bookmarks the browser already has"
+  },
+  "import_skipDuplicatesFound": {
+    "n": "이 파일의 북마크 $1개는 이미 있거나 반복되어 건너뜁니다"
+  },
+  "import_skipDuplicatesNone": {
+    "message": "이 파일의 북마크 중 이미 있는 것은 없습니다.",
+    "description": "Helper text under the Skip duplicates switch when no bookmark in the file already exists"
+  },
+  "import_skippedDuplicates": {
+    "n": "중복으로 $1개를 건너뛰었습니다"
   },
   "shell_navDuplicates": {
     "message": "중복",

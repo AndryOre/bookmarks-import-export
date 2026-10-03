@@ -591,6 +591,18 @@
     "message": "Au moins un format doit rester sélectionné.",
     "description": "Help text under the formats toggle group"
   },
+  "autoExportPage_keepLast": {
+    "message": "Conserver les N derniers fichiers",
+    "description": "Label of the retention number field on the Auto-export page"
+  },
+  "autoExportPage_keepLastDescription": {
+    "message": "Après chaque export réussi, Snug supprime ses propres fichiers exportés les plus anciens au-delà de ce nombre. Seuls les fichiers enregistrés par Snug sont supprimés, jamais les autres fichiers du dossier. Indiquez 0 pour tout conserver.",
+    "description": "Help text explaining the retention rule under the field"
+  },
+  "autoExportPage_keepLastInvalid": {
+    "message": "Saisissez un nombre entier supérieur ou égal à 0.",
+    "description": "Validation error shown when the retention field is not a whole number >= 0"
+  },
   "popup_exportAll": {
     "message": "Tout exporter",
     "description": "Popup button that exports every bookmark in the remembered format"
@@ -952,6 +964,22 @@
     "0": "$1 ignoré car son adresse n'est pas prise en charge",
     "1": "$1 ignoré car son adresse n'est pas prise en charge",
     "n": "$1 ignorés car leur adresse n'est pas prise en charge"
+  },
+  "import_skipDuplicates": {
+    "message": "Ignorer les doublons",
+    "description": "Label of the switch on the Import page that skips bookmarks the browser already has"
+  },
+  "import_skipDuplicatesFound": {
+    "1": "$1 favori de ce fichier existe déjà ou se répète et sera ignoré",
+    "n": "$1 favoris de ce fichier existent déjà ou se répètent et seront ignorés"
+  },
+  "import_skipDuplicatesNone": {
+    "message": "Aucun favori de ce fichier n'existe déjà.",
+    "description": "Helper text under the Skip duplicates switch when no bookmark in the file already exists"
+  },
+  "import_skippedDuplicates": {
+    "1": "$1 ignoré comme doublon",
+    "n": "$1 ignorés comme doublons"
   },
   "shell_navDuplicates": {
     "message": "Doublons",

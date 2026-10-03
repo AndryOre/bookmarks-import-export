@@ -9,6 +9,7 @@ const enabledConfig = {
   dayOfWeek: 1,
   path: 'bookmarks-backup/',
   formats: ['html'],
+  keepLast: 10,
 }
 
 const disabledConfig = { ...enabledConfig, enabled: false }
@@ -214,4 +215,55 @@ test('Export now runs with the on-screen settings and updates the last run', asy
   await expect(
     page.getByText(en.autoExportPage_succeeded.message, { exact: true }),
   ).toBeVisible()
+})
+
+test('the retention field saves on change and rejects anything but an integer >= 0', async ({
+  openExtensionPage,
+  seedStorage,
+  serviceWorker,
+}) => {
+  await seedStorage({
+    autoExportConfig: enabledConfig,
+    autoExportNextRun: Date.now() + 60 * 60 * 1000,
+    autoExportLastRun: null,
+  })
+  const page = await openExtensionPage('app.html#/auto-export')
+
+  const readKeepLast = () =>
+    serviceWorker.evaluate(async () => {
+      const stored = await chrome.storage.local.get('autoExportConfig')
+      return (stored.autoExportConfig as { keepLast: number }).keepLast
+    })
+
+  const keepLast = page.getByLabel(en.autoExportPage_keepLast.message)
+  await expect(keepLast).toHaveValue('10')
+  await expect(
+    page.getByText(en.autoExportPage_keepLastDescription.message),
+  ).toBeVisible()
+
+  await keepLast.fill('3')
+  await keepLast.blur()
+  await expect.poll(readKeepLast).toBe(3)
+  await expect(
+    page.getByText(en.autoExportPage_saved.message, { exact: true }),
+  ).toBeVisible()
+
+  await keepLast.fill('-2')
+  await expect(
+    page.getByText(en.autoExportPage_keepLastInvalid.message),
+  ).toBeVisible()
+  await keepLast.blur()
+  await expect(keepLast).toHaveValue('3')
+  await expect.poll(readKeepLast).toBe(3)
+
+  await keepLast.fill('1.5')
+  await expect(
+    page.getByText(en.autoExportPage_keepLastInvalid.message),
+  ).toBeVisible()
+  await keepLast.blur()
+  await expect.poll(readKeepLast).toBe(3)
+
+  await keepLast.fill('0')
+  await keepLast.blur()
+  await expect.poll(readKeepLast).toBe(0)
 })
