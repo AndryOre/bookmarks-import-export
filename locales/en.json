@@ -184,7 +184,7 @@
     "message": "Fixed an issue where the extension was not working in some browsers."
   },
   "changelog_0_1_0_1": {
-    "message": "Initial release of Bookmark Import/Export extension."
+    "message": "Initial release of Snug."
   },
   "changelog_0_1_0_2": {
     "message": "Simple import feature for HTML and JSON files."

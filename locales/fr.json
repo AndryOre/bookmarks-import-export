@@ -185,7 +185,7 @@
     "message": "Correction d'un problème : l'extension ne fonctionnait pas dans certains navigateurs."
   },
   "changelog_0_1_0_1": {
-    "message": "Première version de l'extension d'importation et d'exportation de favoris."
+    "message": "Première version de Snug."
   },
   "changelog_0_1_0_2": {
     "message": "Importation simple de fichiers HTML et JSON."

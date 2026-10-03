@@ -184,7 +184,7 @@
     "message": "Corregido un problema donde la extensión no funcionaba en algunos navegadores."
   },
   "changelog_0_1_0_1": {
-    "message": "Primera versión de la extensión Importar/Exportar Marcadores."
+    "message": "Primera versión de Snug."
   },
   "changelog_0_1_0_2": {
     "message": "Función de importación simple para archivos HTML y JSON."
